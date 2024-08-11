@@ -6,16 +6,6 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class IndexView(LoginRequiredMixin, View):
-    #TODO: implement control on user passes test (https://docs.djangoproject.com/en/4.2/topics/auth/default/#limiting-access-to-logged-in-users-that-pass-a-test)
-    template_name = 'l4m/index.html'
-    login_url = '/login/'
-
-    def get(self,request):
-        params = {
-            }
-        return render(request, self.template_name, params)
-
 class LoginView(View):
     template_name= 'l4m/login.html'
     
@@ -34,3 +24,12 @@ class LoginView(View):
         else:
             return render(request, self.template, {'form': form})
         
+class IndexView(LoginRequiredMixin, View):
+    #TODO: implement control on user passes test (https://docs.djangoproject.com/en/4.2/topics/auth/default/#limiting-access-to-logged-in-users-that-pass-a-test)
+    template_name = 'l4m/index.html'
+    login_url = '/login/'
+
+    def get(self,request):
+        params = {   }
+        
+        return render(request, self.template_name, params)
