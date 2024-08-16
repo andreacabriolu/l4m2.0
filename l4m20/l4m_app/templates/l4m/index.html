@@ -4,7 +4,31 @@
 { % block title % } L4M2.0 - Asta { % endblock % }
 
 {% block links %}
+<link href="{% static 'l4m/css/index.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="{% static 'l4m/js/index.js' %}"></script>
 {% endblock %}
 
 {% block content %}
+<main class="container">
+    <div class="bg-body-tertiary p-5 rounded mt-3">
+        <h1>ROSA</h1>
+        <!-- Canvas? React? Divs? -->
+        <!-- <canvas id="can" class="can-style"></canvas> -->
+        
+        <div class="div-container" id="main-div-container">
+            <div id="gk1_div" class="gk-div">
+                <input type="text" id="gk1" class="inputPlyr">
+            </div>
+            <div id="gk2_div" class="gk-div">
+                <input type="text" id="gk2" class="inputPlyr">
+            </div>
+            <div id="gk3_div" class="gk-div">
+                <input type="text" id="gk3" class="inputPlyr">
+            </div>
+        </div>
+    </div>
+</main>
 {% endblock %}
