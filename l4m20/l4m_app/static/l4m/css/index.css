@@ -16,10 +16,13 @@
 }
 
 .inputPlyr {
-    display: flex;
     width: 70%;
-    height: 40%;
     margin:20px;
     background: lightgrey;
     caret-color: blue;
+}
+
+.inputCost {
+    width: 20%;
+    background: lightgoldenrodyellow;
 }
