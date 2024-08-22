@@ -153,3 +153,5 @@ STORAGES = {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
+
+SECURE_CROSS_ORIGIN_OPENER_POLICY = None
