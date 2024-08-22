@@ -27,7 +27,7 @@ import os
 DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 # DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['209.38.103.187']
 
 
 # Application definition
