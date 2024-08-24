@@ -27,7 +27,7 @@ import os
 DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
 # ALLOWED_HOSTS = []
-ALLOWED_HOSTS = ['209.38.103.187']
+ALLOWED_HOSTS = ['127.0.0.1','209.38.103.187']
 
 
 # Application definition
@@ -95,6 +95,8 @@ DATABASES = {
 }
 
 # Update database configuration from $DATABASE_URL environment variable (if defined)
+# DATABASE_URL = 'postgres://django:1cdeb91e820b06d6cc8203d630e194f1@209.38.103.187/django'
+# DATABASE_URL = 'postgres://postgres:postgres@209.38.103.187/l4m20_db'
 import dj_database_url
 
 if 'DATABASE_URL' in os.environ:
