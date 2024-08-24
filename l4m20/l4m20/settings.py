@@ -27,7 +27,7 @@ import os
 DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
 # ALLOWED_HOSTS = []
-ALLOWED_HOSTS = ['127.0.0.1','209.38.103.187']
+ALLOWED_HOSTS = ['127.0.0.1','209.38.103.187','www.lega4mori.com']
 
 
 # Application definition
@@ -100,6 +100,7 @@ DATABASES = {
 import dj_database_url
 
 if 'DATABASE_URL' in os.environ:
+    
     DATABASES['default'] = dj_database_url.config(
         conn_max_age=500,
         conn_health_checks=True,
