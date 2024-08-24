@@ -27,7 +27,7 @@ import os
 DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
 # ALLOWED_HOSTS = []
-ALLOWED_HOSTS = ['127.0.0.1','209.38.103.187','www.lega4mori.com']
+ALLOWED_HOSTS = ['127.0.0.1','209.38.103.187','www.lega4mori.com','lega4mori.com']
 
 
 # Application definition
