@@ -9,9 +9,14 @@ class Player(models.Model):
             ("CC", _("Centrocampista")), 
             ("AT", _("Attaccante")),)
     
+    STATUSES = (("A", _("Active")),
+                ("E", _("Estero")),
+                )
+    
     Name = models.CharField(max_length=100)
     Surname = models.CharField(max_length=100)
     Role = models.CharField(max_length=2, choices=ROLES)
+    Status = models.CharField(max_length=1, choices=STATUSES)
     
     def __str__(self):
         #TODO: ID player for identifying

@@ -24,7 +24,8 @@ SECRET_KEY = 'django-insecure-x1n!q!$+c7wivg#m95+azjb)lonp-foy6two$dh@x1^&92=!f0
 
 # SECURITY WARNING: don't run with debug turned on in production!
 import os
-DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
+# DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
+DEBUG = os.getenv("DEBUG")
 
 # ALLOWED_HOSTS = []
 ALLOWED_HOSTS = ['127.0.0.1','209.38.103.187','www.lega4mori.com','lega4mori.com']
@@ -89,22 +90,21 @@ DATABASES = {
         "NAME": "l4m20_db",
         "USER": "postgres",
         "PASSWORD": "postgres",
-        "HOST": "localhost",
+        "HOST": os.getenv("DB_HOST"),
         "PORT": "5432",
     }
 }
 
 # Update database configuration from $DATABASE_URL environment variable (if defined)
-# DATABASE_URL = 'postgres://django:1cdeb91e820b06d6cc8203d630e194f1@209.38.103.187/django'
-# DATABASE_URL = 'postgres://postgres:postgres@209.38.103.187/l4m20_db'
+# DATABASE_URL='postgres://postgres:postgres@209.38.103.187/l4m20_db'
 import dj_database_url
 
-if 'DATABASE_URL' in os.environ:
+# if 'DATABASE_URL' in os.environ:
     
-    DATABASES['default'] = dj_database_url.config(
-        conn_max_age=500,
-        conn_health_checks=True,
-    )
+#     DATABASES['default'] = dj_database_url.config(
+#         conn_max_age=500,
+#         conn_health_checks=True,
+#     )
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
