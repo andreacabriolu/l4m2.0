@@ -90,21 +90,10 @@ DATABASES = {
         "NAME": "l4m20_db",
         "USER": "postgres",
         "PASSWORD": "postgres",
-        "HOST": os.getenv("DB_HOST"),
+        "HOST": "209.38.103.187", #use .env file
         "PORT": "5432",
     }
 }
-
-# Update database configuration from $DATABASE_URL environment variable (if defined)
-# DATABASE_URL='postgres://postgres:postgres@209.38.103.187/l4m20_db'
-import dj_database_url
-
-# if 'DATABASE_URL' in os.environ:
-    
-#     DATABASES['default'] = dj_database_url.config(
-#         conn_max_age=500,
-#         conn_health_checks=True,
-#     )
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

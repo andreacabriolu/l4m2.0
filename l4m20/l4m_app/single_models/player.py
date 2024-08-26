@@ -17,6 +17,8 @@ class Player(models.Model):
     Surname = models.CharField(max_length=100)
     Role = models.CharField(max_length=2, choices=ROLES)
     Status = models.CharField(max_length=1, choices=STATUSES)
+    RealTeam = models.ForeignKey(on_delete=models.CASCADE,to=C.Constant_Strings.real_team, null=True)
+    Team = models.ForeignKey(on_delete=models.CASCADE,to=C.Constant_Strings.team, null=True)
     
     def __str__(self):
         #TODO: ID player for identifying
