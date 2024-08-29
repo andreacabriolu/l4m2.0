@@ -4,25 +4,45 @@
 }
 
 .div-container {
-    width: 25%;
+    width: auto;
+}
+
+.gk-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+@media (max-width: 800px) {
+    .gk-container {
+        flex-direction: column;
+    }
 }
 
 .gk-div {
     background-image: linear-gradient(to bottom, rgb(223, 237, 251),rgb(231, 231, 231));
     display: flex;
-    flex-wrap: wrap;
     justify-items:center;
-    margin-top: 30px;
+    margin: 30px;
+}
+
+@media (max-width: 800px) {
+    .gk-div {
+        margin: 10px;
+    }
 }
 
 .inputPlyr {
-    width: 70%;
+    width: 80%;
     margin:20px;
     background: lightgrey;
     caret-color: blue;
+    color: black;
 }
 
 .inputCost {
     width: 20%;
+    margin: 20px;
     background: lightgoldenrodyellow;
+    color: black;
 }

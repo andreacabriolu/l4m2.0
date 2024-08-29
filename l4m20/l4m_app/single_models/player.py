@@ -13,7 +13,7 @@ class Player(models.Model):
                 ("E", _("Estero")),
                 )
     
-    Name = models.CharField(max_length=100)
+    Name = models.CharField(max_length=100, null=True)
     Surname = models.CharField(max_length=100)
     Role = models.CharField(max_length=2, choices=ROLES)
     Status = models.CharField(max_length=1, choices=STATUSES)

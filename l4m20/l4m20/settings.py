@@ -90,7 +90,7 @@ DATABASES = {
         "NAME": "l4m20_db",
         "USER": "postgres",
         "PASSWORD": "postgres",
-        "HOST": "209.38.103.187", #use .env file
+        "HOST": "localhost", #use .env file
         "PORT": "5432",
     }
 }

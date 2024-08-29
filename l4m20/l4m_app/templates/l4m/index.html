@@ -12,24 +12,28 @@
 {% endblock %}
 
 {% block content %}
-<main class="container">
+<div class="container">
     <div class="bg-body-tertiary p-5 rounded mt-3">
         <h1>ROSA</h1>
         <!-- Canvas? React? Divs? -->
         <!-- <canvas id="can" class="can-style"></canvas> -->
-        
+
         <div class="div-container" id="main-div-container">
-            <div id="gk1_div" class="gk-div">
-                <input type="text" id="gk1" class="inputPlyr">
-                <input type="number" id="gk1_cost" class="inputCost"> 
-            </div>
-            <div id="gk2_div" class="gk-div">
-                <input type="text" id="gk2" class="inputPlyr">
-            </div>
-            <div id="gk3_div" class="gk-div">
-                <input type="text" id="gk3" class="inputPlyr">
+            <div class="gk-container">
+                <div id="gk1_div" class="gk-div">
+                    <input type="text" id="gk1" class="inputPlyr">
+                    <input type="number" id="gk1_cost" class="inputCost">
+                </div>
+                <div id="gk2_div" class="gk-div">
+                    <input type="text" id="gk2" class="inputPlyr">
+                    <input type="number" id="gk2_cost" class="inputCost">
+                </div>
+                <div id="gk3_div" class="gk-div">
+                    <input type="text" id="gk3" class="inputPlyr">
+                    <input type="number" id="gk3_cost" class="inputCost">
+                </div>
             </div>
         </div>
     </div>
-</main>
+</div>
 {% endblock %}

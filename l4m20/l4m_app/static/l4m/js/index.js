@@ -9,8 +9,6 @@ window.addEventListener('DOMContentLoaded', event => {
     // ctx.fillStyle = "white";
     // ctx.fillRect(20, 20, canvas.width/7, canvas.height/7);
 
-    const mainContainer = document.getElementById('main-div-container');
-    
 
 });
 
