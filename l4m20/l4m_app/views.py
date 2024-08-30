@@ -32,7 +32,7 @@ class IndexView(LoginRequiredMixin, View):
     login_url = '/login/'
 
     def get(self,request):
-        players_gk = player.Player.objects.all()
+        players_gk = player.Player.objects.filter(Role="P")
         params = { 
             'players_gk':players_gk
           }
