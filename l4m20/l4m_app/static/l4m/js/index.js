@@ -1,14 +1,16 @@
 window.addEventListener('DOMContentLoaded', event => {
 
-    // $(function() {
-    //     $('#simObDataTable').DataTable();
-    // });
+    gkdivs=document.getElementsByClassName('gk-div');
+    gkcont = document.getElementById('gks');
 
-    // const canvas = document.getElementById("can");
-    // const ctx = canvas.getContext("2d");
-    // ctx.fillStyle = "white";
-    // ctx.fillRect(20, 20, canvas.width/7, canvas.height/7);
+    gkcont.addEventListener("click", function(e) {
+            openDialog(e['id']);
+        })
+    })
 
 
-});
+function openDialog(e){
+    dlg=document.getElementById('dlg open');
+    dlg.showModal();
+  }
 

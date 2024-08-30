@@ -5,6 +5,8 @@ from django.views import View, generic
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from .models import *
+
 
 class LoginView(View):
     template_name= 'l4m/login.html'
@@ -22,7 +24,7 @@ class LoginView(View):
             login(request, user)
             return HttpResponseRedirect('/l4m/') #TODO: redirect based on roles!
         else:
-            return render(request, self.template, {'form': form})
+            return render(request, self.template_name, {'form': form})
         
 class IndexView(LoginRequiredMixin, View):
     #TODO: implement control on user passes test (https://docs.djangoproject.com/en/4.2/topics/auth/default/#limiting-access-to-logged-in-users-that-pass-a-test)
@@ -30,6 +32,9 @@ class IndexView(LoginRequiredMixin, View):
     login_url = '/login/'
 
     def get(self,request):
-        params = {   }
+        players_gk = player.Player.objects.all()
+        params = { 
+            'players_gk':players_gk
+          }
         
         return render(request, self.template_name, params)

@@ -18,8 +18,24 @@
         <!-- Canvas? React? Divs? -->
         <!-- <canvas id="can" class="can-style"></canvas> -->
 
+        <dialog id="dlg open">
+            <div class="modal-body">
+                <input id="modal-ob-name" type="text" class="modal-form-input">
+                {% for player_gk in players_gk %}
+                <dl>
+                    <dt>{{player_gk.Surname}}</dt>
+                    <dd>{{player_gk.Role}}</dd>
+                </dl>
+                {% endfor %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="btnClose" onclick="closeDialog()">Close</button>
+                <button type="button" class="btn btn-primary" id="btnSave" onclick="saveJsonInfo()">Save</button>
+            </div>
+        </dialog>
+
         <div class="div-container" id="main-div-container">
-            <div class="gk-container">
+            <div class="gk-container" id="gks">
                 <div id="gk1_div" class="gk-div">
                     <input type="text" id="gk1" class="inputPlyr">
                     <input type="number" id="gk1_cost" class="inputCost">
