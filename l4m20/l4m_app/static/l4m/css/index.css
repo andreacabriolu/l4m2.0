@@ -20,11 +20,21 @@
 }
 
 .gk-div {
+    /* background-image: url('../images/p.png'); */
     background-image: linear-gradient(to bottom, rgb(223, 237, 251),rgb(231, 231, 231));
     display: flex;
     justify-items:center;
     margin: 30px;
     cursor: pointer;
+    border-radius: 30px;
+    color: #0000;
+  font-family: sans-serif;
+   font-weight: bold;
+  /* background: 
+    repeating-radial-gradient(#000 0 0.0001%,#fff 0 0.0002%) 50% 0/2500px 2500px,
+    repeating-conic-gradient(#000 0 0.0001%,#fff 0 0.0002%) 50% 50%/2500px 2500px; */
+  background-blend-mode: difference;
+  mix-blend-mode: lighten;
 }
 
 @media (max-width: 800px) {
@@ -36,9 +46,15 @@
 .inputPlyr {
     width: 80%;
     margin:20px;
-    background: ghostwhite;
-    caret-color: blue;
-    color: black;
+    background-image: linear-gradient(to bottom, rgb(223, 237, 251),rgb(231, 231, 231));
+    /* background: ghostwhite; */
+    color: blue;
+    cursor: pointer;
+    text-align: center;
+    font-weight: bolder;
+    font-size: large;
+    border-color: transparent;
+    border: none;
 }
 
 .inputCost {

@@ -41,6 +41,7 @@ function searchPlayer() {
         }
     }
 
+    
     // $('#modal-pl-id').val = e;
 }
 
