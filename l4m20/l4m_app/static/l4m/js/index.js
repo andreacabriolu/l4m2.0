@@ -1,9 +1,11 @@
 let dlg;
 let search;
+let player;
 
 window.addEventListener('DOMContentLoaded', event => {
 
     dlg = document.getElementById('dlg open');
+    plr_dlg = document.getElementById('dlg_player open');
     search = document.getElementById('modal-ob-search');
 
     gkdivs = document.getElementsByClassName('gk-div');
@@ -13,13 +15,25 @@ window.addEventListener('DOMContentLoaded', event => {
         openDialog(e['id']);
     })
 
-    var closeM = document.getElementsByClassName("close")[0];
+    var closes = document.getElementsByClassName("close");
     
-    closeM.onclick = function() {
-        dlg.close();
-        search.value='';
-  }
+    closes.forEach(close => {
+        closeM.onclick = function() {
+            dlg.close();
+            search.value='';
+    }}); 
+
+  $('.dt-content').on('click', function() {
+    player_id = $(this)[0].dataset.id;
+
+    openPlayerDialog(player_id);
+  });
+
 })
+
+function openPlayerDialog(id){
+    plr_dlg.showModal();
+}
 
 function openDialog(e) {
     dlg.showModal();
@@ -31,7 +45,6 @@ function searchPlayer() {
     dl = document.getElementById("dataList");
     dt = dl.getElementsByTagName('dt');
 
-    // Loop through all list items, and hide those who don't match the search query
     for (i = 0; i < dt.length; i++) {
         txtValue = dt[i].textContent;
         if (txtValue.toUpperCase().indexOf(filter) > -1) {
@@ -40,7 +53,6 @@ function searchPlayer() {
             dt[i].style.display = "none";
         }
     }
-
     
     // $('#modal-pl-id').val = e;
 }

@@ -27,7 +27,7 @@
                     class="modal-form-input">
                 <dl id="dataList">
                     {% for player_gk in players_gk %}
-                    <dt>{{player_gk.Surname}} ({{player_gk.Role}})</dt>
+                    <dt class="dt-content" data-id="{{player_gk.id}}">{{player_gk.Surname}} ({{player_gk.Role}})</dt>
                     {% endfor %}
                 </dl>
             </div>
@@ -35,6 +35,7 @@
 
         <dialog id="dlg_player open">
             <div class="modal-header">
+                <p></p>
                 <span class="close"><img src="{% static 'l4m/images/close-blue.png' %}"></span>
             </div>
             <div class="modal-body">
