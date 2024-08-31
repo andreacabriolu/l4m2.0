@@ -20,20 +20,34 @@
 
         <dialog id="dlg open">
             <div class="modal-header">
-                <span class="close">X</span>
-              </div>
+                <span class="close"><img src="{% static 'l4m/images/close-blue.png' %}"></span>
+            </div>
             <div class="modal-body">
-                <input id="modal-ob-search" type="text" onkeyup="searchPlayer()" placeholder="Cerca giocatore" class="modal-form-input">
+                <input id="modal-ob-search" type="text" onkeyup="searchPlayer()" placeholder="Cerca giocatore"
+                    class="modal-form-input">
                 <dl id="dataList">
-                {% for player_gk in players_gk %}
-                    <dt><a href="#">{{player_gk.Surname}} ({{player_gk.Role}})</a></dt>
-                {% endfor %}
+                    {% for player_gk in players_gk %}
+                    <dt>{{player_gk.Surname}} ({{player_gk.Role}})</dt>
+                    {% endfor %}
                 </dl>
             </div>
-            <!-- <div class="modal-footer">
-                <button type="button" class="btn btn-default" id="btnClose" onclick="closeDialog()">Close</button>
-                <button type="button" class="btn btn-primary" id="btnSave" onclick="saveJsonInfo()">Save</button>
-            </div> -->
+        </dialog>
+
+        <dialog id="dlg_player open">
+            <div class="modal-header">
+                <span class="close"><img src="{% static 'l4m/images/close-blue.png' %}"></span>
+            </div>
+            <div class="modal-body">
+                <input id="modal-pl-id" type="hidden">
+                <input id="modal-pl-name" type="text" class="modal-form-input">
+                <input id="modal-pl-betamount" type="number" class="modal-form-input" min="1">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="btnAddBet" onclick="addBet()">Aggiungi la
+                    puntata</button>
+                <button type="button" class="btn btn-primary" id="btnSendBet" onclick="sendBet()">Conferma la
+                    puntata</button>
+            </div>
         </dialog>
 
         <div class="div-container" id="main-div-container">
