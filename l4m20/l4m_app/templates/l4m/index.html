@@ -20,32 +20,44 @@
 
         <dialog id="dlg open">
             <div class="modal-header">
-                <span class="close"><img src="{% static 'l4m/images/close-blue.png' %}"></span>
+                <span class="close" id="closeMain"><img src="{% static 'l4m/images/close-blue.png' %}"></span>
             </div>
             <div class="modal-body">
                 <input id="modal-ob-search" type="text" onkeyup="searchPlayer()" placeholder="Cerca giocatore"
                     class="modal-form-input">
                 <dl id="dataList">
                     {% for player_gk in players_gk %}
-                    <dt class="dt-content" data-id="{{player_gk.id}}">{{player_gk.Surname}} ({{player_gk.Role}})</dt>
+                    <dt class="dt-content" data-surname="{{player_gk.Surname}}" data-realteam="{{player_gk.RealTeam__Name}}">{{player_gk.Surname}}
+                        ({{player_gk.RealTeam__Name}})</dt>
                     {% endfor %}
                 </dl>
             </div>
         </dialog>
 
-        <dialog id="dlg_player open">
+        <dialog id="dlg_player open" class="dlg-player">
             <div class="modal-header">
                 <p></p>
-                <span class="close"><img src="{% static 'l4m/images/close-blue.png' %}"></span>
+                <span class="close" id="closePlayer"><img src="{% static 'l4m/images/close-blue.png' %}"></span>
             </div>
             <div class="modal-body">
-                <input id="modal-pl-id" type="hidden">
-                <input id="modal-pl-name" type="text" class="modal-form-input">
-                <input id="modal-pl-betamount" type="number" class="modal-form-input" min="1">
+                <div id="modal-pl-anag" class="modal-anag">
+                    <div id="modal-pl-avatar" class="modal-avatar">
+                        <img src="{% static 'l4m/images/profile.png' %}">
+                    </div>
+                    <input id="modal-pl-name" type="text" class="modal-form-input-anag" readonly>
+                    <input id="modal-pl-realteam" type="text" class="modal-form-input-anag" readonly>
+                    <input id="modal-pl-team" type="text" class="modal-form-input-anag" readonly>
+                </div>
+                <div id="modal-pl-bet" class="modal-bet">
+                    <span class="modal-label">Puntata</span>
+                    <input id="modal-pl-betamount" type="number" min="1" value="1" class="modal-form-input-bet">
+                    <span class="modal-label">Scadenza</span>
+                    <input id="modal-pl-bettime" type="text" class="modal-form-input-bettime" readonly>
+                </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" id="btnAddBet" onclick="addBet()">Aggiungi la
-                    puntata</button>
+                <button type="button" class="btn btn-primary" id="btnAddBet" onclick="addBet()">Aggiungi la
+                    puntata alla lista</button>
                 <button type="button" class="btn btn-primary" id="btnSendBet" onclick="sendBet()">Conferma la
                     puntata</button>
             </div>
@@ -59,11 +71,9 @@
                 </div>
                 <div id="gk2_div" class="gk-div">
                     <input type="text" id="gk2" class="inputPlyr">
-                    <!-- <input type="number" id="gk2_cost" class="inputCost"> -->
                 </div>
                 <div id="gk3_div" class="gk-div">
                     <input type="text" id="gk3" class="inputPlyr">
-                    <!-- <input type="number" id="gk3_cost" class="inputCost"> -->
                 </div>
             </div>
         </div>

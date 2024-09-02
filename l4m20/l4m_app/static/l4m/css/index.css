@@ -79,6 +79,11 @@
     margin-bottom: 10px;
   }
 
+  .modal-footer {
+    margin-top: 5%;
+    justify-content: space-around !important;
+  }
+
   #dataList {
     /* Remove default list styling */
     list-style-type: none;
@@ -104,4 +109,47 @@
 
   .close{
     cursor: pointer;
+  }
+
+  .dlg-player {
+    width: 50%;
+  }
+
+  .modal-avatar {
+    border-style: ridge;
+  }
+
+  .modal-anag{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 3%;
+  }
+
+  .modal-bet {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .modal-label {
+    font-size: larger;
+    margin-top: 4%;
+  }
+
+  .modal-form-input-bet {
+    font-size: xx-large;
+    font-weight: bold;
+    width: 10%;
+    text-align: center;
+  }
+
+  .modal-form-input-bettime {
+    width: 50%;
+    font-size: larger;
+    color: indianred;
+  }
+
+  .modal-form-input-anag {
+    text-align: center;
+    font-weight: bold;
   }

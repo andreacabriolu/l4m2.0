@@ -32,7 +32,8 @@ class IndexView(LoginRequiredMixin, View):
     login_url = '/login/'
 
     def get(self,request):
-        players_gk = player.Player.objects.filter(Role="P")
+
+        players_gk = player.Player.objects.filter(Role="P").select_related('RealTeam').values('Surname','Role','RealTeam__Name')
         params = { 
             'players_gk':players_gk
           }

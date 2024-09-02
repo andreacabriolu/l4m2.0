@@ -15,23 +15,32 @@ window.addEventListener('DOMContentLoaded', event => {
         openDialog(e['id']);
     })
 
-    var closes = document.getElementsByClassName("close");
-    
-    closes.forEach(close => {
-        closeM.onclick = function() {
-            dlg.close();
-            search.value='';
-    }}); 
+    var closeMain = document.getElementById("closeMain");
+    var closePlayer = document.getElementById("closePlayer");
+    closeMain.addEventListener("click", function () {
+        dlg.close();
+        search.value = '';
+    })
 
-  $('.dt-content').on('click', function() {
-    player_id = $(this)[0].dataset.id;
+    closePlayer.addEventListener("click", function () {
+        plr_dlg.close();
+        search.value = '';
+    })
 
-    openPlayerDialog(player_id);
-  });
+    $('.dt-content').on('click', function () {
+        const player = new Object();
+
+        player.surname = $(this)[0].dataset.surname;
+        player.realteam = $(this)[0].dataset.realteam;
+
+        openPlayerDialog(player);
+    });
 
 })
 
-function openPlayerDialog(id){
+function openPlayerDialog(player) {
+    $('#modal-pl-name').val(player.surname);
+    $('#modal-pl-realteam').val(player.realteam);
     plr_dlg.showModal();
 }
 
@@ -53,7 +62,8 @@ function searchPlayer() {
             dt[i].style.display = "none";
         }
     }
-    
-    // $('#modal-pl-id').val = e;
 }
 
+function sendBet() {
+
+}
