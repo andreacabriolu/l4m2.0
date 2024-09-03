@@ -2,10 +2,8 @@ from l4m20 import constants as C
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-
 class Bet(models.Model):
     
-    Name = models.CharField(max_length=100)
     Time = models.DateTimeField(auto_now=True)
     Amount = models.IntegerField()
     Best = models.BooleanField(default=False)
@@ -15,6 +13,20 @@ class Bet(models.Model):
     Market = models.ForeignKey(on_delete=models.CASCADE, to=C.Constant_Strings.market, null=True)
     Team = models.ForeignKey(on_delete=models.CASCADE, to=C.Constant_Strings.team, null=True)
     Session = models.ForeignKey(on_delete=models.CASCADE, to=C.Constant_Strings.session, null=True)
+    Expiration_Date = models.DateTimeField()
     
-    # def __str__(self):
-    #     return " ".join([self.Name])
+    def __str__(self):
+        return " ".join([self.Time+self.Player])
+
+class Bet_Obj():
+    Name=str
+    Time=str
+    Amount=int
+    Best=bool
+    Ghost=bool
+    Carognata=bool
+    Player=str
+    Market=str
+    Team=str
+    Session=str
+    Expiration_Date=str

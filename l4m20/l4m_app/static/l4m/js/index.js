@@ -30,17 +30,32 @@ window.addEventListener('DOMContentLoaded', event => {
     $('.dt-content').on('click', function () {
         const player = new Object();
 
+        player.id = $(this)[0].dataset.id;
         player.surname = $(this)[0].dataset.surname;
         player.realteam = $(this)[0].dataset.realteam;
+        player.role = $(this)[0].dataset.role;
 
         openPlayerDialog(player);
     });
 
+    $('#span-betexpire').hide();
+    $('#modal-pl-bettime').hide();
+
 })
 
 function openPlayerDialog(player) {
+    var RoleNames = {
+         'P':'PORTIERE', 
+         'D':'DIFENSORE',
+         'C':'CENTROCAMPISTA',
+         'A':'ATTACCANTE',
+         '': ''};
+
+    $('#modal-pl-id').val(player.id);
     $('#modal-pl-name').val(player.surname);
     $('#modal-pl-realteam').val(player.realteam);
+    $('#modal-pl-role').val(RoleNames[player.role]);
+    
     plr_dlg.showModal();
 }
 
@@ -64,6 +79,17 @@ function searchPlayer() {
     }
 }
 
-function sendBet() {
+function sendBet(amount) {
+    const token = Cookies.get('csrftoken');
+    const row = new Object()
+    row.playerid = $('#modal-pl-id').val();
+    row.betamount = amount;
+    jsonData = JSON.stringify(row);
 
+    var data = {'jsonData':jsonData, 'csrfmiddlewaretoken':token};
+
+    $.post("/l4m/auction/sendBet/", data, function(response){
+        });
+
+    plr_dlg.close();
 }

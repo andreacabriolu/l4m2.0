@@ -7,3 +7,6 @@ class Constant_Strings:
     series = "Series"
     session = "Session"
     team = "Team"
+
+class Constant_Dicts:
+    RoleNames = {'P':'PORTIERE', 'D':'DIFENSORE','C':'CENTROCAMPISTA','A':'ATTACCANTE'}

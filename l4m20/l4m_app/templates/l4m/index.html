@@ -27,7 +27,11 @@
                     class="modal-form-input">
                 <dl id="dataList">
                     {% for player_gk in players_gk %}
-                    <dt class="dt-content" data-surname="{{player_gk.Surname}}" data-realteam="{{player_gk.RealTeam__Name}}">{{player_gk.Surname}}
+                    <dt class="dt-content" 
+                    data-id="{{player_gk.id}}" 
+                    data-surname="{{player_gk.Surname}}"
+                    data-role="{{player_gk.Role}}"
+                    data-realteam="{{player_gk.RealTeam__Name}}">{{player_gk.Surname}}
                         ({{player_gk.RealTeam__Name}})</dt>
                     {% endfor %}
                 </dl>
@@ -44,21 +48,24 @@
                     <div id="modal-pl-avatar" class="modal-avatar">
                         <img src="{% static 'l4m/images/profile.png' %}">
                     </div>
+                    <input id="modal-pl-id" type="hidden">
                     <input id="modal-pl-name" type="text" class="modal-form-input-anag" readonly>
                     <input id="modal-pl-realteam" type="text" class="modal-form-input-anag" readonly>
-                    <input id="modal-pl-team" type="text" class="modal-form-input-anag" readonly>
+                    <input id="modal-pl-role" type="text" class="modal-form-input-anag" readonly>
                 </div>
                 <div id="modal-pl-bet" class="modal-bet">
                     <span class="modal-label">Puntata</span>
                     <input id="modal-pl-betamount" type="number" min="1" value="1" class="modal-form-input-bet">
-                    <span class="modal-label">Scadenza</span>
+                    <span id="span-betexpire" class="modal-label">Scadenza</span>
                     <input id="modal-pl-bettime" type="text" class="modal-form-input-bettime" readonly>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" id="btnAddBet" onclick="addBet()">Aggiungi la
                     puntata alla lista</button>
-                <button type="button" class="btn btn-primary" id="btnSendBet" onclick="sendBet()">Conferma la
+                <button type="button" class="btn btn-primary" id="btnSendBet" onclick="sendBet(
+                    $('#modal-pl-betamount').val()
+                    )">Conferma la
                     puntata</button>
             </div>
         </dialog>
@@ -70,10 +77,10 @@
                     <!-- <input type="number" id="gk1_cost" class="inputCost"> -->
                 </div>
                 <div id="gk2_div" class="gk-div">
-                    <input type="text" id="gk2" class="inputPlyr">
+                    <input type="text" id="gk2" class="inputPlyr" readonly value="SLOT VUOTO">
                 </div>
                 <div id="gk3_div" class="gk-div">
-                    <input type="text" id="gk3" class="inputPlyr">
+                    <input type="text" id="gk3" class="inputPlyr" readonly value="SLOT VUOTO">
                 </div>
             </div>
         </div>
