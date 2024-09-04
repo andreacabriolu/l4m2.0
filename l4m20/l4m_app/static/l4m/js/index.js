@@ -91,7 +91,7 @@ function set_div(row) {
                             <input type="text" id="${current_div[0].id}_exp" class="inputFullExp" value="${row.exp_date}">\
                         </div>\
                         <div class="plr-full-r3">\
-                            <input type="text" id="${current_div[0].id}_team" class="inputFullTeam">\
+                            <input type="text" id="${current_div[0].id}_team" class="inputFullTeam" value="${row.team}">\
                         </div>\
                     </div>\
     `);
@@ -109,6 +109,7 @@ function sendBet(amount) {
     row.playerid = $('#modal-pl-id').val();
     row.betamount = amount;
     row.exp_date = calculate_expiration_date();
+    row.team = $('#user_team_id').val();
     jsonData = JSON.stringify(row);
 
     var data = {'jsonData':jsonData, 'csrfmiddlewaretoken':token};

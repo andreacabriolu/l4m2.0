@@ -37,10 +37,11 @@ class IndexView(LoginRequiredMixin, View):
     login_url = '/login/'
 
     def get(self,request):
-
+        user_team = team.Team.objects.filter(Users__id=request.user.id)[0]
         players_gk = player.Player.objects.filter(Role="P").select_related('RealTeam').values('id','Surname','Role','RealTeam__Name')
         params = { 
-            'players_gk':players_gk
+            'user_team': user_team,
+            'players_gk':players_gk,
           }
         
         return render(request, self.template_name, params)
@@ -62,7 +63,7 @@ class SendBetView(View):
         bet_new = bet.Bet(Amount=bet_obj.Amount,
                           Player = player_,
                           Best=True,
-                          Expiration_Date=bet_obj.Expiration_Date.__str__())
+                          Expiration_Date=bet_obj.Expiration_Date())
         bet_new.save()
 
         params = {}

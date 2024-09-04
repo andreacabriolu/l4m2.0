@@ -103,15 +103,19 @@
 
 .inputFullExp {
   border: none;
-  color: red;
+  color: crimson;
   background: none;
+  text-align: center;
   width: 100%;
 }
 
 .inputFullTeam {
   background: none;
   border: none;
-  font-style: bolder;
+  font-weight: bolder;
+  color: crimson;
+  text-align: center;
+  width: 100%;
 }
 
 #modal-ob-search {
