@@ -27,11 +27,9 @@
                     class="modal-form-input">
                 <dl id="dataList">
                     {% for player_gk in players_gk %}
-                    <dt class="dt-content" 
-                    data-id="{{player_gk.id}}" 
-                    data-surname="{{player_gk.Surname}}"
-                    data-role="{{player_gk.Role}}"
-                    data-realteam="{{player_gk.RealTeam__Name}}">{{player_gk.Surname}}
+                    <dt class="dt-content" data-id="{{player_gk.id}}" data-surname="{{player_gk.Surname}}"
+                        data-role="{{player_gk.Role}}" data-realteam="{{player_gk.RealTeam__Name}}">
+                        {{player_gk.Surname}}
                         ({{player_gk.RealTeam__Name}})</dt>
                     {% endfor %}
                 </dl>
@@ -72,14 +70,15 @@
 
         <div class="div-container" id="main-div-container">
             <div class="gk-container" id="gks">
-                <div id="gk1_div" class="gk-div">
-                    <input type="text" id="gk1" class="inputPlyr" readonly value="SLOT VUOTO">
-                    <!-- <input type="number" id="gk1_cost" class="inputCost"> -->
+                <div id="gk1_div" class="pl-div">
+                    <div id="gk1_div_empty">
+                        <input type="text" id="gk1" class="inputPlyr" readonly value="SLOT VUOTO">
+                    </div>
                 </div>
-                <div id="gk2_div" class="gk-div">
+                <div id="gk2_div" class="pl-div">
                     <input type="text" id="gk2" class="inputPlyr" readonly value="SLOT VUOTO">
                 </div>
-                <div id="gk3_div" class="gk-div">
+                <div id="gk3_div" class="pl-div">
                     <input type="text" id="gk3" class="inputPlyr" readonly value="SLOT VUOTO">
                 </div>
             </div>

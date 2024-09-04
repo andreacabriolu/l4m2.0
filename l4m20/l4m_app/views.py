@@ -55,13 +55,14 @@ class SendBetView(View):
         bet_obj =  bet.Bet_Obj()
         bet_obj.Amount = int(data['betamount'])
         bet_obj.Player = data['playerid']
-        bet_obj.Expiration_Date = U.calculate_expiration(datetime.datetime.now(tz=pytz.UTC)) #TODO: exclude nighttime
+        # bet_obj.Expiration_Date = U.calculate_expiration(datetime.datetime.now(tz=pytz.UTC)) #TODO: exclude nighttime
+        bet_obj.Expiration_Date = data['exp_date']
 
         player_ = get_object_or_404(player.Player, id=bet_obj.Player)
         bet_new = bet.Bet(Amount=bet_obj.Amount,
                           Player = player_,
                           Best=True,
-                          Expiration_Date=bet_obj.Expiration_Date)
+                          Expiration_Date=bet_obj.Expiration_Date.__str__())
         bet_new.save()
 
         params = {}

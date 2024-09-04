@@ -19,8 +19,8 @@
     }
 }
 
-.gk-div {
-    /* background-image: url('../images/p.png'); */
+.pl-div {
+  width: 30%;
     background-image: linear-gradient(to bottom, rgb(223, 237, 251),rgb(231, 231, 231));
     display: flex;
     justify-items:center;
@@ -38,16 +38,27 @@
 }
 
 @media (max-width: 800px) {
-    .gk-div {
+    .pl-div {
         margin: 10px;
     }
+}
+
+.plr-full-r1 {
+  display: flex;
+}
+
+.plr-full-r2 {
+  display: flex;
+}
+
+.plr-full-r3 {
+  display: flex;
 }
 
 .inputPlyr {
     width: 80%;
     margin:20px;
     background-image: linear-gradient(to bottom, rgb(223, 237, 251),rgb(231, 231, 231));
-    /* background: ghostwhite; */
     color: blue;
     cursor: pointer;
     text-align: center;
@@ -57,11 +68,50 @@
     border: none;
 }
 
-.inputCost {
-    width: 20%;
-    margin: 20px;
-    background: lightgoldenrodyellow;
-    color: black;
+.inputFull {
+    width: 80%;
+    margin:20px;
+    background-image: linear-gradient(to bottom, rgb(223, 237, 251),rgb(231, 231, 231));
+    /* color: blue; */
+    cursor: pointer;
+    text-align: center;
+    font-weight: bolder;
+    font-size: large;
+    border-color: transparent;
+    border: none;
+}
+
+.inputFullName {
+  border: none;
+  text-align: center;
+  font-size: larger;
+  font-weight: bold; 
+  width: 75%;
+  background: none;
+  color: crimson;
+}
+
+.inputFullAmount {
+  border: none;
+    width: 25%;
+    background: none;
+    color: crimson;
+    text-align: center;
+    font-size: large;
+    font-weight: bolder;
+}
+
+.inputFullExp {
+  border: none;
+  color: red;
+  background: none;
+  width: 100%;
+}
+
+.inputFullTeam {
+  background: none;
+  border: none;
+  font-style: bolder;
 }
 
 #modal-ob-search {
@@ -152,4 +202,8 @@
   .modal-form-input-anag {
     text-align: center;
     font-weight: bold;
+  }
+
+  .plr-div-hidden {
+    visibility: hidden;
   }

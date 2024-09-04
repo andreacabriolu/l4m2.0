@@ -14,6 +14,7 @@ class Bet(models.Model):
     Team = models.ForeignKey(on_delete=models.CASCADE, to=C.Constant_Strings.team, null=True)
     Session = models.ForeignKey(on_delete=models.CASCADE, to=C.Constant_Strings.session, null=True)
     Expiration_Date = models.DateTimeField()
+    Slot = models.TextField(max_length=2)
     
     def __str__(self):
         return " ".join([self.Time+self.Player])
@@ -30,3 +31,4 @@ class Bet_Obj():
     Team=str
     Session=str
     Expiration_Date=str
+    Slot=str

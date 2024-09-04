@@ -1,6 +1,7 @@
 let dlg;
 let search;
 let player;
+let current_div;
 
 window.addEventListener('DOMContentLoaded', event => {
 
@@ -12,7 +13,7 @@ window.addEventListener('DOMContentLoaded', event => {
     gkcont = document.getElementById('gks');
 
     gkcont.addEventListener("click", function (e) {
-        openDialog(e['id']);
+        openDialog(e['target'].id);
     })
 
     var closeMain = document.getElementById("closeMain");
@@ -59,7 +60,8 @@ function openPlayerDialog(player) {
     plr_dlg.showModal();
 }
 
-function openDialog(e) {
+function openDialog(id) {
+    current_div = $('#'+id+'_div');
     dlg.showModal();
 }
 
@@ -79,11 +81,34 @@ function searchPlayer() {
     }
 }
 
+function set_div(row) {
+    current_div.html(`<div id="${current_div[0].id}_full" class="plr-full">\
+                        <div class="plr-full-r1">\
+                            <input type="text" id="${current_div[0].id}_name" class="inputFullName" value="${row.playername}">\
+                            <input type="number" id="${current_div[0].id}_cost" class="inputFullAmount" value="${row.betamount}">\
+                        </div>\
+                        <div class="plr-full-r2">\
+                            <input type="text" id="${current_div[0].id}_exp" class="inputFullExp" value="${row.exp_date}">\
+                        </div>\
+                        <div class="plr-full-r3">\
+                            <input type="text" id="${current_div[0].id}_team" class="inputFullTeam">\
+                        </div>\
+                    </div>\
+    `);
+}
+
+function calculate_expiration_date() {
+    const now = new Date()
+    return new Date(new Date(now).setDate(now.getDate() + 3)).toLocaleString() //TODO nighttime
+}
+
 function sendBet(amount) {
     const token = Cookies.get('csrftoken');
     const row = new Object()
+    row.playername = $('#modal-pl-name').val();
     row.playerid = $('#modal-pl-id').val();
     row.betamount = amount;
+    row.exp_date = calculate_expiration_date();
     jsonData = JSON.stringify(row);
 
     var data = {'jsonData':jsonData, 'csrfmiddlewaretoken':token};
@@ -92,4 +117,7 @@ function sendBet(amount) {
         });
 
     plr_dlg.close();
+    dlg.close();
+
+    set_div(row);
 }
