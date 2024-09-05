@@ -99,7 +99,16 @@ function set_div(row) {
 
 function calculate_expiration_date() {
     const now = new Date()
-    return new Date(new Date(now).setDate(now.getDate() + 3)).toLocaleString() //TODO nighttime
+    let options = {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+        fractionalSecondDigits: 3
+    }
+    return new Date(new Date(now).setDate(now.getDate() + 3)).toLocaleString("it-IT",options) //TODO nighttime
 }
 
 function sendBet(amount) {

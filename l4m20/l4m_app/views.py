@@ -5,7 +5,8 @@ from django.views import View, generic
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 import json
-import datetime
+from datetime import datetime
+from django.utils import timezone
 
 import pytz 
 
@@ -56,14 +57,14 @@ class SendBetView(View):
         bet_obj =  bet.Bet_Obj()
         bet_obj.Amount = int(data['betamount'])
         bet_obj.Player = data['playerid']
-        # bet_obj.Expiration_Date = U.calculate_expiration(datetime.datetime.now(tz=pytz.UTC)) #TODO: exclude nighttime
         bet_obj.Expiration_Date = data['exp_date']
+        exp_date_obj = datetime.strptime(bet_obj.Expiration_Date, '%d/%m/%Y, %H:%M:%S,%f').replace(tzinfo=timezone.get_current_timezone())
 
         player_ = get_object_or_404(player.Player, id=bet_obj.Player)
         bet_new = bet.Bet(Amount=bet_obj.Amount,
                           Player = player_,
                           Best=True,
-                          Expiration_Date=bet_obj.Expiration_Date())
+                          Expiration_Date=exp_date_obj)
         bet_new.save()
 
         params = {}

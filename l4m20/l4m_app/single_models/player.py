@@ -20,6 +20,6 @@ class Player(models.Model):
     RealTeam = models.ForeignKey(on_delete=models.CASCADE,to=C.Constant_Strings.real_team, null=True)
     Team = models.ForeignKey(on_delete=models.CASCADE,to=C.Constant_Strings.team, null=True)
     
-    def __str__(self):
-        #TODO: ID player for identifying
-        return " ".join([self.Name, self.Surname])
+    # def __str__(self):
+    #     #TODO: ID player for identifying
+    #     return " ".join([self.Name, self.Surname])
