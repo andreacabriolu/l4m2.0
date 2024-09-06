@@ -99,6 +99,13 @@ function set_div(row) {
 
 function calculate_expiration_date() {
     const now = new Date()
+    const currentHour = now.getHours();
+    // Account for night time, should the bet datetime be between 00:00 and 07:00, the bet is placed at 07:00
+    // ALERT_IMPROVE: not all markets may feature this delay
+    if (currentHour >= 0 && currentHour < 7) {
+        now.setHours(7, 0, 0, 0);
+    }
+
     let options = {
         year: 'numeric',
         month: 'numeric',
@@ -108,7 +115,7 @@ function calculate_expiration_date() {
         second: 'numeric',
         fractionalSecondDigits: 3
     }
-    return new Date(new Date(now).setDate(now.getDate() + 3)).toLocaleString("it-IT",options) //TODO nighttime
+    return new Date(new Date(now).setDate(now.getDate() + 2)).toLocaleString("it-IT",options) //TODO nighttime
 }
 
 function sendBet(amount) {
