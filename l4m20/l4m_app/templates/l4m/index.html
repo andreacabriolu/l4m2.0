@@ -28,10 +28,19 @@
                     class="modal-form-input">
                 <dl id="dataList">
                     {% for player_gk in players_gk %}
-                    <dt class="dt-content" data-id="{{player_gk.id}}" data-surname="{{player_gk.Surname}}"
-                        data-role="{{player_gk.Role}}" data-realteam="{{player_gk.RealTeam__Name}}">
+                    <dt class="dt-content" 
+                    data-id="{{player_gk.id}}" 
+                    data-surname="{{player_gk.Surname}}"
+                    data-role="{{player_gk.Role}}" 
+                    data-realteam="{{player_gk.RealTeam__Name}}"
+                    data-betamount="{{player_gk.bet__Amount}}"
+                    data-expdate="{{player_gk.bet__Expiration_Date}}"
+                    >
                         {{player_gk.Surname}}
-                        ({{player_gk.RealTeam__Name}})</dt>
+                        ({{player_gk.RealTeam__Name}})
+                        {% if player_gk.bet__Amount != None %}
+                        <span class="temp_amount">[puntato a {{player_gk.bet__Amount}}]</span>
+                        {% endif %}
                     {% endfor %}
                 </dl>
             </div>
@@ -62,9 +71,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" id="btnAddBet" onclick="addBet()">Aggiungi la
                     puntata alla lista</button>
-                <button type="button" class="btn btn-primary" id="btnSendBet" onclick="sendBet(
-                    $('#modal-pl-betamount').val()
-                    )">Conferma la
+                <button type="button" class="btn btn-primary" id="btnSendBet" onclick="sendBet()">Conferma la
                     puntata</button>
             </div>
         </dialog>

@@ -7,6 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 import json
 from datetime import datetime
 from django.utils import timezone
+from django.db.models import Q
 
 import pytz 
 
@@ -39,10 +40,22 @@ class IndexView(LoginRequiredMixin, View):
 
     def get(self,request):
         user_team = team.Team.objects.filter(Users__id=request.user.id)[0]
-        players_gk = player.Player.objects.filter(Role="P").select_related('RealTeam').values('id','Surname','Role','RealTeam__Name')
+
+        players_gk = player.Player.objects.\
+            filter(Q(bet__Best=True) | Q(bet__Best=None)).\
+            filter(Role="P").\
+            filter(RealTeam__isnull=False).\
+                values('Surname','RealTeam__Name','bet__Amount','bet__Expiration_Date','bet__Team_id')
+
+        players_def = player.Player.objects.filter(Role="D").select_related('RealTeam').values('id','Surname','Role','RealTeam__Name')
+        players_cc = player.Player.objects.filter(Role="C").select_related('RealTeam').values('id','Surname','Role','RealTeam__Name')
+        players_fw = player.Player.objects.filter(Role="A").select_related('RealTeam').values('id','Surname','Role','RealTeam__Name')
         params = { 
             'user_team': user_team,
             'players_gk':players_gk,
+            'players_def':players_def,
+            'players_cc':players_cc,
+            'players_fw':players_fw,
           }
         
         return render(request, self.template_name, params)
@@ -58,11 +71,13 @@ class SendBetView(View):
         bet_obj.Amount = int(data['betamount'])
         bet_obj.Player = data['playerid']
         bet_obj.Expiration_Date = data['exp_date']
+        bet_obj.Team = data['team']
         exp_date_obj = datetime.strptime(bet_obj.Expiration_Date, '%d/%m/%Y, %H:%M:%S,%f').replace(tzinfo=timezone.get_current_timezone())
 
         player_ = get_object_or_404(player.Player, id=bet_obj.Player)
         bet_new = bet.Bet(Amount=bet_obj.Amount,
                           Player = player_,
+                          Team = bet_obj.Team,
                           Best=True,
                           Expiration_Date=exp_date_obj)
         bet_new.save()

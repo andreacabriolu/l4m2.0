@@ -35,6 +35,8 @@ window.addEventListener('DOMContentLoaded', event => {
         player.surname = $(this)[0].dataset.surname;
         player.realteam = $(this)[0].dataset.realteam;
         player.role = $(this)[0].dataset.role;
+        player.betamount = $(this)[0].dataset.betamount;
+        player.betexpdate = $(this)[0].dataset.betexpdate;
 
         openPlayerDialog(player);
     });
@@ -56,6 +58,12 @@ function openPlayerDialog(player) {
     $('#modal-pl-name').val(player.surname);
     $('#modal-pl-realteam').val(player.realteam);
     $('#modal-pl-role').val(RoleNames[player.role]);
+    if(player.betamount != null) $('#modal-pl-betamount').val(player.betamount);
+    if(player.betexpdate != null) {
+        $('#span-betexpire').show();
+        $('#modal-pl-bettime').show();
+        $('#modal-pl-betexpdate').val(player.betexpdate);
+    }
     
     plr_dlg.showModal();
 }
@@ -111,12 +119,12 @@ function calculate_expiration_date() {
     return new Date(new Date(now).setDate(now.getDate() + 3)).toLocaleString("it-IT",options) //TODO nighttime
 }
 
-function sendBet(amount) {
+function sendBet(user_team) {
     const token = Cookies.get('csrftoken');
     const row = new Object()
     row.playername = $('#modal-pl-name').val();
     row.playerid = $('#modal-pl-id').val();
-    row.betamount = amount;
+    row.betamount = $('#modal-pl-betamount').val();
     row.exp_date = calculate_expiration_date();
     row.team = $('#user_team_id').val();
     jsonData = JSON.stringify(row);

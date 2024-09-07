@@ -9,9 +9,9 @@ class Market(models.Model):
                 ("C", _("Chiuso")),
                 )
     
-    Session_date = models.CharField(max_length=100)
+    Name = models.CharField(max_length=100)
     Status = models.CharField(max_length=1, choices=STATUSES)
     Competition = models.ForeignKey(on_delete=models.CASCADE, to=C.Constant_Strings.competition, null=True)
     
     def __str__(self):
-        return " ".join([self.Session_date])
+        return " ".join([self.Name])
