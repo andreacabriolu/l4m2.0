@@ -37,13 +37,10 @@ window.addEventListener('DOMContentLoaded', event => {
         player.role = $(this)[0].dataset.role;
         player.betamount = $(this)[0].dataset.betamount;
         player.betexpdate = $(this)[0].dataset.betexpdate;
+        player.betteam = $(this)[0].dataset.betteam;
 
         openPlayerDialog(player);
     });
-
-    $('#span-betexpire').hide();
-    $('#modal-pl-bettime').hide();
-
 })
 
 function openPlayerDialog(player) {
@@ -54,14 +51,21 @@ function openPlayerDialog(player) {
          'A':'ATTACCANTE',
          '': ''};
 
+    if(!Object.is(player.name, undefined)) { 
+        player.name = player.name + ' ' }
+    else {
+        player.name = ''
+    }
     $('#modal-pl-id').val(player.id);
-    $('#modal-pl-name').val(player.surname);
+    $('#modal-pl-name').val(player.name + player.surname);
     $('#modal-pl-realteam').val(player.realteam);
     $('#modal-pl-role').val(RoleNames[player.role]);
-    if(player.betamount != null) $('#modal-pl-betamount').val(player.betamount);
-    if(player.betexpdate != null) {
-        $('#span-betexpire').show();
-        $('#modal-pl-bettime').show();
+    if(player.betamount != 'None') 
+        $('#modal-pl-betamount').val(player.betamount);
+    $('#modal-currentbet').hide();
+    if(player.betexpdate != 'None') {
+        $('#modal-currentbet').show();
+        $('#modal-pl-bestbetteam').val(player.betteam);
         $('#modal-pl-betexpdate').val(player.betexpdate);
     }
     

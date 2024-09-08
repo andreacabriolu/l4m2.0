@@ -198,9 +198,10 @@
   }
 
   .modal-form-input-bettime {
-    width: 50%;
     font-size: larger;
     color: indianred;
+    font-weight: bold;
+    text-align: center;
   }
 
   .modal-form-input-anag {
@@ -210,4 +211,22 @@
 
   .plr-div-hidden {
     visibility: hidden;
+  }
+
+  .modal-form-input-currentbet {
+    margin: 5%;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .modal-label-bestbet {
+    margin-left: 2%;
+    margin-right: 2%;
+  }
+
+  .modal-form-input-betteam {
+    font-size: larger;
+    color: indianred;
+    font-weight: bold;
+    text-align: center;
   }

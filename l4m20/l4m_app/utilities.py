@@ -1,5 +1,10 @@
-import datetime
+from .models import *
+from django.db.models import Q
 
-def calculate_expiration(start_date):
 
-    return start_date+datetime.timedelta(3)
+def get_query_players(filter_role):
+    return player.Player.objects.\
+            filter(Q(bet__Best=True) | Q(bet__Best=None)).\
+            filter(Role=filter_role).\
+            filter(RealTeam__isnull=False).\
+                values('id','Surname','Name','Role','RealTeam__Name','bet__Amount','bet__Expiration_Date','bet__Team_id')

@@ -41,15 +41,11 @@ class IndexView(LoginRequiredMixin, View):
     def get(self,request):
         user_team = team.Team.objects.filter(Users__id=request.user.id)[0]
 
-        players_gk = player.Player.objects.\
-            filter(Q(bet__Best=True) | Q(bet__Best=None)).\
-            filter(Role="P").\
-            filter(RealTeam__isnull=False).\
-                values('Surname','RealTeam__Name','bet__Amount','bet__Expiration_Date','bet__Team_id')
+        players_gk = U.get_query_players("P")
+        players_def = U.get_query_players("D")
+        players_cc = U.get_query_players("C")
+        players_fw = U.get_query_players("A")
 
-        players_def = player.Player.objects.filter(Role="D").select_related('RealTeam').values('id','Surname','Role','RealTeam__Name')
-        players_cc = player.Player.objects.filter(Role="C").select_related('RealTeam').values('id','Surname','Role','RealTeam__Name')
-        players_fw = player.Player.objects.filter(Role="A").select_related('RealTeam').values('id','Surname','Role','RealTeam__Name')
         params = { 
             'user_team': user_team,
             'players_gk':players_gk,

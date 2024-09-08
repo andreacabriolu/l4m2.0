@@ -17,7 +17,7 @@
         <h1>ROSA</h1>
         <!-- Canvas? React? Divs? -->
         <!-- <canvas id="can" class="can-style"></canvas> -->
-         <input id="user_team_id" type="hidden" value="{{user_team}}">
+        <input id="user_team_id" type="hidden" value="{{user_team}}">
 
         <dialog id="dlg open">
             <div class="modal-header">
@@ -28,20 +28,16 @@
                     class="modal-form-input">
                 <dl id="dataList">
                     {% for player_gk in players_gk %}
-                    <dt class="dt-content" 
-                    data-id="{{player_gk.id}}" 
-                    data-surname="{{player_gk.Surname}}"
-                    data-role="{{player_gk.Role}}" 
-                    data-realteam="{{player_gk.RealTeam__Name}}"
-                    data-betamount="{{player_gk.bet__Amount}}"
-                    data-expdate="{{player_gk.bet__Expiration_Date}}"
-                    >
+                    <dt class="dt-content" data-id="{{player_gk.id}}" data-surname="{{player_gk.Surname}}"
+                        data-role="{{player_gk.Role}}" data-realteam="{{player_gk.RealTeam__Name}}"
+                        data-betamount="{{player_gk.bet__Amount}}" data-betexpdate="{{player_gk.bet__Expiration_Date}}"
+                        data-betteam="{{player_gk.bet__Team_id}}">
                         {{player_gk.Surname}}
                         ({{player_gk.RealTeam__Name}})
                         {% if player_gk.bet__Amount != None %}
                         <span class="temp_amount">[puntato a {{player_gk.bet__Amount}}]</span>
                         {% endif %}
-                    {% endfor %}
+                        {% endfor %}
                 </dl>
             </div>
         </dialog>
@@ -64,8 +60,12 @@
                 <div id="modal-pl-bet" class="modal-bet">
                     <span class="modal-label">Puntata</span>
                     <input id="modal-pl-betamount" type="number" min="1" value="1" class="modal-form-input-bet">
-                    <span id="span-betexpire" class="modal-label">Scadenza</span>
-                    <input id="modal-pl-bettime" type="text" class="modal-form-input-bettime" readonly>
+                    <div id="modal-currentbet" class="modal-form-input-currentbet">
+                        <span id="span-betexpire" class="modal-label-bestbet">Scadenza</span>
+                        <input id="modal-pl-betexpdate" type="text" class="modal-form-input-bettime" readonly>
+                        <span id="span-bestbetteam" class="modal-label-bestbet">Squadra con migliore offerta</span>
+                        <input id="modal-pl-bestbetteam" type="text" class="modal-form-input-betteam" readonly>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -79,9 +79,7 @@
         <div class="div-container" id="main-div-container">
             <div class="gk-container" id="gks">
                 <div id="gk1_div" class="pl-div">
-                    <div id="gk1_div_empty">
-                        <input type="text" id="gk1" class="inputPlyr" readonly value="SLOT VUOTO">
-                    </div>
+                    <input type="text" id="gk1" class="inputPlyr" readonly value="SLOT VUOTO">
                 </div>
                 <div id="gk2_div" class="pl-div">
                     <input type="text" id="gk2" class="inputPlyr" readonly value="SLOT VUOTO">
