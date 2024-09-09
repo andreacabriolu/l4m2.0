@@ -216,7 +216,7 @@
   .modal-form-input-currentbet {
     margin: 5%;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
   }
 
   .modal-label-bestbet {
@@ -225,6 +225,13 @@
   }
 
   .modal-form-input-betteam {
+    font-size: larger;
+    color: indianred;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .modal-form-input-betteamvalue {
     font-size: larger;
     color: indianred;
     font-weight: bold;

@@ -17,7 +17,8 @@
         <h1>ROSA</h1>
         <!-- Canvas? React? Divs? -->
         <!-- <canvas id="can" class="can-style"></canvas> -->
-        <input id="user_team_id" type="hidden" value="{{user_team}}">
+        <input id="user_team_id" type="hidden" value="{{user_team.id}}">
+        <input id="user_team_name" type="hidden" value="{{user_team.Name}}">
 
         <dialog id="dlg open">
             <div class="modal-header">
@@ -31,11 +32,11 @@
                     <dt class="dt-content" data-id="{{player_gk.id}}" data-surname="{{player_gk.Surname}}"
                         data-role="{{player_gk.Role}}" data-realteam="{{player_gk.RealTeam__Name}}"
                         data-betamount="{{player_gk.bet__Amount}}" data-betexpdate="{{player_gk.bet__Expiration_Date}}"
-                        data-betteam="{{player_gk.bet__Team_id}}">
+                        data-betteam="{{player_gk.bet__Team_id__Name}}">
                         {{player_gk.Surname}}
                         ({{player_gk.RealTeam__Name}})
                         {% if player_gk.bet__Amount != None %}
-                        <span class="temp_amount">[puntato a {{player_gk.bet__Amount}}]</span>
+                        <span class="temp_amount">[puntato a {{player_gk.bet__Amount}} da {{player_gk.bet__Team_id__Name}}]</span>
                         {% endif %}
                         {% endfor %}
                 </dl>
@@ -65,6 +66,8 @@
                         <input id="modal-pl-betexpdate" type="text" class="modal-form-input-bettime" readonly>
                         <span id="span-bestbetteam" class="modal-label-bestbet">Squadra con migliore offerta</span>
                         <input id="modal-pl-bestbetteam" type="text" class="modal-form-input-betteam" readonly>
+                        <span id="span-bestbet" class="modal-label-bestbet">Migliore offerta</span>
+                        <input id="modal-pl-bestbet" type="text" class="modal-form-input-betteamvalue" readonly>
                     </div>
                 </div>
             </div>

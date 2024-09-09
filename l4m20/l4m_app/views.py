@@ -39,7 +39,7 @@ class IndexView(LoginRequiredMixin, View):
     login_url = '/login/'
 
     def get(self,request):
-        user_team = team.Team.objects.filter(Users__id=request.user.id)[0]
+        user_team = team.Team.objects.filter(Users__id=request.user.id).values('id','Name')[0]
 
         players_gk = U.get_query_players("P")
         players_def = U.get_query_players("D")
@@ -67,13 +67,14 @@ class SendBetView(View):
         bet_obj.Amount = int(data['betamount'])
         bet_obj.Player = data['playerid']
         bet_obj.Expiration_Date = data['exp_date']
-        bet_obj.Team = data['team']
+        bet_obj.Team = data['userteamid']
         exp_date_obj = datetime.strptime(bet_obj.Expiration_Date, '%d/%m/%Y, %H:%M:%S,%f').replace(tzinfo=timezone.get_current_timezone())
 
         player_ = get_object_or_404(player.Player, id=bet_obj.Player)
+        user_team = get_object_or_404(team.Team, id=bet_obj.Team) #TODO: how to avoid this double fetch?
         bet_new = bet.Bet(Amount=bet_obj.Amount,
                           Player = player_,
-                          Team = bet_obj.Team,
+                          Team = user_team,
                           Best=True,
                           Expiration_Date=exp_date_obj)
         bet_new.save()
