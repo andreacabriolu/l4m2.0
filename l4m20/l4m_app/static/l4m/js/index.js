@@ -4,17 +4,17 @@ let player;
 let current_div;
 
 window.addEventListener('DOMContentLoaded', event => {
+    // gkcont = document.getElementById('gks');
+
+    // gkcont.addEventListener("click", function (e) {
+    //     openDialog(e['target'].id);
+    // })
 
     dlg = document.getElementById('dlg open');
     plr_dlg = document.getElementById('dlg_player open');
     search = document.getElementById('modal-ob-search');
 
     gkdivs = document.getElementsByClassName('gk-div');
-    gkcont = document.getElementById('gks');
-
-    gkcont.addEventListener("click", function (e) {
-        openDialog(e['target'].id);
-    })
 
     var closeMain = document.getElementById("closeMain");
     var closePlayer = document.getElementById("closePlayer");
@@ -74,7 +74,7 @@ function openPlayerDialog(player) {
 }
 
 function openDialog(id) {
-    current_div = $('#'+id+'_div');
+    current_div = $('#'+id+'_div'); //TODO:put small timespan?
     dlg.showModal();
 }
 
@@ -97,14 +97,11 @@ function searchPlayer() {
 function set_div(row) {
     current_div.html(`<div id="${current_div[0].id}_full" class="plr-full">\
                         <div class="plr-full-r1">\
-                            <input type="text" id="${current_div[0].id}_name" class="inputFullName" value="${row.playername}">\
-                            <input type="number" id="${current_div[0].id}_cost" class="inputFullAmount" value="${row.betamount}">\
+                            <input type="text" id="${current_div[0].id}_name" class="inputFullName" value="${row.playername}" readonly>\
+                            <input type="text" id="${current_div[0].id}_cost" class="inputFullAmount" value="${row.betamount}" readonly>\
                         </div>\
                         <div class="plr-full-r2">\
-                            <input type="text" id="${current_div[0].id}_exp" class="inputFullExp" value="${row.exp_date}">\
-                        </div>\
-                        <div class="plr-full-r3">\
-                            <input type="text" id="${current_div[0].id}_team" class="inputFullTeam" value="${row.userteamname}">\
+                            <input type="text" id="${current_div[0].id}_exp" class="inputFullExp" value="${row.exp_date}" readonly>\
                         </div>\
                     </div>\
     `);
@@ -133,6 +130,7 @@ function sendBet() {
     row.exp_date = calculate_expiration_date();
     row.userteamid = $('#user_team_id').val();
     row.userteamname = $('#user_team_name').val();
+    row.slot = current_div[0].id;
     jsonData = JSON.stringify(row);
 
     var data = {'jsonData':jsonData, 'csrfmiddlewaretoken':token};

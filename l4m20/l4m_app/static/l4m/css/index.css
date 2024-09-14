@@ -43,6 +43,10 @@
     }
 }
 
+.plr-full {
+  cursor: pointer;
+}
+
 .plr-full-r1 {
   display: flex;
 }
@@ -60,7 +64,7 @@
     margin:20px;
     background-image: linear-gradient(to bottom, rgb(223, 237, 251),rgb(231, 231, 231));
     color: blue;
-    cursor: pointer;
+    cursor: pointer !important;
     text-align: center;
     font-weight: bolder;
     font-size: large;
@@ -73,7 +77,7 @@
     margin:20px;
     background-image: linear-gradient(to bottom, rgb(223, 237, 251),rgb(231, 231, 231));
     /* color: blue; */
-    cursor: pointer;
+    cursor: pointer !important;
     text-align: center;
     font-weight: bolder;
     font-size: large;
@@ -89,6 +93,7 @@
   width: 75%;
   background: none;
   color: crimson;
+  cursor: pointer !important;
 }
 
 .inputFullAmount {
@@ -99,6 +104,7 @@
     text-align: center;
     font-size: large;
     font-weight: bolder;
+    cursor: pointer !important;
 }
 
 .inputFullExp {
@@ -107,6 +113,7 @@
   background: none;
   text-align: center;
   width: 100%;
+  cursor: pointer !important;
 }
 
 .inputFullTeam {
@@ -116,6 +123,7 @@
   color: crimson;
   text-align: center;
   width: 100%;
+  cursor: pointer !important;
 }
 
 #modal-ob-search {

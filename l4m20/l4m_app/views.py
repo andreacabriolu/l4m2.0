@@ -41,10 +41,12 @@ class IndexView(LoginRequiredMixin, View):
     def get(self,request):
         user_team = team.Team.objects.filter(Users__id=request.user.id).values('id','Name')[0]
 
-        players_gk = U.get_query_players("P")
-        players_def = U.get_query_players("D")
-        players_cc = U.get_query_players("C")
-        players_fw = U.get_query_players("A")
+        players_gk = U.get_players("P")
+        players_def = U.get_players("D")
+        players_cc = U.get_players("C")
+        players_fw = U.get_players("A")
+
+        my_best_bets = U.get_my_best_bets(user_team['id'])
 
         params = { 
             'user_team': user_team,
@@ -52,6 +54,7 @@ class IndexView(LoginRequiredMixin, View):
             'players_def':players_def,
             'players_cc':players_cc,
             'players_fw':players_fw,
+            'my_best_bets':my_best_bets,
           }
         
         return render(request, self.template_name, params)
@@ -68,6 +71,7 @@ class SendBetView(View):
         bet_obj.Player = data['playerid']
         bet_obj.Expiration_Date = data['exp_date']
         bet_obj.Team = data['userteamid']
+        bet_obj.Slot = data['slot']
         exp_date_obj = datetime.strptime(bet_obj.Expiration_Date, '%d/%m/%Y, %H:%M:%S,%f').replace(tzinfo=timezone.get_current_timezone())
 
         player_ = get_object_or_404(player.Player, id=bet_obj.Player)
@@ -76,7 +80,8 @@ class SendBetView(View):
                           Player = player_,
                           Team = user_team,
                           Best=True,
-                          Expiration_Date=exp_date_obj)
+                          Expiration_Date=exp_date_obj,
+                          Slot=bet_obj.Slot)
         bet_new.save()
 
         params = {}

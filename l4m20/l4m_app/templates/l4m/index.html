@@ -81,13 +81,24 @@
 
         <div class="div-container" id="main-div-container">
             <div class="gk-container" id="gks">
-                <div id="gk1_div" class="pl-div">
+                {% if my_best_bets.Slot == "gk1_div" %}
+                    <div id="gk1_div_full" class="plr-full">
+                        <div class="plr-full-r1">
+                            <input type="text" id="gk1_div_name" class="inputFullName" value="" readonly>
+                            <input type="text" id="gk1_div_cost" class="inputFullAmount" value="${row.betamount}" readonly>
+                        </div>
+                        <div class="plr-full-r2">
+                            <input type="text" id="gk1_div_exp" class="inputFullExp" value="${row.exp_date}" readonly>
+                        </div>
+                    </div>
+                {% endif %}
+                <div id="gk1_div" class="pl-div" onclick="openDialog('gk1')">
                     <input type="text" id="gk1" class="inputPlyr" readonly value="SLOT VUOTO">
                 </div>
-                <div id="gk2_div" class="pl-div">
+                <div id="gk2_div" class="pl-div" onclick="openDialog('gk2')">
                     <input type="text" id="gk2" class="inputPlyr" readonly value="SLOT VUOTO">
                 </div>
-                <div id="gk3_div" class="pl-div">
+                <div id="gk3_div" class="pl-div" onclick="openDialog('gk3')">
                     <input type="text" id="gk3" class="inputPlyr" readonly value="SLOT VUOTO">
                 </div>
             </div>
