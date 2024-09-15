@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'l4m_app.apps.L4MAppConfig',
     'widget_tweaks',
+    # 'django-vite',
 ]
 
 MIDDLEWARE = [
