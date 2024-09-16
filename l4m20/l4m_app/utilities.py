@@ -1,5 +1,6 @@
 from .models import *
 from django.db.models import Q
+import json
 
 # SELECT
 # 	"pl"."id","pl."Surname","pl."Role,
@@ -28,3 +29,8 @@ def get_my_best_bets(teamid):
     return bet.Bet.objects.\
         filter(Q(Best=True) & Q(Team_id=teamid)).\
         values('Amount','Player_id__Surname','Expiration_Date','Slot')
+
+def list_my_best_bets(mbb):
+    ls = list(mbb).__str__()
+    lsr = ls.replace('\'','"')
+    return lsr

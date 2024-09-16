@@ -46,7 +46,7 @@ class IndexView(LoginRequiredMixin, View):
         players_cc = U.get_players("C")
         players_fw = U.get_players("A")
 
-        my_best_bets = U.get_my_best_bets(user_team['id'])
+        my_best_bets = U.list_my_best_bets(U.get_my_best_bets(user_team['id']))
 
         params = { 
             'user_team': user_team,
@@ -82,6 +82,12 @@ class SendBetView(View):
                           Best=True,
                           Expiration_Date=exp_date_obj,
                           Slot=bet_obj.Slot)
+        #edit old bet
+        bet_old = bet.Bet.objects.filter(Q(Best=True) & Q(Player=player_))
+        if len(list(bet_old)) == 1: #there is an old best bet
+            bet_old[0].Best = False
+            bet_old[0].save()
+
         bet_new.save()
 
         params = {}

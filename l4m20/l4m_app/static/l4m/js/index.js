@@ -3,12 +3,26 @@ let search;
 let player;
 let current_div;
 
-window.addEventListener('DOMContentLoaded', event => {
-    // gkcont = document.getElementById('gks');
+function fill_slots(mbb) {
+    mbb.forEach(bet => {
+        div_id = bet.Slot
+        if (div_id != '') {
+            $("#" + div_id).html(`<div id="${div_id}_full" class="plr-full">\
+                <div class="plr-full-r1">\
+                    <input type="text" id="${div_id}_name" class="inputFullName" value="${bet.Player_id__Surname}" readonly>\
+                    <input type="text" id="${div_id}_cost" class="inputFullAmount" value="${bet.Amount}" readonly>\
+                </div>\
+                <div class="plr-full-r2">\
+                    <input type="text" id="${div_id}_exp" class="inputFullExp" value="${bet.Expiration_Date}" readonly>\
+                </div>\
+            </div>\
+        `);
+        }
+    });
+}
 
-    // gkcont.addEventListener("click", function (e) {
-    //     openDialog(e['target'].id);
-    // })
+window.addEventListener('DOMContentLoaded', event => {
+    fill_slots(JSON.parse($('#my_best_bets').val()));
 
     dlg = document.getElementById('dlg open');
     plr_dlg = document.getElementById('dlg_player open');
@@ -45,14 +59,16 @@ window.addEventListener('DOMContentLoaded', event => {
 
 function openPlayerDialog(player) {
     var RoleNames = {
-         'P':'PORTIERE', 
-         'D':'DIFENSORE',
-         'C':'CENTROCAMPISTA',
-         'A':'ATTACCANTE',
-         '': ''};
+        'P': 'PORTIERE',
+        'D': 'DIFENSORE',
+        'C': 'CENTROCAMPISTA',
+        'A': 'ATTACCANTE',
+        '': ''
+    };
 
-    if(!Object.is(player.name, undefined)) { 
-        player.name = player.name + ' ' }
+    if (!Object.is(player.name, undefined)) {
+        player.name = player.name + ' '
+    }
     else {
         player.name = ''
     }
@@ -60,21 +76,21 @@ function openPlayerDialog(player) {
     $('#modal-pl-name').val(player.name + player.surname);
     $('#modal-pl-realteam').val(player.realteam);
     $('#modal-pl-role').val(RoleNames[player.role]);
-    if(player.betamount != 'None') 
+    if (player.betamount != 'None')
         $('#modal-pl-betamount').val(parseInt(player.betamount) + 1);
     $('#modal-currentbet').hide();
-    if(player.betexpdate != 'None') {
+    if (player.betexpdate != 'None') {
         $('#modal-currentbet').show();
         $('#modal-pl-bestbetteam').val(player.betteam);
         $('#modal-pl-betexpdate').val(player.betexpdate);
         $('#modal-pl-bestbet').val(player.betamount);
     }
-    
+
     plr_dlg.showModal();
 }
 
 function openDialog(id) {
-    current_div = $('#'+id+'_div'); //TODO:put small timespan?
+    current_div = $('#' + id + '_div'); //TODO:put small timespan?
     dlg.showModal();
 }
 
@@ -118,7 +134,7 @@ function calculate_expiration_date() {
         second: 'numeric',
         fractionalSecondDigits: 3
     }
-    return new Date(new Date(now).setDate(now.getDate() + 3)).toLocaleString("it-IT",options) //TODO nighttime
+    return new Date(new Date(now).setDate(now.getDate() + 3)).toLocaleString("it-IT", options) //TODO nighttime
 }
 
 function sendBet() {
@@ -133,10 +149,10 @@ function sendBet() {
     row.slot = current_div[0].id;
     jsonData = JSON.stringify(row);
 
-    var data = {'jsonData':jsonData, 'csrfmiddlewaretoken':token};
+    var data = { 'jsonData': jsonData, 'csrfmiddlewaretoken': token };
 
-    $.post("/l4m/auction/sendBet/", data, function(response){
-        });
+    $.post("/l4m/auction/sendBet/", data, function (response) {
+    });
 
     plr_dlg.close();
     dlg.close();

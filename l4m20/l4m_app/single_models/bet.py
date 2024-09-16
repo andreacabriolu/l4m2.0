@@ -13,11 +13,11 @@ class Bet(models.Model):
     Market = models.ForeignKey(on_delete=models.CASCADE, to=C.Constant_Strings.market, null=True)
     Team = models.ForeignKey(on_delete=models.CASCADE, to=C.Constant_Strings.team, null=True)
     Session = models.ForeignKey(on_delete=models.CASCADE, to=C.Constant_Strings.session, null=True)
-    Expiration_Date = models.DateTimeField()
+    Expiration_Date = models.TextField(max_length=100)
     Slot = models.TextField(max_length=2)
     
-    def __str__(self):
-        return " ".join([self.Time+self.Player])
+    # def __str__(self):
+    #     return " ".join([self.Time+self.Player])
 
 class Bet_Obj():
     Name=str
