@@ -28,13 +28,11 @@
     cursor: pointer;
     border-radius: 30px;
     color: #0000;
-  font-family: sans-serif;
-   font-weight: bold;
-  /* background: 
-    repeating-radial-gradient(#000 0 0.0001%,#fff 0 0.0002%) 50% 0/2500px 2500px,
-    repeating-conic-gradient(#000 0 0.0001%,#fff 0 0.0002%) 50% 50%/2500px 2500px; */
-  background-blend-mode: difference;
-  mix-blend-mode: lighten;
+    font-family: sans-serif;
+    font-weight: bold;
+    background-blend-mode: difference;
+    mix-blend-mode: lighten;
+    flex-wrap: wrap;
 }
 
 @media (max-width: 800px) {
@@ -44,7 +42,9 @@
 }
 
 .plr-full {
-  cursor: pointer;
+  cursor: default;
+  border-radius: 30px;
+  box-shadow: crimson 0 0 10px 5px;
 }
 
 .plr-full-r1 {
@@ -52,7 +52,7 @@
 }
 
 .plr-full-r2 {
-  display: flex;
+  width: 100%;
 }
 
 .plr-full-r3 {

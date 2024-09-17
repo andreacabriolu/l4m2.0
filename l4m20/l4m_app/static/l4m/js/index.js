@@ -7,15 +7,15 @@ function fill_slots(mbb) {
     mbb.forEach(bet => {
         div_id = bet.Slot
         if (div_id != '') {
-            $("#" + div_id).html(`<div id="${div_id}_full" class="plr-full">\
-                <div class="plr-full-r1">\
+            $("#" + div_id).addClass('plr-full');
+            $("#" + div_id).prop('onclick', null).off("click");
+            $("#" + div_id).html(`<div class="plr-full-r1">\
                     <input type="text" id="${div_id}_name" class="inputFullName" value="${bet.Player_id__Surname}" readonly>\
                     <input type="text" id="${div_id}_cost" class="inputFullAmount" value="${bet.Amount}" readonly>\
                 </div>\
                 <div class="plr-full-r2">\
                     <input type="text" id="${div_id}_exp" class="inputFullExp" value="${bet.Expiration_Date}" readonly>\
                 </div>\
-            </div>\
         `);
         }
     });
@@ -90,7 +90,7 @@ function openPlayerDialog(player) {
 }
 
 function openDialog(id) {
-    current_div = $('#' + id + '_div'); //TODO:put small timespan?
+    current_div = $('#' + id + '_div');
     dlg.showModal();
 }
 
@@ -111,15 +111,15 @@ function searchPlayer() {
 }
 
 function set_div(row) {
-    current_div.html(`<div id="${current_div[0].id}_full" class="plr-full">\
-                        <div class="plr-full-r1">\
+    current_div.addClass('plr-full');
+    current_div.prop('onclick', null).off("click");
+    current_div.html(`<div class="plr-full-r1">\
                             <input type="text" id="${current_div[0].id}_name" class="inputFullName" value="${row.playername}" readonly>\
                             <input type="text" id="${current_div[0].id}_cost" class="inputFullAmount" value="${row.betamount}" readonly>\
                         </div>\
                         <div class="plr-full-r2">\
                             <input type="text" id="${current_div[0].id}_exp" class="inputFullExp" value="${row.exp_date}" readonly>\
                         </div>\
-                    </div>\
     `);
 }
 
@@ -131,8 +131,7 @@ function calculate_expiration_date() {
         day: 'numeric',
         hour: 'numeric',
         minute: 'numeric',
-        second: 'numeric',
-        fractionalSecondDigits: 3
+        second: 'numeric'
     }
     return new Date(new Date(now).setDate(now.getDate() + 3)).toLocaleString("it-IT", options) //TODO nighttime
 }

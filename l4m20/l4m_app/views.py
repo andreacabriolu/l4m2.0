@@ -72,7 +72,7 @@ class SendBetView(View):
         bet_obj.Expiration_Date = data['exp_date']
         bet_obj.Team = data['userteamid']
         bet_obj.Slot = data['slot']
-        exp_date_obj = datetime.strptime(bet_obj.Expiration_Date, '%d/%m/%Y, %H:%M:%S,%f').replace(tzinfo=timezone.get_current_timezone())
+        exp_date_obj = datetime.strptime(bet_obj.Expiration_Date, '%d/%m/%Y, %H:%M:%S').replace(tzinfo=timezone.get_current_timezone())
 
         player_ = get_object_or_404(player.Player, id=bet_obj.Player)
         user_team = get_object_or_404(team.Team, id=bet_obj.Team) #TODO: how to avoid this double fetch?
