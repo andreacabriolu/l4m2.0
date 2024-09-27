@@ -21,9 +21,9 @@
         <input id="user_team_name" type="hidden" value="{{user_team.Name}}">
         <input id="my_best_bets" type="hidden" value="{{my_best_bets}}">
 
-        <dialog id="dlg open">
+        <dialog id="dlg_gk_open">
             <div class="modal-header">
-                <span class="close" id="closeMain"><img src="{% static 'l4m/images/close-blue.png' %}"></span>
+                <span class="close" id="closeGk" onclick="closeDlg(this)"><img src="{% static 'l4m/images/close-blue.png' %}"></span>
             </div>
             <div class="modal-body">
                 <input id="modal-ob-search" type="text" onkeyup="searchPlayer()" placeholder="Cerca giocatore"
@@ -44,10 +44,33 @@
             </div>
         </dialog>
 
-        <dialog id="dlg_player open" class="dlg-player">
+        <dialog id="dlg_df_open">
+            <div class="modal-header">
+                <span class="close" id="closeDf" onclick="closeDlg(this)"><img src="{% static 'l4m/images/close-blue.png' %}"></span>
+            </div>
+            <div class="modal-body">
+                <input id="modal-ob-search" type="text" onkeyup="searchPlayer()" placeholder="Cerca giocatore"
+                    class="modal-form-input">
+                <dl id="dataList">
+                    {% for player_def in players_def %}
+                    <dt class="dt-content" data-id="{{player_def.id}}" data-surname="{{player_def.Surname}}"
+                        data-role="{{player_def.Role}}" data-realteam="{{player_def.RealTeam__Name}}"
+                        data-betamount="{{player_def.bet__Amount}}" data-betexpdate="{{player_def.bet__Expiration_Date}}"
+                        data-betteam="{{player_def.bet__Team_id__Name}}">
+                        {{player_def.Surname}}
+                        ({{player_def.RealTeam__Name}})
+                        {% if player_def.bet__Amount != None %}
+                            <span class="temp_amount">[puntato a {{player_def.bet__Amount}} da {{player_def.bet__Team_id__Name}}]</span>
+                        {% endif %}
+                        {% endfor %}
+                </dl>
+            </div>
+        </dialog>
+
+        <dialog id="dlg_player_open" class="dlg-player">
             <div class="modal-header">
                 <p></p>
-                <span class="close" id="closePlayer"><img src="{% static 'l4m/images/close-blue.png' %}"></span>
+                <span class="closeP" id="closePlayer" onclick="closeDlg(this)"><img src="{% static 'l4m/images/close-blue.png' %}"></span>
             </div>
             <div class="modal-body">
                 <div id="modal-pl-anag" class="modal-anag">
@@ -82,17 +105,6 @@
 
         <div class="div-container" id="main-div-container">
             <div class="gk-container" id="gks">
-                {% if my_best_bets.Slot == "gk1_div" %}
-                    <div id="gk1_div_full" class="plr-full">
-                        <div class="plr-full-r1">
-                            <input type="text" id="gk1_div_name" class="inputFullName" value="" readonly>
-                            <input type="text" id="gk1_div_cost" class="inputFullAmount" value="${row.betamount}" readonly>
-                        </div>
-                        <div class="plr-full-r2">
-                            <input type="text" id="gk1_div_exp" class="inputFullExp" value="${row.exp_date}" readonly>
-                        </div>
-                    </div>
-                {% endif %}
                 <div id="gk1_div" class="pl-div" onclick="openDialog('gk1')">
                     <input type="text" id="gk1" class="inputPlyr" readonly value="SLOT VUOTO">
                 </div>
@@ -101,6 +113,33 @@
                 </div>
                 <div id="gk3_div" class="pl-div" onclick="openDialog('gk3')">
                     <input type="text" id="gk3" class="inputPlyr" readonly value="SLOT VUOTO">
+                </div>
+            </div>
+
+            <div class="def-container" id="defs">
+                <div id="df1_div" class="pl-div" onclick="openDialog('df1')">
+                    <input type="text" id="def1" class="inputPlyr" readonly value="SLOT VUOTO">
+                </div>
+                <div id="df2_div" class="pl-div" onclick="openDialog('df2')">
+                    <input type="text" id="def2" class="inputPlyr" readonly value="SLOT VUOTO">
+                </div>
+                <div id="df3_div" class="pl-div" onclick="openDialog('df3')">
+                    <input type="text" id="def3" class="inputPlyr" readonly value="SLOT VUOTO">
+                </div>
+                <div id="df4_div" class="pl-div" onclick="openDialog('df4')">
+                    <input type="text" id="def4" class="inputPlyr" readonly value="SLOT VUOTO">
+                </div>
+                <div id="df5_div" class="pl-div" onclick="openDialog('df5')">
+                    <input type="text" id="def5" class="inputPlyr" readonly value="SLOT VUOTO">
+                </div>
+                <div id="df6_div" class="pl-div" onclick="openDialog('df6')">
+                    <input type="text" id="def6" class="inputPlyr" readonly value="SLOT VUOTO">
+                </div>
+                <div id="df7_div" class="pl-div" onclick="openDialog('df7')">
+                    <input type="text" id="def7" class="inputPlyr" readonly value="SLOT VUOTO">
+                </div>
+                <div id="df8_div" class="pl-div" onclick="openDialog('df8')">
+                    <input type="text" id="def8" class="inputPlyr" readonly value="SLOT VUOTO">
                 </div>
             </div>
         </div>

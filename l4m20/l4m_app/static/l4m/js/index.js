@@ -1,4 +1,4 @@
-let dlg;
+let dlg, plr_dlg;
 let search;
 let player;
 let current_div;
@@ -6,6 +6,7 @@ let current_div;
 function fill_slots(mbb) {
     mbb.forEach(bet => {
         div_id = bet.Slot
+        expDate = bet.Expiration_Date.substr(0,19) //Format, TODO improve, I don't like it
         if (div_id != '') {
             $("#" + div_id).addClass('plr-full');
             $("#" + div_id).prop('onclick', null).off("click");
@@ -14,7 +15,7 @@ function fill_slots(mbb) {
                     <input type="text" id="${div_id}_cost" class="inputFullAmount" value="${bet.Amount}" readonly>\
                 </div>\
                 <div class="plr-full-r2">\
-                    <input type="text" id="${div_id}_exp" class="inputFullExp" value="${bet.Expiration_Date}" readonly>\
+                    <input type="text" id="${div_id}_exp" class="inputFullExp" value="${expDate}" readonly>\
                 </div>\
         `);
         }
@@ -24,23 +25,7 @@ function fill_slots(mbb) {
 window.addEventListener('DOMContentLoaded', event => {
     fill_slots(JSON.parse($('#my_best_bets').val()));
 
-    dlg = document.getElementById('dlg open');
-    plr_dlg = document.getElementById('dlg_player open');
     search = document.getElementById('modal-ob-search');
-
-    gkdivs = document.getElementsByClassName('gk-div');
-
-    var closeMain = document.getElementById("closeMain");
-    var closePlayer = document.getElementById("closePlayer");
-    closeMain.addEventListener("click", function () {
-        dlg.close();
-        search.value = '';
-    })
-
-    closePlayer.addEventListener("click", function () {
-        plr_dlg.close();
-        search.value = '';
-    })
 
     $('.dt-content').on('click', function () {
         const player = new Object();
@@ -56,6 +41,14 @@ window.addEventListener('DOMContentLoaded', event => {
         openPlayerDialog(player);
     });
 })
+
+function closeDlg(el) {
+    parent = el.offsetParent;
+    if(parent != null) {
+        parent.close();
+    }
+
+}
 
 function openPlayerDialog(player) {
     var RoleNames = {
@@ -86,12 +79,16 @@ function openPlayerDialog(player) {
         $('#modal-pl-bestbet').val(player.betamount);
     }
 
-    plr_dlg.showModal();
+    plr_dlg = $('#dlg_player_open')[0];
+    if(plr_dlg != null) 
+        plr_dlg.showModal(); 
 }
 
 function openDialog(id) {
     current_div = $('#' + id + '_div');
-    dlg.showModal();
+    dlg = $('#dlg_'+id.substr(0,2)+'_open')[0];
+    if (dlg!=null) 
+        dlg.showModal();
 }
 
 function searchPlayer() {
