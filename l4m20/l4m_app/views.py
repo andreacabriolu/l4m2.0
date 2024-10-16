@@ -93,3 +93,25 @@ class SendBetView(View):
         params = {}
 
         return render(request, self.template_name, params)
+    
+class GetPlayerInfoView(View):
+
+    def post(self, request):
+        id = request.POST.get("id")
+
+        pl = player.Player.objects.\
+        filter(Q(bet__Best=True) | Q(bet__Best=None)).\
+        values('id','Surname','Name','Role','RealTeam__Name','bet__Amount','bet__Expiration_Date','bet__Team_id__Name').\
+        get(pk=id)
+
+        pl_obj = json.dumps({'Sur':pl['Surname'], 
+                             'Nam':pl['Name'], 
+                             'Rol':pl['Role'],
+                             'RealT':pl['RealTeam__Name'], 
+                             'BetA':pl['bet__Amount'],
+                             'BetE': pl['bet__Expiration_Date'][:-6], #remove final timestamp
+                             'BetT': pl['bet__Team_id__Name']})
+
+        return HttpResponse(pl_obj)
+
+

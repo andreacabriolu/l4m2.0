@@ -67,6 +67,35 @@
             </div>
         </dialog>
 
+        <dialog id="dlg_player_info" class="dlg-player">
+            <div class="modal-header">
+                <p></p>
+                <span class="closeP" id="closePlayer" onclick="closeDlg(this)"><img src="{% static 'l4m/images/close-blue.png' %}"></span>
+            </div>
+            <div class="modal-body">
+                <div id="modal-pl-anag" class="modal-anag">
+                    <div id="modal-pl-avatar" class="modal-avatar">
+                        <img src="{% static 'l4m/images/profile.png' %}">
+                    </div>
+                    <input id="modal-pl-info-name" type="text" class="modal-form-input-anag" readonly>
+                    <input id="modal-pl-info-realteam" type="text" class="modal-form-input-anag" readonly>
+                    <input id="modal-pl-info-role" type="text" class="modal-form-input-anag" readonly>
+                </div>
+                <div id="modal-pl-bet" class="modal-bet">
+                    <span class="modal-label">Puntata</span>
+                    <input id="modal-pl-info-betamount" type="number" min="1" value="1" class="modal-form-input-bet">
+                    <div id="modal-currentbet" class="modal-form-input-currentbet">
+                        <span id="span-betexpire" class="modal-label-bestbet">Scadenza</span>
+                        <input id="modal-pl-info-betexpdate" type="text" class="modal-form-input-bettime" readonly>
+                        <span id="span-bestbetteam" class="modal-label-bestbet">Squadra con migliore offerta</span>
+                        <input id="modal-pl-info-bestbetteam" type="text" class="modal-form-input-betteam" readonly>
+                        <span id="span-bestbet" class="modal-label-bestbet">Migliore offerta</span>
+                        <input id="modal-pl-info-bestbet" type="text" class="modal-form-input-betteamvalue" readonly>
+                    </div>
+                </div>
+            </div>
+        </dialog>
+
         <dialog id="dlg_player_open" class="dlg-player">
             <div class="modal-header">
                 <p></p>

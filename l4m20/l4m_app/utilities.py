@@ -28,7 +28,7 @@ def get_players(filter_role):
 def get_my_best_bets(teamid):
     return bet.Bet.objects.\
         filter(Q(Best=True) & Q(Team_id=teamid)).\
-        values('Amount','Player_id__Surname','Expiration_Date','Slot')
+        values('Amount','Player_id','Player_id__Surname','Expiration_Date','Slot')
 
 def list_my_best_bets(mbb):
     ls = list(mbb).__str__()

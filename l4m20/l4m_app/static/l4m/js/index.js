@@ -3,6 +3,14 @@ let search;
 let player;
 let current_div;
 
+var RoleNames = {
+    'P': 'PORTIERE',
+    'D': 'DIFENSORE',
+    'C': 'CENTROCAMPISTA',
+    'A': 'ATTACCANTE',
+    '': ''
+};
+
 function fill_slots(mbb) {
     mbb.forEach(bet => {
         div_id = bet.Slot
@@ -10,6 +18,25 @@ function fill_slots(mbb) {
         if (div_id != '') {
             $("#" + div_id).addClass('plr-full');
             $("#" + div_id).prop('onclick', null).off("click");
+            $("#" + div_id).click(function(){
+                const token = Cookies.get('csrftoken');
+                var data = { 'id': bet.Player_id, 'csrfmiddlewaretoken': token };
+
+                $.post("/l4m/auction/getPlayerInfo/", data, function (response) {
+                    json_res = JSON.parse(response)
+                    
+                    $('#modal-pl-info-name').val(json_res.Sur);
+                    $('#modal-pl-info-realteam').val(json_res.RealT);
+                    $('#modal-pl-info-role').val(RoleNames[json_res.Rol]);
+                    $('#modal-pl-info-betexpdate').val(json_res.BetE);
+                    $('#modal-pl-info-bestbetteam').val(json_res.BetT);
+                    $('#modal-pl-info-bestbet').val(json_res.BetA);
+
+                    plr_info_dlg = $('#dlg_player_info')[0];
+                    if(plr_info_dlg != null) 
+                        plr_info_dlg.showModal(); 
+                });
+            });
             $("#" + div_id).html(`<div class="plr-full-r1">\
                     <input type="text" id="${div_id}_name" class="inputFullName" value="${bet.Player_id__Surname}" readonly>\
                     <input type="text" id="${div_id}_cost" class="inputFullAmount" value="${bet.Amount}" readonly>\
@@ -51,13 +78,6 @@ function closeDlg(el) {
 }
 
 function openPlayerDialog(player) {
-    var RoleNames = {
-        'P': 'PORTIERE',
-        'D': 'DIFENSORE',
-        'C': 'CENTROCAMPISTA',
-        'A': 'ATTACCANTE',
-        '': ''
-    };
 
     if (!Object.is(player.name, undefined)) {
         player.name = player.name + ' '
@@ -111,6 +131,7 @@ function set_div(row) {
     current_div.addClass('plr-full');
     current_div.prop('onclick', null).off("click");
     current_div.html(`<div class="plr-full-r1">\
+                            <input type="hidden" id="${current_div[0].id}_id" value="${row.playerid}">\
                             <input type="text" id="${current_div[0].id}_name" class="inputFullName" value="${row.playername}" readonly>\
                             <input type="text" id="${current_div[0].id}_cost" class="inputFullAmount" value="${row.betamount}" readonly>\
                         </div>\
@@ -135,7 +156,7 @@ function calculate_expiration_date() {
 
 function sendBet() {
     const token = Cookies.get('csrftoken');
-    const row = new Object()
+    const row = new Object();
     row.playername = $('#modal-pl-name').val();
     row.playerid = $('#modal-pl-id').val();
     row.betamount = $('#modal-pl-betamount').val();
