@@ -12,6 +12,8 @@
     flex-direction: row;
     justify-content: center;
     background-color: #efef9c7a;
+    box-shadow: 3px 3px 10px lightblue;
+    margin-bottom: 1%;
 }
 
 .def-container {
@@ -20,6 +22,28 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  box-shadow: 3px 3px 10px lightblue;
+  margin-bottom: 1%;
+}
+
+.cc-container {
+  background-color: #a5b2d785;
+  padding: 1%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  box-shadow: 3px 3px 10px lightblue;
+  margin-bottom: 1%;
+}
+
+.fw-container {
+  background-color: #d7a5a585;
+  padding: 1%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  box-shadow: 3px 3px 10px lightblue;
+  margin-bottom: 1%;
 }
 
 @media (max-width: 800px) {

@@ -46,7 +46,7 @@
 
         <dialog id="dlg_df_open">
             <div class="modal-header">
-                <span class="close" id="closeDf" onclick="closeDlg(this)"><img src="{% static 'l4m/images/close-blue.png' %}"></span>
+                <span class="close" id="closedf" onclick="closeDlg(this)"><img src="{% static 'l4m/images/close-blue.png' %}"></span>
             </div>
             <div class="modal-body">
                 <input id="modal-ob-search" type="text" onkeyup="searchPlayer()" placeholder="Cerca giocatore"
@@ -61,6 +61,52 @@
                         ({{player_def.RealTeam__Name}})
                         {% if player_def.bet__Amount != None %}
                             <span class="temp_amount">[puntato a {{player_def.bet__Amount}} da {{player_def.bet__Team_id__Name}}]</span>
+                        {% endif %}
+                        {% endfor %}
+                </dl>
+            </div>
+        </dialog>
+
+        <dialog id="dlg_cc_open">
+            <div class="modal-header">
+                <span class="close" id="closecc" onclick="closeDlg(this)"><img src="{% static 'l4m/images/close-blue.png' %}"></span>
+            </div>
+            <div class="modal-body">
+                <input id="modal-ob-search" type="text" onkeyup="searchPlayer()" placeholder="Cerca giocatore"
+                    class="modal-form-input">
+                <dl id="dataList">
+                    {% for player_cc in players_cc %}
+                    <dt class="dt-content" data-id="{{player_cc.id}}" data-surname="{{player_cc.Surname}}"
+                        data-role="{{player_cc.Role}}" data-realteam="{{player_cc.RealTeam__Name}}"
+                        data-betamount="{{player_cc.bet__Amount}}" data-betexpdate="{{player_cc.bet__Expiration_Date}}"
+                        data-betteam="{{player_cc.bet__Team_id__Name}}">
+                        {{player_cc.Surname}}
+                        ({{player_cc.RealTeam__Name}})
+                        {% if player_cc.bet__Amount != None %}
+                            <span class="temp_amount">[puntato a {{player_cc.bet__Amount}} da {{player_cc.bet__Team_id__Name}}]</span>
+                        {% endif %}
+                        {% endfor %}
+                </dl>
+            </div>
+        </dialog>
+
+        <dialog id="dlg_fw_open">
+            <div class="modal-header">
+                <span class="close" id="closefw" onclick="closeDlg(this)"><img src="{% static 'l4m/images/close-blue.png' %}"></span>
+            </div>
+            <div class="modal-body">
+                <input id="modal-ob-search" type="text" onkeyup="searchPlayer()" placeholder="Cerca giocatore"
+                    class="modal-form-input">
+                <dl id="dataList">
+                    {% for player_fw in players_fw %}
+                    <dt class="dt-content" data-id="{{player_fw.id}}" data-surname="{{player_fw.Surname}}"
+                        data-role="{{player_fw.Role}}" data-realteam="{{player_fw.RealTeam__Name}}"
+                        data-betamount="{{player_fw.bet__Amount}}" data-betexpdate="{{player_fw.bet__Expiration_Date}}"
+                        data-betteam="{{player_fw.bet__Team_id__Name}}">
+                        {{player_fw.Surname}}
+                        ({{player_fw.RealTeam__Name}})
+                        {% if player_fw.bet__Amount != None %}
+                            <span class="temp_amount">[puntato a {{player_fw.bet__Amount}} da {{player_fw.bet__Team_id__Name}}]</span>
                         {% endif %}
                         {% endfor %}
                 </dl>
@@ -169,6 +215,54 @@
                 </div>
                 <div id="df8_div" class="pl-div" onclick="openDialog('df8')">
                     <input type="text" id="def8" class="inputPlyr" readonly value="SLOT VUOTO">
+                </div>
+            </div>
+
+            <div class="cc-container" id="ccs">
+                <div id="cc1_div" class="pl-div" onclick="openDialog('cc1')">
+                    <input type="text" id="cc1" class="inputPlyr" readonly value="SLOT VUOTO">
+                </div>
+                <div id="cc2_div" class="pl-div" onclick="openDialog('cc2')">
+                    <input type="text" id="cc2" class="inputPlyr" readonly value="SLOT VUOTO">
+                </div>
+                <div id="cc3_div" class="pl-div" onclick="openDialog('cc3')">
+                    <input type="text" id="cc3" class="inputPlyr" readonly value="SLOT VUOTO">
+                </div>
+                <div id="cc4_div" class="pl-div" onclick="openDialog('cc4')">
+                    <input type="text" id="cc4" class="inputPlyr" readonly value="SLOT VUOTO">
+                </div>
+                <div id="cc5_div" class="pl-div" onclick="openDialog('cc5')">
+                    <input type="text" id="cc5" class="inputPlyr" readonly value="SLOT VUOTO">
+                </div>
+                <div id="cc6_div" class="pl-div" onclick="openDialog('cc6')">
+                    <input type="text" id="cc6" class="inputPlyr" readonly value="SLOT VUOTO">
+                </div>
+                <div id="cc7_div" class="pl-div" onclick="openDialog('cc7')">
+                    <input type="text" id="cc7" class="inputPlyr" readonly value="SLOT VUOTO">
+                </div>
+                <div id="cc8_div" class="pl-div" onclick="openDialog('cc8')">
+                    <input type="text" id="cc8" class="inputPlyr" readonly value="SLOT VUOTO">
+                </div>
+            </div>
+
+            <div class="fw-container" id="fws">
+                <div id="fw1_div" class="pl-div" onclick="openDialog('fw1')">
+                    <input type="text" id="fw1" class="inputPlyr" readonly value="SLOT VUOTO">
+                </div>
+                <div id="fw_div" class="pl-div" onclick="openDialog('fw2')">
+                    <input type="text" id="fw2" class="inputPlyr" readonly value="SLOT VUOTO">
+                </div>
+                <div id="fw3_div" class="pl-div" onclick="openDialog('fw3')">
+                    <input type="text" id="fw3" class="inputPlyr" readonly value="SLOT VUOTO">
+                </div>
+                <div id="fw4_div" class="pl-div" onclick="openDialog('fw4')">
+                    <input type="text" id="fw4" class="inputPlyr" readonly value="SLOT VUOTO">
+                </div>
+                <div id="fw5_div" class="pl-div" onclick="openDialog('fw5')">
+                    <input type="text" id="fw5" class="inputPlyr" readonly value="SLOT VUOTO">
+                </div>
+                <div id="fw6_div" class="pl-div" onclick="openDialog('fw6')">
+                    <input type="text" id="fw6" class="inputPlyr" readonly value="SLOT VUOTO">
                 </div>
             </div>
         </div>
