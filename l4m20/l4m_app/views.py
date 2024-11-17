@@ -47,6 +47,9 @@ class IndexView(LoginRequiredMixin, View):
         players_fw = U.get_players("A")
 
         my_best_bets = U.list_my_best_bets(U.get_my_best_bets(user_team['id']))
+        tot_my_best_bets = U.get_total(my_best_bets)
+
+        balance = U.get_balance(user_team['id'])[0] #TODO: filter by season/league
 
         params = { 
             'user_team': user_team,
@@ -55,6 +58,7 @@ class IndexView(LoginRequiredMixin, View):
             'players_cc':players_cc,
             'players_fw':players_fw,
             'my_best_bets':my_best_bets,
+            'balance' : balance,
           }
         
         return render(request, self.template_name, params)
@@ -63,36 +67,39 @@ class SendBetView(View):
     template_name = 'l4m/index.html'
 
     def post(self, request): 
-        data = json.loads(request.POST.get("jsonData"))
-        if (data is None): return
-        
-        bet_obj =  bet.Bet_Obj()
-        bet_obj.Amount = int(data['betamount'])
-        bet_obj.Player = data['playerid']
-        bet_obj.Expiration_Date = data['exp_date']
-        bet_obj.Team = data['userteamid']
-        bet_obj.Slot = data['slot']
-        exp_date_obj = datetime.strptime(bet_obj.Expiration_Date, '%d/%m/%Y, %H:%M:%S').replace(tzinfo=timezone.get_current_timezone())
+        try:
+            data = json.loads(request.POST.get("jsonData"))
+            if (data is None): return
+            
+            bet_obj =  bet.Bet_Obj()
+            bet_obj.Amount = int(data['betamount'])
+            bet_obj.Player = data['playerid']
+            bet_obj.Expiration_Date = data['exp_date']
+            bet_obj.Team = data['userteamid']
+            bet_obj.Slot = data['slot']
+            exp_date_obj = datetime.strptime(bet_obj.Expiration_Date, '%d/%m/%Y, %H:%M:%S').replace(tzinfo=timezone.get_current_timezone())
 
-        player_ = get_object_or_404(player.Player, id=bet_obj.Player)
-        user_team = get_object_or_404(team.Team, id=bet_obj.Team) #TODO: how to avoid this double fetch?
-        bet_new = bet.Bet(Amount=bet_obj.Amount,
-                          Player = player_,
-                          Team = user_team,
-                          Best=True,
-                          Expiration_Date=exp_date_obj,
-                          Slot=bet_obj.Slot)
-        #edit old bet
-        bet_old = bet.Bet.objects.filter(Q(Best=True) & Q(Player=player_))
-        if len(list(bet_old)) == 1: #there is an old best bet
-            bet_old[0].Best = False
-            bet_old[0].save()
+            player_ = get_object_or_404(player.Player, id=bet_obj.Player)
+            user_team = get_object_or_404(team.Team, id=bet_obj.Team) #TODO: how to avoid this double fetch?
+            bet_new = bet.Bet(Amount=bet_obj.Amount,
+                            Player = player_,
+                            Team = user_team,
+                            Best=True,
+                            Expiration_Date=exp_date_obj,
+                            Slot=bet_obj.Slot)
+            #edit old bet
+            bet_old = bet.Bet.objects.filter(Q(Best=True) & Q(Player=player_))
+            if len(list(bet_old)) == 1: #there is an old best bet
+                bet_old[0].Best = False
+                bet_old[0].save()
 
-        bet_new.save()
+            bet_new.save()
+        except:
+            return HttpResponse('error inserting bet')
+        # params = {}
 
-        params = {}
-
-        return render(request, self.template_name, params)
+        return HttpResponse('')
+        # return render(request, self.template_name, params)
     
 class GetPlayerInfoView(View):
 

@@ -34,3 +34,11 @@ def list_my_best_bets(mbb):
     ls = list(mbb).__str__()
     lsr = ls.replace('\'','"')
     return lsr
+
+def get_balance(teamid):
+    return balance.Balance.objects.\
+        filter(Team_id=teamid)
+
+def get_total(mbb):
+    #TODO implement
+    pass

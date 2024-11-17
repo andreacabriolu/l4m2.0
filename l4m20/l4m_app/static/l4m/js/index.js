@@ -169,6 +169,14 @@ function sendBet() {
     var data = { 'jsonData': jsonData, 'csrfmiddlewaretoken': token };
 
     $.post("/l4m/auction/sendBet/", data, function (response) {
+        if(response != '') {
+            //manage error TODO
+        }
+        else {
+            var bal = parseInt($('#main-balance').text());
+            var bal_w_bets = parseInt(row.betamount);
+            $('#balance-with-bets').text(bal - bal_w_bets);
+        }
     });
 
     plr_dlg.close();
