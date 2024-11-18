@@ -10,5 +10,6 @@ urlpatterns = [
     path("l4m/", views.IndexView.as_view(), name="index"),
     path("l4m/auction/sendBet/", views.SendBetView.as_view(), name="send_bet"),
     path("l4m/auction/getPlayerInfo/", views.GetPlayerInfoView.as_view(), name="get_player_info"),
+    path("l4m/auction/getBalance/", views.GetBalanceView.as_view(), name="get_balance"),
 
 ]

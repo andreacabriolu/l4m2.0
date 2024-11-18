@@ -47,7 +47,6 @@ class IndexView(LoginRequiredMixin, View):
         players_fw = U.get_players("A")
 
         my_best_bets = U.list_my_best_bets(U.get_my_best_bets(user_team['id']))
-        tot_my_best_bets = U.get_total(my_best_bets)
 
         balance = U.get_balance(user_team['id'])[0] #TODO: filter by season/league
 
@@ -87,18 +86,24 @@ class SendBetView(View):
                             Best=True,
                             Expiration_Date=exp_date_obj,
                             Slot=bet_obj.Slot)
-            #edit old bet
+
             bet_old = bet.Bet.objects.filter(Q(Best=True) & Q(Player=player_))
             if len(list(bet_old)) == 1: #there is an old best bet
                 bet_old[0].Best = False
                 bet_old[0].save()
 
             bet_new.save()
+
+            bal = balance.Balance.objects.filter(Team=bet_obj.Team)
+            bal = bal[0] #there should be only one balance TODO: check with giamba
+            bal.Purchases_amount = bal.Purchases_amount - bet_new.Amount
+            bal.save()
         except:
-            return HttpResponse('error inserting bet')
+            return HttpResponse('error inserting bet and updating balance')
+        
         # params = {}
 
-        return HttpResponse('')
+        return HttpResponse(json.dumps({'new_bal' : bal.Purchases_amount}))
         # return render(request, self.template_name, params)
     
 class GetPlayerInfoView(View):
@@ -121,4 +126,8 @@ class GetPlayerInfoView(View):
 
         return HttpResponse(pl_obj)
 
-
+class GetBalanceView(View):
+    def post(self,request):
+        user_team = team.Team.objects.filter(Users__id=request.user.id).values('id')[0]
+        
+        return HttpResponse(U.get_balance(user_team['id'])['Purchases_amount']) #TODO: filter by season/league

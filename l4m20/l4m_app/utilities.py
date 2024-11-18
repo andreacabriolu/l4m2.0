@@ -37,7 +37,8 @@ def list_my_best_bets(mbb):
 
 def get_balance(teamid):
     return balance.Balance.objects.\
-        filter(Team_id=teamid)
+        filter(Team_id=teamid).\
+        values('Purchases_amount')
 
 def get_total(mbb):
     #TODO implement
