@@ -159,7 +159,7 @@
   cursor: pointer !important;
 }
 
-#modal-ob-search {
+.modal-form-input {
     background-image: url('../images/search.png'); /* Add a search icon to input */
     background-repeat: no-repeat; /* Do not repeat the icon image */
     width: 100%; /* Full-width */
@@ -179,14 +179,14 @@
     justify-content: space-around !important;
   }
 
-  #dataList {
+  dl {
     /* Remove default list styling */
     list-style-type: none;
     padding: 0;
     margin: 0;
   }
   
-  #dataList dt {
+  dl dt {
     border: 1px solid #ddd; /* Add a border to all links */
     margin-top: -1px; /* Prevent double borders */
     background-color: #f6f6f6; /* Grey background color */
@@ -198,7 +198,7 @@
     cursor: pointer;
   }
   
-  #dataList dt:hover:not(.header) {
+  dl dt:hover:not(.header) {
     background-color: #eee; /* Add a hover effect to all links, except for headers */
   }
 

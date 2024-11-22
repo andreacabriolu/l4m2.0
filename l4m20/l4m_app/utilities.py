@@ -18,11 +18,12 @@ import json
 # 		"b"."Best" = TRUE
 # 		OR "b"."Best" IS NULL
 # 	)
-def get_players(filter_role):
+def get_players(filter_role, teamid):
     return player.Player.objects.\
         filter(Q(bet__Best=True) | Q(bet__Best=None)).\
         filter(Role=filter_role).\
         filter(RealTeam__isnull=False).\
+        exclude(bet__Team_id=teamid).\
         values('id','Surname','Name','Role','RealTeam__Name','bet__Amount','bet__Expiration_Date','bet__Team_id__Name')
 
 def get_my_best_bets(teamid):

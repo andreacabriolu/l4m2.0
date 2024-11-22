@@ -30,9 +30,9 @@
                         src="{% static 'l4m/images/close-blue.png' %}"></span>
             </div>
             <div class="modal-body">
-                <input id="modal-ob-search" type="text" onkeyup="searchPlayer()" placeholder="Cerca giocatore"
+                <input id="modal-ob-search_gk" type="text" onkeyup="searchPlayer('gk')" placeholder="Cerca giocatore"
                     class="modal-form-input">
-                <dl id="dataList">
+                <dl id="dataList_gk" class="dl-class">
                     {% for player_gk in players_gk %}
                     <dt class="dt-content" data-id="{{player_gk.id}}" data-surname="{{player_gk.Surname}}"
                         data-role="{{player_gk.Role}}" data-realteam="{{player_gk.RealTeam__Name}}"
@@ -44,7 +44,7 @@
                         <span class="temp_amount">[puntato a {{player_gk.bet__Amount}} da
                             {{player_gk.bet__Team_id__Name}}]</span>
                         {% endif %}
-                        {% endfor %}
+                    {% endfor %}
                 </dl>
             </div>
         </dialog>
@@ -55,9 +55,9 @@
                         src="{% static 'l4m/images/close-blue.png' %}"></span>
             </div>
             <div class="modal-body">
-                <input id="modal-ob-search" type="text" onkeyup="searchPlayer()" placeholder="Cerca giocatore"
+                <input id="modal-ob-search_def" type="text" onkeyup="searchPlayer('def')" placeholder="Cerca giocatore"
                     class="modal-form-input">
-                <dl id="dataList">
+                <dl id="dataList_def"  class="dl-class">
                     {% for player_def in players_def %}
                     <dt class="dt-content" data-id="{{player_def.id}}" data-surname="{{player_def.Surname}}"
                         data-role="{{player_def.Role}}" data-realteam="{{player_def.RealTeam__Name}}"
@@ -81,9 +81,9 @@
                         src="{% static 'l4m/images/close-blue.png' %}"></span>
             </div>
             <div class="modal-body">
-                <input id="modal-ob-search" type="text" onkeyup="searchPlayer()" placeholder="Cerca giocatore"
+                <input id="modal-ob-search_cc" type="text" onkeyup="searchPlayer('cc')" placeholder="Cerca giocatore"
                     class="modal-form-input">
-                <dl id="dataList">
+                <dl id="dataList_cc" class="dl-class">
                     {% for player_cc in players_cc %}
                     <dt class="dt-content" data-id="{{player_cc.id}}" data-surname="{{player_cc.Surname}}"
                         data-role="{{player_cc.Role}}" data-realteam="{{player_cc.RealTeam__Name}}"
@@ -106,9 +106,9 @@
                         src="{% static 'l4m/images/close-blue.png' %}"></span>
             </div>
             <div class="modal-body">
-                <input id="modal-ob-search" type="text" onkeyup="searchPlayer()" placeholder="Cerca giocatore"
+                <input id="modal-ob-search_fw" type="text" onkeyup="searchPlayer('fw')" placeholder="Cerca giocatore"
                     class="modal-form-input">
-                <dl id="dataList">
+                <dl id="dataList_fw" class="dl-class">
                     {% for player_fw in players_fw %}
                     <dt class="dt-content" data-id="{{player_fw.id}}" data-surname="{{player_fw.Surname}}"
                         data-role="{{player_fw.Role}}" data-realteam="{{player_fw.RealTeam__Name}}"

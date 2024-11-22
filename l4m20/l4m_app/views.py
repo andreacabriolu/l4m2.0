@@ -40,15 +40,16 @@ class IndexView(LoginRequiredMixin, View):
 
     def get(self,request):
         user_team = team.Team.objects.filter(Users__id=request.user.id).values('id','Name')[0]
+        teamid = user_team['id']
 
-        players_gk = U.get_players("P")
-        players_def = U.get_players("D")
-        players_cc = U.get_players("C")
-        players_fw = U.get_players("A")
+        players_gk = U.get_players("P", teamid)
+        players_def = U.get_players("D", teamid)
+        players_cc = U.get_players("C", teamid)
+        players_fw = U.get_players("A", teamid)
 
-        my_best_bets = U.list_my_best_bets(U.get_my_best_bets(user_team['id']))
+        my_best_bets = U.list_my_best_bets(U.get_my_best_bets(teamid))
 
-        balance = U.get_balance(user_team['id'])[0] #TODO: filter by season/league
+        balance = U.get_balance(teamid)[0] #TODO: filter by season/league
 
         params = { 
             'user_team': user_team,
@@ -104,7 +105,7 @@ class SendBetView(View):
         # params = {}
 
         return HttpResponse(json.dumps({'new_bal' : bal.Purchases_amount}))
-        # return render(request, self.template_name, params)
+        # return render(request, self.template_name, {})
     
 class GetPlayerInfoView(View):
 

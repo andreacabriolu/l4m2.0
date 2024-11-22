@@ -52,8 +52,6 @@ function fill_slots(mbb) {
 window.addEventListener('DOMContentLoaded', event => {
     fill_slots(JSON.parse($('#my_best_bets').val()));
 
-    search = document.getElementById('modal-ob-search');
-
     $('.dt-content').on('click', function () {
         const player = new Object();
 
@@ -111,10 +109,11 @@ function openDialog(id) {
         dlg.showModal();
 }
 
-function searchPlayer() {
+function searchPlayer(role) {
     var filter, i, txtValue;
+    search = document.getElementById('modal-ob-search_'+role);
     filter = search.value.toUpperCase();
-    dl = document.getElementById("dataList");
+    dl = document.getElementById("dataList_"+role);
     dt = dl.getElementsByTagName('dt');
 
     for (i = 0; i < dt.length; i++) {
@@ -174,6 +173,11 @@ function sendBet() {
         }
         else {
             $('#main-balance').text(JSON.parse(response)['new_bal']);
+            //remove datalist entry
+            entry = document.querySelector("dl.dl-class dt[data-id='"+row.playerid+"']");
+            if(entry!=null) { 
+                entry.parentNode.removeChild(entry); 
+            }
         }
     });
 
