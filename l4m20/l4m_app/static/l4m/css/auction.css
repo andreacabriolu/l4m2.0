@@ -3,6 +3,11 @@
     width: 100%;  
 }
 
+.big-container {
+  display: block;
+
+}
+
 .div-container {
     width: auto;
 }
@@ -341,4 +346,12 @@
  .main-div {
     display: flex;
     flex-direction: column;
+  }
+
+  .side-buttons {
+    display: flex;
+  }
+
+  .btn-top {
+    margin: 1% 0 0 1%;
   }

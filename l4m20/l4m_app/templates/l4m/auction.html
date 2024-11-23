@@ -4,15 +4,19 @@
 { % block title % } L4M2.0 - Asta { % endblock % }
 
 {% block links %}
-<link href="{% static 'l4m/css/index.css' %}" rel="stylesheet">
+<link href="{% static 'l4m/css/auction.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block scripts %}
-<script type="text/javascript" src="{% static 'l4m/js/index.js' %}"></script>
+<script type="text/javascript" src="{% static 'l4m/js/auction.js' %}"></script>
 {% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="big-container">
+    <div class="side-buttons">
+        <button type="button" class="btn btn-primary btn-lg btn-top" id="myAuctionBtn">LA MIA ASTA</button>
+        <button type="button" class="btn btn-primary btn-lg btn-top" id="allAuctionsBtn">TUTTE LE ASTE</button>
+    </div>
     <div class="bg-body-tertiary p-5 rounded mt-3 main-div">
         <div class="balance-div" id="balance_div">
             <label class="balance-label">Monte acquisti</label>

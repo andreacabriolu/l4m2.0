@@ -33,9 +33,9 @@ class LoginView(View):
         else:
             return render(request, self.template_name, {'form': form})
         
-class IndexView(LoginRequiredMixin, View):
+class AuctionView(LoginRequiredMixin, View):
     #TODO: implement control on user passes test (https://docs.djangoproject.com/en/4.2/topics/auth/default/#limiting-access-to-logged-in-users-that-pass-a-test)
-    template_name = 'l4m/index.html'
+    template_name = 'l4m/auction.html'
     login_url = '/login/'
 
     def get(self,request):
@@ -64,7 +64,7 @@ class IndexView(LoginRequiredMixin, View):
         return render(request, self.template_name, params)
     
 class SendBetView(View):
-    template_name = 'l4m/index.html'
+    template_name = 'l4m/auction.html'
 
     def post(self, request): 
         try:
