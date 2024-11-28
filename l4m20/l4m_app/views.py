@@ -132,3 +132,13 @@ class GetBalanceView(View):
         user_team = team.Team.objects.filter(Users__id=request.user.id).values('id')[0]
         
         return HttpResponse(U.get_balance(user_team['id'])['Purchases_amount']) #TODO: filter by season/league
+
+class AllAuctionsView(LoginRequiredMixin, View):
+    template_name = 'l4m/allauctions.html'
+
+    def get(self,request):
+
+        params = { 
+          }
+        
+        return render(request, self.template_name, params)
