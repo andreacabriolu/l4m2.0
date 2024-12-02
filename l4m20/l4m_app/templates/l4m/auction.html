@@ -5,14 +5,19 @@
 
 {% block links %}
 <link href="{% static 'l4m/css/auction.css' %}" rel="stylesheet">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+
 {% endblock %}
 
 {% block scripts %}
 <script type="text/javascript" src="{% static 'l4m/js/auction.js' %}"></script>
+
 {% endblock %}
 
 {% block content %}
-<div class="big-container">
+<!-- <div class="big-container"> -->
+<div id="layoutSidenav_content" class="custom-layout">
+
     <div class="bg-body-tertiary p-5 rounded mt-3 main-div">
         <div class="balance-div" id="balance_div">
             <label class="balance-label">Monte acquisti</label>
