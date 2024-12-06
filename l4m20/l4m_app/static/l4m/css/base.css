@@ -1,3 +1,16 @@
 .topbar {
   height: 2%;
 }
+
+.sidenav-custom {
+  font-size: larger !important;
+  display: flex;
+}
+
+.nav-link-custom {
+  font-size: smaller !important;
+}
+
+.nav-span {
+  margin-left: 10%;
+}

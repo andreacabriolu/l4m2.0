@@ -137,8 +137,16 @@ class AllAuctionsView(LoginRequiredMixin, View):
     template_name = 'l4m/allauctions.html'
 
     def get(self,request):
+        all_team_players = U.get_all_team_players()
+        team_ids = team.Team.objects.all().values('id')
+        team_players = {}
+
+        for id in team_ids:
+            l = list(all_team_players.filter(Team_id=id['id']))
+            team_players[id['id']] = json.dumps(l)
 
         params = { 
+            'team_players' : team_players
           }
         
         return render(request, self.template_name, params)

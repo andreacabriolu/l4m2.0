@@ -44,3 +44,9 @@ def get_balance(teamid):
 def get_total(mbb):
     #TODO implement
     pass
+
+def get_all_team_players():
+    return player.Player.objects.\
+        filter(Q(bet__Best=True) | Q(Team_id__isnull=False)).\
+        values('id','Surname','Name','Role','Team_id','bet__Team_id')
+    
