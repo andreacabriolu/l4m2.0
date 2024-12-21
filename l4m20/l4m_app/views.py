@@ -143,10 +143,10 @@ class AllAuctionsView(LoginRequiredMixin, View):
 
         for id in team_ids:
             l = list(all_team_players.filter(Team_id=id['id']))
-            team_players[id['id']] = json.dumps(l)
+            team_players[id['id']] = l
 
         params = { 
-            'team_players' : team_players
+            'team_players' : json.dumps(team_players)
           }
         
         return render(request, self.template_name, params)
