@@ -9,10 +9,10 @@ from datetime import datetime
 from django.utils import timezone
 from django.db.models import Q
 
-import pytz 
-
 from . import utilities as U
 from .models import *
+from l4m20 import constants as C
+
 
 
 class LoginView(View):
@@ -133,6 +133,13 @@ class GetBalanceView(View):
         
         return HttpResponse(U.get_balance(user_team['id'])['Purchases_amount']) #TODO: filter by season/league
 
+def complete_list(l, num_max, role):
+    if(len(l) < num_max):
+        for _ in range(num_max - len(l)):
+            l.append({"id": "-1", "Role":role})
+    
+    return l
+
 class AllAuctionsView(LoginRequiredMixin, View):
     template_name = 'l4m/allauctions.html'
 
@@ -141,9 +148,18 @@ class AllAuctionsView(LoginRequiredMixin, View):
         team_ids = team.Team.objects.all().values('id')
         team_players = {}
 
-        for id in team_ids:
-            l = list(all_team_players.filter(Team_id=id['id']))
-            team_players[id['id']] = l
+        for team_id in team_ids:
+            lp = list(all_team_players.filter(Q(bet__Team_id=team_id['id']) & Q(Role=C.Constant_Dicts.RoleChars['POR'])))
+            ld = list(all_team_players.filter(Q(bet__Team_id=team_id['id']) & Q(Role=C.Constant_Dicts.RoleChars['DIF'])))
+            lc = list(all_team_players.filter(Q(bet__Team_id=team_id['id']) & Q(Role=C.Constant_Dicts.RoleChars['CC'])))
+            la = list(all_team_players.filter(Q(bet__Team_id=team_id['id']) & Q(Role=C.Constant_Dicts.RoleChars['ATT'])))
+
+            lp = complete_list(lp, C.NUM_GK, C.Constant_Dicts.RoleChars['POR'])
+            ld = complete_list(ld, C.NUM_DEF, C.Constant_Dicts.RoleChars['DIF'])
+            lc = complete_list(lc, C.NUM_CC, C.Constant_Dicts.RoleChars['CC'])
+            la = complete_list(la, C.NUM_FW, C.Constant_Dicts.RoleChars['ATT'])
+
+            team_players[team_id['id']] = lp + ld + lc + la
 
         params = { 
             'team_players' : json.dumps(team_players)

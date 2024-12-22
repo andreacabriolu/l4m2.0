@@ -5,3 +5,11 @@
 .main-div {
     display: flex;
 }
+
+.dataTables_wrapper {
+    margin-left: 3%;
+}
+
+.betting-player {
+    background-color: rgb(172, 205, 172) !important;
+}

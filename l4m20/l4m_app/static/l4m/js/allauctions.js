@@ -16,15 +16,29 @@ function fillTables() {
             {
                 searching: false,
                 paging: false,
-                info: false
-            }
+                info: false,
+                order: [],
+                createdRow: function (row, data, dataIndex) {
+                    // if (data[1] == 'Activated') {
+                        $(row).addClass('betting-player');
+                    // }
+                },
+            
+            },
         );
 
         for ([k, player_data] of Object.entries(v))
+            if(player_data.id == "-1") {
+                dt.row.add([
+                    "VUOTO",
+                    ""
+                ]).draw(false);
+            }
+            else {
             dt.row.add([
                 player_data.Surname,
-                player_data.id,
-            ]).draw(false);
+                player_data.bet__Amount,
+            ]).draw(false);}
     }
 }
 
