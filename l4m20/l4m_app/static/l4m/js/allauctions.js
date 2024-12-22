@@ -5,6 +5,7 @@ function fillTables() {
         var newDtHtml = `<table class='table custom-table hover' id=${k}DataTable cellspacing="0">
         <thead>
             <tr class="custom-th">
+                <th>Ruolo</th>
                 <th>Giocatore</th>
                 <th>Puntata</th>
             </tr>
@@ -30,12 +31,14 @@ function fillTables() {
         for ([k, player_data] of Object.entries(v))
             if(player_data.id == "-1") {
                 dt.row.add([
+                    player_data.Role,
                     "VUOTO",
                     ""
                 ]).draw(false);
             }
             else {
             dt.row.add([
+                player_data.Role,
                 player_data.Surname,
                 player_data.bet__Amount,
             ]).draw(false);}

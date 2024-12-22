@@ -71,41 +71,40 @@ class SendBetView(View):
             data = json.loads(request.POST.get("jsonData"))
             if (data is None): return
             
-            bet_obj =  bet.Bet_Obj()
-            bet_obj.Amount = int(data['betamount'])
-            bet_obj.Player = data['playerid']
-            bet_obj.Expiration_Date = data['exp_date']
-            bet_obj.Team = data['userteamid']
-            bet_obj.Slot = data['slot']
-            exp_date_obj = datetime.strptime(bet_obj.Expiration_Date, '%d/%m/%Y, %H:%M:%S').replace(tzinfo=timezone.get_current_timezone())
+            bal = U.send_bet(data)
 
-            player_ = get_object_or_404(player.Player, id=bet_obj.Player)
-            user_team = get_object_or_404(team.Team, id=bet_obj.Team) #TODO: how to avoid this double fetch?
-            bet_new = bet.Bet(Amount=bet_obj.Amount,
-                            Player = player_,
-                            Team = user_team,
-                            Best=True,
-                            Expiration_Date=exp_date_obj,
-                            Slot=bet_obj.Slot)
+            # bet_obj =  bet.Bet_Obj()
+            # bet_obj.Amount = int(data['betamount'])
+            # bet_obj.Player = data['playerid']
+            # bet_obj.Expiration_Date = data['exp_date']
+            # bet_obj.Team = data['userteamid']
+            # bet_obj.Slot = data['slot']
+            # exp_date_obj = datetime.strptime(bet_obj.Expiration_Date, '%d/%m/%Y, %H:%M:%S').replace(tzinfo=timezone.get_current_timezone())
 
-            bet_old = bet.Bet.objects.filter(Q(Best=True) & Q(Player=player_))
-            if len(list(bet_old)) == 1: #there is an old best bet
-                bet_old[0].Best = False
-                bet_old[0].save()
+            # player_ = get_object_or_404(player.Player, id=bet_obj.Player)
+            # user_team = get_object_or_404(team.Team, id=bet_obj.Team) #TODO: how to avoid this double fetch?
+            # bet_new = bet.Bet(Amount=bet_obj.Amount,
+            #                 Player = player_,
+            #                 Team = user_team,
+            #                 Best=True,
+            #                 Expiration_Date=exp_date_obj,
+            #                 Slot=bet_obj.Slot)
 
-            bet_new.save()
+            # bet_old = bet.Bet.objects.filter(Q(Best=True) & Q(Player=player_))
+            # if len(list(bet_old)) == 1: #there is an old best bet
+            #     bet_old[0].Best = False
+            #     bet_old[0].save()
 
-            bal = balance.Balance.objects.filter(Team=bet_obj.Team)
-            bal = bal[0] #there should be only one balance TODO: check with giamba
-            bal.Purchases_amount = bal.Purchases_amount - bet_new.Amount
-            bal.save()
+            # bet_new.save()
+
+            # bal = balance.Balance.objects.filter(Team=bet_obj.Team)
+            # bal = bal[0] #there should be only one balance TODO: check with giamba
+            # bal.Purchases_amount = bal.Purchases_amount - bet_new.Amount
+            # bal.save()
         except:
             return HttpResponse('error inserting bet and updating balance')
         
-        # params = {}
-
         return HttpResponse(json.dumps({'new_bal' : bal.Purchases_amount}))
-        # return render(request, self.template_name, {})
     
 class GetPlayerInfoView(View):
 

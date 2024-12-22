@@ -1,9 +1,12 @@
 .custom-table {
     width: 30%;
+    border-spacing: 1em !important;
 }
 
 .main-div {
     display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .dataTables_wrapper {
