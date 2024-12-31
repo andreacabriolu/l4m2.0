@@ -83,3 +83,7 @@ def send_bet(data):
     bal.save()
 
     return bal
+
+def get_user_team(userid):
+    return team.Team.objects.filter(Users__id=userid).values('id','Name')[0]
+    

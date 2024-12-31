@@ -1,6 +1,7 @@
 .custom-table {
     width: 30%;
     border-spacing: 1em !important;
+    --bs-table-bg: transparent !important;
 }
 
 .main-div {
@@ -14,5 +15,14 @@
 }
 
 .betting-player {
-    background-color: rgb(172, 205, 172) !important;
+    background-color: gray !important;
+    border-bottom-color: currentColor;
+    mix-blend-mode: color-dodge;
+    color: green !important;
 }
+
+.table-caption {
+    caption-side:top;
+    padding: 10px;
+    font-weight: bold;
+  }

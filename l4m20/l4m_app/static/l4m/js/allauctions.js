@@ -3,6 +3,7 @@ function fillTables() {
 
     for ([k, v] of Object.entries(teamPlayers)) {
         var newDtHtml = `<table class='table custom-table hover' id=${k}DataTable cellspacing="0">
+        <caption class='table-caption'>${k}</caption>
         <thead>
             <tr class="custom-th">
                 <th>Ruolo</th>

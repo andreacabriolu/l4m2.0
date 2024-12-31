@@ -15,6 +15,7 @@ class Bet(models.Model):
     Session = models.ForeignKey(on_delete=models.CASCADE, to=C.Constant_Strings.session, null=True)
     Expiration_Date = models.TextField(max_length=100)
     Slot = models.TextField(max_length=2)
+    IsExpired = models.BooleanField(default=False)
     
     # def __str__(self):
     #     return " ".join([self.Time+self.Player])

@@ -39,7 +39,7 @@ class AuctionView(LoginRequiredMixin, View):
     login_url = '/login/'
 
     def get(self,request):
-        user_team = team.Team.objects.filter(Users__id=request.user.id).values('id','Name')[0]
+        user_team = U.get_user_team(request.user.id)
         teamid = user_team['id']
 
         players_gk = U.get_players("P", teamid)
@@ -72,35 +72,7 @@ class SendBetView(View):
             if (data is None): return
             
             bal = U.send_bet(data)
-
-            # bet_obj =  bet.Bet_Obj()
-            # bet_obj.Amount = int(data['betamount'])
-            # bet_obj.Player = data['playerid']
-            # bet_obj.Expiration_Date = data['exp_date']
-            # bet_obj.Team = data['userteamid']
-            # bet_obj.Slot = data['slot']
-            # exp_date_obj = datetime.strptime(bet_obj.Expiration_Date, '%d/%m/%Y, %H:%M:%S').replace(tzinfo=timezone.get_current_timezone())
-
-            # player_ = get_object_or_404(player.Player, id=bet_obj.Player)
-            # user_team = get_object_or_404(team.Team, id=bet_obj.Team) #TODO: how to avoid this double fetch?
-            # bet_new = bet.Bet(Amount=bet_obj.Amount,
-            #                 Player = player_,
-            #                 Team = user_team,
-            #                 Best=True,
-            #                 Expiration_Date=exp_date_obj,
-            #                 Slot=bet_obj.Slot)
-
-            # bet_old = bet.Bet.objects.filter(Q(Best=True) & Q(Player=player_))
-            # if len(list(bet_old)) == 1: #there is an old best bet
-            #     bet_old[0].Best = False
-            #     bet_old[0].save()
-
-            # bet_new.save()
-
-            # bal = balance.Balance.objects.filter(Team=bet_obj.Team)
-            # bal = bal[0] #there should be only one balance TODO: check with giamba
-            # bal.Purchases_amount = bal.Purchases_amount - bet_new.Amount
-            # bal.save()
+            bal.save()
         except:
             return HttpResponse('error inserting bet and updating balance')
         
@@ -144,7 +116,8 @@ class AllAuctionsView(LoginRequiredMixin, View):
 
     def get(self,request):
         all_team_players = U.get_all_team_players()
-        team_ids = team.Team.objects.all().values('id')
+        team_ids = team.Team.objects.all().values('id','Name')
+        user_team_name = U.get_user_team(request.user.id)['Name'].replace(' ','_')
         team_players = {}
 
         for team_id in team_ids:
@@ -158,7 +131,8 @@ class AllAuctionsView(LoginRequiredMixin, View):
             lc = complete_list(lc, C.NUM_CC, C.Constant_Dicts.RoleChars['CC'])
             la = complete_list(la, C.NUM_FW, C.Constant_Dicts.RoleChars['ATT'])
 
-            team_players[team_id['id']] = lp + ld + lc + la
+            team_players[team_id['Name'].replace(' ','_')] = lp + ld + lc + la
+            team_players={user_team_name:team_players.pop(user_team_name), **team_players} #get user team as first
 
         params = { 
             'team_players' : json.dumps(team_players)
