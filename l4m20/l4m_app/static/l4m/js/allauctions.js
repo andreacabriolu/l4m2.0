@@ -9,11 +9,16 @@ function fillTables() {
                 <th>Ruolo</th>
                 <th>Giocatore</th>
                 <th>Puntata</th>
+                <th>Scaduto</th>
+                <th>Carognata</th>
             </tr>
         </thead>
     </table>`;
 
+
         $('#allTeamsDiv').append(newDtHtml);
+        $('table.dataTable tr td').css({ 'background-color': 'initial', 'opacity': '' });
+
         var dt = $(`#${k}DataTable`).DataTable(
             {
                 searching: false,
@@ -21,28 +26,43 @@ function fillTables() {
                 info: false,
                 order: [],
                 createdRow: function (row, data, dataIndex) {
-                    // if (data[1] == 'Activated') {
-                        $(row).addClass('betting-player');
-                    // }
+                    $(row).addClass(data[2]==true ? 'betting-player-expired': 
+                        (data[3]==true ? 'betting-player-carognata' : 'betting-player')
+                    );
+                
                 },
-            
+                columnDefs: [
+                    {
+                        target:3,
+                        visible:false
+                    },
+                    {
+                        target:4,
+                        visible:false
+                    }
+                ]
             },
         );
 
         for ([k, player_data] of Object.entries(v))
-            if(player_data.id == "-1") {
+            if (player_data.id == "-1") {
                 dt.row.add([
                     player_data.Role,
                     "VUOTO",
+                    "",
+                    "",
                     ""
                 ]).draw(false);
             }
             else {
-            dt.row.add([
-                player_data.Role,
-                player_data.Surname,
-                player_data.bet__Amount,
-            ]).draw(false);}
+                dt.row.add([
+                    player_data.Role,
+                    player_data.Surname,
+                    player_data.bet__Amount,
+                    player_data.bet__IsExpired,
+                    player_data.bet__Carognata,
+                ]).draw(false);
+            }
     }
 }
 
