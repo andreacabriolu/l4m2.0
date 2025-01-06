@@ -37,4 +37,6 @@
     caption-side:top;
     padding: 10px;
     font-weight: bold;
+    border:solid;
+    text-align: center;
   }

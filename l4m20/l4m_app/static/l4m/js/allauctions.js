@@ -11,6 +11,7 @@ function fillTables() {
                 <th>Puntata</th>
                 <th>Scaduto</th>
                 <th>Carognata</th>
+                <th>Scadenza</th>
             </tr>
         </thead>
     </table>`;
@@ -29,7 +30,13 @@ function fillTables() {
                     $(row).addClass(data[2]==true ? 'betting-player-expired': 
                         (data[3]==true ? 'betting-player-carognata' : 'betting-player')
                     );
-                
+                    $(row).tooltip({
+                        placement: 'top',
+                        animation: true,
+                        title: 'SCADENZA: ' + data[5].slice(0, -6), //Bad way to remove timezone,
+                        trigger: 'hover focus click',
+                    });        
+                    if(data[1] == "VUOTO") { $(row).tooltip('disable'); }  
                 },
                 columnDefs: [
                     {
@@ -38,6 +45,10 @@ function fillTables() {
                     },
                     {
                         target:4,
+                        visible:false
+                    },
+                    {
+                        target:5,
                         visible:false
                     }
                 ]
@@ -51,6 +62,7 @@ function fillTables() {
                     "VUOTO",
                     "",
                     "",
+                    "",
                     ""
                 ]).draw(false);
             }
@@ -61,6 +73,7 @@ function fillTables() {
                     player_data.bet__Amount,
                     player_data.bet__IsExpired,
                     player_data.bet__Carognata,
+                    player_data.bet__Expiration_Date
                 ]).draw(false);
             }
     }

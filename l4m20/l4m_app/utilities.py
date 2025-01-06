@@ -50,7 +50,7 @@ def get_total(mbb):
 def get_all_team_players():
     return player.Player.objects.\
         filter(Q(bet__Best=True)).\
-        values('id','Surname','Name','Role','Team_id','bet__Team_id','bet__Amount','bet__IsExpired','bet__Carognata')
+        values('id','Surname','Name','Role','Team_id','bet__Team_id','bet__Amount','bet__IsExpired','bet__Carognata','bet__Expiration_Date')
     
 def send_bet(data):
     bet_obj =  bet.Bet_Obj()
