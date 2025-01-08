@@ -130,7 +130,7 @@
   font-weight: bold; 
   width: 75%;
   background: none;
-  color: crimson;
+  color: #1461ed;
   cursor: pointer !important;
 }
 
@@ -138,7 +138,7 @@
   border: none;
     width: 25%;
     background: none;
-    color: crimson;
+    color: #1461ed;
     text-align: center;
     font-size: large;
     font-weight: bolder;
@@ -147,7 +147,7 @@
 
 .inputFullExp {
   border: none;
-  color: crimson;
+  color: #1461ed;
   background: none;
   text-align: center;
   width: 100%;
@@ -359,4 +359,19 @@
 
   .btn-top {
     margin: 1% 0 0 1%;
+  }
+
+  .raised {
+    color: crimson;
+  }
+
+  .stripe-1 {
+    color: white;
+    background: repeating-linear-gradient(
+      45deg,
+      rgba(0, 0, 0, 0.2),
+      rgba(0, 0, 0, 0.1) 10px,
+      rgba(0, 0, 0, 0.1) 10px,
+      rgba(0, 0, 0, 0.1) 20px
+    );
   }

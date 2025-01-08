@@ -30,12 +30,14 @@ def get_players(filter_role, teamid):
 
 def get_my_best_bets(teamid):
     return bet.Bet.objects.\
-        filter(Q(Best=True) & Q(Team_id=teamid)).\
-        values('Amount','Player_id','Player_id__Surname','Expiration_Date','Slot')
+        filter((Q(Best=True) & Q(Team_id=teamid)) | (Q(IsRaised=True) & Q(Team_id=teamid))).\
+        values('Amount','Player_id','Player_id__Surname','Expiration_Date','Slot','IsRaised')
 
 def list_my_best_bets(mbb):
     ls = list(mbb).__str__()
     lsr = ls.replace('\'','"')
+    lsr = lsr.replace('True', 'true')
+    lsr = lsr.replace('False','false')
     return lsr
 
 def get_balance(teamid):
@@ -73,6 +75,7 @@ def send_bet(data):
     bet_old = bet.Bet.objects.filter(Q(Best=True) & Q(Player=player_))
     if len(list(bet_old)) == 1: #there is an old best bet
         bet_old[0].Best = False
+        bet_old[0].IsRaised = True
         bet_old[0].save()
 
     bet_new.save()

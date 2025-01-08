@@ -31,28 +31,28 @@
         <form method="post" action="" class="user">
             {% csrf_token %}
             <div class="form-group">
-                <label for="id_username">NOME UTENTE</label>
+                <label for="id_username" class="login-label">NOME UTENTE</label>
                 <input type="text" name="username" autofocus=""  maxlength="150" 
                 class="form-control form-control-user" placeholder="Nome utente" required="" id="id_username">
             </div>
             <div class="form-group">
-                <label for="id_email">INDIRIZZO EMAIL</label>
+                <label for="id_email" class="login-label">INDIRIZZO EMAIL</label>
                 <input type="text" name="email" autofocus="" maxlength="150" 
                 class="form-control form-control-user" placeholder="Indirizzo email" required="" id="id_email">
             </div>
             <div class="form-group">
-                <label for="id_email">PASSWORD</label>
+                <label for="id_pwd1" class="login-label">PASSWORD</label>
                 <input type="password" name="password1" autofocus="" maxlength="150" 
                 class="form-control form-control-user" placeholder="Password" required="" id="id_pwd1">
             </div>
             <div class="form-group">
-                <label for="id_email">RIPETI PASSWORD</label>
+                <label for="id_pwd2" class="login-label">RIPETI PASSWORD</label>
                 <input type="password" name="password2" autofocus="" maxlength="150" 
                 class="form-control form-control-user" placeholder="Password (ripeti)" required="" id="id_pwd2">
                 <!-- oninvalid="setCustomValidity('OBBLIGATORIO')" oninput="setCustomValidity('')"> -->
             </div>
             <div class="form-group">
-                <label for="id_email">NOME SQUADRA</label>
+                <label for="id_team" class="login-label">NOME SQUADRA</label>
                 <input type="text" name="team" autofocus="" maxlength="150" 
                 class="form-control form-control-user" placeholder="Nome squadra" required="" id="id_team">
             </div>

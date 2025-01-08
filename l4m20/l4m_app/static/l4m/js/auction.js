@@ -37,12 +37,17 @@ function fill_slots(mbb) {
                         plr_info_dlg.showModal(); 
                 });
             });
-            $("#" + div_id).html(`<div class="plr-full-r1">\
-                    <input type="text" id="${div_id}_name" class="inputFullName" value="${bet.Player_id__Surname}" readonly>\
-                    <input type="text" id="${div_id}_cost" class="inputFullAmount" value="${bet.Amount}" readonly>\
+
+            var divStripeClass = !bet.IsRaised ? "" : " stripe-1";
+            var classRaised = bet.IsRaised ? " raised" : "";
+            var raisedStr = bet.IsRaised ? "(RILANCIATO) " : "";
+            
+            $("#" + div_id).html(`<div class="plr-full-r1${divStripeClass}">\
+                    <input type="text" id="${div_id}_name" class="inputFullName${classRaised}" value="${raisedStr}${bet.Player_id__Surname}" readonly>\
+                    <input type="text" id="${div_id}_cost" class="inputFullAmount${classRaised}" value="${bet.Amount}" readonly>\
                 </div>\
-                <div class="plr-full-r2">\
-                    <input type="text" id="${div_id}_exp" class="inputFullExp" value="${expDate}" readonly>\
+                <div class="plr-full-r2${divStripeClass}">\
+                    <input type="text" id="${div_id}_exp" class="inputFullExp${classRaised}" value="${expDate}" readonly>\
                 </div>\
         `);
         }
