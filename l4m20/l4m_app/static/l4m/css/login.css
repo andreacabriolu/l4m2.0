@@ -23,3 +23,15 @@ body {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
+
+.register_link {
+  display: flex;
+  justify-content: center;
+  margin-top: 1em;
+  text-align: center;
+  font-weight: bold;
+}
+
+.form-group {
+  margin-bottom: 1em;
+}

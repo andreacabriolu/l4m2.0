@@ -1,0 +1,70 @@
+{% extends "./base_login.html" %}
+
+{% load static %}
+
+{% load widget_tweaks %}
+
+{% block title %} L4M 2.0 - Registrazione {% endblock %}
+
+{% block links %}
+<link href="{% static 'l4m/css/login.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+<body class="d-flex align-items-center py-4 bg-body-tertiary">
+
+    <main class="form-signin w-100 m-auto">
+
+        {% if res and "ERROR" in res %}
+        <div class="alert alert-danger" role="alert" id="error-alert">
+            <span id="span-error-alert">
+            {{ res }}
+            </span>
+        </div>
+        {% endif %}
+
+      <form action="" method="post">
+        {% csrf_token %}
+        <img class="mb-4" src="{% static 'l4m/images/logo.jpeg' %}" alt="" width="72" height="57">
+        <h1 class="h3 mb-3 fw-normal">LA TUA SQUADRA</h1>
+  
+        <form method="post" action="" class="user">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_username">NOME UTENTE</label>
+                <input type="text" name="username" autofocus=""  maxlength="150" 
+                class="form-control form-control-user" placeholder="Nome utente" required="" id="id_username">
+            </div>
+            <div class="form-group">
+                <label for="id_email">INDIRIZZO EMAIL</label>
+                <input type="text" name="email" autofocus="" maxlength="150" 
+                class="form-control form-control-user" placeholder="Indirizzo email" required="" id="id_email">
+            </div>
+            <div class="form-group">
+                <label for="id_email">PASSWORD</label>
+                <input type="password" name="password1" autofocus="" maxlength="150" 
+                class="form-control form-control-user" placeholder="Password" required="" id="id_pwd1">
+            </div>
+            <div class="form-group">
+                <label for="id_email">RIPETI PASSWORD</label>
+                <input type="password" name="password2" autofocus="" maxlength="150" 
+                class="form-control form-control-user" placeholder="Password (ripeti)" required="" id="id_pwd2">
+                <!-- oninvalid="setCustomValidity('OBBLIGATORIO')" oninput="setCustomValidity('')"> -->
+            </div>
+            <div class="form-group">
+                <label for="id_email">NOME SQUADRA</label>
+                <input type="text" name="team" autofocus="" maxlength="150" 
+                class="form-control form-control-user" placeholder="Nome squadra" required="" id="id_team">
+            </div>
+            <button class="btn btn-primary w-100 py-2" type="submit">REGISTRA</button>
+        </form>
+        <div class="register_link">
+            <a href="/login/" class="link-offset-2 link-underline link-underline-opacity-25">TORNA AL LOGIN</a>
+        </div>
+
+      </form>
+    </main>
+  
+  </body>
+
+{% endblock %}

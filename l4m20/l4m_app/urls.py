@@ -1,16 +1,18 @@
 from django.urls import path
 
-from . import views
+from .single_views import login_views, auction_views
 
 app_name = "l4m"
 
 urlpatterns = [
-    path("", views.LoginView.as_view(), name="login"),
-    path("login/", views.LoginView.as_view(), name="login"),
-    path("l4m/", views.AuctionView.as_view(), name="auction"),
-    path("l4m/auction/sendBet/", views.SendBetView.as_view(), name="send_bet"),
-    path("l4m/auction/getPlayerInfo/", views.GetPlayerInfoView.as_view(), name="get_player_info"),
-    path("l4m/auction/getBalance/", views.GetBalanceView.as_view(), name="get_balance"),
-    path("l4m/allauctions/", views.AllAuctionsView.as_view(), name="allauction"),
+    path("", login_views.LoginView.as_view(), name="login"),
+    path("login/", login_views.LoginView.as_view(), name="login"),
+    path("logout/", login_views.LogoutView.as_view(), name="logout"),
+    path("register/", login_views.RegisterView.as_view(), name="register"),
+    path("l4m/", auction_views.AuctionView.as_view(), name="auction"),
+    path("l4m/auction/sendBet/", auction_views.SendBetView.as_view(), name="send_bet"),
+    path("l4m/auction/getPlayerInfo/", auction_views.GetPlayerInfoView.as_view(), name="get_player_info"),
+    path("l4m/auction/getBalance/", auction_views.GetBalanceView.as_view(), name="get_balance"),
+    path("l4m/allauctions/", auction_views.AllAuctionsView.as_view(), name="allauction"),
 
 ]

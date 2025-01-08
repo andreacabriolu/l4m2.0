@@ -82,7 +82,7 @@
 .plr-full {
   cursor: default;
   border-radius: 30px;
-  box-shadow: crimson 0 0 10px 5px;
+  /* box-shadow: crimson 0 0 10px 5px; */
 }
 
 .plr-full-r1 {
@@ -284,6 +284,11 @@
     .modal-form-input-anag {
       margin-top: 2%;
     }
+  }
+
+  .modal-bet-amount {
+    display: flex;
+    justify-content: center;
   }
 
   @media (max-width:800px) {
