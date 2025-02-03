@@ -5,7 +5,8 @@ from django.contrib.auth import login, authenticate, logout
 from django.views import View
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
-from ..single_models import team
+from ..single_models import team, balance
+from datetime import datetime
 
 class LoginView(View):
     template_name= 'l4m/login.html'
@@ -61,5 +62,13 @@ class RegisterView(View):
         _team =  team.Team.objects.create(Name=new_team)
         _team.Users.set([user])
         _team.save()
+
+        _bal = balance.Balance.objects.create(
+            Name=f'newbal_{datetime.now.__str__()}',
+            Wages_amount = 300,
+            Purchases_amount = 300,
+            Team = _team
+            )
+        _bal.save()
 
         return redirect('/login/', form)
