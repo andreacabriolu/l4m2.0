@@ -143,6 +143,26 @@ function set_div(row) {
                             <input type="text" id="${current_div[0].id}_exp" class="inputFullExp" value="${row.exp_date}" readonly>\
                         </div>\
     `);
+
+    current_div.click(function(){
+        const token = Cookies.get('csrftoken');
+        var data = { 'id': row.playerid, 'csrfmiddlewaretoken': token };
+
+        $.post("/l4m/auction/getPlayerInfo/", data, function (response) {
+            json_res = JSON.parse(response)
+            
+            $('#modal-pl-info-name').val(json_res.Sur);
+            $('#modal-pl-info-realteam').val(json_res.RealT);
+            $('#modal-pl-info-role').val(RoleNames[json_res.Rol]);
+            $('#modal-pl-info-betexpdate').val(json_res.BetE);
+            $('#modal-pl-info-bestbetteam').val(json_res.BetT);
+            $('#modal-pl-info-bestbet').val(json_res.BetA);
+
+            plr_info_dlg = $('#dlg_player_info')[0];
+            if(plr_info_dlg != null) 
+                plr_info_dlg.showModal(); 
+        });
+    });
 }
 
 function calculate_expiration_date() {

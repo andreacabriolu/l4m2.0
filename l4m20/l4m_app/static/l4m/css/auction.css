@@ -132,6 +132,7 @@
   background: none;
   color: #1461ed;
   cursor: pointer !important;
+  outline: none;
 }
 
 .inputFullAmount {
@@ -143,6 +144,7 @@
     font-size: large;
     font-weight: bolder;
     cursor: pointer !important;
+    outline:none;
 }
 
 .inputFullExp {
@@ -152,6 +154,7 @@
   text-align: center;
   width: 100%;
   cursor: pointer !important;
+  outline: none;
 }
 
 .inputFullTeam {
@@ -162,6 +165,7 @@
   text-align: center;
   width: 100%;
   cursor: pointer !important;
+  outline: none;
 }
 
 .modal-form-input {
