@@ -20,6 +20,7 @@ class LoginView(View):
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
+        #TODO: find user team here
         if user is not None:
             login(request, user)
             return HttpResponseRedirect('/l4m/') #TODO: redirect based on roles!

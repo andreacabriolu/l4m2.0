@@ -268,8 +268,9 @@
   .modal-form-input-bet {
     font-size: xx-large;
     font-weight: bold;
-    width: 10%;
-    text-align: center;
+    width: 20%;
+    text-align: end;
+    margin-left: 1em;
   }
 
   .modal-form-input-bettime {

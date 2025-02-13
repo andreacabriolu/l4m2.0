@@ -30,7 +30,7 @@ function fill_slots(mbb) {
                     $('#modal-pl-info-role').val(RoleNames[json_res.Rol]);
                     $('#modal-pl-info-betexpdate').val(json_res.BetE);
                     $('#modal-pl-info-bestbetteam').val(json_res.BetT);
-                    $('#modal-pl-info-bestbet').val(json_res.BetA);
+                    $('#modal-pl-info-betamount').val(json_res.BetA);
 
                     plr_info_dlg = $('#dlg_player_info')[0];
                     if(plr_info_dlg != null) 
@@ -44,12 +44,12 @@ function fill_slots(mbb) {
             
             $("#" + div_id).html(`<div class="plr-full-r1${divStripeClass}">\
                     <input type="text" id="${div_id}_name" class="inputFullName${classRaised}" value="${raisedStr}${bet.Player_id__Surname}" readonly>\
-                    <input type="text" id="${div_id}_cost" class="inputFullAmount${classRaised}" value="${bet.Amount}" readonly>\
+                    <input type="text" id="${div_id}_cost" class="inputFullAmount${classRaised}" value="${bet.Amount}">\
                 </div>\
                 <div class="plr-full-r2${divStripeClass}">\
                     <input type="text" id="${div_id}_exp" class="inputFullExp${classRaised}" value="${expDate}" readonly>\
                 </div>\
-        `);
+            `);
         }
     });
 }
@@ -92,9 +92,11 @@ function openPlayerDialog(player) {
     $('#modal-pl-name').val(player.name + player.surname);
     $('#modal-pl-realteam').val(player.realteam);
     $('#modal-pl-role').val(RoleNames[player.role]);
-    if (player.betamount != 'None')
+    if (player.betamount != 'None') {
         $('#modal-pl-betamount').val(parseInt(player.betamount) + 1);
-    $('#modal-currentbet').hide();
+        $('#modal-pl-betamount').attr({"min" : parseInt(player.betamount) + 1}); 
+    }
+    $('#modal-currentbet').hide(); //TODO: check here for player displaying
     if (player.betexpdate != 'None') {
         $('#modal-currentbet').show();
         $('#modal-pl-bestbetteam').val(player.betteam);
