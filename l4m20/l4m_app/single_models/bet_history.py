@@ -2,7 +2,7 @@ from l4m20 import constants as C
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-class Bet(models.Model):
+class Bet_History(models.Model):
     
     Time = models.DateTimeField(auto_now=True)
     Amount = models.IntegerField()
@@ -15,9 +15,9 @@ class Bet(models.Model):
     Expiration_Date = models.TextField(max_length=100)
     Slot = models.TextField(max_length=2)
     IsExpired = models.BooleanField(default=False)
-    IsRaised = models.BooleanField(default=False) #TODO move to Bet_history
+    IsRaised = models.BooleanField(default=False)
 
-class Bet_Obj():
+class Bet_History_Obj():
     Name=str
     Time=str
     Amount=int
