@@ -21,24 +21,26 @@ function fill_slots(mbb) {
             $("#" + div_id).click(function(){
                 const token = Cookies.get('csrftoken');
                 var data = { 'id': bet.Player_id, 'csrfmiddlewaretoken': token };
+                var yes = true;
 
                 $.post("/l4m/auction/getPlayerInfo/", data, function (response) {
                     json_res = JSON.parse(response)
+                    
                     
                     $('#modal-pl-info-name').val(json_res.Sur);
                     $('#modal-pl-info-realteam').val(json_res.RealT);
                     $('#modal-pl-info-role').val(RoleNames[json_res.Rol]);
                     $('#modal-pl-info-betexpdate').val(json_res.BetE);
-                    $('#modal-pl-info-bestbetteam').val(json_res.BetT);
-                    $('#modal-pl-info-betamount').val(json_res.BetA);
+                    $('#modal-pl-info-bestbetteam').val(json_res.BetT); 
+                    $('#modal-pl-info-bestbet').val(json_res.BetA);
 
                     plr_info_dlg = $('#dlg_player_info')[0];
-                    if(plr_info_dlg != null) 
+                    if(plr_info_dlg != null && bet.IsExpired!=true) //Do not open modal when finalizing bet
                         plr_info_dlg.showModal(); 
                 });
             });
 
-            var divStripeClass = !bet.IsRaised ? "" : " stripe-1";
+            var divStripeClass = ! bet.IsRaised ? "" : " stripe-1";
             var classRaised = bet.IsRaised ? " raised" : "";
             var raisedStr = bet.IsRaised ? "(RILANCIATO) " : "";
             
@@ -47,9 +49,11 @@ function fill_slots(mbb) {
                     <input type="text" id="${div_id}_cost" class="inputFullAmount${classRaised}" value="${bet.Amount}">\
                 </div>\
                 <div class="plr-full-r2${divStripeClass}">\
-                    <input type="text" id="${div_id}_exp" class="inputFullExp${classRaised}" value="${expDate}" readonly>\
+                ${bet.IsExpired ? 
+                `<button id="${div_id}_exp_btn" class="inputFullExp${classRaised}" onclick="finalizeBet('${div_id}','${bet.Player_id}')">Ufficializza</button>` :
+                `<input type="text" id="${div_id}_exp" class="inputFullExp${classRaised}" value="${expDate}" readonly>`}
                 </div>\
-            `);
+           `);
         }
     });
 }
@@ -212,4 +216,31 @@ function sendBet() {
     dlg.close();
 
     set_div(row);
+}
+
+function finalizeBet(div_id,pl_id) {
+
+    const token = Cookies.get('csrftoken');
+    const row = new Object();
+    
+    row.playername = $('#'+div_id+'_name').val();
+    row.playerid = pl_id;
+    row.amount = parseFloat($('#'+div_id+'_cost').val());
+    row.userteamid = $('#user_team_id').val();
+    
+    jsonData = JSON.stringify(row);
+    alert(jsonData);
+	
+	var data = { 'jsonData': jsonData, 'csrfmiddlewaretoken': token };
+    $.post("/l4m/auction/finalizeBet/", data, function (response) {
+        if(response.startsWith ('error')) {
+            alert("no"+response);
+        }
+        else {
+            //remove datalist entry
+            //do something
+            alert(response);
+        }
+    });
+     
 }

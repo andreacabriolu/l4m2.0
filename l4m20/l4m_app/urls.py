@@ -11,6 +11,7 @@ urlpatterns = [
     path("register/", login_views.RegisterView.as_view(), name="register"),
     path("l4m/", auction_views.AuctionView.as_view(), name="auction"),
     path("l4m/auction/sendBet/", auction_views.SendBetView.as_view(), name="send_bet"),
+    path("l4m/auction/finalizeBet/", auction_views.FinBetView.as_view(), name="finalize_bet"),
     path("l4m/auction/getPlayerInfo/", auction_views.GetPlayerInfoView.as_view(), name="get_player_info"),
     path("l4m/auction/getBalance/", auction_views.GetBalanceView.as_view(), name="get_balance"),
     path("l4m/allauctions/", auction_views.AllAuctionsView.as_view(), name="allauction"),

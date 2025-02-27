@@ -5,6 +5,24 @@ import datetime
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 
+
+
+# SELECT
+# 	"pl"."id","pl."Surname","pl."Role,
+# 	"r"."Name" AS REALTEAMNAME,
+# 	"b"."Amount","b"."Expiration_Date",
+# 	"t"."Name" AS TEAMNAME
+# FROM
+# 	PUBLIC.L4M_APP_PLAYER PL
+# 	LEFT JOIN L4M_APP_BET B ON "pl"."id" = "b"."Player_id"
+# 	JOIN L4M_APP_REALTEAM R ON "pl"."RealTeam_id" = "r"."id"
+# 	LEFT JOIN L4M_APP_TEAM T ON "b"."Team_id" = "t"."id"
+# WHERE
+# 	"pl"."Role" = filter_role
+# 	AND (
+# 		"b"."Best" = TRUE
+# 		OR "b"."Best" IS NULL
+# 	)
 def get_players(filter_role, teamid):
     return player.Player.objects.\
         filter(Q(bet__Best=True) | Q(bet__Best=None)).\
@@ -16,7 +34,7 @@ def get_players(filter_role, teamid):
 def get_my_best_bets(teamid):
     return bet.Bet.objects.\
         filter((Q(Best=True) & Q(Team_id=teamid)) | (Q(IsRaised=True) & Q(Team_id=teamid))).\
-        values('Amount','Player_id','Player_id__Surname','Expiration_Date','Slot','IsRaised')
+        values('Amount','Player_id','Player_id__Surname','Expiration_Date','Slot','IsRaised','IsExpired','id','Team_id')
 
 def list_my_best_bets(mbb):
     ls = list(mbb).__str__()
@@ -71,7 +89,28 @@ def send_bet(data):
     bal.save()
 
     return bal
+    
+def finalize_bet(data):
 
+    fin_obj = squads.Squads_Obj()
+    fin_obj.Amount = data['amount']
+    fin_obj.Player = data['playerid']
+    fin_obj.userteamid = data['userteamid']
+	
+
+    player_ = get_object_or_404(player.Player, id=fin_obj.Player)
+    user_team = get_object_or_404(team.Team, id=fin_obj.userteamid)
+	
+
+    fin_new = squads.Squads(Amount=fin_obj.Amount,
+                Player = player_,
+                Team = user_team)
+    fin_new.save()            
+                
+    return fin_obj.userteamid
+    #return fin_new
+
+    
 def get_user_team(userid):
     return team.Team.objects.filter(Users__id=userid).values('id','Name')[0]
     

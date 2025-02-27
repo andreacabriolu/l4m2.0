@@ -53,6 +53,21 @@ class SendBetView(View):
             return HttpResponse('error inserting bet and updating balance')
         
         return HttpResponse(json.dumps({'new_bal' : bal.Purchases_amount}))
+
+class FinBetView(View):
+    template_name = 'l4m/auction.html'
+
+    def post(self, request): 
+        try:
+            data = json.loads(request.POST.get("jsonData"))
+            if (data is None): return
+            
+            msg = U.finalize_bet(data)
+
+            return HttpResponse(msg)
+        except:
+            return HttpResponse('error inserting bet and updating balance')
+
     
 class GetPlayerInfoView(View):
 
