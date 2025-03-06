@@ -25,7 +25,6 @@ from django.utils import timezone
 # 	)
 def get_players(filter_role, teamid):
     return player.Player.objects.\
-        filter(Q(bet__Best=True) | Q(bet__Best=None)).\
         filter(Role=filter_role).\
         filter(RealTeam__isnull=False).\
         exclude(bet__Team_id=teamid).\
@@ -33,7 +32,7 @@ def get_players(filter_role, teamid):
 
 def get_my_best_bets(teamid):
     return bet.Bet.objects.\
-        filter((Q(Best=True) & Q(Team_id=teamid)) | (Q(IsRaised=True) & Q(Team_id=teamid))).\
+        filter((Q(Team_id=teamid)) | (Q(IsRaised=True) & Q(Team_id=teamid))).\
         values('Amount','Player_id','Player_id__Surname','Expiration_Date','Slot','IsRaised','IsExpired','id','Team_id')
 
 def list_my_best_bets(mbb):

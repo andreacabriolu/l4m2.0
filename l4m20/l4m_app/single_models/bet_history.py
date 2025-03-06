@@ -29,3 +29,4 @@ class Bet_History_Obj():
     Session=str
     Expiration_Date=str
     Slot=str
+    IsExpired=str
