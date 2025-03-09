@@ -13,9 +13,6 @@ class Bet_History(models.Model):
     Team = models.ForeignKey(on_delete=models.CASCADE, to=C.Constant_Strings.team, null=True)
     Session = models.ForeignKey(on_delete=models.CASCADE, to=C.Constant_Strings.session, null=True)
     Expiration_Date = models.TextField(max_length=100)
-    Slot = models.TextField(max_length=2)
-    IsExpired = models.BooleanField(default=False)
-    IsRaised = models.BooleanField(default=False)
 
 class Bet_History_Obj():
     Name=str
@@ -28,5 +25,3 @@ class Bet_History_Obj():
     Team=str
     Session=str
     Expiration_Date=str
-    Slot=str
-    IsExpired=str

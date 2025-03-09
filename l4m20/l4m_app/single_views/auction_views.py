@@ -75,7 +75,6 @@ class GetPlayerInfoView(View):
         id = request.POST.get("id")
 
         pl = player.Player.objects.\
-        filter(Q(bet__Best=True) | Q(bet__Best=None)).\
         values('id','Surname','Name','Role','RealTeam__Name','bet__Amount','bet__Expiration_Date','bet__Team_id__Name').\
         get(pk=id)
 
@@ -123,6 +122,7 @@ class AllAuctionsView(LoginRequiredMixin, View):
             la = complete_list(la, C.NUM_FW, C.Constant_Dicts.RoleChars['ATT'])
 
             team_players[team_id['Name'].replace(' ','_')] = lp + ld + lc + la
+            
         team_players={user_team_name:team_players.pop(user_team_name), **team_players} #get user team as first
 
         params = { 

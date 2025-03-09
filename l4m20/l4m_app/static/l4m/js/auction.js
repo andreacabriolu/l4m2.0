@@ -229,17 +229,17 @@ function finalizeBet(div_id,pl_id) {
     row.userteamid = $('#user_team_id').val();
     
     jsonData = JSON.stringify(row);
-    alert(jsonData);
+    // alert(jsonData);
 	
 	var data = { 'jsonData': jsonData, 'csrfmiddlewaretoken': token };
     $.post("/l4m/auction/finalizeBet/", data, function (response) {
         if(response.startsWith ('error')) {
-            alert("no"+response);
+            // alert("no"+response);
         }
         else {
             //remove datalist entry
             //do something
-            alert(response);
+            // alert(response);
         }
     });
      
