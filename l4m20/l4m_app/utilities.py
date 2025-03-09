@@ -62,8 +62,8 @@ def send_bet(data):
             Player=bet_old.Player,
             Team=bet_old.Team
         )
-
-    bet_history_new.save()
+        bet_history_new.save()
+    
     bet_new.save()
 
     bal = balance.Balance.objects.filter(Team=bet_obj.Team)
