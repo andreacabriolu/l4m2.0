@@ -5,30 +5,8 @@ import datetime
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 
-#<<<<<<< HEAD
-
-
-# SELECT
-# 	"pl"."id","pl."Surname","pl."Role,
-# 	"r"."Name" AS REALTEAMNAME,
-# 	"b"."Amount","b"."Expiration_Date",
-# 	"t"."Name" AS TEAMNAME
-# FROM
-# 	PUBLIC.L4M_APP_PLAYER PL
-# 	LEFT JOIN L4M_APP_BET B ON "pl"."id" = "b"."Player_id"
-# 	JOIN L4M_APP_REALTEAM R ON "pl"."RealTeam_id" = "r"."id"
-# 	LEFT JOIN L4M_APP_TEAM T ON "b"."Team_id" = "t"."id"
-# WHERE
-# 	"pl"."Role" = filter_role
-# 	AND (
-# 		"b"."Best" = TRUE
-# 		OR "b"."Best" IS NULL
-# 	)
-#=======
-#>>>>>>> c6264d462d3d971cab9ac7021c8b104bdc608204
 def get_players(filter_role, teamid):
     return player.Player.objects.\
-        filter(Q(bet__Best=True) | Q(bet__Best=None)).\
         filter(Role=filter_role).\
         filter(RealTeam__isnull=False).\
         exclude(bet__Team_id=teamid).\
@@ -36,7 +14,7 @@ def get_players(filter_role, teamid):
 
 def get_my_best_bets(teamid):
     return bet.Bet.objects.\
-        filter((Q(Best=True) & Q(Team_id=teamid)) | (Q(IsRaised=True) & Q(Team_id=teamid))).\
+        filter((Q(Team_id=teamid)) | (Q(IsRaised=True) & Q(Team_id=teamid))).\
         values('Amount','Player_id','Player_id__Surname','Expiration_Date','Slot','IsRaised','IsExpired','id','Team_id')
 
 def list_my_best_bets(mbb):
@@ -57,8 +35,8 @@ def get_total(mbb):
 
 def get_all_team_players():
     return player.Player.objects.\
-        filter(Q(bet__Best=True)).\
-        values('id','Surname','Name','Role','Team_id','bet__Team_id','bet__Amount','bet__IsExpired','bet__Carognata','bet__Expiration_Date')
+        values('id','Surname','Name','Role','Team_id','bet__Team_id','bet__Amount',\
+               'bet__IsExpired','bet__Carognata','bet__Expiration_Date')
     
 def send_bet(data):
     bet_obj =  bet.Bet_Obj()
@@ -74,16 +52,18 @@ def send_bet(data):
     bet_new = bet.Bet(Amount=bet_obj.Amount,
                     Player = player_,
                     Team = user_team,
-                    Best=True,
                     Expiration_Date=exp_date_obj,
                     Slot=bet_obj.Slot)
 
-    bet_old = bet.Bet.objects.filter(Q(Best=True) & Q(Player=player_))
+    bet_old = bet.Bet.objects.filter(Q(Player=player_))
     if len(list(bet_old)) == 1: #there is an old best bet
-        bet_old[0].Best = False
-        bet_old[0].IsRaised = True
-        bet_old[0].save()
-
+        bet_history_new = bet_history.Bet_History(
+            Amount=bet_old.Amount,
+            Player=bet_old.Player,
+            Team=bet_old.Team
+        )
+        bet_history_new.save()
+    
     bet_new.save()
 
     bal = balance.Balance.objects.filter(Team=bet_obj.Team)

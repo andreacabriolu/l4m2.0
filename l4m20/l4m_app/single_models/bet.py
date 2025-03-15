@@ -30,3 +30,4 @@ class Bet_Obj():
     Expiration_Date=str
     Slot=str
     IsExpired=bool
+    IsRaised=bool

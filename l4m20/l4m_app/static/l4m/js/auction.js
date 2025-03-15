@@ -31,13 +31,8 @@ function fill_slots(mbb) {
                     $('#modal-pl-info-realteam').val(json_res.RealT);
                     $('#modal-pl-info-role').val(RoleNames[json_res.Rol]);
                     $('#modal-pl-info-betexpdate').val(json_res.BetE);
-<<<<<<< HEAD
                     $('#modal-pl-info-bestbetteam').val(json_res.BetT); 
                     $('#modal-pl-info-bestbet').val(json_res.BetA);
-=======
-                    $('#modal-pl-info-bestbetteam').val(json_res.BetT);
-                    $('#modal-pl-info-betamount').val(json_res.BetA);
->>>>>>> c6264d462d3d971cab9ac7021c8b104bdc608204
 
                     plr_info_dlg = $('#dlg_player_info')[0];
                     if(plr_info_dlg != null && bet.IsExpired!=true) //Do not open modal when finalizing bet
@@ -58,11 +53,7 @@ function fill_slots(mbb) {
                 `<button id="${div_id}_exp_btn" class="inputFullExp${classRaised}" onclick="finalizeBet('${div_id}','${bet.Player_id}')">Ufficializza</button>` :
                 `<input type="text" id="${div_id}_exp" class="inputFullExp${classRaised}" value="${expDate}" readonly>`}
                 </div>\
-<<<<<<< HEAD
            `);
-=======
-            `);
->>>>>>> c6264d462d3d971cab9ac7021c8b104bdc608204
         }
     });
 }
@@ -238,17 +229,17 @@ function finalizeBet(div_id,pl_id) {
     row.userteamid = $('#user_team_id').val();
     
     jsonData = JSON.stringify(row);
-    alert(jsonData);
+    // alert(jsonData);
 	
 	var data = { 'jsonData': jsonData, 'csrfmiddlewaretoken': token };
     $.post("/l4m/auction/finalizeBet/", data, function (response) {
         if(response.startsWith ('error')) {
-            alert("no"+response);
+            // alert("no"+response);
         }
         else {
             //remove datalist entry
             //do something
-            alert(response);
+            // alert(response);
         }
     });
      
