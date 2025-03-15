@@ -31,8 +31,13 @@ function fill_slots(mbb) {
                     $('#modal-pl-info-realteam').val(json_res.RealT);
                     $('#modal-pl-info-role').val(RoleNames[json_res.Rol]);
                     $('#modal-pl-info-betexpdate').val(json_res.BetE);
+<<<<<<< HEAD
                     $('#modal-pl-info-bestbetteam').val(json_res.BetT); 
                     $('#modal-pl-info-bestbet').val(json_res.BetA);
+=======
+                    $('#modal-pl-info-bestbetteam').val(json_res.BetT);
+                    $('#modal-pl-info-betamount').val(json_res.BetA);
+>>>>>>> c6264d462d3d971cab9ac7021c8b104bdc608204
 
                     plr_info_dlg = $('#dlg_player_info')[0];
                     if(plr_info_dlg != null && bet.IsExpired!=true) //Do not open modal when finalizing bet
@@ -46,14 +51,18 @@ function fill_slots(mbb) {
             
             $("#" + div_id).html(`<div class="plr-full-r1${divStripeClass}">\
                     <input type="text" id="${div_id}_name" class="inputFullName${classRaised}" value="${raisedStr}${bet.Player_id__Surname}" readonly>\
-                    <input type="text" id="${div_id}_cost" class="inputFullAmount${classRaised}" value="${bet.Amount}" readonly>\
+                    <input type="text" id="${div_id}_cost" class="inputFullAmount${classRaised}" value="${bet.Amount}">\
                 </div>\
                 <div class="plr-full-r2${divStripeClass}">\
                 ${bet.IsExpired ? 
                 `<button id="${div_id}_exp_btn" class="inputFullExp${classRaised}" onclick="finalizeBet('${div_id}','${bet.Player_id}')">Ufficializza</button>` :
                 `<input type="text" id="${div_id}_exp" class="inputFullExp${classRaised}" value="${expDate}" readonly>`}
                 </div>\
+<<<<<<< HEAD
            `);
+=======
+            `);
+>>>>>>> c6264d462d3d971cab9ac7021c8b104bdc608204
         }
     });
 }
@@ -96,9 +105,11 @@ function openPlayerDialog(player) {
     $('#modal-pl-name').val(player.name + player.surname);
     $('#modal-pl-realteam').val(player.realteam);
     $('#modal-pl-role').val(RoleNames[player.role]);
-    if (player.betamount != 'None')
+    if (player.betamount != 'None') {
         $('#modal-pl-betamount').val(parseInt(player.betamount) + 1);
-    $('#modal-currentbet').hide();
+        $('#modal-pl-betamount').attr({"min" : parseInt(player.betamount) + 1}); 
+    }
+    $('#modal-currentbet').hide(); //TODO: check here for player displaying
     if (player.betexpdate != 'None') {
         $('#modal-currentbet').show();
         $('#modal-pl-bestbetteam').val(player.betteam);
@@ -147,6 +158,26 @@ function set_div(row) {
                             <input type="text" id="${current_div[0].id}_exp" class="inputFullExp" value="${row.exp_date}" readonly>\
                         </div>\
     `);
+
+    current_div.click(function(){
+        const token = Cookies.get('csrftoken');
+        var data = { 'id': row.playerid, 'csrfmiddlewaretoken': token };
+
+        $.post("/l4m/auction/getPlayerInfo/", data, function (response) {
+            json_res = JSON.parse(response)
+            
+            $('#modal-pl-info-name').val(json_res.Sur);
+            $('#modal-pl-info-realteam').val(json_res.RealT);
+            $('#modal-pl-info-role').val(RoleNames[json_res.Rol]);
+            $('#modal-pl-info-betexpdate').val(json_res.BetE);
+            $('#modal-pl-info-bestbetteam').val(json_res.BetT);
+            $('#modal-pl-info-bestbet').val(json_res.BetA);
+
+            plr_info_dlg = $('#dlg_player_info')[0];
+            if(plr_info_dlg != null) 
+                plr_info_dlg.showModal(); 
+        });
+    });
 }
 
 function calculate_expiration_date() {

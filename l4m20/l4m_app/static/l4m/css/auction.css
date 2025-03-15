@@ -132,6 +132,7 @@
   background: none;
   color: #ffffff;
   cursor: pointer !important;
+  outline: none;
 }
 
 .inputFullAmount {
@@ -143,6 +144,7 @@
     font-size: large;
     font-weight: bolder;
     cursor: pointer !important;
+    outline:none;
 }
 
 .inputFullExp {
@@ -153,6 +155,7 @@
   text-align: center;
   width: 100%;
   cursor: pointer !important;
+  outline: none;
 }
 
 .inputFullTeam {
@@ -163,6 +166,7 @@
   text-align: center;
   width: 100%;
   cursor: pointer !important;
+  outline: none;
 }
 
 .modal-form-input {
@@ -265,8 +269,9 @@
   .modal-form-input-bet {
     font-size: xx-large;
     font-weight: bold;
-    width: 10%;
-    text-align: center;
+    width: 20%;
+    text-align: end;
+    margin-left: 1em;
   }
 
   .modal-form-input-bettime {

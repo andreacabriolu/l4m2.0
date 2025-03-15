@@ -123,7 +123,7 @@ class AllAuctionsView(LoginRequiredMixin, View):
             la = complete_list(la, C.NUM_FW, C.Constant_Dicts.RoleChars['ATT'])
 
             team_players[team_id['Name'].replace(' ','_')] = lp + ld + lc + la
-            team_players={user_team_name:team_players.pop(user_team_name), **team_players} #get user team as first
+        team_players={user_team_name:team_players.pop(user_team_name), **team_players} #get user team as first
 
         params = { 
             'team_players' : json.dumps(team_players)

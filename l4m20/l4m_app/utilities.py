@@ -5,6 +5,7 @@ import datetime
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 
+#<<<<<<< HEAD
 
 
 # SELECT
@@ -23,6 +24,8 @@ from django.utils import timezone
 # 		"b"."Best" = TRUE
 # 		OR "b"."Best" IS NULL
 # 	)
+#=======
+#>>>>>>> c6264d462d3d971cab9ac7021c8b104bdc608204
 def get_players(filter_role, teamid):
     return player.Player.objects.\
         filter(Q(bet__Best=True) | Q(bet__Best=None)).\
