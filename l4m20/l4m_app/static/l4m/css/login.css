@@ -37,9 +37,13 @@ body {
 }
 
 .login-label {
-  color: whitesmoke;
+  color: #828282;
 }
 
 h1 {
   color: darkgray !important;
+}
+
+.custom-form-control {
+  background-color: lightblue;
 }
