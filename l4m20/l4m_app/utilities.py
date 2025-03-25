@@ -65,6 +65,7 @@ def send_bet(data):
         bet_history_new.save()
     
     bet_new.save()
+    bet_old.delete() #remove old bet
 
     bal = balance.Balance.objects.filter(Team=bet_obj.Team)
     bal = bal[0] #there should be only one balance TODO: check with giamba

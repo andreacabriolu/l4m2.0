@@ -59,7 +59,8 @@
 
 .pl-div {
   width: 30%;
-    background-image: linear-gradient(to bottom, rgb(223, 237, 251),rgb(231, 231, 231));
+    /* background-image: linear-gradient(to bottom, rgb(223, 237, 251),rgb(231, 231, 231)); */
+    background-color: whitesmoke;
     display: flex;
     justify-items:center;
     margin: 30px;
@@ -91,6 +92,8 @@
 
 .plr-full-r2 {
   width: 100%;
+  display: flex;
+  justify-content: space-evenly;
 }
 
 .plr-full-r3 {
@@ -217,6 +220,7 @@
   }
 
   .dlg-player {
+    background-color: lightslategrey;
     width: 50%;
   }
 
@@ -381,3 +385,14 @@
       rgba(0, 0, 0, 0.1) 20px
     );
   }
+
+  .official {
+    content: url('../images/uffic.png');
+    cursor: pointer;
+  }
+
+  .player-got {
+    background-color: yellowgreen;
+  }
+
+  

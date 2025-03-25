@@ -50,7 +50,7 @@ function fill_slots(mbb) {
                 </div>\
                 <div class="plr-full-r2${divStripeClass}">\
                 ${bet.IsExpired ? 
-                `<button id="${div_id}_exp_btn" class="inputFullExp${classRaised}" onclick="finalizeBet('${div_id}','${bet.Player_id}')">Ufficializza</button>` :
+                `<div>ASTA CONCLUSA! <img id="${div_id}_img" class="official" onclick="finalizeBet('${div_id}','${bet.Player_id}')"></img></div>` :
                 `<input type="text" id="${div_id}_exp" class="inputFullExp${classRaised}" value="${expDate}" readonly>`}
                 </div>\
            `);
@@ -59,6 +59,7 @@ function fill_slots(mbb) {
 }
 
 window.addEventListener('DOMContentLoaded', event => {
+    $('#official-alert').hide();
     fill_slots(JSON.parse($('#my_best_bets').val()));
 
     $('.dt-content').on('click', function () {
@@ -229,17 +230,18 @@ function finalizeBet(div_id,pl_id) {
     row.userteamid = $('#user_team_id').val();
     
     jsonData = JSON.stringify(row);
-    // alert(jsonData);
 	
 	var data = { 'jsonData': jsonData, 'csrfmiddlewaretoken': token };
     $.post("/l4m/auction/finalizeBet/", data, function (response) {
         if(response.startsWith ('error')) {
-            // alert("no"+response);
         }
         else {
-            //remove datalist entry
-            //do something
-            // alert(response);
+            $('#'+div_id).addClass('player-got');
+            $('#'+div_id+'_img').prop('hidden', true);
+            $('#'+div_id).children().prop('disabled', true);
+            $("#official-alert").fadeTo(2000, 500);
+            $("#official-alert").slideUp(500, function(){ $("#official-alert").slideUp(500); });
+
         }
     });
      
