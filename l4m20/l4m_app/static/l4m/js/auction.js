@@ -43,15 +43,20 @@ function fill_slots(mbb) {
             var divStripeClass = ! bet.IsRaised ? "" : " stripe-1";
             var classRaised = bet.IsRaised ? " raised" : "";
             var raisedStr = bet.IsRaised ? "(RILANCIATO) " : "";
+            var htmlIsNotOfficial = `<img id="${div_id}_img" class="official" onclick="finalizeBet('${div_id}','${bet.Player_id}')"></img>`;
+            var htmlIsExpired = `<div class="end-auction">ASTA CONCLUSA!\ 
+                    ${!bet.IsOfficial ? htmlIsNotOfficial : ''}\</div>`;
+            var htmlIsNotExpired = `<input type="text" id="${div_id}_exp" class="inputFullExp${classRaised}" value="${expDate}" readonly>`;
             
-            $("#" + div_id).html(`<div class="plr-full-r1${divStripeClass}">\
+            $("#" + div_id).html(`
+                <div class="plr-full-r1${divStripeClass}">\
                     <input type="text" id="${div_id}_name" class="inputFullName${classRaised}" value="${raisedStr}${bet.Player_id__Surname}" readonly>\
                     <input type="text" id="${div_id}_cost" class="inputFullAmount${classRaised}" value="${bet.Amount}">\
                 </div>\
                 <div class="plr-full-r2${divStripeClass}">\
                 ${bet.IsExpired ? 
-                `<div>ASTA CONCLUSA! <img id="${div_id}_img" class="official" onclick="finalizeBet('${div_id}','${bet.Player_id}')"></img></div>` :
-                `<input type="text" id="${div_id}_exp" class="inputFullExp${classRaised}" value="${expDate}" readonly>`}
+                    htmlIsExpired:
+                    htmlIsNotExpired}
                 </div>\
            `);
         }

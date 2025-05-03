@@ -15,7 +15,7 @@ def get_players(filter_role, teamid):
 def get_my_best_bets(teamid):
     return bet.Bet.objects.\
         filter((Q(Team_id=teamid)) | (Q(IsRaised=True) & Q(Team_id=teamid))).\
-        values('Amount','Player_id','Player_id__Surname','Expiration_Date','Slot','IsRaised','IsExpired','id','Team_id')
+        values('Amount','Player_id','Player_id__Surname','Expiration_Date','Slot','IsRaised','IsExpired','id','Team_id','IsOfficial')
 
 def list_my_best_bets(mbb):
     ls = list(mbb).__str__()
@@ -79,20 +79,19 @@ def finalize_bet(data):
     fin_obj = squads.Squads_Obj()
     fin_obj.Amount = data['amount']
     fin_obj.Player = data['playerid']
-    fin_obj.userteamid = data['userteamid']
-	
+    fin_obj.Team = data['userteamid']
 
     player_ = get_object_or_404(player.Player, id=fin_obj.Player)
-    user_team = get_object_or_404(team.Team, id=fin_obj.userteamid)
-	
+    user_team = get_object_or_404(team.Team, id=fin_obj.Team)
+    last_bet = bet.Bet.objects.filter(Q(Player_id=player_.id))
+    last_bet.update(IsOfficial=True)
 
     fin_new = squads.Squads(Amount=fin_obj.Amount,
                 Player = player_,
                 Team = user_team)
     fin_new.save()            
                 
-    return fin_obj.userteamid
-    #return fin_new
+    # return fin_obj.userteamid
 
     
 def get_user_team(userid):

@@ -16,6 +16,7 @@ class Bet(models.Model):
     Slot = models.TextField(max_length=2)
     IsExpired = models.BooleanField(default=False)
     IsRaised = models.BooleanField(default=False) #TODO move to Bet_history
+    IsOfficial = models.BooleanField(default=False)
 
 class Bet_Obj():
     Name=str
@@ -31,3 +32,4 @@ class Bet_Obj():
     Slot=str
     IsExpired=bool
     IsRaised=bool
+    IsOfficial=bool
