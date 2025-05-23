@@ -33,6 +33,24 @@
         <input id="my_best_bets" type="hidden" value="{{my_best_bets}}">
         <input id="my_balance" type="hidden" value="{{balance}}">
 
+        <div class="modal fade" id="officialModal" tabindex="-1" role="dialog" aria-labelledby="officialModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="officialModalLabel"></h4>
+                        </div>
+                        <div class="modal-body">
+                            <h4>UFFICIALIZZARE IL GIOCATORE?</h4>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-bs-dismiss="modal">No</button>
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                                onclick="finalizeBet()">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         <dialog id="dlg_gk_open">
             <div class="modal-header">
                 <span class="close" id="closeGk" onclick="closeDlg(this)"><img

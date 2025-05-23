@@ -2,6 +2,7 @@ let dlg, plr_dlg;
 let search;
 let player;
 let current_div;
+let officialInfo = {};
 
 var RoleNames = {
     'P': 'PORTIERE',
@@ -10,6 +11,17 @@ var RoleNames = {
     'A': 'ATTACCANTE',
     '': ''
 };
+
+function openOfficialModal(divid, playerid) {
+
+    officialInfo = {
+        'divid' : divid,
+        'playerid' : playerid
+    };
+
+    $('#officialModal').modal('show');
+    
+}
 
 function fill_slots(mbb) {
     mbb.forEach(bet => {
@@ -40,25 +52,26 @@ function fill_slots(mbb) {
                 });
             });
 
-            var divStripeClass = ! bet.IsRaised ? "" : " stripe-1";
-            var classRaised = bet.IsRaised ? " raised" : "";
-            var raisedStr = bet.IsRaised ? "(RILANCIATO) " : "";
-            var htmlIsNotOfficial = `<img id="${div_id}_img" class="official" onclick="finalizeBet('${div_id}','${bet.Player_id}')"></img>`;
-            var htmlIsExpired = `<div class="end-auction">ASTA CONCLUSA!\ 
+            var htmlIsNotOfficial = `<img class="official" id="${div_id}_img" onclick="openOfficialModal('${div_id}','${bet.Player_id}')"></img>`;
+            // var htmlIsNotOfficial = `<img id="${div_id}_img" onclick="finalizeBet('${div_id}','${bet.Player_id}')"></img>`;
+            
+            var htmlIsExpired = `<div>ASTA CONCLUSA!\ 
                     ${!bet.IsOfficial ? htmlIsNotOfficial : ''}\</div>`;
-            var htmlIsNotExpired = `<input type="text" id="${div_id}_exp" class="inputFullExp${classRaised}" value="${expDate}" readonly>`;
+            var htmlIsNotExpired = `<input type="text" id="${div_id}_exp" class="inputFullExp" value="${expDate}" readonly>`;
             
             $("#" + div_id).html(`
-                <div class="plr-full-r1${divStripeClass}">\
-                    <input type="text" id="${div_id}_name" class="inputFullName${classRaised}" value="${raisedStr}${bet.Player_id__Surname}" readonly>\
-                    <input type="text" id="${div_id}_cost" class="inputFullAmount${classRaised}" value="${bet.Amount}">\
+                <div class="plr-full-r1">\
+                    <input type="text" id="${div_id}_name" class="inputFullName" value="${bet.Player_id__Surname}" readonly>\
+                    <input type="text" id="${div_id}_cost" class="inputFullAmount" value="${bet.Amount}">\
                 </div>\
-                <div class="plr-full-r2${divStripeClass}">\
+                <div class="plr-full-r2">\
                 ${bet.IsExpired ? 
                     htmlIsExpired:
                     htmlIsNotExpired}
                 </div>\
            `);
+
+           $('#' + div_id).addClass(`${bet.IsOfficial ? 'end-official' : ''}`);
         }
     });
 }
@@ -224,8 +237,11 @@ function sendBet() {
     set_div(row);
 }
 
-function finalizeBet(div_id,pl_id) {
+function finalizeBet() {
 
+    div_id = officialInfo['divid'];
+    pl_id = officialInfo['playerid'];
+    
     const token = Cookies.get('csrftoken');
     const row = new Object();
     
@@ -241,7 +257,7 @@ function finalizeBet(div_id,pl_id) {
         if(response.startsWith ('error')) {
         }
         else {
-            $('#'+div_id).addClass('player-got');
+            $('#'+div_id).addClass('end-official');
             $('#'+div_id+'_img').prop('hidden', true);
             $('#'+div_id).children().prop('disabled', true);
             $("#official-alert").fadeTo(2000, 500);
