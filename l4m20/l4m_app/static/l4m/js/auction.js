@@ -23,17 +23,36 @@ function openOfficialModal(divid, playerid) {
     
 }
 
+function fillSlotContent(div_id, bet, expDate) {
+
+    var htmlIsExpired = `<div>${!bet.IsOfficial ? "ASTA CONCLUSA!" : "UFFICIALE"}</div>`;
+    var htmlIsNotExpired = `<input type="text" id="${div_id}_exp" class="inputFullExp" value="${expDate}" readonly>`;
+
+    $("#" + div_id).html(`
+                <div class="plr-full-r1">\
+                    <input type="text" id="${div_id}_name" class="inputFullName" value="${bet.Player_id__Surname}" readonly>\
+                    <input type="text" id="${div_id}_cost" class="inputFullAmount" value="${bet.Amount}">\
+                </div>\
+                <div class="plr-full-r2">\
+                ${bet.IsExpired ?
+                    htmlIsExpired :
+                    htmlIsNotExpired}
+                </div>\
+           `);
+
+    $('#' + div_id).addClass(`${bet.IsOfficial ? 'end-official' : ''}`);
+}
+
 function fill_slots(mbb) {
     mbb.forEach(bet => {
         div_id = bet.Slot
         expDate = bet.Expiration_Date.substr(0,19) //Format, TODO improve, I don't like it
         if (div_id != '') {
             $("#" + div_id).addClass('plr-full');
-            $("#" + div_id).prop('onclick', null).off("click");
+            // $("#" + div_id).prop('onclick', null).off("click");
             $("#" + div_id).click(function(){
                 const token = Cookies.get('csrftoken');
                 var data = { 'id': bet.Player_id, 'csrfmiddlewaretoken': token };
-                var yes = true;
 
                 $.post("/l4m/auction/getPlayerInfo/", data, function (response) {
                     json_res = JSON.parse(response)
@@ -47,31 +66,20 @@ function fill_slots(mbb) {
                     $('#modal-pl-info-bestbet').val(json_res.BetA);
 
                     plr_info_dlg = $('#dlg_player_info')[0];
-                    if(plr_info_dlg != null && bet.IsExpired!=true) //Do not open modal when finalizing bet
+
+                    if(plr_info_dlg == null) { return; }
+
+                    if(!bet.IsExpired) { //AUCTION OPEN
                         plr_info_dlg.showModal(); 
+                    }
+                    else if(bet.IsExpired) {
+                        openOfficialModal(div_id, bet.Player_id);
+                    }
+                    
                 });
             });
 
-            var htmlIsNotOfficial = `<img class="official" id="${div_id}_img" onclick="openOfficialModal('${div_id}','${bet.Player_id}')"></img>`;
-            // var htmlIsNotOfficial = `<img id="${div_id}_img" onclick="finalizeBet('${div_id}','${bet.Player_id}')"></img>`;
-            
-            var htmlIsExpired = `<div>ASTA CONCLUSA!\ 
-                    ${!bet.IsOfficial ? htmlIsNotOfficial : ''}\</div>`;
-            var htmlIsNotExpired = `<input type="text" id="${div_id}_exp" class="inputFullExp" value="${expDate}" readonly>`;
-            
-            $("#" + div_id).html(`
-                <div class="plr-full-r1">\
-                    <input type="text" id="${div_id}_name" class="inputFullName" value="${bet.Player_id__Surname}" readonly>\
-                    <input type="text" id="${div_id}_cost" class="inputFullAmount" value="${bet.Amount}">\
-                </div>\
-                <div class="plr-full-r2">\
-                ${bet.IsExpired ? 
-                    htmlIsExpired:
-                    htmlIsNotExpired}
-                </div>\
-           `);
-
-           $('#' + div_id).addClass(`${bet.IsOfficial ? 'end-official' : ''}`);
+            fillSlotContent(div_id, bet, expDate);
         }
     });
 }

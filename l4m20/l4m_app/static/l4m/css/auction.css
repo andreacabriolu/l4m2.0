@@ -387,7 +387,7 @@
   }
 
   .official {
-    content: url('../images/uffic.png');
+    /* content: url('../images/uffic.png'); */
     cursor: pointer;
   }
 
