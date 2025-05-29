@@ -103,7 +103,7 @@
 .inputPlyr {
     width: 80%;
     margin:20px;
-    background-image: linear-gradient(to bottom, rgb(223, 237, 251),rgb(231, 231, 231));
+    background-color: whitesmoke;  
     color: blue;
     cursor: pointer !important;
     text-align: center;
@@ -399,4 +399,14 @@
     align-items: center;
   }
 
-  
+.dlg-main {
+  background-color: slategray;
+}  
+
+.plr-info {
+  background: darkgrey;
+}
+
+.plr-info-official {
+  background: darkseagreen;
+}

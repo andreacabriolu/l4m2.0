@@ -12,15 +12,30 @@ var RoleNames = {
     '': ''
 };
 
-function openOfficialModal(divid, playerid) {
+function openPreOfficialModal(divid, playerid) {
 
     officialInfo = {
         'divid' : divid,
         'playerid' : playerid
     };
 
-    $('#officialModal').modal('show');
+    $('#preOfficialModal').modal('show');
     
+}
+
+function openPlayerModal(playerName, official=false) {
+    $('#dlg_player_info').modal('show');
+    $('#playerInfoLabel').text(playerName.toUpperCase());
+
+    if(official) {
+        $('#plr_info_modal_body').addClass('plr-info-official');
+        $('#modal-currentbet').prop('hidden', true);
+    }
+    else {
+        $('#plr_info_modal_body').removeClass('plr-info-official');
+        $('#modal-currentbet').prop('hidden', false);
+    }
+
 }
 
 function fillSlotContent(div_id, bet, expDate) {
@@ -49,7 +64,7 @@ function fill_slots(mbb) {
         expDate = bet.Expiration_Date.substr(0,19) //Format, TODO improve, I don't like it
         if (div_id != '') {
             $("#" + div_id).addClass('plr-full');
-            // $("#" + div_id).prop('onclick', null).off("click");
+            $("#" + div_id).prop('onclick', null).off("click");
             $("#" + div_id).click(function(){
                 const token = Cookies.get('csrftoken');
                 var data = { 'id': bet.Player_id, 'csrfmiddlewaretoken': token };
@@ -65,15 +80,14 @@ function fill_slots(mbb) {
                     $('#modal-pl-info-bestbetteam').val(json_res.BetT); 
                     $('#modal-pl-info-bestbet').val(json_res.BetA);
 
-                    plr_info_dlg = $('#dlg_player_info')[0];
-
-                    if(plr_info_dlg == null) { return; }
-
-                    if(!bet.IsExpired) { //AUCTION OPEN
-                        plr_info_dlg.showModal(); 
+                    if(!bet.IsExpired) {
+                        openPlayerModal(json_res.Sur);
                     }
-                    else if(bet.IsExpired) {
-                        openOfficialModal(div_id, bet.Player_id);
+                    else if(bet.IsExpired && !bet.IsOfficial) {
+                        openPreOfficialModal(div_id, bet.Player_id);
+                    }
+                    else if(bet.IsOfficial) {
+                        openPlayerModal(json_res.Sur, official=true);
                     }
                     
                 });
@@ -191,9 +205,7 @@ function set_div(row) {
             $('#modal-pl-info-bestbetteam').val(json_res.BetT);
             $('#modal-pl-info-bestbet').val(json_res.BetA);
 
-            plr_info_dlg = $('#dlg_player_info')[0];
-            if(plr_info_dlg != null) 
-                plr_info_dlg.showModal(); 
+            openPlayerModal(json_res.Sur);
         });
     });
 }

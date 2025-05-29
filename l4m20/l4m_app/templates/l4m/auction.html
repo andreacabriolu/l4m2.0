@@ -24,33 +24,34 @@
         </div>
         <div class="balance-div" id="balance_div">
             <label class="balance-label">Monte acquisti</label>
-            <span class="balance-info" id="main-balance">{{balance.Purchases_amount}}</span> 
-        </div> 
+            <span class="balance-info" id="main-balance">{{balance.Purchases_amount}}</span>
+        </div>
         <!-- Canvas? React? Divs? -->
         <input id="user_team_id" type="hidden" value="{{user_team.id}}">
         <input id="user_team_name" type="hidden" value="{{user_team.Name}}">
         <input id="my_best_bets" type="hidden" value="{{my_best_bets}}">
         <input id="my_balance" type="hidden" value="{{balance}}">
 
-        <div class="modal fade" id="officialModal" tabindex="-1" role="dialog" aria-labelledby="officialModalLabel">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title" id="officialModalLabel"></h4>
-                        </div>
-                        <div class="modal-body">
-                            <h4 class="official-modal-title">UFFICIALIZZARE IL GIOCATORE?</h4>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-bs-dismiss="modal">No</button>
-                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
-                                onclick="finalizeBet()">OK</button>
-                        </div>
+        <div class="modal fade" id="preOfficialModal" tabindex="-1" role="dialog"
+            aria-labelledby="preOfficialModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="preOfficialModalLabel"></h4>
+                    </div>
+                    <div class="modal-body">
+                        <h4 class="official-modal-title">UFFICIALIZZARE IL GIOCATORE?</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">DOPO</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                            onclick="finalizeBet()">OK</button>
                     </div>
                 </div>
             </div>
+        </div>
 
-        <dialog id="dlg_gk_open">
+        <dialog id="dlg_gk_open" class="dlg-main">
             <div class="modal-header">
                 <span class="close" id="closeGk" onclick="closeDlg(this)"><img
                         src="{% static 'l4m/images/close-blue.png' %}"></span>
@@ -70,12 +71,12 @@
                         <span class="temp_amount">[puntato a {{player_gk.bet__Amount}} da
                             {{player_gk.bet__Team_id__Name}}]</span>
                         {% endif %}
-                    {% endfor %}
+                        {% endfor %}
                 </dl>
             </div>
         </dialog>
 
-        <dialog id="dlg_df_open">
+        <dialog id="dlg_df_open" class="dlg-main">
             <div class="modal-header">
                 <span class="close" id="closedf" onclick="closeDlg(this)"><img
                         src="{% static 'l4m/images/close-blue.png' %}"></span>
@@ -83,7 +84,7 @@
             <div class="modal-body">
                 <input id="modal-ob-search_def" type="text" onkeyup="searchPlayer('def')" placeholder="Cerca giocatore"
                     class="modal-form-input">
-                <dl id="dataList_def"  class="dl-class">
+                <dl id="dataList_def" class="dl-class">
                     {% for player_def in players_def %}
                     <dt class="dt-content" data-id="{{player_def.id}}" data-surname="{{player_def.Surname}}"
                         data-role="{{player_def.Role}}" data-realteam="{{player_def.RealTeam__Name}}"
@@ -101,7 +102,7 @@
             </div>
         </dialog>
 
-        <dialog id="dlg_cc_open">
+        <dialog id="dlg_cc_open" class="dlg-main">
             <div class="modal-header">
                 <span class="close" id="closecc" onclick="closeDlg(this)"><img
                         src="{% static 'l4m/images/close-blue.png' %}"></span>
@@ -126,7 +127,7 @@
             </div>
         </dialog>
 
-        <dialog id="dlg_fw_open">
+        <dialog id="dlg_fw_open" class="dlg-main">
             <div class="modal-header">
                 <span class="close" id="closefw" onclick="closeDlg(this)"><img
                         src="{% static 'l4m/images/close-blue.png' %}"></span>
@@ -151,42 +152,53 @@
             </div>
         </dialog>
 
-        <dialog id="dlg_player_info" class="dlg-player">
-            <div class="modal-header">
-                <p></p>
-                <span class="closeP" id="closePlayer" onclick="closeDlg(this)"><img
-                        src="{% static 'l4m/images/close-blue.png' %}"></span>
+        <div class="modal fade" id="dlg_player_info" tabindex="-1" role="dialog" aria-labelledby="playerInfoLabel">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="playerInfoLabel"></h4>
+                    </div>
+                    <div id="plr_info_modal_body" class="modal-body plr-info">
+                        <div id="modal-pl-anag" class="modal-anag">
+                            <div id="modal-pl-avatar" class="modal-avatar">
+                                <img src="{% static 'l4m/images/profile.png' %}">
+                            </div>
+                            <input id="modal-pl-info-name" type="text" class="modal-form-input-anag" readonly>
+                            <input id="modal-pl-info-realteam" type="text" class="modal-form-input-anag" readonly>
+                            <input id="modal-pl-info-role" type="text" class="modal-form-input-anag" readonly>
+                        </div>
+                        <div id="modal-pl-bet" class="modal-bet">
+                            <div class="modal-bet-amount">
+                                <span class="modal-label">Puntata</span>
+                                <input id="modal-pl-info-betamount" type="number" min="1" value="1"
+                                    class="modal-form-input-bet" readonly>
+                            </div>
+                            <div id="modal-currentbet" class="modal-form-input-currentbet">
+                                <span id="span-betexpire" class="modal-label-bestbet">Scadenza</span>
+                                <input id="modal-pl-info-betexpdate" type="text" class="modal-form-input-bettime"
+                                    readonly>
+                                <span id="span-bestbetteam" class="modal-label-bestbet">Squadra con migliore
+                                    offerta</span>
+                                <input id="modal-pl-info-bestbetteam" type="text" class="modal-form-input-betteam"
+                                    readonly>
+                            </div>
+                        </div>
+                        <!-- RAISED - FUTURE DEV -->
+                        <div id="modal-bet-raised" class="modal-footer" hidden>
+                            <button type="button" class="btn btn-primary" id="btnAddBet" onclick="addBet()"
+                                disabled>Aggiungi la
+                                puntata alla lista</button>
+                            <button type="button" class="btn btn-primary" id="btnSendBet" onclick="sendBet()">Conferma
+                                la
+                                puntata</button>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CHIUDI</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="modal-body">
-                <div id="modal-pl-anag" class="modal-anag">
-                    <div id="modal-pl-avatar" class="modal-avatar">
-                        <img src="{% static 'l4m/images/profile.png' %}">
-                    </div>
-                    <input id="modal-pl-info-name" type="text" class="modal-form-input-anag" readonly>
-                    <input id="modal-pl-info-realteam" type="text" class="modal-form-input-anag" readonly>
-                    <input id="modal-pl-info-role" type="text" class="modal-form-input-anag" readonly>
-                </div>
-                <div id="modal-pl-bet" class="modal-bet">
-                    <div class="modal-bet-amount">
-                        <span class="modal-label">Puntata</span>
-                        <input id="modal-pl-info-betamount" type="number" min="1" value="1"
-                            class="modal-form-input-bet" readonly>
-                    </div>
-                    <div id="modal-currentbet" class="modal-form-input-currentbet">
-                        <span id="span-betexpire" class="modal-label-bestbet">Scadenzaa</span>
-                        <input id="modal-pl-info-betexpdate" type="text" class="modal-form-input-bettime" readonly>
-                        <span id="span-bestbetteam" class="modal-label-bestbet">Squadra con migliore offerta</span>
-                        <input id="modal-pl-info-bestbetteam" type="text" class="modal-form-input-betteam" readonly>
-                    </div>
-                </div>
-                <div id="modal-bet-raised" class="modal-footer" hidden>
-                    <button type="button" class="btn btn-primary" id="btnAddBet" onclick="addBet()" disabled>Aggiungi la
-                        puntata alla lista</button>
-                    <button type="button" class="btn btn-primary" id="btnSendBet" onclick="sendBet()">Conferma la
-                        puntata</button>
-                </div>
-            </div>
-        </dialog>
+        </div>
 
         <dialog id="dlg_player_open" class="dlg-player">
             <div class="modal-header">
