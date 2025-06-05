@@ -15,6 +15,9 @@ class Constant_Dicts:
     RoleEnum = {'1':'PORTIERE', '2':'DIFENSORE','3':'CENTROCAMPISTA','4':'ATTACCANTE'}
     RoleChars = {'POR': 'P', 'DIF': 'D', 'CC': 'C', 'ATT': 'A'}
 
+class Constant_Lists:
+    Modules = ['3-5-2','3-4-3','4-4-2','4-3-3','4-5-1','5-3-2','5-4-1']
+
 NUM_GK = 3
 NUM_DEF = 8
 NUM_CC = 8

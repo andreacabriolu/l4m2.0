@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .single_views import login_views, auction_views
+from .single_views import login_views, auction_views, lineup_views
 
 app_name = "l4m"
 
@@ -15,5 +15,6 @@ urlpatterns = [
     path("l4m/auction/getPlayerInfo/", auction_views.GetPlayerInfoView.as_view(), name="get_player_info"),
     path("l4m/auction/getBalance/", auction_views.GetBalanceView.as_view(), name="get_balance"),
     path("l4m/allauctions/", auction_views.AllAuctionsView.as_view(), name="allauction"),
+    path("l4m/lineup/", lineup_views.LineupView.as_view(), name="lineup"),
 
 ]

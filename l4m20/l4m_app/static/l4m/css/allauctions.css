@@ -1,13 +1,16 @@
 .custom-table {
     width: 30%;
     border-spacing: 1em !important;
-    --bs-table-bg: transparent !important;
+    --bs-table-bg: #515357 !important;
+    color: whitesmoke !important;
+    border-collapse: collapse;  
 }
 
 .main-div {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    background-color: black;
 }
 
 .dataTables_wrapper {
@@ -17,20 +20,20 @@
 .betting-player {
     background-color: gray !important;
     border-bottom-color: currentColor;
-    mix-blend-mode: color-dodge;
+    /* mix-blend-mode: color-dodge; */
     /* color: green !important; */
 }
 
 .betting-player-expired {
     background-color: rgb(125, 179, 129) !important;
     border-bottom-color: currentColor;
-    mix-blend-mode: color-dodge;
+    /* mix-blend-mode: color-dodge; */
 }
 
 .betting-player-carognata {
     background-color: rgb(124 130 176) !important;
     border-bottom-color: currentColor;
-    mix-blend-mode: color-dodge;
+    /* mix-blend-mode: color-dodge; */
 }
 
 .table-caption {

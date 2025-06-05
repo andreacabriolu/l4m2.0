@@ -1,0 +1,68 @@
+{% extends "./base.html" %}
+{% load static %}
+
+{ % block title % } L4M2.0 - Schiera formazione { % endblock % }
+
+{% block links %}
+<link href="{% static 'l4m/css/lineup.css' %}" rel="stylesheet">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="{% static 'l4m/js/lineup.js' %}"></script>
+
+{% endblock %}
+
+{% block content %}
+<div id="layoutSidenav_content" class="custom-layout">
+    <div class="bg-body-tertiary main-div" id="lineupDiv">
+        <div class="form-floating">
+            <select class="form-select form-select-lg mb-3 form-select-custom" id="mods">
+                {% for mod in mods %}
+                <option value="{{mod}}">{{mod}}</option>
+                {% endfor %}
+            </select>
+            <label for="mods">Modulo</label>
+        </div>
+        <div class="lineups">
+            <div class="main-lineup">
+                <div class="form-floating">
+                    <select class="form-select form-select-lg mb-3" id="gk_tit">
+                        {% for gk in players_gk %}
+                        <option value="{{gk}}">{{gk.Player__Surname}} ({{gk.Player__RealTeam__Name}})</option>
+                        {% endfor %}
+                        <option value="" disabled selected></option>
+                    </select>
+                    <label for="gk_tit">Portiere titolare</label>
+                </div>
+
+                <div class="form-floating">
+                    <select class="form-select form-select-lg mb-3" id="d1_tit">
+                        {% for def in players_def %}
+                        <option value="{{def}}">{{def.Player__Surname}} ({{def.Player__RealTeam__Name}})</option>
+                        {% endfor %}
+                        <option value="" disabled selected></option>
+                    </select>
+                    <label for="d1_tit">Difensore 1 titolare</label>
+                </div>
+            </div>
+
+            <div class="vr vr-custom"></div>
+
+            <div class="secondary-lineup">
+                <div class="form-floating">
+                    <select class="form-select form-select-lg mb-3" id="gk1_ris">
+                        {% for gk in players_gk %}
+                        <option value="{{gk}}">{{gk.Player__Surname}} ({{gk.Player__RealTeam__Name}})</option>
+                        {% endfor %}
+                        <option value="" disabled selected></option>
+                    </select>
+                    <label for="gk1_ris">Portiere 1 riserva</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}

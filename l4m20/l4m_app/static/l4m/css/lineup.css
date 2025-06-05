@@ -1,0 +1,32 @@
+.main-div {
+    background-color: black;
+}
+
+.vr-custom {
+    width: 1em !important;
+    background-color: whitesmoke !important;
+    opacity: 0.75 !important;
+    margin-left: 4em;
+    margin-right: 4em;
+    border-radius: 2em;
+}
+
+.form-select-custom {
+    width: 25% !important;
+}
+
+.lineups {
+    padding: 2.5em;
+    display: flex;
+    justify-content: center;
+}
+
+.main-lineup {
+    display: flex;
+    flex-direction: column;
+}
+
+.secondary-lineup {
+    display: flex;
+    flex-direction: column;
+}

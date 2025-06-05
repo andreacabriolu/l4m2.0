@@ -96,4 +96,11 @@ def finalize_bet(data):
     
 def get_user_team(userid):
     return team.Team.objects.filter(Users__id=userid).values('id','Name')[0]
+
+def get_my_players(filter_role, teamid):
+
+    return squads.Squads.objects.\
+        filter(Team_id=teamid).\
+        filter(Player__Role=filter_role).\
+        values('Player__Surname','Player__RealTeam__Name','Jersey_num')
     
