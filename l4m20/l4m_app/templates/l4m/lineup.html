@@ -200,7 +200,7 @@
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
-                    <label for="d1_ris">Difensore 1 riserva</label>
+                    <label for="d1_ris">Giocatore di riserva</label>
                 </div>
 
                 <div class="form-floating" id="d2r">
@@ -210,7 +210,7 @@
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
-                    <label for="d2_ris">Difensore 2 riserva</label>
+                    <label for="d2_ris">Giocatore di riserva</label>
                 </div>
 
                 <div class="form-floating" id="d3r">
@@ -220,27 +220,27 @@
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
-                    <label for="d3_ris">Difensore 3 riserva</label>
+                    <label for="d3_ris">Giocatore di riserva</label>
                 </div>
 
-                <div class="form-floating" id="d4r">
+                <div class="form-floating" id="d4r" hidden>
                     <select class="form-select form-select-lg mb-3" id="d4_ris">
                         {% for def in players_def %}
                         <option value="{{def}}">{{def.Player__Surname}} ({{def.Player__RealTeam__Name}})</option>
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
-                    <label for="d4_ris">Difensore 4 riserva</label>
+                    <label for="d4_ris">Giocatore di riserva</label>
                 </div>
 
-                <div class="form-floating" id="d5r">
+                <div class="form-floating" id="d5r" hidden>
                     <select class="form-select form-select-lg mb-3" id="d5_ris">
                         {% for def in players_def %}
                         <option value="{{def}}">{{def.Player__Surname}} ({{def.Player__RealTeam__Name}})</option>
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
-                    <label for="d5_ris">Difensore 5 riserva</label>
+                    <label for="d5_ris">Giocatore di riserva</label>
                 </div>
 
                 <div class="form-floating" id="c1r">
@@ -250,7 +250,7 @@
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
-                    <label for="c1_ris">Centrocampista 1 riserva</label>
+                    <label for="c1_ris">Giocatore di riserva</label>
                 </div>
 
                 <div class="form-floating" id="c2r">
@@ -260,7 +260,7 @@
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
-                    <label for="c2_ris">Centrocampista 2 riserva</label>
+                    <label for="c2_ris">Giocatore di riserva</label>
                 </div>
 
                 <div class="form-floating" id="c3r">
@@ -270,7 +270,7 @@
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
-                    <label for="c3_ris">Centrocampista 3 riserva</label>
+                    <label for="c3_ris">Giocatore di riserva</label>
                 </div>
 
                 <div class="form-floating" id="c4r" hidden>
@@ -280,7 +280,7 @@
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
-                    <label for="c4_ris">Centrocampista 4 riserva</label>
+                    <label for="c4_ris">Giocatore di riserva</label>
                 </div>
 
                 <div class="form-floating" id="c5r" hidden>
@@ -290,7 +290,7 @@
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
-                    <label for="c5_ris">Centrocampista 5 riserva</label>
+                    <label for="c5_ris">Giocatore di riserva</label>
                 </div>
 
                 <div class="form-floating" id="a1r">
@@ -300,7 +300,7 @@
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
-                    <label for="a1_ris">Attaccante 1 riserva</label>
+                    <label for="a1_ris">Giocatore di riserva</label>
                 </div>
 
                 <div class="form-floating" id="a2r">
@@ -310,7 +310,7 @@
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
-                    <label for="a2_ris">Attaccante 2 riserva</label>
+                    <label for="a2_ris">Giocatore di riserva</label>
                 </div>
 
                 <div class="form-floating" id="a3r">
@@ -320,7 +320,7 @@
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
-                    <label for="a3_ris">Attaccante 3 riserva</label>
+                    <label for="a3_ris">Giocatore di riserva</label>
                 </div>
 
                 <div class="form-floating" id="a4r" hidden>
@@ -330,7 +330,7 @@
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
-                    <label for="a4_ris">Attaccante 4 riserva</label>
+                    <label for="a4_ris">Giocatore di riserva</label>
                 </div>
 
                 <div class="form-floating" id="a5r" hidden>
@@ -340,7 +340,7 @@
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
-                    <label for="a5_ris">Attaccante 5 riserva</label>
+                    <label for="a5_ris">Giocatore di riserva</label>
                 </div>
 
             </div>

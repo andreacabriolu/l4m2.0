@@ -1,42 +1,44 @@
 
 function manage_mod(val) { //show and hide, TODO: real the best way?
-    if(val == '3-4-3') {
-        $('#d4').prop('hidden', true);
-        $('#d5').prop('hidden', true);
-        $('#d6').prop('hidden', true);
-        $('#d7').prop('hidden', true);
-        $('#d8').prop('hidden', true);
 
-        $('#d4r').prop('hidden', false);
-        $('#d5r').prop('hidden', false);
-        $('#d6r').prop('hidden', false);
-        $('#d7r').prop('hidden', false);
-        $('#d8r').prop('hidden', false);
+    nums = val.split('-');
+    ndif = parseInt(nums[0]);
+    ncen = parseInt(nums[1]);
+    natt = parseInt(nums[2]);
+    let max_dif_ris = 5;
+    let max_cen_ris = 5;
+    let max_att_ris = 5;
 
-        $('#c4').prop('hidden', false);
-        $('#c5').prop('hidden', true);
-        $('#c6').prop('hidden', true);
-        $('#c7').prop('hidden', true);
-        $('#c8').prop('hidden', true);
-
-        $('#c4r').prop('hidden', true);
-        $('#c5r').prop('hidden', false);
-        $('#c6r').prop('hidden', false);
-        $('#c7r').prop('hidden', false);
-        $('#c8r').prop('hidden', false);
-
-        $('#a2').prop('hidden', false);
-        $('#a3').prop('hidden', false);
-        $('#a4').prop('hidden', true);
-        $('#a5').prop('hidden', true);
-        $('#a6').prop('hidden', true);
-
-        $('#a4r').prop('hidden', true);
-        $('#a5r').prop('hidden', true);
-        $('#a6r').prop('hidden', true);
-
-
+    //DIF
+    for (i=4; i<=ndif; i++) {
+        $(`#d${i}`).prop('hidden',false);
+        $(`#d${max_dif_ris--}r`).prop('hidden',true);
     }
+    for (i=ndif+1; i<=5; i++) {
+        $(`#d${i}`).prop('hidden',true);
+        $(`#d${i}r`).prop('hidden',false);
+    }
+
+    //CC
+    for (i=4; i<=ncen; i++) {
+        $(`#c${i}`).prop('hidden',false);
+        $(`#c${max_cen_ris--}r`).prop('hidden',true);
+    }
+    for (i=ncen+1; i<=5; i++) {
+        $(`#c${i}`).prop('hidden',true);
+        $(`#c${i}r`).prop('hidden',false);
+    }
+
+    //ATT
+    for (i=2; i<=natt; i++) {
+        $(`#a${i}`).prop('hidden',false);
+        $(`#a${max_att_ris--}r`).prop('hidden',true);
+    }
+    for (i=natt+1; i<=5; i++) {
+        $(`#a${i}`).prop('hidden',true);
+        $(`#a${i}r`).prop('hidden',false);
+    }
+
 }
 
 window.addEventListener('DOMContentLoaded', event => {
