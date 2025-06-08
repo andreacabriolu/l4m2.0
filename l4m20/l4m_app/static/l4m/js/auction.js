@@ -12,6 +12,14 @@ var RoleNames = {
     '': ''
 };
 
+function showErrorAlert(response) {
+    $("#error-alert").prop('hidden', false);
+    $('#span-error-alert').text(response);
+    $("#error-alert").fadeTo(5000, 0.33, function(){
+        $("#error-alert").prop('hidden', true);
+    });
+}
+
 function openPreOfficialModal(divid, playerid) {
 
     officialInfo = {
@@ -239,22 +247,23 @@ function sendBet() {
 
     $.post("/l4m/auction/sendBet/", data, function (response) {
         if(response.startsWith ('error')) {
-            //manage error TODO
+            showErrorAlert(response);
         }
         else {
-            $('#main-balance').text(JSON.parse(response)['new_bal']);
+            $('#main-balance').text(`${JSON.parse(response)['amount']} / ${JSON.parse(response)['max']} FML`);
             //remove datalist entry
             entry = document.querySelector("dl.dl-class dt[data-id='"+row.playerid+"']");
             if(entry!=null) { 
                 entry.parentNode.removeChild(entry); 
             }
+
+            set_div(row);
         }
     });
 
     plr_dlg.close();
     dlg.close();
 
-    set_div(row);
 }
 
 function finalizeBet() {

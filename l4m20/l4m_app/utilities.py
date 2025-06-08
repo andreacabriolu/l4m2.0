@@ -27,7 +27,7 @@ def list_my_best_bets(mbb):
 def get_balance(teamid):
     return balance.Balance.objects.\
         filter(Team_id=teamid).\
-        values('Purchases_amount')
+        values('Purchases_amount','Purchases_max')
 
 def get_total(mbb):
     #TODO implement
@@ -49,30 +49,62 @@ def send_bet(data):
 
     player_ = get_object_or_404(player.Player, id=bet_obj.Player)
     user_team = get_object_or_404(team.Team, id=bet_obj.Team) #TODO: how to avoid this double fetch?
-    bet_new = bet.Bet(Amount=bet_obj.Amount,
-                    Player = player_,
-                    Team = user_team,
-                    Expiration_Date=exp_date_obj,
-                    Slot=bet_obj.Slot)
 
-    bet_old = bet.Bet.objects.filter(Q(Player=player_))
-    if len(list(bet_old)) == 1: #there is an old best bet
-        bet_history_new = bet_history.Bet_History(
-            Amount=bet_old.Amount,
-            Player=bet_old.Player,
-            Team=bet_old.Team
-        )
-        bet_history_new.save()
+    try:
+        bet_old = bet.Bet.objects.filter(Q(Player=player_))
+        if len(list(bet_old)) == 1: #there is an old best bet
+            _bet_old = bet_old[0]
+            bet_history_new = bet_history.Bet_History(
+                Amount=_bet_old.Amount,
+                Player=_bet_old.Player,
+                Team=_bet_old.Team
+            )
+            bet_history_new.save()
+
+            #Give back the spent money to the old betting team
+            bal_oldteam = balance.Balance.objects.filter(Team=_bet_old.Team)
+            bal_oldteam = bal_oldteam[0]
+            bal_oldteam.Purchases_amount = bal_oldteam.Purchases_amount + _bet_old.Amount
+            bal_oldteam.save()
     
-    bet_new.save()
-    bet_old.delete() #remove old bet
+    except Exception as e:
+        bet_new.delete() #rollback
+        bal_newteam.Purchases_amount = bal_newteam.Purchases_amount + bet_new.Amount #rollback
+        raise Exception(e) 
 
-    bal = balance.Balance.objects.filter(Team=bet_obj.Team)
-    bal = bal[0] #there should be only one balance TODO: check with giamba
-    bal.Purchases_amount = bal.Purchases_amount - bet_new.Amount
-    bal.save()
+    if len(list(bet_old)) == 1: #there is an old best bet
+        try:
+            bet_old.delete() #remove old bet
+        except Exception as e:
+            bet_new.delete() #rollback
+            bal_newteam.Purchases_amount = bal_newteam.Purchases_amount + bet_new.Amount #rollback
+            bal_oldteam.Purchases_amount = bal_oldteam.Purchases_amount - _bet_old.Amount
+            raise Exception(e) 
+        
+    try:
+        bet_new = bet.Bet(Amount=bet_obj.Amount,
+                        Player = player_,
+                        Team = user_team,
+                        Expiration_Date=exp_date_obj,
+                        Slot=bet_obj.Slot)
 
-    return bal
+        bet_new.save()
+
+    except Exception as e:
+        raise Exception(e) 
+
+    try:
+        #Take back the spent money from the betting team
+        bal_newteam = balance.Balance.objects.filter(Team=bet_obj.Team)
+        bal_newteam = bal_newteam[0] #there should be only one balance TODO: check with giamba
+        bal_newteam.Purchases_amount = bal_newteam.Purchases_amount - bet_new.Amount
+        bal_newteam.save()
+
+    except Exception as e:
+        bet_new.delete() #rollback
+        raise Exception(e)
+
+    return bal_newteam
     
 def finalize_bet(data):
 
@@ -103,4 +135,12 @@ def get_my_players(filter_role, teamid):
         filter(Team_id=teamid).\
         filter(Player__Role=filter_role).\
         values('Player__Surname','Player__RealTeam__Name','Jersey_num')
+
+
+def complete_list(l, num_max, role):
+    if(len(l) < num_max):
+        for _ in range(num_max - len(l)):
+            l.append({"id": "-1", "Role":role})
+    
+    return l
     

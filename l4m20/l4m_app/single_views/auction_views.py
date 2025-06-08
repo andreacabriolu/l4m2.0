@@ -47,12 +47,12 @@ class SendBetView(View):
             data = json.loads(request.POST.get("jsonData"))
             if (data is None): return
             
-            bal = U.send_bet(data)
-            bal.save()
-        except:
-            return HttpResponse('error inserting bet and updating balance')
+            bal_info = U.send_bet(data)
+            bal_info.save()
+        except Exception as e:
+            return HttpResponse(f'error inserting bet and updating balance: {e}')
         
-        return HttpResponse(json.dumps({'new_bal' : bal.Purchases_amount}))
+        return HttpResponse(json.dumps({'amount': bal_info.Purchases_amount, 'max': bal_info.Purchases_max}))
 
 class FinBetView(View):
     template_name = 'l4m/auction.html'
@@ -94,12 +94,6 @@ class GetBalanceView(View):
         
         return HttpResponse(U.get_balance(user_team['id'])['Purchases_amount']) #TODO: filter by season/league
 
-def complete_list(l, num_max, role):
-    if(len(l) < num_max):
-        for _ in range(num_max - len(l)):
-            l.append({"id": "-1", "Role":role})
-    
-    return l
 
 class AllAuctionsView(LoginRequiredMixin, View):
     template_name = 'l4m/allauctions.html'
@@ -116,10 +110,10 @@ class AllAuctionsView(LoginRequiredMixin, View):
             lc = list(all_team_players.filter(Q(bet__Team_id=team_id['id']) & Q(Role=C.Constant_Dicts.RoleChars['CC'])))
             la = list(all_team_players.filter(Q(bet__Team_id=team_id['id']) & Q(Role=C.Constant_Dicts.RoleChars['ATT'])))
 
-            lp = complete_list(lp, C.NUM_GK, C.Constant_Dicts.RoleChars['POR'])
-            ld = complete_list(ld, C.NUM_DEF, C.Constant_Dicts.RoleChars['DIF'])
-            lc = complete_list(lc, C.NUM_CC, C.Constant_Dicts.RoleChars['CC'])
-            la = complete_list(la, C.NUM_FW, C.Constant_Dicts.RoleChars['ATT'])
+            lp = U.complete_list(lp, C.NUM_GK, C.Constant_Dicts.RoleChars['POR'])
+            ld = U.complete_list(ld, C.NUM_DEF, C.Constant_Dicts.RoleChars['DIF'])
+            lc = U.complete_list(lc, C.NUM_CC, C.Constant_Dicts.RoleChars['CC'])
+            la = U.complete_list(la, C.NUM_FW, C.Constant_Dicts.RoleChars['ATT'])
 
             team_players[team_id['Name'].replace(' ','_')] = lp + ld + lc + la
             

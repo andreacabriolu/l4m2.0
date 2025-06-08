@@ -68,6 +68,8 @@ class RegisterView(View):
             Name=f'newbal_{datetime.now.__str__()}',
             Wages_amount = 300,
             Purchases_amount = 300,
+            Wages_max = 300,
+            Purchases_max = 300,
             Team = _team
             )
         _bal.save()

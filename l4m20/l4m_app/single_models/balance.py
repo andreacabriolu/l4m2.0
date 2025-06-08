@@ -7,6 +7,8 @@ class Balance(models.Model):
     Name = models.CharField(max_length=100)
     Wages_amount = models.IntegerField()
     Purchases_amount = models.IntegerField()
+    Wages_max = models.IntegerField(null=True)
+    Purchases_max = models.IntegerField(null=True)
     Team = models.ForeignKey(C.Constant_Strings.team, on_delete=models.CASCADE, null=True)
     
     def __str__(self):
