@@ -134,7 +134,7 @@ def get_my_players(filter_role, teamid):
     return squads.Squads.objects.\
         filter(Team_id=teamid).\
         filter(Player__Role=filter_role).\
-        values('Player__Surname','Player__RealTeam__Name','Jersey_num')
+        values('id','Player__Surname','Player__RealTeam__Name','Jersey_num','Player__Role')
 
 
 def complete_list(l, num_max, role):

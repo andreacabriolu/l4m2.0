@@ -22,6 +22,7 @@ class LineupView(LoginRequiredMixin, View):
         players_def = U.get_my_players("D", teamid)
         players_cc = U.get_my_players("C", teamid)
         players_fw = U.get_my_players("A", teamid)
+        players_my = list(players_def) + list(players_cc)+ list(players_fw)
 
         params = { 
             'mods': mods,
@@ -30,6 +31,7 @@ class LineupView(LoginRequiredMixin, View):
             'players_def':players_def,
             'players_cc':players_cc,
             'players_fw':players_fw,
+            'players_my':players_my
           }
         
         return render(request, self.template_name, params)

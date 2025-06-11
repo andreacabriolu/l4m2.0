@@ -25,12 +25,12 @@
             </select>
             <label for="mods">Modulo</label>
         </div>
-        <div class="lineups">
+        <div class="lineups" id="l_ups">
             <div class="main-lineup">
                 <div class="form-floating">
                     <select class="form-select form-select-lg mb-3" id="gk_tit">
                         {% for gk in players_gk %}
-                        <option value="{{gk}}">{{gk.Player__Surname}} ({{gk.Player__RealTeam__Name}})</option>
+                        <option value="{{gk}}" data-id="{{gk.id}}">{{gk.Player__Surname}} ({{gk.Player__RealTeam__Name}})</option>
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
@@ -40,7 +40,7 @@
                 <div class="form-floating" id="d1">
                     <select class="form-select form-select-lg mb-3" id="d1_tit">
                         {% for def in players_def %}
-                        <option value="{{def}}">{{def.Player__Surname}} ({{def.Player__RealTeam__Name}})</option>
+                        <option value="{{def}}" data-id="{{def.id}}">{{def.Player__Surname}} ({{def.Player__RealTeam__Name}})</option>
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
@@ -50,7 +50,7 @@
                 <div class="form-floating" id="d2">
                     <select class="form-select form-select-lg mb-3" id="d2_tit">
                         {% for def in players_def %}
-                        <option value="{{def}}">{{def.Player__Surname}} ({{def.Player__RealTeam__Name}})</option>
+                        <option value="{{def}}" data-id="{{def.id}}">{{def.Player__Surname}} ({{def.Player__RealTeam__Name}})</option>
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
@@ -60,7 +60,7 @@
                 <div class="form-floating" id="d3">
                     <select class="form-select form-select-lg mb-3" id="d3_tit">
                         {% for def in players_def %}
-                        <option value="{{def}}">{{def.Player__Surname}} ({{def.Player__RealTeam__Name}})</option>
+                        <option value="{{def}}" data-id="{{def.id}}">{{def.Player__Surname}} ({{def.Player__RealTeam__Name}})</option>
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
@@ -70,7 +70,7 @@
                 <div class="form-floating" id="d4" hidden>
                     <select class="form-select form-select-lg mb-3" id="d4_tit">
                         {% for def in players_def %}
-                        <option value="{{def}}">{{def.Player__Surname}} ({{def.Player__RealTeam__Name}})</option>
+                        <option value="{{def}}" data-id="{{def.id}}">{{def.Player__Surname}} ({{def.Player__RealTeam__Name}})</option>
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
@@ -80,7 +80,7 @@
                 <div class="form-floating" id="d5" hidden>
                     <select class="form-select form-select-lg mb-3" id="d5_tit">
                         {% for def in players_def %}
-                        <option value="{{def}}">{{def.Player__Surname}} ({{def.Player__RealTeam__Name}})</option>
+                        <option value="{{def}}" data-id="{{def.id}}">{{def.Player__Surname}} ({{def.Player__RealTeam__Name}})</option>
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
@@ -90,7 +90,7 @@
                 <div class="form-floating" id="c1">
                     <select class="form-select form-select-lg mb-3" id="c1_tit">
                         {% for cc in players_cc %}
-                        <option value="{{cc}}">{{cc.Player__Surname}} ({{cc.Player__RealTeam__Name}})</option>
+                        <option value="{{cc}}" data-id="{{cc.id}}">{{cc.Player__Surname}} ({{cc.Player__RealTeam__Name}})</option>
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
@@ -100,7 +100,7 @@
                 <div class="form-floating" id="c2">
                     <select class="form-select form-select-lg mb-3" id="c2_tit">
                         {% for cc in players_cc %}
-                        <option value="{{cc}}">{{cc.Player__Surname}} ({{cc.Player__RealTeam__Name}})</option>
+                        <option value="{{cc}}" data-id="{{cc.id}}">{{cc.Player__Surname}} ({{cc.Player__RealTeam__Name}})</option>
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
@@ -110,7 +110,7 @@
                 <div class="form-floating" id="c3">
                     <select class="form-select form-select-lg mb-3" id="c3_tit">
                         {% for cc in players_cc %}
-                        <option value="{{cc}}">{{cc.Player__Surname}} ({{cc.Player__RealTeam__Name}})</option>
+                        <option value="{{cc}}" data-id="{{cc.id}}">{{cc.Player__Surname}} ({{cc.Player__RealTeam__Name}})</option>
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
@@ -120,7 +120,7 @@
                 <div class="form-floating" id="c4">
                     <select class="form-select form-select-lg mb-3" id="c4_tit">
                         {% for cc in players_cc %}
-                        <option value="{{cc}}">{{cc.Player__Surname}} ({{cc.Player__RealTeam__Name}})</option>
+                        <option value="{{cc}}" data-id="{{cc.id}}">{{cc.Player__Surname}} ({{cc.Player__RealTeam__Name}})</option>
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
@@ -130,7 +130,7 @@
                 <div class="form-floating" id="c5">
                     <select class="form-select form-select-lg mb-3" id="c5_tit">
                         {% for cc in players_cc %}
-                        <option value="{{cc}}">{{cc.Player__Surname}} ({{cc.Player__RealTeam__Name}})</option>
+                        <option value="{{cc}}" data-id="{{cc.id}}">{{cc.Player__Surname}} ({{cc.Player__RealTeam__Name}})</option>
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
@@ -140,7 +140,7 @@
                 <div class="form-floating" id="a1">
                     <select class="form-select form-select-lg mb-3" id="a1_tit">
                         {% for fw in players_fw %}
-                        <option value="{{fw}}">{{fw.Player__Surname}} ({{fw.Player__RealTeam__Name}})</option>
+                        <option value="{{fw}}" data-id="{{fw.id}}">{{fw.Player__Surname}} ({{fw.Player__RealTeam__Name}})</option>
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
@@ -150,7 +150,7 @@
                 <div class="form-floating" id="a2">
                     <select class="form-select form-select-lg mb-3" id="a2_tit">
                         {% for fw in players_fw %}
-                        <option value="{{fw}}">{{fw.Player__Surname}} ({{fw.Player__RealTeam__Name}})</option>
+                        <option value="{{fw}}" data-id="{{fw.id}}">{{fw.Player__Surname}} ({{fw.Player__RealTeam__Name}})</option>
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
@@ -158,9 +158,9 @@
                 </div>
 
                 <div class="form-floating" id="a3" hidden>
-                    <select class="form-select form-select-lg mb-3" id="a1_tit">
+                    <select class="form-select form-select-lg mb-3" id="a3_tit">
                         {% for fw in players_fw %}
-                        <option value="{{fw}}">{{fw.Player__Surname}} ({{fw.Player__RealTeam__Name}})</option>
+                        <option value="{{fw}}" data-id="{{fw.id}}">{{fw.Player__Surname}} ({{fw.Player__RealTeam__Name}})</option>
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
@@ -176,7 +176,7 @@
                 <div class="form-floating">
                     <select class="form-select form-select-lg mb-3" id="gk1_ris">
                         {% for gk in players_gk %}
-                        <option value="{{gk}}">{{gk.Player__Surname}} ({{gk.Player__RealTeam__Name}})</option>
+                        <option value="{{gk}}" data-id="{{gk.id}}">{{gk.Player__Surname}} ({{gk.Player__RealTeam__Name}})</option>
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
@@ -186,7 +186,7 @@
                 <div class="form-floating">
                     <select class="form-select form-select-lg mb-3" id="gk2_ris">
                         {% for gk in players_gk %}
-                        <option value="{{gk}}">{{gk.Player__Surname}} ({{gk.Player__RealTeam__Name}})</option>
+                        <option value="{{gk}}" data-id="{{gk.id}}">{{gk.Player__Surname}} ({{gk.Player__RealTeam__Name}})</option>
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
@@ -194,153 +194,123 @@
                 </div>
 
                 <div class="form-floating" id="d1r">
-                    <select class="form-select form-select-lg mb-3" id="d1_ris">
-                        {% for def in players_def %}
-                        <option value="{{def}}">{{def.Player__Surname}} ({{def.Player__RealTeam__Name}})</option>
+                    <select class="form-select form-select-lg mb-3" id="p1_ris">
+                        {% for pl in players_my %}
+                        <option value="{{pl}}" data-id="{{pl.id}}">{{pl.Player__Surname}} ({{pl.Player__RealTeam__Name}})</option>
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
-                    <label for="d1_ris">Giocatore di riserva</label>
+                    <label for="p1_ris">Giocatore di riserva</label>
                 </div>
 
                 <div class="form-floating" id="d2r">
-                    <select class="form-select form-select-lg mb-3" id="d2_ris">
-                        {% for def in players_def %}
-                        <option value="{{def}}">{{def.Player__Surname}} ({{def.Player__RealTeam__Name}})</option>
+                    <select class="form-select form-select-lg mb-3" id="p2_ris">
+                        {% for pl in players_my %}
+                        <option value="{{pl}}" data-id="{{pl.id}}">{{pl.Player__Surname}} ({{pl.Player__RealTeam__Name}})</option>
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
-                    <label for="d2_ris">Giocatore di riserva</label>
+                    <label for="p2_ris">Giocatore di riserva</label>
                 </div>
 
                 <div class="form-floating" id="d3r">
-                    <select class="form-select form-select-lg mb-3" id="d3_ris">
-                        {% for def in players_def %}
-                        <option value="{{def}}">{{def.Player__Surname}} ({{def.Player__RealTeam__Name}})</option>
+                    <select class="form-select form-select-lg mb-3" id="p3_ris">
+                        {% for pl in players_my %}
+                        <option value="{{pl}}" data-id="{{pl.id}}">{{pl.Player__Surname}} ({{pl.Player__RealTeam__Name}})</option>
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
-                    <label for="d3_ris">Giocatore di riserva</label>
+                    <label for="p3_ris">Giocatore di riserva</label>
                 </div>
 
                 <div class="form-floating" id="d4r" hidden>
-                    <select class="form-select form-select-lg mb-3" id="d4_ris">
-                        {% for def in players_def %}
-                        <option value="{{def}}">{{def.Player__Surname}} ({{def.Player__RealTeam__Name}})</option>
+                    <select class="form-select form-select-lg mb-3" id="p4_ris">
+                        {% for pl in players_my %}
+                        <option value="{{pl}}" data-id="{{pl.id}}">{{pl.Player__Surname}} ({{pl.Player__RealTeam__Name}})</option>
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
-                    <label for="d4_ris">Giocatore di riserva</label>
+                    <label for="p4_ris">Giocatore di riserva</label>
                 </div>
 
-                <div class="form-floating" id="d5r" hidden>
-                    <select class="form-select form-select-lg mb-3" id="d5_ris">
-                        {% for def in players_def %}
-                        <option value="{{def}}">{{def.Player__Surname}} ({{def.Player__RealTeam__Name}})</option>
+                <div class="form-floating" id="p5r" hidden>
+                    <select class="form-select form-select-lg mb-3" id="p5_ris">
+                        {% for pl in players_my %}
+                        <option value="{{pl}}" data-id="{{pl.id}}">{{pl.Player__Surname}} ({{pl.Player__RealTeam__Name}})</option>
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
-                    <label for="d5_ris">Giocatore di riserva</label>
+                    <label for="p5_ris">Giocatore di riserva</label>
                 </div>
 
                 <div class="form-floating" id="c1r">
-                    <select class="form-select form-select-lg mb-3" id="c1_ris">
-                        {% for cc in players_cc %}
-                        <option value="{{cc}}">{{cc.Player__Surname}} ({{cc.Player__RealTeam__Name}})</option>
+                    <select class="form-select form-select-lg mb-3" id="p6_ris">
+                        {% for pl in players_my %}
+                        <option value="{{pl}}" data-id="{{pl.id}}">{{pl.Player__Surname}} ({{pl.Player__RealTeam__Name}})</option>
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
-                    <label for="c1_ris">Giocatore di riserva</label>
+                    <label for="p6_ris">Giocatore di riserva</label>
                 </div>
 
                 <div class="form-floating" id="c2r">
-                    <select class="form-select form-select-lg mb-3" id="c2_ris">
-                        {% for cc in players_cc %}
-                        <option value="{{cc}}">{{cc.Player__Surname}} ({{cc.Player__RealTeam__Name}})</option>
+                    <select class="form-select form-select-lg mb-3" id="p7_ris">
+                        {% for pl in players_my %}
+                        <option value="{{pl}}" data-id="{{pl.id}}">{{pl.Player__Surname}} ({{pl.Player__RealTeam__Name}})</option>
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
-                    <label for="c2_ris">Giocatore di riserva</label>
+                    <label for="p7_ris">Giocatore di riserva</label>
                 </div>
 
                 <div class="form-floating" id="c3r">
-                    <select class="form-select form-select-lg mb-3" id="c3_ris">
-                        {% for cc in players_cc %}
-                        <option value="{{cc}}">{{cc.Player__Surname}} ({{cc.Player__RealTeam__Name}})</option>
+                    <select class="form-select form-select-lg mb-3" id="p8_ris">
+                        {% for pl in players_my %}
+                        <option value="{{pl}}" data-id="{{pl.id}}">{{pl.Player__Surname}} ({{pl.Player__RealTeam__Name}})</option>
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
-                    <label for="c3_ris">Giocatore di riserva</label>
+                    <label for="p8_ris">Giocatore di riserva</label>
                 </div>
 
                 <div class="form-floating" id="c4r" hidden>
-                    <select class="form-select form-select-lg mb-3" id="c4_ris">
-                        {% for cc in players_cc %}
-                        <option value="{{cc}}">{{cc.Player__Surname}} ({{cc.Player__RealTeam__Name}})</option>
+                    <select class="form-select form-select-lg mb-3" id="p9_ris">
+                        {% for pl in players_my %}
+                        <option value="{{pl}}" data-id="{{pl.id}}">{{pl.Player__Surname}} ({{pl.Player__RealTeam__Name}})</option>
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
-                    <label for="c4_ris">Giocatore di riserva</label>
+                    <label for="p9_ris">Giocatore di riserva</label>
                 </div>
 
                 <div class="form-floating" id="c5r" hidden>
-                    <select class="form-select form-select-lg mb-3" id="c5_ris">
-                        {% for cc in players_cc %}
-                        <option value="{{cc}}">{{cc.Player__Surname}} ({{cc.Player__RealTeam__Name}})</option>
+                    <select class="form-select form-select-lg mb-3" id="p10_ris">
+                        {% for pl in players_my %}
+                        <option value="{{pl}}" data-id="{{pl.id}}">{{pl.Player__Surname}} ({{pl.Player__RealTeam__Name}})</option>
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
-                    <label for="c5_ris">Giocatore di riserva</label>
+                    <label for="p10_ris">Giocatore di riserva</label>
                 </div>
 
                 <div class="form-floating" id="a1r">
-                    <select class="form-select form-select-lg mb-3" id="a1_ris">
-                        {% for fw in players_fw %}
-                        <option value="{{fw}}">{{fw.Player__Surname}} ({{fw.Player__RealTeam__Name}})</option>
+                    <select class="form-select form-select-lg mb-3" id="p11_ris">
+                        {% for pl in players_my %}
+                        <option value="{{pl}}" data-id="{{pl.id}}">{{pl.Player__Surname}} ({{pl.Player__RealTeam__Name}})</option>
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
-                    <label for="a1_ris">Giocatore di riserva</label>
+                    <label for="p11_ris">Giocatore di riserva</label>
                 </div>
 
                 <div class="form-floating" id="a2r">
-                    <select class="form-select form-select-lg mb-3" id="a2_ris">
-                        {% for fw in players_fw %}
-                        <option value="{{fw}}">{{fw.Player__Surname}} ({{fw.Player__RealTeam__Name}})</option>
+                    <select class="form-select form-select-lg mb-3" id="p12_ris">
+                        {% for pl in players_my %}
+                        <option value="{{pl}}" data-id="{{pl.id}}">{{pl.Player__Surname}} ({{pl.Player__RealTeam__Name}})</option>
                         {% endfor %}
                         <option value="" disabled selected></option>
                     </select>
-                    <label for="a2_ris">Giocatore di riserva</label>
-                </div>
-
-                <div class="form-floating" id="a3r">
-                    <select class="form-select form-select-lg mb-3" id="a3_ris">
-                        {% for fw in players_fw %}
-                        <option value="{{fw}}">{{fw.Player__Surname}} ({{fw.Player__RealTeam__Name}})</option>
-                        {% endfor %}
-                        <option value="" disabled selected></option>
-                    </select>
-                    <label for="a3_ris">Giocatore di riserva</label>
-                </div>
-
-                <div class="form-floating" id="a4r" hidden>
-                    <select class="form-select form-select-lg mb-3" id="a4_ris">
-                        {% for fw in players_fw %}
-                        <option value="{{fw}}">{{fw.Player__Surname}} ({{fw.Player__RealTeam__Name}})</option>
-                        {% endfor %}
-                        <option value="" disabled selected></option>
-                    </select>
-                    <label for="a4_ris">Giocatore di riserva</label>
-                </div>
-
-                <div class="form-floating" id="a5r" hidden>
-                    <select class="form-select form-select-lg mb-3" id="a5_ris">
-                        {% for fw in players_fw %}
-                        <option value="{{fw}}">{{fw.Player__Surname}} ({{fw.Player__RealTeam__Name}})</option>
-                        {% endfor %}
-                        <option value="" disabled selected></option>
-                    </select>
-                    <label for="a5_ris">Giocatore di riserva</label>
+                    <label for="p12_ris">Giocatore di riserva</label>
                 </div>
 
             </div>
