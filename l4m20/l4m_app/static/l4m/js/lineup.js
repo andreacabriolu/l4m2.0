@@ -1,4 +1,12 @@
 
+function showErrorAlert(response) {
+    $("#error-alert").prop('hidden', false);
+    $('#span-error-alert').text(response);
+    // $("#error-alert").fadeTo(5000, 0.33, function(){
+    //     $("#error-alert").prop('hidden', true);
+    // });
+}
+
 function manage_mod(val) { //show and hide, TODO: real the best way?
 
     nums = val.split('-');
@@ -69,6 +77,36 @@ window.addEventListener('DOMContentLoaded', event => {
         removeSelectedOptionsFromOtherDropdowns($(this));
     });
 
+    $('#btnSaveLineup').on('click', function(){
+        var allFilled = false;
+
+        $('#main_lineup').each(function () { 
+            if($(this).children().children().val('')) {
+                allFilled = false;
+            }
+        });
+
+
+        if(!allFilled) {
+            showErrorAlert('RIEMPI TUTTI GLI SLOT TITOLARI PRIMA DI CONFERMARE');
+        }
+    });
+
+    $('#btnResetLineup').on('click', function() {
+        $('#main_lineup').each(function () { 
+            $(this).children().children().val('');
+        });
+
+        $('#secondary_lineup').each(function () { 
+            $(this).children().children().val('');
+        });
+    });
+
+    $('#btnResetMainLineup').on('click', function() {
+        $('#main_lineup').each(function () { 
+            $(this).children().children().val('');
+        });
+    });
 
 
 })

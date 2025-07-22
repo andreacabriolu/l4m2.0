@@ -16,6 +16,11 @@
 
 {% block content %}
 <div id="layoutSidenav_content" class="custom-layout">
+
+    <div class="alert alert-danger" role="alert" id="error-alert" hidden>
+            <span id="span-error-alert"></span>
+    </div>
+
     <div class="bg-body-tertiary main-div p-5" id="lineupDiv">
         <div class="form-floating">
             <select class="form-select form-select-lg mb-3 form-select-custom" id="mods">
@@ -26,7 +31,7 @@
             <label for="mods">Modulo</label>
         </div>
         <div class="lineups" id="l_ups">
-            <div class="main-lineup">
+            <div class="main-lineup" id="main_lineup">
                 <div class="form-floating">
                     <select class="form-select form-select-lg mb-3" id="gk_tit">
                         {% for gk in players_gk %}
@@ -171,7 +176,7 @@
 
             <div class="vr vr-custom"></div>
 
-            <div class="secondary-lineup">
+            <div class="secondary-lineup" id="secondary_lineup">
                 
                 <div class="form-floating">
                     <select class="form-select form-select-lg mb-3" id="gk1_ris">
@@ -317,9 +322,17 @@
 
         </div>
 
-        <button type="button" class="btn btn-primary" id="btnSaveLineup" value="CONFERMA">
-            CONFERMA
-        </button>
+        <div class="btn-panel" id="btn_panel">
+            <button type="button" class="btn btn-primary" id="btnSaveLineup">
+                CONFERMA
+            </button>
+            <button type="button" class="btn btn-primary" id="btnResetMainLineup">
+                RESET TITOLARI
+            </button>
+            <button type="button" class="btn btn-primary" id="btnResetLineup">
+                RESET TUTTI
+            </button>
+        </div>
     </div>
 </div>
 </div>
