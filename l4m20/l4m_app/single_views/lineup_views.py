@@ -36,3 +36,8 @@ class LineupView(LoginRequiredMixin, View):
         
         return render(request, self.template_name, params)
     
+class SaveLineupView(View):
+  def post(self, request):
+      
+      pass
+    

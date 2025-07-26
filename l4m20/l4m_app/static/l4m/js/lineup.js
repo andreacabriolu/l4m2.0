@@ -7,6 +7,14 @@ function showErrorAlert(response) {
     // });
 }
 
+function showInfoAlert(response) {
+    $("#info-alert").prop('hidden', false);
+    $('#span-info-alert').text(response);
+    $("#info-alert").fadeTo(5000, 0.33, function(){
+        $("#info-alert").prop('hidden', true);
+    });
+}
+
 function manage_mod(val) { //show and hide, TODO: real the best way?
 
     nums = val.split('-');
@@ -66,6 +74,9 @@ function removeSelectedOptionsFromOtherDropdowns(current) {
 
 window.addEventListener('DOMContentLoaded', event => {
 
+    const token = Cookies.get('csrftoken');
+
+
     $('#mods').on('change', function () {
         var val = $(this).val();
 
@@ -78,19 +89,49 @@ window.addEventListener('DOMContentLoaded', event => {
     });
 
     $('#btnSaveLineup').on('click', function(){
-        var allFilled = false;
+        var allFilled = true;
+        var titSlots = [];
 
-        $('#main_lineup').each(function () { 
-            if($(this).children().children().val('')) {
+        $('#main_lineup').children().each(function () { 
+            if($(this).children().val() == null) {
                 allFilled = false;
+            }
+
+            if(!allFilled) {
+                showErrorAlert('RIEMPI TUTTI GLI SLOT TITOLARI PRIMA DI CONFERMARE');
+                return;
+            }
+
+            if($(this).get(0).hidden== false) {
+                t = new Object();
+                t.slot = $(this).children().get(0).id;
+                t.id = $(this).children().children('option:selected').data().id;
+                titSlots.push(t);
             }
         });
 
+        
 
-        if(!allFilled) {
-            showErrorAlert('RIEMPI TUTTI GLI SLOT TITOLARI PRIMA DI CONFERMARE');
-        }
-    });
+        const row = {
+            module : $('#mods').val(),
+            gk_tit : $('#gk_tit').val(),
+            d1_tit : $('#d1_tit').val(),
+
+        };
+
+        jsonData = JSON.stringify(row);
+
+        var data = { 'jsonData': jsonData, 'csrfmiddlewaretoken': token };
+
+        $.post("/l4m/lineup/save/", data, function (response) {
+            if(response.startsWith ('error')) {
+                showErrorAlert(response);
+            }
+            else {
+                showInfoAlert("FORMAZIONE SCHIERATA CORRETTAMENTE!");
+            }
+        });
+        });
 
     $('#btnResetLineup').on('click', function() {
         $('#main_lineup').each(function () { 
