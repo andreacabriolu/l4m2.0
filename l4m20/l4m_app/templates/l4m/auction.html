@@ -19,12 +19,15 @@
     <div class="alert alert-success alert-hidden fade in" role="alert" id="official-alert">
         UFFICIALE!
     </div>
+    <div class="alert alert-danger" role="alert" id="error-alert" hidden>
+            <span id="span-error-alert"></span>
+    </div>
     <div class="bg-body p-5 main-div">
         <div class="btnDiv">
         </div>
         <div class="balance-div" id="balance_div">
             <label class="balance-label">Monte acquisti</label>
-            <span class="balance-info" id="main-balance">{{balance.Purchases_amount}}</span>
+            <span class="balance-info" id="main-balance">{{balance.Purchases_amount}} / {{balance.Purchases_max}} FML</span>
         </div>
         <!-- Canvas? React? Divs? -->
         <input id="user_team_id" type="hidden" value="{{user_team.id}}">

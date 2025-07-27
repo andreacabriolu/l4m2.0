@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.shortcuts import render
 from django.views import View
 from django.http import HttpResponse
@@ -22,6 +23,7 @@ class LineupView(LoginRequiredMixin, View):
         players_def = U.get_my_players("D", teamid)
         players_cc = U.get_my_players("C", teamid)
         players_fw = U.get_my_players("A", teamid)
+        players_my = list(players_def) + list(players_cc)+ list(players_fw)
 
         params = { 
             'mods': mods,
@@ -30,7 +32,37 @@ class LineupView(LoginRequiredMixin, View):
             'players_def':players_def,
             'players_cc':players_cc,
             'players_fw':players_fw,
+            'players_my':players_my
           }
         
         return render(request, self.template_name, params)
+    
+class SaveLineupView(View):
+  def post(self, request):
+    try:
+        data = json.loads(request.POST.get("jsonData"))
+        if (data is None): return
+
+        last_version = 0
+        day = U.get_current_day()
+        teamid = U.get_user_team(request.user.id)['id']
+        last_lineup = U.get_last_lineup(teamid, day)
+
+        if(last_lineup):
+            last_version = last_lineup[0]['Version']
+
+        lineup_info = {
+            "line": data,
+            "day": day,
+            "team": teamid,
+            "version": last_version + 1,
+            "timestamp": datetime.now(),
+            "series": U.get_user_series() #TODO: implement get_series
+        }
+
+        U.save_lineup(lineup_info)
+        return HttpResponse("success")
+
+    except Exception as e:
+            return HttpResponse(f'error saving lineup: {e}') 
     
