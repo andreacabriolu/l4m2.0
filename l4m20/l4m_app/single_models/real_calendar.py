@@ -7,8 +7,8 @@ class Real_calendar(models.Model):
     Competition = models.ForeignKey(C.Constant_Strings.competition, on_delete=models.CASCADE)
     Day = models.IntegerField()
     Date = models.DateTimeField()
-    RealTeamHome = models.ForeignKey(C.Constant_Strings.real_team, on_delete=models.CASCADE)
-    RealTeamAway = models.ForeignKey(C.Constant_Strings.real_team, on_delete=models.CASCADE)
+    RealTeamHome = models.ForeignKey(C.Constant_Strings.real_team, on_delete=models.CASCADE, related_name="team_home")
+    RealTeamAway = models.ForeignKey(C.Constant_Strings.real_team, on_delete=models.CASCADE, related_name="team_away")
     
     def __str__(self):
         return " ".join([self.Name])

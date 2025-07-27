@@ -129,6 +129,9 @@ def finalize_bet(data):
 def get_user_team(userid):
     return team.Team.objects.filter(Users__id=userid).values('id','Name')[0]
 
+def get_user_series():
+    return get_object_or_404(series.Series, Name="serie A".lower()) #TODO: implement
+
 def get_my_players(filter_role, teamid):
 
     return squads.Squads.objects.\
@@ -143,4 +146,24 @@ def complete_list(l, num_max, role):
             l.append({"id": "-1", "Role":role})
     
     return l
+
+def get_current_day():
+    #TODO: to be implemented, get the current day based on calendar
+    return 1 #TEMP
+
+def get_last_lineup(teamid, day):
+    return lineup.Lineup.objects.filter(Team=teamid, Day=day).order_by('-Version').values('Version')[:1]
+    
+def save_lineup(lineup_info):
+    lineup_new = lineup.Lineup(
+        Line = lineup_info['line'],
+        Day = lineup_info['day'],
+        Version = lineup_info['version'],
+        Team = get_object_or_404(team.Team, id=lineup_info['team']),
+        Timestamp = lineup_info['timestamp'],
+        Series = lineup_info['series']
+        )
+
+    lineup_new.save()
+
     

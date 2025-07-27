@@ -59,3 +59,24 @@ label {
 .btn-panel {
     display: block;
 }
+
+.top-line {
+    display: flex;
+}
+
+@media (max-width:800px) {
+    .top-line{
+        display: flex;
+        flex-direction: column-reverse;
+    }
+  }
+
+@media (max-width:800px) {
+    .btn-panel{
+        margin-bottom: 1.5em;
+    }
+  }
+
+.mod {
+    display: contents;
+  }

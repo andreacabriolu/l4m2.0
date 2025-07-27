@@ -9,3 +9,4 @@ class Lineup(models.Model):
     Version = models.IntegerField()
     Timestamp = models.DateTimeField()
     Series = models.ForeignKey(to=C.Constant_Strings.series, on_delete=models.CASCADE)
+    Day = models.IntegerField()

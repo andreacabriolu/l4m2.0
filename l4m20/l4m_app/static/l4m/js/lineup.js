@@ -99,8 +99,10 @@ window.addEventListener('DOMContentLoaded', event => {
 
             if(!allFilled) {
                 showErrorAlert('RIEMPI TUTTI GLI SLOT TITOLARI PRIMA DI CONFERMARE');
-                return;
+                // return;
             }
+
+            titSlots.push({'slot':'mod', id:$("#mods").val()});
 
             if($(this).get(0).hidden== false) {
                 t = new Object();
@@ -110,16 +112,7 @@ window.addEventListener('DOMContentLoaded', event => {
             }
         });
 
-        
-
-        const row = {
-            module : $('#mods').val(),
-            gk_tit : $('#gk_tit').val(),
-            d1_tit : $('#d1_tit').val(),
-
-        };
-
-        jsonData = JSON.stringify(row);
+        jsonData = JSON.stringify(titSlots);
 
         var data = { 'jsonData': jsonData, 'csrfmiddlewaretoken': token };
 

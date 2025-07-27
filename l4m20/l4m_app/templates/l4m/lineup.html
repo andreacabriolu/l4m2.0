@@ -26,13 +26,27 @@
     </div>
 
     <div class="bg-body-tertiary main-div p-5" id="lineupDiv">
-        <div class="form-floating">
-            <select class="form-select form-select-lg mb-3 form-select-custom" id="mods">
-                {% for mod in mods %}
-                <option value="{{mod}}">{{mod}}</option>
-                {% endfor %}
-            </select>
-            <label for="mods">Modulo</label>
+        <div class="form-floating top-line">
+            <div class="mod">
+                <select class="form-select form-select-lg mb-3 form-select-custom" id="mods">
+                    {% for mod in mods %}
+                    <option value="{{mod}}">{{mod}}</option>
+                    {% endfor %}
+                </select>
+                <label for="mods">Modulo</label>
+            </div>
+            <div class="btn-panel" id="btn_panel">
+                <button type="button" class="btn btn-primary" id="btnSaveLineup">
+                    CONFERMA
+                </button>
+                <button type="button" class="btn btn-primary" id="btnResetMainLineup">
+                    RESET TITOLARI
+                </button>
+                <button type="button" class="btn btn-primary" id="btnResetLineup">
+                    RESET TUTTI
+                </button>
+            </div>
+            
         </div>
         <div class="lineups" id="l_ups">
             <div class="main-lineup" id="main_lineup">
@@ -326,17 +340,7 @@
 
         </div>
 
-        <div class="btn-panel" id="btn_panel">
-            <button type="button" class="btn btn-primary" id="btnSaveLineup">
-                CONFERMA
-            </button>
-            <button type="button" class="btn btn-primary" id="btnResetMainLineup">
-                RESET TITOLARI
-            </button>
-            <button type="button" class="btn btn-primary" id="btnResetLineup">
-                RESET TUTTI
-            </button>
-        </div>
+        
     </div>
 </div>
 </div>
