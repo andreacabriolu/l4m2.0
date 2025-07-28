@@ -72,7 +72,7 @@ function removeSelectedOptionsFromOtherDropdowns(current) {
     });
 }
 
-function load_main_lineup(lineup) {
+function load_lineup(lineup) {
     for (item in lineup) {
         if(item == "mod") {continue;}
 
@@ -101,7 +101,7 @@ function load_last_lineup() {
                     $('#mods').val(mod);
                     manage_mod(mod);
 
-                    load_main_lineup(last_lineup[0]);
+                    load_lineup(last_lineup[0]);
                 }
                 catch{
                     showErrorAlert("ERRORE NEL CARICAMENTO DELLA FORMAZIONE");
@@ -185,5 +185,17 @@ window.addEventListener('DOMContentLoaded', event => {
         });
     });
 
+    $("select[id$='tit']").on('change', function() {
+        if($(this.length > 0)) {
+            sel_pl = $(this).children('option:selected');
+
+            // pl = $(`#${this}`).children(`option[data-id=${sel_pl.data().id}]`);
+            if($('#captain').children(`option[data-id=${sel_pl.data().id}]`).length > 0) {
+                return; //duplicate
+            }
+
+            $('#captain').append(sel_pl[0]);
+        }
+    });
 
 })

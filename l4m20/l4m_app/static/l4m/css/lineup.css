@@ -81,6 +81,10 @@ label {
     display: contents;
   }
 
+.cap {
+    margin-right: 2em;
+  }
+
   .form-select-player {
     min-width: 12em !important;
   }
