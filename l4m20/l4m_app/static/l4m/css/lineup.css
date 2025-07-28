@@ -80,3 +80,7 @@ label {
 .mod {
     display: contents;
   }
+
+  .form-select-player {
+    min-width: 12em !important;
+  }

@@ -72,14 +72,43 @@ function removeSelectedOptionsFromOtherDropdowns(current) {
     });
 }
 
+function load_last_lineup() {
+    var last_lineup = "";
+
+    $.get("/l4m/lineup/getLast/", function (response) {
+            if(response.startsWith ('error')) {
+                showErrorAlert(response);
+            }
+            else {
+                try{
+                    if(response == "") {
+                        return;
+                    }
+
+                    last_lineup = JSON.parse(response);
+                    
+                    mod = last_lineup[0].mod;
+                    $('#mods').val(mod);
+                }
+                catch{
+                    showErrorAlert("ERRORE NEL CARICAMENTO DELLA FORMAZIONE");
+                }
+
+            }
+        });
+
+
+
+}
+
 window.addEventListener('DOMContentLoaded', event => {
 
     const token = Cookies.get('csrftoken');
 
+    load_last_lineup();
 
     $('#mods').on('change', function () {
         var val = $(this).val();
-
         manage_mod(val);
 
     });
@@ -90,7 +119,12 @@ window.addEventListener('DOMContentLoaded', event => {
 
     $('#btnSaveLineup').on('click', function(){
         var allFilled = true;
-        var titSlots = [];
+        var titSlots = {};
+
+        // titSlots.push(['mod', $("#mods").val()]);
+        titSlots = {
+            mod : $("#mods").val()
+        };
 
         $('#main_lineup').children().each(function () { 
             if($(this).children().val() == null) {
@@ -99,16 +133,13 @@ window.addEventListener('DOMContentLoaded', event => {
 
             if(!allFilled) {
                 showErrorAlert('RIEMPI TUTTI GLI SLOT TITOLARI PRIMA DI CONFERMARE');
-                // return;
+                // return; //TODO: set this
             }
 
-            titSlots.push({'slot':'mod', id:$("#mods").val()});
-
             if($(this).get(0).hidden== false) {
-                t = new Object();
-                t.slot = $(this).children().get(0).id;
-                t.id = $(this).children().children('option:selected').data().id;
-                titSlots.push(t);
+                slot = $(this).children().get(0).id;
+                id = $(this).children().children('option:selected').data().id;
+                titSlots[slot] = id;
             }
         });
 
