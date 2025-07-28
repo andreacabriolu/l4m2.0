@@ -72,6 +72,16 @@ function removeSelectedOptionsFromOtherDropdowns(current) {
     });
 }
 
+function load_main_lineup(lineup) {
+    for (item in lineup) {
+        if(item == "mod") {continue;}
+
+        pl = $(`#${item}`).children(`option[data-id=${lineup[item]}]`);
+        if(pl.length <= 0) { continue; }
+        $(`#${item}`).val(pl[0].value);
+    }     
+}
+
 function load_last_lineup() {
     var last_lineup = "";
 
@@ -89,6 +99,9 @@ function load_last_lineup() {
                     
                     mod = last_lineup[0].mod;
                     $('#mods').val(mod);
+                    manage_mod(mod);
+
+                    load_main_lineup(last_lineup[0]);
                 }
                 catch{
                     showErrorAlert("ERRORE NEL CARICAMENTO DELLA FORMAZIONE");
@@ -121,7 +134,6 @@ window.addEventListener('DOMContentLoaded', event => {
         var allFilled = true;
         var titSlots = {};
 
-        // titSlots.push(['mod', $("#mods").val()]);
         titSlots = {
             mod : $("#mods").val()
         };

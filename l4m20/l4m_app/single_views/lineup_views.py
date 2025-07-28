@@ -68,7 +68,6 @@ class SaveLineupView(View):
     
 class GetLastLineupView(View):
     def get(self, request):
-        # data = json.loads(request.POST.get("jsonData"))
 
         try:
           last_lineup = U.get_last_lineup(U.get_user_team(request.user.id)['id'], U.get_current_day())
