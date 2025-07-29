@@ -70,10 +70,12 @@
                         data-betteam="{{player_gk.bet__Team_id__Name}}">
                         {{player_gk.Surname}}
                         ({{player_gk.RealTeam__Name}})
-                        {% if player_gk.bet__Amount != None %}
+
+                        {% if player_gk.bet__Amount != None and player_gk.bet__IsExpired == False %}
                         <span class="temp_amount">[puntato a {{player_gk.bet__Amount}} da
                             {{player_gk.bet__Team_id__Name}}]</span>
                         {% endif %}
+                        
                         {% endfor %}
                 </dl>
             </div>
