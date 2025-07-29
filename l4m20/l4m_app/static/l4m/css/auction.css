@@ -14,7 +14,6 @@
 
 .gk-container{
     display: flex;
-    flex-direction: row;
     justify-content: center;
     background-color: #0000007a;
     box-shadow: 3px 3px 10px lightblue;
@@ -53,7 +52,7 @@
 
 @media (max-width: 800px) {
     .gk-container {
-        flex-direction: column;
+        flex-wrap: wrap;
     }
 }
 
@@ -77,6 +76,7 @@
 @media (max-width: 800px) {
     .pl-div {
         margin: 10px;
+        width: 12em;
     }
 }
 

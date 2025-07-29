@@ -152,7 +152,7 @@ def get_current_day():
     return 1 #TEMP
 
 def get_last_lineup(teamid, day):
-    return lineup.Lineup.objects.filter(Team=teamid, Day=day).order_by('-Version').values('Version')[:1]
+    return lineup.Lineup.objects.filter(Team=teamid, Day=day).order_by('-Version')[:1]
     
 def save_lineup(lineup_info):
     lineup_new = lineup.Lineup(
@@ -166,4 +166,9 @@ def save_lineup(lineup_info):
 
     lineup_new.save()
 
-    
+def cleanJSON(jsonData):
+    jsonData = jsonData.replace("'","\"") #retransform after HTML form
+    jsonData = jsonData.replace("\"{","{").replace("}\"","}") #remove extra " with {
+    jsonData = jsonData.replace("\\","") #remove extra \
+
+    return jsonData    

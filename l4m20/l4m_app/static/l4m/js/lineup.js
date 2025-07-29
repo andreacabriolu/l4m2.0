@@ -72,14 +72,56 @@ function removeSelectedOptionsFromOtherDropdowns(current) {
     });
 }
 
+function load_lineup(lineup) {
+    for (item in lineup) {
+        if(item == "mod") {continue;}
+
+        pl = $(`#${item}`).children(`option[data-id=${lineup[item]}]`);
+        if(pl.length <= 0) { continue; }
+        $(`#${item}`).val(pl[0].value);
+    }     
+}
+
+function load_last_lineup() {
+    var last_lineup = "";
+
+    $.get("/l4m/lineup/getLast/", function (response) {
+            if(response.startsWith ('error')) {
+                showErrorAlert(response);
+            }
+            else {
+                try{
+                    if(response == "") {
+                        return;
+                    }
+
+                    last_lineup = JSON.parse(response);
+                    
+                    mod = last_lineup[0].mod;
+                    $('#mods').val(mod);
+                    manage_mod(mod);
+
+                    load_lineup(last_lineup[0]);
+                }
+                catch{
+                    showErrorAlert("ERRORE NEL CARICAMENTO DELLA FORMAZIONE");
+                }
+
+            }
+        });
+
+
+
+}
+
 window.addEventListener('DOMContentLoaded', event => {
 
     const token = Cookies.get('csrftoken');
 
+    load_last_lineup();
 
     $('#mods').on('change', function () {
         var val = $(this).val();
-
         manage_mod(val);
 
     });
@@ -90,7 +132,11 @@ window.addEventListener('DOMContentLoaded', event => {
 
     $('#btnSaveLineup').on('click', function(){
         var allFilled = true;
-        var titSlots = [];
+        var titSlots = {};
+
+        titSlots = {
+            mod : $("#mods").val()
+        };
 
         $('#main_lineup').children().each(function () { 
             if($(this).children().val() == null) {
@@ -99,16 +145,13 @@ window.addEventListener('DOMContentLoaded', event => {
 
             if(!allFilled) {
                 showErrorAlert('RIEMPI TUTTI GLI SLOT TITOLARI PRIMA DI CONFERMARE');
-                // return;
+                // return; //TODO: set this
             }
 
-            titSlots.push({'slot':'mod', id:$("#mods").val()});
-
             if($(this).get(0).hidden== false) {
-                t = new Object();
-                t.slot = $(this).children().get(0).id;
-                t.id = $(this).children().children('option:selected').data().id;
-                titSlots.push(t);
+                slot = $(this).children().get(0).id;
+                id = $(this).children().children('option:selected').data().id;
+                titSlots[slot] = id;
             }
         });
 
@@ -142,5 +185,17 @@ window.addEventListener('DOMContentLoaded', event => {
         });
     });
 
+    $("select[id$='tit']").on('change', function() {
+        if($(this.length > 0)) {
+            sel_pl = $(this).children('option:selected');
+
+            // pl = $(`#${this}`).children(`option[data-id=${sel_pl.data().id}]`);
+            if($('#captain').children(`option[data-id=${sel_pl.data().id}]`).length > 0) {
+                return; //duplicate
+            }
+
+            $('#captain').append(sel_pl[0]);
+        }
+    });
 
 })

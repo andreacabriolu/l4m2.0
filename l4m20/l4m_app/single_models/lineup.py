@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 class Lineup(models.Model):
-    Line = models.CharField()
+    Line = models.CharField(max_length=2000)
     Team = models.ForeignKey(to=C.Constant_Strings.team, on_delete=models.CASCADE)
     Version = models.IntegerField()
     Timestamp = models.DateTimeField()

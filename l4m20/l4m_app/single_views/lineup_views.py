@@ -49,7 +49,7 @@ class SaveLineupView(View):
         last_lineup = U.get_last_lineup(teamid, day)
 
         if(last_lineup):
-            last_version = last_lineup[0]['Version']
+            last_version = last_lineup[0].Version
 
         lineup_info = {
             "line": data,
@@ -66,3 +66,15 @@ class SaveLineupView(View):
     except Exception as e:
             return HttpResponse(f'error saving lineup: {e}') 
     
+class GetLastLineupView(View):
+    def get(self, request):
+
+        try:
+          last_lineup = U.get_last_lineup(U.get_user_team(request.user.id)['id'], U.get_current_day())
+          if (not last_lineup):
+              return HttpResponse("")
+          else: 
+              ret_json = json.dumps([last_lineup[0].Line, last_lineup[0].Timestamp.__str__()])
+              return HttpResponse(U.cleanJSON(ret_json))        
+        except Exception as e:
+            return HttpResponse(f"error: {e}")
