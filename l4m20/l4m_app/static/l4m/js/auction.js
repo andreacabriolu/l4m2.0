@@ -31,12 +31,13 @@ function openPreOfficialModal(divid, playerid) {
     
 }
 
-function openPlayerModal(playerName, official=false) {
+function openPlayerModal(playerName, bet=1, official=false) {
     $('#dlg_player_info').modal('show');
     $('#playerInfoLabel').text(playerName.toUpperCase());
 
     if(official) {
         $('#plr_info_modal_body').addClass('plr-info-official');
+        $('#modal-pl-info-betamount').val(bet);
         $('#modal-currentbet').prop('hidden', true);
     }
     else {
@@ -95,7 +96,7 @@ function fill_slots(mbb) {
                         openPreOfficialModal(div_id, bet.Player_id);
                     }
                     else if(bet.IsOfficial) {
-                        openPlayerModal(json_res.Sur, official=true);
+                        openPlayerModal(json_res.Sur, json_res.BetA, official=true);
                     }
                     
                 });
