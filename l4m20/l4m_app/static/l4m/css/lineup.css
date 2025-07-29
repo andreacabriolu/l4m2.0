@@ -87,4 +87,5 @@ label {
 
   .form-select-player {
     min-width: 12em !important;
+    font-size: large !important;
   }

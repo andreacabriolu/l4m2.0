@@ -28,7 +28,8 @@ function fillTables() {
                 order: [],
                 createdRow: function (row, data, dataIndex) {
                     $(row).addClass(data[2] == true ? 'betting-player-expired' :
-                        (data[3] == true ? 'betting-player-carognata' : 'betting-player')
+                                   (data[3] == true ? 'betting-player-carognata' : 
+                                   'betting-player')
                     );
                     $(row).tooltip({
                         placement: 'top',
