@@ -1,9 +1,10 @@
 from .models import *
-from django.db.models import Q
+from django.db.models import Q, Sum
 import json
 import datetime
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from l4m20 import constants as C
 
 def get_players(filter_role, teamid):
     return player.Player.objects.\
@@ -11,6 +12,10 @@ def get_players(filter_role, teamid):
         filter(RealTeam__isnull=False).\
         exclude(bet__Team_id=teamid).\
         values('id','Surname','Name','Role','RealTeam__Name','bet__Amount','bet__Expiration_Date','bet__Team_id__Name')
+
+def get_balance_for_bets(teamid, balance_max):
+    sum = bet.Bet.objects.filter(Q(Team_id=teamid) & Q(IsExpired=False)).aggregate(Sum('Amount'))
+    return (balance_max - sum['Amount__sum'] if sum['Amount__sum'] is not None else 0)
 
 def get_my_best_bets(teamid):
     return bet.Bet.objects.\
@@ -35,7 +40,7 @@ def get_total(mbb):
 
 def get_all_team_players():
     return player.Player.objects.\
-        values('id','Surname','Name','Role','Team_id','bet__Team_id','bet__Amount',\
+        values('id','Surname','Name','Role','bet__Team_id','bet__Amount',\
                'bet__IsExpired','bet__Carognata','bet__Expiration_Date')
     
 def send_bet(data):
@@ -45,10 +50,16 @@ def send_bet(data):
     bet_obj.Expiration_Date = data['exp_date']
     bet_obj.Team = data['userteamid']
     bet_obj.Slot = data['slot']
+    
+    balance_max = data['balancemax']
     exp_date_obj = datetime.datetime.strptime(bet_obj.Expiration_Date, '%d/%m/%Y, %H:%M:%S').replace(tzinfo=timezone.get_current_timezone())
 
     player_ = get_object_or_404(player.Player, id=bet_obj.Player)
     user_team = get_object_or_404(team.Team, id=bet_obj.Team) #TODO: how to avoid this double fetch?
+
+    balance_for_bets = get_balance_for_bets(bet_obj.Team, int(balance_max))
+    if(bet_obj.Amount > balance_for_bets):
+        return C.SendBetResult.BET_OVERFLOW, balance_max
 
     try:
         bet_old = bet.Bet.objects.filter(Q(Player=player_))
@@ -61,27 +72,8 @@ def send_bet(data):
             )
             bet_history_new.save()
 
-            #Give back the spent money to the old betting team
-            bal_oldteam = balance.Balance.objects.filter(Team=_bet_old.Team)
-            bal_oldteam = bal_oldteam[0]
-            bal_oldteam.Purchases_amount = bal_oldteam.Purchases_amount + _bet_old.Amount
-            bal_oldteam.save()
-    
-    except Exception as e:
-        bet_new.delete() #rollback
-        bal_newteam.Purchases_amount = bal_newteam.Purchases_amount + bet_new.Amount #rollback
-        raise Exception(e) 
-
-    if len(list(bet_old)) == 1: #there is an old best bet
-        try:
             bet_old.delete() #remove old bet
-        except Exception as e:
-            bet_new.delete() #rollback
-            bal_newteam.Purchases_amount = bal_newteam.Purchases_amount + bet_new.Amount #rollback
-            bal_oldteam.Purchases_amount = bal_oldteam.Purchases_amount - _bet_old.Amount
-            raise Exception(e) 
-        
-    try:
+
         bet_new = bet.Bet(Amount=bet_obj.Amount,
                         Player = player_,
                         Team = user_team,
@@ -89,22 +81,13 @@ def send_bet(data):
                         Slot=bet_obj.Slot)
 
         bet_new.save()
-
-    except Exception as e:
-        raise Exception(e) 
-
-    try:
-        #Take back the spent money from the betting team
-        bal_newteam = balance.Balance.objects.filter(Team=bet_obj.Team)
-        bal_newteam = bal_newteam[0] #there should be only one balance TODO: check with giamba
-        bal_newteam.Purchases_amount = bal_newteam.Purchases_amount - bet_new.Amount
-        bal_newteam.save()
-
+    
     except Exception as e:
         bet_new.delete() #rollback
-        raise Exception(e)
+        #RESCUE OLD BET FROM BET_HISTORY TODO
+        raise Exception(e) 
 
-    return bal_newteam
+    return (balance_for_bets - bet_obj.Amount), balance_max
     
 def finalize_bet(data):
 

@@ -27,13 +27,14 @@
         </div>
         <div class="balance-div" id="balance_div">
             <label class="balance-label">Monte acquisti</label>
-            <span class="balance-info" id="main-balance">{{balance.Purchases_amount}} / {{balance.Purchases_max}} FML</span>
+            <span class="balance-info" id="main-balance">{{balance_for_bets}} / {{balance.Purchases_max}} FML</span>
         </div>
         <!-- Canvas? React? Divs? -->
         <input id="user_team_id" type="hidden" value="{{user_team.id}}">
         <input id="user_team_name" type="hidden" value="{{user_team.Name}}">
         <input id="my_best_bets" type="hidden" value="{{my_best_bets}}">
         <input id="my_balance" type="hidden" value="{{balance}}">
+        <input id="my_balance_max" type="hidden" value="{{balance.Purchases_max}}">
 
         <div class="modal fade" id="preOfficialModal" tabindex="-1" role="dialog"
             aria-labelledby="preOfficialModalLabel">
@@ -175,7 +176,7 @@
                         <div id="modal-pl-bet" class="modal-bet">
                             <div class="modal-bet-amount">
                                 <span class="modal-label">Puntata</span>
-                                <input id="modal-pl-info-betamount" type="number" min="1" value="1"
+                                <input id="modal-pl-info-betamount" type="number" min="1" max="{{balance_for_bets}}" value="1"
                                     class="modal-form-input-bet" readonly>
                             </div>
                             <div id="modal-currentbet" class="modal-form-input-currentbet">
@@ -223,7 +224,7 @@
                 </div>
                 <div id="modal-pl-bet" class="modal-bet">
                     <span class="modal-label">Puntata</span>
-                    <input id="modal-pl-betamount" type="number" min="1" value="1" class="modal-form-input-bet">
+                    <input id="modal-pl-betamount" type="number" min="1" max="{{balance_for_bets}}" value="1" class="modal-form-input-bet">
                     <div id="modal-currentbet" class="modal-form-input-currentbet">
                         <span id="span-betexpire" class="modal-label-bestbet">Scadenza</span>
                         <input id="modal-pl-betexpdate" type="text" class="modal-form-input-bettime" readonly>
@@ -313,7 +314,7 @@
                 <div id="fw1_div" class="pl-div" onclick="openDialog('fw1')">
                     <input type="text" id="fw1" class="inputPlyr" readonly value="SLOT VUOTO">
                 </div>
-                <div id="fw_div" class="pl-div" onclick="openDialog('fw2')">
+                <div id="fw2_div" class="pl-div" onclick="openDialog('fw2')">
                     <input type="text" id="fw2" class="inputPlyr" readonly value="SLOT VUOTO">
                 </div>
                 <div id="fw3_div" class="pl-div" onclick="openDialog('fw3')">
