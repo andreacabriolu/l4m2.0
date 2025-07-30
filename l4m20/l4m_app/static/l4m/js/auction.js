@@ -229,7 +229,7 @@ function calculate_expiration_date() {
         minute: 'numeric',
         second: 'numeric'
     }
-    return new Date(new Date(now).setDate(now.getDate() + 3)).toLocaleString("it-IT", options) //TODO nighttime
+    return new Date(new Date(now).setDate(now.getDate() + 2)).toLocaleString("it-IT", options) //TODO nighttime
 }
 
 function sendBet() {
@@ -241,6 +241,7 @@ function sendBet() {
     row.exp_date = calculate_expiration_date();
     row.userteamid = $('#user_team_id').val();
     row.userteamname = $('#user_team_name').val();
+    row.balancemax = $('#my_balance_max').val();
     row.slot = current_div[0].id;
     jsonData = JSON.stringify(row);
 

@@ -1,9 +1,10 @@
 function fillTables() {
     var teamPlayers = JSON.parse($('#team_players').val());
+    var balances = JSON.parse($('#balances').val());
 
     for ([k, v] of Object.entries(teamPlayers)) {
         var newDtHtml = `<table class='table custom-table hover' id=${k}DataTable cellspacing="0">
-        <caption class='table-caption'>${k}</caption>
+        <caption class='table-caption'>${k} [${balances[k]} FML]</caption>
             <thead>
                 <tr class="custom-th">
                     <th>Ruolo</th>
@@ -37,7 +38,7 @@ function fillTables() {
                         title: 'SCADENZA: ' + data[5].slice(0, -6), //Bad way to remove timezone,
                         trigger: 'hover focus click',
                     });
-                    if (data[1] == "VUOTO") { $(row).tooltip('disable'); }
+                    if (data[1] == "") { $(row).tooltip('disable'); }
                 },
                 columnDefs: [
                     {
@@ -60,7 +61,7 @@ function fillTables() {
             if (player_data.id == "-1") {
                 dt.row.add([
                     player_data.Role,
-                    "VUOTO",
+                    "",
                     "",
                     "",
                     "",

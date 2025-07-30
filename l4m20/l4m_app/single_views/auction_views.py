@@ -8,6 +8,7 @@ from django.db.models import Q
 from .. import utilities as U
 from ..models import *
 from l4m20 import constants as C
+from ..libs import *
 
 class AuctionView(LoginRequiredMixin, View):
     #TODO: implement control on user passes test (https://docs.djangoproject.com/en/4.2/topics/auth/default/#limiting-access-to-logged-in-users-that-pass-a-test)
@@ -26,6 +27,9 @@ class AuctionView(LoginRequiredMixin, View):
         my_best_bets = U.list_my_best_bets(U.get_my_best_bets(teamid))
 
         balance = U.get_balance(teamid)[0] #TODO: filter by season/league
+        balance_for_bets = U.get_balance_for_bets(teamid, balance['Purchases_max'])
+        if(balance_for_bets is None): 
+            balance_for_bets = 0
 
         params = { 
             'user_team': user_team,
@@ -35,6 +39,7 @@ class AuctionView(LoginRequiredMixin, View):
             'players_fw':players_fw,
             'my_best_bets':my_best_bets,
             'balance' : balance,
+            'balance_for_bets' : balance_for_bets,
           }
         
         return render(request, self.template_name, params)
@@ -43,16 +48,22 @@ class SendBetView(View):
     template_name = 'l4m/auction.html'
 
     def post(self, request): 
+        uname = request.user.username
+
         try:
             data = json.loads(request.POST.get("jsonData"))
             if (data is None): return
             
-            bal_info = U.send_bet(data)
-            bal_info.save()
+            logger.debug(f"{uname} : SENDING BET: {data}")
+
+            bet_result, balance_max = U.send_bet(data)
+
+            if(bet_result == C.SendBetResult.BET_OVERFLOW):
+                return HttpResponse(f'error PUNTATA TROPPO ALTA!')
         except Exception as e:
             return HttpResponse(f'error inserting bet and updating balance: {e}')
         
-        return HttpResponse(json.dumps({'amount': bal_info.Purchases_amount, 'max': bal_info.Purchases_max}))
+        return HttpResponse(json.dumps({'amount': bet_result, 'max': balance_max}))
 
 class FinBetView(View):
     template_name = 'l4m/auction.html'
@@ -103,6 +114,7 @@ class AllAuctionsView(LoginRequiredMixin, View):
         team_ids = team.Team.objects.all().values('id','Name')
         user_team_name = U.get_user_team(request.user.id)['Name'].replace(' ','_')
         team_players = {}
+        balances = {}
 
         for team_id in team_ids:
             lp = list(all_team_players.filter(Q(bet__Team_id=team_id['id']) & Q(Role=C.Constant_Dicts.RoleChars['POR'])))
@@ -117,10 +129,17 @@ class AllAuctionsView(LoginRequiredMixin, View):
 
             team_players[team_id['Name'].replace(' ','_')] = lp + ld + lc + la
             
+            #TODO: manage more than 1 balance!
+            balance = U.get_balance(team_id['id'])
+            if(not balance):
+                continue
+            balances[team_id['Name'].replace(' ','_')] = U.get_balance_for_bets(team_id['id'], balance[0]['Purchases_max'])
+            
         team_players={user_team_name:team_players.pop(user_team_name), **team_players} #get user team as first
 
         params = { 
-            'team_players' : json.dumps(team_players)
+            'team_players' : json.dumps(team_players),
+            'balances' : json.dumps(balances)
           }
         
         return render(request, self.template_name, params)

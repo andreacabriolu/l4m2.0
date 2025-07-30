@@ -23,4 +23,10 @@ NUM_DEF = 8
 NUM_CC = 8
 NUM_FW = 6
 
+NUM_DAYS_AUCTION = 2
+
+class SendBetResult:
+    BET_OK = 0
+    BET_OVERFLOW = 1
+
 
