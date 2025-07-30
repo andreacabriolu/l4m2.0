@@ -15,7 +15,7 @@ def get_players(filter_role, teamid):
 
 def get_balance_for_bets(teamid, balance_max):
     sum = bet.Bet.objects.filter(Q(Team_id=teamid) & Q(IsExpired=False)).aggregate(Sum('Amount'))
-    return (balance_max - sum['Amount__sum'] if sum['Amount__sum'] is not None else 0)
+    return (balance_max - sum['Amount__sum'] if sum['Amount__sum'] is not None else balance_max)
 
 def get_my_best_bets(teamid):
     return bet.Bet.objects.\
