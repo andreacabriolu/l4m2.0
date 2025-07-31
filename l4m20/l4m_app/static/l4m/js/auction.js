@@ -12,6 +12,10 @@ var RoleNames = {
     '': ''
 };
 
+function showPopupErrorAlert(response) {
+    alert(response);
+}
+
 function showErrorAlert(response) {
     $("#error-alert").prop('hidden', false);
     $('#span-error-alert').text(response);
@@ -34,10 +38,10 @@ function openPreOfficialModal(divid, playerid) {
 function openPlayerModal(playerName, bet=1, official=false) {
     $('#dlg_player_info').modal('show');
     $('#playerInfoLabel').text(playerName.toUpperCase());
+    $('#modal-pl-info-betamount').val(bet);
 
     if(official) {
         $('#plr_info_modal_body').addClass('plr-info-official');
-        $('#modal-pl-info-betamount').val(bet);
         $('#modal-currentbet').prop('hidden', true);
     }
     else {
@@ -90,7 +94,7 @@ function fill_slots(mbb) {
                     $('#modal-pl-info-bestbet').val(json_res.BetA);
 
                     if(!bet.IsExpired) {
-                        openPlayerModal(json_res.Sur);
+                        openPlayerModal(json_res.Sur, json_res.BetA);
                     }
                     else if(bet.IsExpired && !bet.IsOfficial) {
                         openPreOfficialModal(div_id, bet.Player_id);
@@ -246,6 +250,14 @@ function sendBet() {
     jsonData = JSON.stringify(row);
 
     var data = { 'jsonData': jsonData, 'csrfmiddlewaretoken': token };
+
+    if($('#modal-pl-betamount').attr('min') != null) {
+        if(row.betamount <= $('#modal-pl-betamount').attr('min')) {
+            showPopupErrorAlert("PUNTATA TROPPO BASSA!");
+        
+            return;
+        }
+    }
 
     $.post("/l4m/auction/sendBet/", data, function (response) {
         if(response.startsWith ('error')) {
