@@ -273,7 +273,7 @@
   .modal-form-input-bet {
     font-size: xx-large;
     font-weight: bold;
-    width: 20%;
+    width: fit-content;
     text-align: end;
     margin-left: 1em;
   }
@@ -410,3 +410,8 @@
 .plr-info-official {
   background: darkseagreen;
 }
+
+input:invalid {
+  border: 2px dashed red;
+  }
+
