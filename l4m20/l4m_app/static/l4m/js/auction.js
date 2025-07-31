@@ -254,7 +254,7 @@ function sendBet() {
     if($('#modal-pl-betamount').attr('min') != null) {
         if(row.betamount <= $('#modal-pl-betamount').attr('min')) {
             showPopupErrorAlert("PUNTATA TROPPO BASSA!");
-            
+        
             return;
         }
     }
