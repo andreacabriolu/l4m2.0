@@ -85,7 +85,6 @@ function fill_slots(mbb) {
                 $.post("/l4m/auction/getPlayerInfo/", data, function (response) {
                     json_res = JSON.parse(response)
                     
-                    
                     $('#modal-pl-info-name').val(json_res.Sur);
                     $('#modal-pl-info-realteam').val(json_res.RealT);
                     $('#modal-pl-info-role').val(RoleNames[json_res.Rol]);
@@ -154,12 +153,22 @@ function openPlayerDialog(player) {
         $('#modal-pl-betamount').val(parseInt(player.betamount) + 1);
         $('#modal-pl-betamount').attr({"min" : parseInt(player.betamount) + 1}); 
     }
+    else {
+        $('#modal-pl-betamount').val('');
+        $('#modal-pl-betamount').attr({"min" : 1}); 
+    }
+
     $('#modal-currentbet').hide(); //TODO: check here for player displaying
     if (player.betexpdate != 'None') {
         $('#modal-currentbet').show();
         $('#modal-pl-bestbetteam').val(player.betteam);
         $('#modal-pl-betexpdate').val(player.betexpdate);
         $('#modal-pl-bestbet').val(player.betamount);
+    }
+    else {
+        $('#modal-pl-bestbetteam').val('');
+        $('#modal-pl-betexpdate').val('');
+        $('#modal-pl-bestbet').val('');
     }
 
     plr_dlg = $('#dlg_player_open')[0];
@@ -251,10 +260,21 @@ function sendBet() {
 
     var data = { 'jsonData': jsonData, 'csrfmiddlewaretoken': token };
 
+    var min = parseInt($('#modal-pl-betamount').attr("min"));
+    var max = parseInt($('#modal-pl-betamount').attr("max"));
+
     if($('#modal-pl-betamount').attr('min') != null) {
-        if(row.betamount <= $('#modal-pl-betamount').attr('min')) {
+        if(row.betamount < min) {
             showPopupErrorAlert("PUNTATA TROPPO BASSA!");
-        
+            $('#modal-pl-betamount').val(min);
+            return;
+        }
+    }
+
+    if($('#modal-pl-betamount').attr('max') != null) {
+        if(row.betamount > max) {
+            showPopupErrorAlert("PUNTATA TROPPO ALTA!");
+            $('#modal-pl-betamount').val(max);
             return;
         }
     }

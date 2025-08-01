@@ -11,7 +11,9 @@ def get_players(filter_role, teamid):
         filter(Role=filter_role).\
         filter(RealTeam__isnull=False).\
         exclude(bet__Team_id=teamid).\
-        values('id','Surname','Name','Role','RealTeam__Name','bet__Amount','bet__Expiration_Date','bet__Team_id__Name')
+        exclude(bet__IsExpired=True).\
+        values('id','Surname','Name','Role','RealTeam__Name','bet__Amount',
+               'bet__Expiration_Date','bet__Team_id__Name','bet__IsExpired')
 
 def get_balance_for_bets(teamid, balance_max):
     sum = bet.Bet.objects.filter(Q(Team_id=teamid) & Q(IsExpired=False)).aggregate(Sum('Amount'))
@@ -20,7 +22,8 @@ def get_balance_for_bets(teamid, balance_max):
 def get_my_best_bets(teamid):
     return bet.Bet.objects.\
         filter((Q(Team_id=teamid)) | (Q(IsRaised=True) & Q(Team_id=teamid))).\
-        values('Amount','Player_id','Player_id__Surname','Expiration_Date','Slot','IsRaised','IsExpired','id','Team_id','IsOfficial')
+        values('Amount','Player_id','Player_id__Surname','Expiration_Date','Slot',
+               'IsRaised','IsExpired','id','Team_id','IsOfficial')
 
 def list_my_best_bets(mbb):
     ls = list(mbb).__str__()
