@@ -35,7 +35,6 @@
         <input id="my_best_bets" type="hidden" value="{{my_best_bets}}">
         <input id="my_balance" type="hidden" value="{{balance}}">
         <input id="my_balance_max" type="hidden" value="{{balance.Purchases_max}}">
-        <input id="balance_for_bets" type="hidden" value="{{balance_for_bets}}">
         
         <div class="modal fade" id="preOfficialModal" tabindex="-1" role="dialog"
             aria-labelledby="preOfficialModalLabel">
@@ -228,7 +227,11 @@
                 </div>
                 <div id="modal-pl-bet" class="modal-bet">
                     <span class="modal-label modal-label-bet" id="modal-label-bet">PUNTATA (MIN: _minbet_ MAX: _maxbet_)</span>
-                    <input id="modal-pl-betamount" type="number" min="1" max="{{balance_for_bets}}" value="1" class="modal-form-input-bet">
+                    <div id="modal_bet_add" class="modal-bet-add">
+                        <input id="modal-pl-betamount" type="number" min="1" max="{{balance_for_bets}}" value="1" class="modal-form-input-bet">
+                        <button type="button" class="btn btn-primary btn-add-bet" id="btnplus1">+1</button>
+                        <button type="button" class="btn btn-primary btn-add-bet" id="btnplus5">+5</button>
+                    </div>
                     <div id="modal-currentbet" class="modal-form-input-currentbet">
                         <span id="span-betexpire" class="modal-label-bestbet">Scadenza</span>
                         <input id="modal-pl-betexpdate" type="text" class="modal-form-input-bettime" readonly>

@@ -437,3 +437,15 @@ input:invalid {
   display: flex;
   justify-content: center;
 }
+
+.no-pointer-events {
+  pointer-events: none;
+}
+
+.modal-bet-add {
+  display: flex;
+}
+
+.btn-add-bet {
+  margin-left: 1em;
+}
