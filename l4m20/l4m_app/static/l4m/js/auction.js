@@ -127,6 +127,24 @@ window.addEventListener('DOMContentLoaded', event => {
 
         openPlayerDialog(player);
     });
+
+    $('#btnplus1').on('click', function(){
+        currentVal = parseInt($('#modal-pl-betamount').val());        
+        currentVal = isNaN(currentVal) ? 0 : currentVal;
+
+        $('#modal-pl-betamount').val(
+            currentVal + 1
+        );
+    });
+
+    $('#btnplus5').on('click', function(){
+        currentVal = parseInt($('#modal-pl-betamount').val());        
+        currentVal = isNaN(currentVal) ? 0 : currentVal;
+
+        $('#modal-pl-betamount').val(
+            currentVal + 5
+        );
+    });
 })
 
 function closeDlg(el) {
@@ -135,6 +153,23 @@ function closeDlg(el) {
         parent.close();
     }
 
+}
+
+function setPlayerDialog(player, mode='std') {
+    if(mode == 'high') {
+        $('#dlg_player_open').removeClass('dlg-player');
+        $('#dlg_player_open').addClass('dlg-player-high');
+        $('#notafford').attr('hidden', false);
+        $('#modal-pl-betamount').val(parseInt(player.betamount));   
+        $('#btnSendBet').addClass('no-pointer-events');
+    }
+    else {
+        $('#dlg_player_open').removeClass('dlg-player-high');
+        $('#dlg_player_open').addClass('dlg-player');
+        $('#notafford').attr('hidden', true);
+        $('#btnSendBet').removeClass('no-pointer-events');
+
+    }
 }
 
 function openPlayerDialog(player) {
@@ -149,16 +184,44 @@ function openPlayerDialog(player) {
     $('#modal-pl-name').val(player.name + player.surname);
     $('#modal-pl-realteam').val(player.realteam);
     $('#modal-pl-role').val(RoleNames[player.role]);
-    if (player.betamount != 'None') {
-        $('#modal-pl-betamount').val(parseInt(player.betamount) + 1);
-        $('#modal-pl-betamount').attr({"min" : parseInt(player.betamount) + 1}); 
-    }
-    else {
-        $('#modal-pl-betamount').val('');
-        $('#modal-pl-betamount').attr({"min" : 1}); 
-    }
 
-    $('#modal-currentbet').hide(); //TODO: check here for player displaying
+    let balance_for_bets;
+    const token = Cookies.get('csrftoken');
+    var data = {'csrfmiddlewaretoken': token };
+
+    $.post("/l4m/auction/getBalanceForBets/", data, function (response) {
+        balance_for_bets = response;    
+
+        if (player.betamount != 'None') {
+        if(parseInt(player.betamount) >= parseInt(balance_for_bets)) { //UNAFFORDABLE
+            setPlayerDialog(player, 'high');
+        }
+        else {
+            setPlayerDialog(player);
+            $('#modal-pl-betamount').val(parseInt(player.betamount) + 1);   
+            $('#modal-pl-betamount').attr({"min" : parseInt(player.betamount) + 1});
+        }
+        }
+        else {
+            if(parseInt(balance_for_bets) <= 0) {
+                setPlayerDialog(player, 'high');
+            }
+            else {
+                setPlayerDialog(player);
+                $('#modal-pl-betamount').val('');
+                $('#modal-pl-betamount').attr({"min" : 1});
+            } 
+        }
+
+        $('#modal-label-bet').html($('#modal-label-bet').html()
+            .replace('_minbet_', player.betamount != 'None' ? `<strong>${parseInt(player.betamount)+1}</strong>` : '<strong>1</strong>')
+            .replace('_maxbet_', `<strong>${balance_for_bets}</strong>`)
+        );            
+    });
+
+    
+
+    $('#modal-currentbet').hide();
     if (player.betexpdate != 'None') {
         $('#modal-currentbet').show();
         $('#modal-pl-bestbetteam').val(player.betteam);

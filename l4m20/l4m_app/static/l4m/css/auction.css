@@ -224,8 +224,19 @@
     width: 50%;
   }
 
+  .dlg-player-high {
+    background-color: #b8a6aa;
+    width: 50%;
+  }
+
   @media (max-width:800px) {
     .dlg-player {
+     width: 90%; 
+    }
+  }
+
+  @media (max-width:800px) {
+    .dlg-player-high {
      width: 90%; 
     }
   }
@@ -412,7 +423,29 @@
 }
 
 input:invalid {
-  border: 2px dashed red;
+  border: 2px solid red;
   background-color: rgb(237, 180, 180);
   }
 
+.not-afford {
+  font-size: x-large;
+  font-weight: bold;
+  color: crimson;
+}
+
+.notafford-div {
+  display: flex;
+  justify-content: center;
+}
+
+.no-pointer-events {
+  pointer-events: none;
+}
+
+.modal-bet-add {
+  display: flex;
+}
+
+.btn-add-bet {
+  margin-left: 1em;
+}

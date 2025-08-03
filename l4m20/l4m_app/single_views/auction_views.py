@@ -104,6 +104,12 @@ class GetBalanceView(View):
         user_team = team.Team.objects.filter(Users__id=request.user.id).values('id')[0]
         
         return HttpResponse(U.get_balance(user_team['id'])['Purchases_amount']) #TODO: filter by season/league
+    
+class GetBalanceForBetsView(View):
+    def post(self, request):
+        user_team = team.Team.objects.filter(Users__id=request.user.id).values('id')[0]
+
+        return HttpResponse(U.get_balance_for_bets(user_team['id'], U.get_balance(user_team['id'])[0]['Purchases_max']))
 
 
 class AllAuctionsView(LoginRequiredMixin, View):
