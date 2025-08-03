@@ -1,0 +1,24 @@
+{% extends "./base.html" %}
+{% load static %}
+
+{ % block title % } L4M2.0 - Tutte le aste { % endblock % }
+
+{% block links %}
+<link href="{% static 'l4m/css/squad.css' %}" rel="stylesheet">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="{% static 'l4m/js/squad.js' %}"></script>
+
+{% endblock %}
+
+{% block content %}
+<div id="layoutSidenav_content" class="custom-layout">
+    <div class="bg-body-tertiary p-5 main-div" id="allTeamsDiv">
+        <input id="team_players" type="hidden" value="{{team_players}}">
+        <input id="balances" type="hidden" value="{{balances}}">      
+    </div>
+</div>
+{% endblock %}
