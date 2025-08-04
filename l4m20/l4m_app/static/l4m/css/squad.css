@@ -91,9 +91,11 @@
     background-color: transparent;
     padding: 0;
 }
-
+.first_column {
+    width:5%;
+}
 .fixed-width {
-    width: 12%; /* or whatever value fits your layout */
+    max-width: 30%; /* or whatever value fits your layout */
     text-align: center;
     white-space: nowrap;
 }
