@@ -13,7 +13,8 @@ def get_players(filter_role, teamid):
         exclude(bet__Team_id=teamid).\
         exclude(bet__IsExpired=True).\
         values('id','Surname','Name','Role','RealTeam__Name','bet__Amount',
-               'bet__Expiration_Date','bet__Team_id__Name','bet__IsExpired')
+               'bet__Expiration_Date','bet__Team_id__Name','bet__IsExpired').\
+               order_by('Surname')
 
 def get_balance_for_bets(teamid, balance_max):
     sum = bet.Bet.objects.filter(Q(Team_id=teamid) & Q(IsExpired=False)).aggregate(Sum('Amount'))
