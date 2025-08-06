@@ -20,7 +20,10 @@ class SquadView(LoginRequiredMixin, View):
 
         # Get all players for the team, any role
         players = list(U.get_my_players('P', tid))  # pass '' or modify to get all roles
-
+        players += list(U.get_my_players('D', tid))  # pass '' or modify to get all roles
+        players += list(U.get_my_players('C', tid))  # pass '' or modify to get all roles
+        players += list(U.get_my_players('A', tid))  # pass '' or modify to get all roles
+        print(players)
         context = {
             'team_name': tname,
             'players_json': json.dumps(players),

@@ -7,60 +7,55 @@ function groupPlayersByRole(players) {
     }, {});
 }
 
-function buildTableForRole(role, players) {
-    if (players.length === 0) return '';
+function fillSingleTeamTable() {
+    const roleCounts = { P: 3, D: 8, C: 8, A: 6 };
+    const roleLabels = { P: 'P', D: 'D', C: 'C', A: 'A' };
 
-    // Columns based on keys in player object, customize as needed
-    const columns = ['Player__Role', 'Player__Surname', 'Player__RealTeam__Name', 'Jersey_num'];
+    const players = JSON.parse($('#team_players').val());  // This should be an array of player objects
 
-    const columnHeaders = {
-      'Player__Role': 'Ruolo',
-      'Player__Surname': 'Player',
-      'Player__RealTeam__Name': 'Squadra',
-      'Jersey_num': 'Numero Maglia'
-    };
-    
-    let html = `` //<h3>Role: ${role}</h3>`;
+    const roleRows = {};
+
+     // Group players by role
+    for (const role of Object.keys(roleCounts)) {
+     roleRows[role] = players.filter(p => p.Player__Role === role);
+    }
+
+
+    // Build HTML
+    let html = `<div style="overflow-x: auto;width:100%;">`;
     html += `<table class="table custom-table hover" id="allTeamsTable" cellspacing="0" cellpadding="5">`;
-    html += '<thead><tr>';
-    columns.forEach(col => html += `<th>${columnHeaders[col] || col}</th>`);
-    html += '</tr></thead><tbody>';
 
-    players.forEach(player => {
-        html += '<tr>';
-        columns.forEach(col => {
-            html += `<td>${player[col] || ''}</td>`;
-        });
-        html += '</tr>';
-    });
+    html += `<thead><tr>`;
+    html += `<th>Ruolo</th><th>Giocatore</th><th>Squadra</th><th>Costo</th>`;
+    html += `</tr></thead><tbody>`;
 
-    html += '</tbody></table>';
-    return html;
-}
+    for (const role of Object.keys(roleCounts)) {
+        const label = roleLabels[role] || role;
+        const count = roleCounts[role];
+        const playersOfRole = roleRows[role];
 
-function fillPlayersTable() {
-    document.getElementById('team-name').textContent = teamName;
-
-    const grouped = groupPlayersByRole(players);
-
-    const container = document.getElementById('players-table');
-    container.innerHTML = '';
-
-    // Define roles order and names you want to show
-    const roleOrder = ['P', 'D', 'C', 'A']; // e.g., P=keeper, D=defender, C=midfielder, A=forward
-
-    roleOrder.forEach(role => {
-        if (grouped[role]) {
-            container.innerHTML += buildTableForRole(role, grouped[role]);
+        for (let i = 0; i < count; i++) {
+            html += `<tr  class="role-label ${label}-row" >`;
+            if (i === 0) {
+                html += `<td class="role-label ${label}-row" rowspan="${count}"><strong>${label}</strong></td>`;
+            }
+            const player = playersOfRole[i] || {};
+            html += `<td>${player.Player__Surname || ''}</td>`;
+            html += `<td>${player.Player__RealTeam__Name || ''}</td>`;
+            html += `<td>${player.Amount || ''}</td>`;
+            html += `</tr>`;
         }
-    });
+
+        html += `<tr class="role-separator"><td colspan="4"></td></tr>`;
+    }
+
+    html += `</tbody></table></div>`;
+
+    $('#allTeamsDiv').html(html);
 }
 
-document.addEventListener('DOMContentLoaded', fillPlayersTable);
+window.addEventListener('DOMContentLoaded', () => {
+	    console.log("Script loaded and DOM ready");
+        fillSingleTeamTable();
+});
 
-function fillSingleTableWithTeams_bla() {
-    document.getElementById('team-display').textContent =
-        `Keeper: ${data.keep.Player__Surname} (${data.keep.Player__RealTeam__Name})`;
-}
-
-document.addEventListener('DOMContentLoaded', fillSingleTableWithTeams);

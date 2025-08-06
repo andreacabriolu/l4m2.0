@@ -4,13 +4,13 @@
 {% block title %}L4M2.0 - Squad{% endblock %}
 
 {% block links %}
-<link href="{% static 'l4m/css/allauction.css' %}" rel="stylesheet">
+<link href="{% static 'l4m/css/squad.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block scripts %}
 <script type="text/javascript">
     const teamName = "{{ team_name|escapejs }}";
-    const players = JSON.parse(`{{ players_json|escapejs }}`);
+    //const players = JSON.parse(`{{ players_json|escapejs }}`);
 </script>
 <script src="{% static 'l4m/js/squad.js' %}"></script>
 {% endblock %}
@@ -19,6 +19,8 @@
 <div id="layoutSidenav_content" class="custom-layout">
     <div class="bg-body-tertiary p-5 main-div" id="allTeamsDiv">
         <h2>Team: <span id="team-name"></span></h2>
+           <input type="hidden" id="team_players" value='{{ players_json|safe }}'>
+
         <div id="players-table"></div>
     </div>
 </div>
