@@ -59,7 +59,7 @@ def get_all_team_players():
     return player.Player.objects.\
         values('id','Surname','Name','Role','bet__Team_id','bet__Amount',\
                'bet__IsExpired','bet__Carognata','bet__Expiration_Date')
-    
+                
 def send_bet(data):
     bet_obj =  bet.Bet_Obj()
     bet_obj.Amount = int(data['betamount'])
@@ -135,6 +135,8 @@ def finalize_bet(data):
     
 def get_user_team(userid):
     return team.Team.objects.filter(Users__id=userid).values('id','Name')[0]
+    
+
 
 def get_user_series():
     return get_object_or_404(series.Series, Name="serie A".lower()) #TODO: implement

@@ -119,5 +119,23 @@
     background-color: #f9f9f9;
 }
 
+.player-hover-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.player-hover-wrapper .player-exp-date {
+    display: none;
+    color: #666;
+}
+
+.player-hover-wrapper:hover .player-name {
+    display: none;
+}
+
+.player-hover-wrapper:hover .player-exp-date {
+    display: inline;
+}
+
 .player-money {
 }

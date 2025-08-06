@@ -14,7 +14,13 @@ function fillSingleTableWithTeams() {
             let row = [];
             for (const teamName of teamNames) {
                 const playersOfRole = teamPlayers[teamName].filter(p => p.Role === role && p.id !== "-1");
-                row.push(playersOfRole[i] ? { Surname: playersOfRole[i].Surname, bet__Amount: playersOfRole[i].bet__Amount } : { Surname: "", bet__Amount: "" });
+                row.push(playersOfRole[i] ? 
+                { 
+					Surname: playersOfRole[i].Surname, 
+					bet__Amount: playersOfRole[i].bet__Amount,
+					bet__IsExpired: playersOfRole[i].bet__IsExpired,
+					bet__Expiration_Date: playersOfRole[i].bet__Expiration_Date 
+				} : { Surname: "", bet__Amount: "", bet__IsExpired: "", bet__Expiration_Date: "" });
                 //row.push(playersOfRole[i] ? playersOfRole[i].Surname : "");
             }
             roleRows[role].push(row);
@@ -39,8 +45,15 @@ function fillSingleTableWithTeams() {
                 html += `<td class="role-label" rowspan="${roleCounts[role]}"><strong>${role}</strong></td>`;
             }
             for (const player of roleRows[role][i]) {
-                html += `<td>${player.Surname}</td><td class="player-money">${player.bet__Amount}</td><td class="spacer-cell"></td>`;
-            }
+                //html += `<td>${player.Surname}</td><td class="player-money">${player.bet__Amount}</td><td class="spacer-cell"></td>`;
+                const color = player['bet__IsExpired'] ? 'black' : 'red';
+                html += `<td>
+                  <div style="color:${color}" class="player-hover-wrapper">
+                     <span class="player-name">${player.Surname}</span>
+                     <span class="player-exp-date">${player.bet__Expiration_Date}</span>
+                 </div>
+                 </td>`;
+                 html += `<td style="color:${color}" class="player-money">${player.bet__Amount}</td><td class="spacer-cell"></td>`;            }
             //for (const playerName of roleRows[role][i]) {
             //    html += `<td>${playerName}</td><td class="player-money"></td>`;
             //}
