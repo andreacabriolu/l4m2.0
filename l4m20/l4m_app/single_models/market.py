@@ -11,8 +11,9 @@ class Market(models.Model):
     
     Name = models.CharField(max_length=100)
     Status = models.CharField(max_length=1, choices=STATUSES)
-    Competition = models.ForeignKey(on_delete=models.CASCADE, to=C.Constant_Strings.competition, null=True)
+    # Competition = models.ForeignKey(on_delete=models.CASCADE, to=C.Constant_Strings.competition, null=True)
     Players = models.ManyToManyField(C.Constant_Strings.player)
+    Series = models.ForeignKey(on_delete=models.CASCADE, to=C.Constant_Strings.series, null=True)
     
     def __str__(self):
         return " ".join([self.Name])

@@ -5,6 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 class Series(models.Model):
     Name = models.CharField(max_length=100)
+    Competition = models.ForeignKey(to=C.Constant_Strings.competition, on_delete=models.CASCADE, null=True)
     
     def __str__(self):
         return " ".join([self.Name])

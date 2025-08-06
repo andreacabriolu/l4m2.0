@@ -24,7 +24,8 @@ class AuctionView(LoginRequiredMixin, View):
         players_cc = U.get_players("C", teamid)
         players_fw = U.get_players("A", teamid)
 
-        my_best_bets = U.list_my_best_bets(U.get_my_best_bets(teamid))
+        my_market = U.get_my_markets(U.get_my_series(teamid)[0].id)[0].id #TODO: improve check
+        my_best_bets = U.list_my_best_bets(U.get_my_best_bets(teamid, my_market))
 
         balance = U.get_balance(teamid)[0] #TODO: filter by season/league
         balance_for_bets = U.get_balance_for_bets(teamid, balance['Purchases_max'])
@@ -40,6 +41,7 @@ class AuctionView(LoginRequiredMixin, View):
             'my_best_bets':my_best_bets,
             'balance' : balance,
             'balance_for_bets' : balance_for_bets,
+            'my_market': my_market
           }
         
         return render(request, self.template_name, params)
