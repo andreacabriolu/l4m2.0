@@ -7,8 +7,8 @@ from django.contrib.auth.models import User
 class Team(models.Model):
     
     Name = models.CharField(max_length=100)
-    Series = models.ForeignKey(on_delete=models.CASCADE, to=C.Constant_Strings.series, null=True)
-    Session = models.ForeignKey(on_delete=models.CASCADE, to=C.Constant_Strings.session, null=True)
+    Series = models.ManyToManyField(C.Constant_Strings.series)
+    # Session = models.ForeignKey(on_delete=models.CASCADE, to=C.Constant_Strings.session, null=True)
     Users = models.ManyToManyField(User, related_name='user')
     
     def __str__(self):

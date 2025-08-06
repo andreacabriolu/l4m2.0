@@ -6,22 +6,35 @@ from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from l4m20 import constants as C
 
+def get_my_series(teamid):
+    return series.Series.objects.filter(team__id=teamid)
+
+def get_my_markets(seriesid):
+    return market.Market.objects.filter(Series_id=seriesid)
+
 def get_players(filter_role, teamid):
+    my_series = get_my_series(teamid)
+    if(len(my_series) <= 0): 
+        return
+    my_markets = get_my_markets(my_series[0].id)
+    if(len(my_markets) <= 0): 
+        return
+
     return player.Player.objects.\
         filter(Role=filter_role).\
         filter(RealTeam__isnull=False).\
         exclude(bet__Team_id=teamid).\
         exclude(bet__IsExpired=True).\
         values('id','Surname','Name','Role','RealTeam__Name','bet__Amount',
-               'bet__Expiration_Date','bet__Team_id__Name','bet__IsExpired')
+               'bet__Expiration_Date','bet__Team_id__Name','bet__IsExpired', 'bet__Market_id')
 
 def get_balance_for_bets(teamid, balance_max):
     sum = bet.Bet.objects.filter(Q(Team_id=teamid) & Q(IsExpired=False)).aggregate(Sum('Amount'))
     return (balance_max - sum['Amount__sum'] if sum['Amount__sum'] is not None else balance_max)
 
-def get_my_best_bets(teamid):
+def get_my_best_bets(teamid, marketid):
     return bet.Bet.objects.\
-        filter((Q(Team_id=teamid)) | (Q(IsRaised=True) & Q(Team_id=teamid))).\
+        filter(Q(Team_id=teamid) & Q(Market_id=marketid)).\
         values('Amount','Player_id','Player_id__Surname','Expiration_Date','Slot',
                'IsRaised','IsExpired','id','Team_id','IsOfficial')
 
@@ -53,25 +66,28 @@ def send_bet(data):
     bet_obj.Expiration_Date = data['exp_date']
     bet_obj.Team = data['userteamid']
     bet_obj.Slot = data['slot']
+    bet_obj.Market = data['market']
     
     balance_max = data['balancemax']
     exp_date_obj = datetime.datetime.strptime(bet_obj.Expiration_Date, '%d/%m/%Y, %H:%M:%S').replace(tzinfo=timezone.get_current_timezone())
 
     player_ = get_object_or_404(player.Player, id=bet_obj.Player)
     user_team = get_object_or_404(team.Team, id=bet_obj.Team) #TODO: how to avoid this double fetch?
+    market_ = get_object_or_404(market.Market, id=int(bet_obj.Market))
 
     balance_for_bets = get_balance_for_bets(bet_obj.Team, int(balance_max))
     if(bet_obj.Amount > balance_for_bets):
         return C.SendBetResult.BET_OVERFLOW, balance_max
 
     try:
-        bet_old = bet.Bet.objects.filter(Q(Player=player_))
+        bet_old = bet.Bet.objects.filter(Q(Player=player_) & Q(Market=market_))
         if len(list(bet_old)) == 1: #there is an old best bet
             _bet_old = bet_old[0]
             bet_history_new = bet_history.Bet_History(
                 Amount=_bet_old.Amount,
                 Player=_bet_old.Player,
-                Team=_bet_old.Team
+                Team=_bet_old.Team,
+                Market=bet_obj.Market
             )
             bet_history_new.save()
 
@@ -81,12 +97,14 @@ def send_bet(data):
                         Player = player_,
                         Team = user_team,
                         Expiration_Date=exp_date_obj,
-                        Slot=bet_obj.Slot)
+                        Slot=bet_obj.Slot,
+                        Market=market_)
 
         bet_new.save()
     
     except Exception as e:
-        bet_new.delete() #rollback
+        # if(bet_new is not None):
+        #     bet_new.delete() #rollback
         #RESCUE OLD BET FROM BET_HISTORY TODO
         raise Exception(e) 
 
@@ -101,7 +119,9 @@ def finalize_bet(data):
 
     player_ = get_object_or_404(player.Player, id=fin_obj.Player)
     user_team = get_object_or_404(team.Team, id=fin_obj.Team)
-    last_bet = bet.Bet.objects.filter(Q(Player_id=player_.id))
+    my_market_id = get_my_markets(get_my_series(user_team.id)[0].id)[0].id
+    my_market = get_object_or_404(market.Market, id=my_market_id)
+    last_bet = bet.Bet.objects.filter(Q(Player=player_) & Q(Market=my_market))
     last_bet.update(IsOfficial=True)
 
     fin_new = squads.Squads(Amount=fin_obj.Amount,

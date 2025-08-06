@@ -318,6 +318,7 @@ function sendBet() {
     row.userteamid = $('#user_team_id').val();
     row.userteamname = $('#user_team_name').val();
     row.balancemax = $('#my_balance_max').val();
+    row.market = $('#my_market').val();
     row.slot = current_div[0].id;
     jsonData = JSON.stringify(row);
 
