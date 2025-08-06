@@ -14,8 +14,8 @@ class Migration(migrations.Migration):
             model_name='market',
             name='Competition',
         ),
-        migrations.RemoveField(
-            model_name='market',
-            name='Players',
-        ),
+#        migrations.RemoveField(
+ #           model_name='market',
+  #          name='Players',
+   #     ),
     ]
