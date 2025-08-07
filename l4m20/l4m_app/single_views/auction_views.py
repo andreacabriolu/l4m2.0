@@ -31,6 +31,7 @@ class AuctionView(LoginRequiredMixin, View):
         balance_for_bets = U.get_balance_for_bets(teamid, balance['Purchases_max'])
         if(balance_for_bets is None): 
             balance_for_bets = 0
+        n_carognate = U.get_carognate()
 
         params = { 
             'user_team': user_team,
@@ -41,7 +42,9 @@ class AuctionView(LoginRequiredMixin, View):
             'my_best_bets':my_best_bets,
             'balance' : balance,
             'balance_for_bets' : balance_for_bets,
-            'my_market': my_market
+            'my_market': my_market,
+            'max_carognate' : C.MAX_CAROGNATE,
+            'n_carognate' : n_carognate
           }
         
         return render(request, self.template_name, params)
