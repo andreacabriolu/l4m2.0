@@ -160,16 +160,21 @@ class AllAuctionsView(LoginRequiredMixin, View):
         series_players = U.get_series_players(series_id) 
 
         for team_id in filtered_teams:
-            print(team_id['id'])
             lp = list(all_team_players.filter(Q(bet__Team_id=team_id['id']) & Q(Role=C.Constant_Dicts.RoleChars['POR'])))
             ld = list(all_team_players.filter(Q(bet__Team_id=team_id['id']) & Q(Role=C.Constant_Dicts.RoleChars['DIF'])))
             lc = list(all_team_players.filter(Q(bet__Team_id=team_id['id']) & Q(Role=C.Constant_Dicts.RoleChars['CC'])))
             la = list(all_team_players.filter(Q(bet__Team_id=team_id['id']) & Q(Role=C.Constant_Dicts.RoleChars['ATT'])))
             
+            balance = U.get_balance(team_id['id'])[0] #TODO: filter by season/league
+            balance_for_bets = U.get_balance_for_bets(teamid, balance['Purchases_max'])
+            
+            amount = balance['Purchases_amount']  # returns 300
+            pmax = balance_for_bets
+            
 
-            li = [{'Surname': 'Monte Acquisti', 'Name': None, 'bet__Team_id': team_id['id'], 'bet__Amount': 300, 'bet__IsExpired': True, 'bet__Carognata': False, 'bet__Expiration_Date': '2025-08-05 16:32:09+00:00','id':"0", 'Role': 'I'},
-                  {'Surname': 'Restante', 'Name': None, 'bet__Team_id': team_id['id'], 'bet__Amount': 300, 'bet__IsExpired': True, 'bet__Carognata': False, 'bet__Expiration_Date': '2025-08-05 16:32:09+00:00','id':"0", 'Role': 'I'},
-                  {'Surname': 'Puntata Massima', 'Name': None, 'bet__Team_id': team_id['id'], 'bet__Amount': 276, 'bet__IsExpired': True, 'bet__Carognata': False, 'bet__Expiration_Date': '2025-08-05 16:32:09+00:00','id':"0", 'Role': 'I'},
+            li = [{'Surname': 'Monte Acquisti', 'Name': None, 'bet__Team_id': team_id['id'], 'bet__Amount': amount, 'bet__IsExpired': True, 'bet__Carognata': False, 'bet__Expiration_Date': '2025-08-05 16:32:09+00:00','id':"0", 'Role': 'I'},
+                  {'Surname': 'Restante', 'Name': None, 'bet__Team_id': team_id['id'], 'bet__Amount': '-', 'bet__IsExpired': True, 'bet__Carognata': False, 'bet__Expiration_Date': '2025-08-05 16:32:09+00:00','id':"0", 'Role': 'I'},
+                  {'Surname': 'Puntata Massima', 'Name': None, 'bet__Team_id': team_id['id'], 'bet__Amount': pmax, 'bet__IsExpired': True, 'bet__Carognata': False, 'bet__Expiration_Date': '2025-08-05 16:32:09+00:00','id':"0", 'Role': 'I'},
                   {'Surname': 'Carognate', 'Name': None, 'bet__Team_id': team_id['id'], 'bet__Amount': 3, 'bet__IsExpired': True, 'bet__Carognata': False, 'bet__Expiration_Date': '2025-08-05 16:32:09+00:00','id':"0", 'Role': 'I'},
                   ]
             
@@ -185,6 +190,7 @@ class AllAuctionsView(LoginRequiredMixin, View):
             if(not balance):
                 continue
             balances[team_id['Name'].replace(' ','_')] = U.get_balance_for_bets(team_id['id'], balance[0]['Purchases_max'])
+            
          
         filtered_team_ids = {team['id'] for team in filtered_teams}
         
@@ -194,8 +200,6 @@ class AllAuctionsView(LoginRequiredMixin, View):
             for team_name, players in team_players.items()
         }     
 
-
-        print(team_players)    
 
         if(seriesid == myseries):
             team_players={user_team_name:team_players.pop(user_team_name), **team_players} #get user team as first
