@@ -68,14 +68,14 @@
                     {% for player_gk in players_gk %}
                     <dt class="dt-content" data-id="{{player_gk.id}}" data-surname="{{player_gk.Surname}}"
                         data-role="{{player_gk.Role}}" data-realteam="{{player_gk.RealTeam__Name}}"
-                        data-betamount="{{player_gk.bet__Amount}}" data-betexpdate="{{player_gk.bet__Expiration_Date}}"
-                        data-betteam="{{player_gk.bet__Team_id__Name}}">
+                        data-betamount="{{player_gk.mark_players__bet__Amount}}" data-betexpdate="{{player_gk.mark_players__bet__Expiration_Date}}"
+                        data-betteam="{{player_gk.mark_players__bet__Team_id__Name}}">
                         {{player_gk.Surname}}
                         ({{player_gk.RealTeam__Name}})
 
-                        {% if player_gk.bet__Amount != None and not player_gk.bet__IsExpired %}
-                        <span class="temp_amount">[puntato a {{player_gk.bet__Amount}} da
-                            {{player_gk.bet__Team_id__Name}}]</span>
+                        {% if player_gk.mark_players__bet__Amount != None and not player_gk.mark_players__bet__IsExpired %}
+                        <span class="temp_amount">[puntato a {{player_gk.mark_players__bet__Amount}} da
+                            {{player_gk.mark_players__bet__Team_id__Name}}]</span>
                         {% endif %}
                         
                         {% endfor %}
@@ -95,14 +95,14 @@
                     {% for player_def in players_def %}
                     <dt class="dt-content" data-id="{{player_def.id}}" data-surname="{{player_def.Surname}}"
                         data-role="{{player_def.Role}}" data-realteam="{{player_def.RealTeam__Name}}"
-                        data-betamount="{{player_def.bet__Amount}}"
-                        data-betexpdate="{{player_def.bet__Expiration_Date}}"
-                        data-betteam="{{player_def.bet__Team_id__Name}}">
+                        data-betamount="{{player_def.mark_players__bet__Amount}}"
+                        data-betexpdate="{{player_def.mark_players__bet__Expiration_Date}}"
+                        data-betteam="{{player_def.mark_players__bet__Team_id__Name}}">
                         {{player_def.Surname}}
                         ({{player_def.RealTeam__Name}})
-                        {% if player_def.bet__Amount != None and not player_def.bet__IsExpired %}
-                        <span class="temp_amount">[puntato a {{player_def.bet__Amount}} da
-                            {{player_def.bet__Team_id__Name}}]</span>
+                        {% if player_def.mark_players__bet__Amount != None and not player_def.mark_players__bet__IsExpired %}
+                        <span class="temp_amount">[puntato a {{player_def.mark_players__bet__Amount}} da
+                            {{player_def.mark_players__bet__Team_id__Name}}]</span>
                         {% endif %}
                         {% endfor %}
                 </dl>
@@ -121,13 +121,13 @@
                     {% for player_cc in players_cc %}
                     <dt class="dt-content" data-id="{{player_cc.id}}" data-surname="{{player_cc.Surname}}"
                         data-role="{{player_cc.Role}}" data-realteam="{{player_cc.RealTeam__Name}}"
-                        data-betamount="{{player_cc.bet__Amount}}" data-betexpdate="{{player_cc.bet__Expiration_Date}}"
-                        data-betteam="{{player_cc.bet__Team_id__Name}}">
+                        data-betamount="{{player_cc.mark_players__bet__Amount}}" data-betexpdate="{{player_cc.mark_players__bet__Expiration_Date}}"
+                        data-betteam="{{player_cc.mark_players__bet__Team_id__Name}}">
                         {{player_cc.Surname}}
                         ({{player_cc.RealTeam__Name}})
-                        {% if player_cc.bet__Amount != None and not player_cc.bet__IsExpired %}
-                        <span class="temp_amount">[puntato a {{player_cc.bet__Amount}} da
-                            {{player_cc.bet__Team_id__Name}}]</span>
+                        {% if player_cc.mark_players__bet__Amount != None and not player_cc.mark_players__bet__IsExpired %}
+                        <span class="temp_amount">[puntato a {{player_cc.mark_players__bet__Amount}} da
+                            {{player_cc.mark_players__bet__Team_id__Name}}]</span>
                         {% endif %}
                         {% endfor %}
                 </dl>
@@ -146,13 +146,13 @@
                     {% for player_fw in players_fw %}
                     <dt class="dt-content" data-id="{{player_fw.id}}" data-surname="{{player_fw.Surname}}"
                         data-role="{{player_fw.Role}}" data-realteam="{{player_fw.RealTeam__Name}}"
-                        data-betamount="{{player_fw.bet__Amount}}" data-betexpdate="{{player_fw.bet__Expiration_Date}}"
-                        data-betteam="{{player_fw.bet__Team_id__Name}}">
+                        data-betamount="{{player_fw.mark_players__bet__Amount}}" data-betexpdate="{{player_fw.mark_players__bet__Expiration_Date}}"
+                        data-betteam="{{player_fw.mark_players__bet__Team_id__Name}}">
                         {{player_fw.Surname}}
                         ({{player_fw.RealTeam__Name}})
-                        {% if player_fw.bet__Amount != None and not player_fw.bet__IsExpired %}
-                        <span class="temp_amount">[puntato a {{player_fw.bet__Amount}} da
-                            {{player_fw.bet__Team_id__Name}}]</span>
+                        {% if player_fw.mark_players__bet__Amount != None and not player_fw.mark_players__bet__IsExpired %}
+                        <span class="temp_amount">[puntato a {{player_fw.mark_players__bet__Amount}} da
+                            {{player_fw.mark_players__bet__Team_id__Name}}]</span>
                         {% endif %}
                         {% endfor %}
                 </dl>

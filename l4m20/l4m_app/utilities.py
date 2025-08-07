@@ -20,13 +20,18 @@ def get_players(filter_role, teamid):
     if(len(my_markets) <= 0): 
         return
 
+    my_market = my_markets[0].id
+#~
     return player.Player.objects.\
         filter(Role=filter_role).\
         filter(RealTeam__isnull=False).\
+        filter(mark_players__Market_id=my_market).\
+        filter(Q(bet__Market_id=my_market) | Q(bet__isnull=True) | (Q(bet__isnull=False) & ~Q(bet__Market_id=my_market))).\
+        exclude(Q(bet__Market_id=my_market) & Q(bet__IsExpired=True)).\
         exclude(bet__Team_id=teamid).\
-        exclude(bet__IsExpired=True).\
-        values('id','Surname','Name','Role','RealTeam__Name','bet__Amount',
-               'bet__Expiration_Date','bet__Team_id__Name','bet__IsExpired', 'bet__Market_id')
+        values('id','Surname','Name','Role','RealTeam__Name','mark_players__bet__Amount',
+               'mark_players__bet__Expiration_Date','mark_players__bet__Team_id__Name',
+               'mark_players__bet__IsExpired', 'mark_players__bet__Market_id')
 
 def get_balance_for_bets(teamid, balance_max):
     sum = bet.Bet.objects.filter(Q(Team_id=teamid) & Q(IsExpired=False)).aggregate(Sum('Amount'))
@@ -74,6 +79,7 @@ def send_bet(data):
     player_ = get_object_or_404(player.Player, id=bet_obj.Player)
     user_team = get_object_or_404(team.Team, id=bet_obj.Team) #TODO: how to avoid this double fetch?
     market_ = get_object_or_404(market.Market, id=int(bet_obj.Market))
+    mark_player_ = mark_players.Mark_Players.objects.filter(Q(Player_id=player_.id) & Q(Market_id=market_))
 
     balance_for_bets = get_balance_for_bets(bet_obj.Team, int(balance_max))
     if(bet_obj.Amount > balance_for_bets):
@@ -87,7 +93,7 @@ def send_bet(data):
                 Amount=_bet_old.Amount,
                 Player=_bet_old.Player,
                 Team=_bet_old.Team,
-                Market=bet_obj.Market
+                Market=market_
             )
             bet_history_new.save()
 
@@ -98,7 +104,8 @@ def send_bet(data):
                         Team = user_team,
                         Expiration_Date=exp_date_obj,
                         Slot=bet_obj.Slot,
-                        Market=market_)
+                        Market=market_,
+                        Mark_player=mark_player_[0])
 
         bet_new.save()
     
