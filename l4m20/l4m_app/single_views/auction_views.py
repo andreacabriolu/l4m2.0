@@ -117,14 +117,46 @@ class GetBalanceForBetsView(View):
 class AllAuctionsView(LoginRequiredMixin, View):
     template_name = 'l4m/allauctions.html'
 
-    def get(self,request):
+    def get(self,request,series_id=None):
+
+        user_team = U.get_user_team(request.user.id)
+        teamid = user_team['id']
+        series_mine = U.get_my_series(teamid)
+        myseries=series_mine[0].id
+                
+        if series_id is None:
+          user_team = U.get_user_team(request.user.id)
+          teamid = user_team['id']
+          series_id = U.get_my_series(teamid)
+          seriesid = series_id[0].id
+        
+        else:
+          seriesid = series_id
+         
+         
         all_team_players = U.get_all_team_players()
+        
         team_ids = team.Team.objects.all().values('id','Name')
+        team_ids_to_filter = team.Team.objects.all().values('id','Name')
+        filtered_teams = []
+        for team_id in team_ids_to_filter:
+            tid=team_id['id']
+            foreign_series = U.get_my_series(tid)
+            if foreign_series.exists():
+               fsid = foreign_series[0].id
+               if fsid == seriesid:
+                   filtered_teams.append(team_id)
+                   
+
+        
         user_team_name = U.get_user_team(request.user.id)['Name'].replace(' ','_')
         team_players = {}
         balances = {}
+        
+        series_players = U.get_series_players(series_id) 
+        
 
-        for team_id in team_ids:
+        for team_id in filtered_teams:
             lp = list(all_team_players.filter(Q(bet__Team_id=team_id['id']) & Q(Role=C.Constant_Dicts.RoleChars['POR'])))
             ld = list(all_team_players.filter(Q(bet__Team_id=team_id['id']) & Q(Role=C.Constant_Dicts.RoleChars['DIF'])))
             lc = list(all_team_players.filter(Q(bet__Team_id=team_id['id']) & Q(Role=C.Constant_Dicts.RoleChars['CC'])))
@@ -143,7 +175,8 @@ class AllAuctionsView(LoginRequiredMixin, View):
                 continue
             balances[team_id['Name'].replace(' ','_')] = U.get_balance_for_bets(team_id['id'], balance[0]['Purchases_max'])
             
-        team_players={user_team_name:team_players.pop(user_team_name), **team_players} #get user team as first
+        if(seriesid == myseries):
+            team_players={user_team_name:team_players.pop(user_team_name), **team_players} #get user team as first
 
         params = { 
             'team_players' : json.dumps(team_players),

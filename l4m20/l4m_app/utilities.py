@@ -21,6 +21,7 @@ def get_players(filter_role, teamid):
         return
 
     my_market = my_markets[0].id
+    
 #~
     return player.Player.objects.\
         filter(Role=filter_role).\
@@ -63,6 +64,31 @@ def get_all_team_players():
     return player.Player.objects.\
         values('id','Surname','Name','Role','bet__Team_id','bet__Amount',\
                'bet__IsExpired','bet__Carognata','bet__Expiration_Date')
+
+
+def get_series_players(series_id):
+	print(series_id)
+   #my_series = get_my_series(teamid)
+   #if(len(my_series) <= 0): 
+   #    return
+   #my_markets = get_my_markets(my_series[0].id)
+   #if(len(my_markets) <= 0): 
+   #    return
+   #
+   #my_market = my_markets[0].id
+   #
+#~ #
+   #return player.Player.objects.\
+   #    filter(Role=filter_role).\
+   #    filter(RealTeam__isnull=False).\
+   #    filter(mark_players__Market_id=my_market).\
+   #    filter(Q(bet__Market_id=my_market) | Q(bet__isnull=True) | (Q(bet__isnull=False) & ~Q(bet__Market_id=my_market))).\
+   #    exclude(Q(bet__Market_id=my_market) & Q(bet__IsExpired=True)).\
+   #    exclude(bet__Team_id=teamid).\
+   #    values('id','Surname','Name','Role','RealTeam__Name','mark_players__bet__Amount',
+   #           'mark_players__bet__Expiration_Date','mark_players__bet__Team_id__Name',
+   #           'mark_players__bet__IsExpired', 'mark_players__bet__Market_id').order_by('Surname')
+
                 
 def send_bet(data):
     bet_obj =  bet.Bet_Obj()

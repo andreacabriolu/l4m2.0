@@ -2,7 +2,7 @@ function fillSingleTableWithTeams() {
     const roleCounts = { P: 3, D: 8, C: 8, A: 6 };
     const roles = Object.keys(roleCounts);
     const teamPlayers = JSON.parse($('#team_players').val());
-    const teamNames = Object.keys(teamPlayers).slice(0, 8);;
+    const teamNames = Object.keys(teamPlayers);
     var balances = JSON.parse($('#balances').val());
 
 
