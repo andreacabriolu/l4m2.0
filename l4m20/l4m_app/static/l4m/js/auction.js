@@ -225,7 +225,7 @@ function openPlayerDialog(player) {
     if (player.betexpdate != 'None') {
         $('#modal-currentbet').show();
         $('#modal-pl-bestbetteam').val(player.betteam);
-        $('#modal-pl-betexpdate').val(player.betexpdate);
+        $('#modal-pl-betexpdate').val(new Date(player.betexpdate).toLocaleString("it-IT"));
         $('#modal-pl-bestbet').val(player.betamount);
     }
     else {
