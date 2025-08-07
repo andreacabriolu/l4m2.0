@@ -1,5 +1,5 @@
 from .models import *
-from django.db.models import Q, Sum
+from django.db.models import Q, Sum, Count
 import json
 import datetime
 from django.shortcuts import get_object_or_404
@@ -12,16 +12,23 @@ def get_my_series(teamid):
 def get_my_markets(seriesid):
     return market.Market.objects.filter(Series_id=seriesid)
 
-def get_players(filter_role, teamid):
-    my_series = get_my_series(teamid)
-    if(len(my_series) <= 0): 
+def get_my_market(teamid=None, userid=None):
+    if teamid is None and userid is None:
         return
-    my_markets = get_my_markets(my_series[0].id)
-    if(len(my_markets) <= 0): 
-        return
+    if(userid is not None):
+        teamid = get_user_team(userid)['id']
 
-    my_market = my_markets[0].id
-    
+    myseries = get_my_series(teamid)
+    if(len(myseries) <= 0): 
+        return
+    mymarkets = get_my_markets(myseries[0].id)
+    if(len(mymarkets) <= 0): 
+        return
+    return mymarkets[0]
+
+def get_players(filter_role, teamid):
+
+    my_market = get_my_market(teamid).id
 #~
     return player.Player.objects.\
         filter(Role=filter_role).\
@@ -35,8 +42,12 @@ def get_players(filter_role, teamid):
                'mark_players__bet__IsExpired', 'mark_players__bet__Market_id').order_by('Surname')
 
 def get_balance_for_bets(teamid, balance_max):
-    sum = bet.Bet.objects.filter(Q(Team_id=teamid) & Q(IsExpired=False)).aggregate(Sum('Amount'))
-    return (balance_max - sum['Amount__sum'] if sum['Amount__sum'] is not None else balance_max)
+    sum = bet.Bet.objects.filter(Q(Team_id=teamid) & Q(Market_id=get_my_market(teamid).id)).aggregate(Sum('Amount'))
+    #missing slot count
+    num_active_bets = bet.Bet.objects.filter(Q(Team_id=teamid)).aggregate(Count('id'))
+    num_missing_slots = C.NUM_SLOTS - num_active_bets['id__count']
+
+    return ((balance_max - sum['Amount__sum'] - num_missing_slots) if sum['Amount__sum'] is not None else balance_max)
 
 def get_my_best_bets(teamid, marketid):
     return bet.Bet.objects.\
@@ -152,7 +163,7 @@ def finalize_bet(data):
 
     player_ = get_object_or_404(player.Player, id=fin_obj.Player)
     user_team = get_object_or_404(team.Team, id=fin_obj.Team)
-    my_market_id = get_my_markets(get_my_series(user_team.id)[0].id)[0].id
+    my_market_id = get_my_market(fin_obj.Team).id
     my_market = get_object_or_404(market.Market, id=my_market_id)
     last_bet = bet.Bet.objects.filter(Q(Player=player_) & Q(Market=my_market))
     last_bet.update(IsOfficial=True)
@@ -161,8 +172,6 @@ def finalize_bet(data):
                 Player = player_,
                 Team = user_team)
     fin_new.save()            
-                
-    # return fin_obj.userteamid
 
     
 def get_user_team(userid):

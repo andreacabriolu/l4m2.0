@@ -87,17 +87,21 @@ class GetPlayerInfoView(View):
     def post(self, request):
         id = request.POST.get("id")
 
+        my_market = U.get_my_market(userid=request.user.id)
+
         pl = player.Player.objects.\
-        values('id','Surname','Name','Role','RealTeam__Name','bet__Amount','bet__Expiration_Date','bet__Team_id__Name').\
+        filter(mark_players__Market_id=my_market.id).\
+        values('id','Surname','Name','Role','RealTeam__Name','mark_players__bet__Amount','mark_players__bet__Expiration_Date',
+               'mark_players__bet__Team_id__Name','mark_players__Market_id').\
         get(pk=id)
 
         pl_obj = json.dumps({'Sur':pl['Surname'], 
                              'Nam':pl['Name'], 
                              'Rol':pl['Role'],
                              'RealT':pl['RealTeam__Name'], 
-                             'BetA':pl['bet__Amount'],
-                             'BetE': pl['bet__Expiration_Date'][:-6], #remove final timestamp
-                             'BetT': pl['bet__Team_id__Name']})
+                             'BetA':pl['mark_players__bet__Amount'],
+                             'BetE': pl['mark_players__bet__Expiration_Date'][:-6] if pl['mark_players__bet__Expiration_Date'] != None else pl['mark_players__bet__Expiration_Date'], #remove final timestamp
+                             'BetT': pl['mark_players__bet__Team_id__Name']})
 
         return HttpResponse(pl_obj)
 
