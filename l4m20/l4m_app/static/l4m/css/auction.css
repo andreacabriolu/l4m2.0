@@ -444,6 +444,10 @@
     cursor: pointer;
   }
 
+  .carognata {
+    background-color: darkkhaki;
+  }
+
   .end-official {
     background-color: yellowgreen;
   }

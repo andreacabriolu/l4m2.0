@@ -53,7 +53,7 @@ def get_my_best_bets(teamid, marketid):
     return bet.Bet.objects.\
         filter(Q(Team_id=teamid) & Q(Market_id=marketid)).\
         values('Amount','Player_id','Player_id__Surname','Expiration_Date','Slot',
-               'IsRaised','IsExpired','id','Team_id','IsOfficial')
+               'IsRaised','IsExpired','id','Team_id','IsOfficial','Carognata')
 
 def list_my_best_bets(mbb):
     ls = list(mbb).__str__()

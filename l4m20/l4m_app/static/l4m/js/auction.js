@@ -68,7 +68,9 @@ function fillSlotContent(div_id, bet, expDate) {
                 </div>\
            `);
 
+    $('#' + div_id).addClass(`${bet.Carognata ? 'carognata' : ''}`);
     $('#' + div_id).addClass(`${bet.IsOfficial ? 'end-official' : ''}`);
+    
 }
 
 function fill_slots(mbb) {
