@@ -158,9 +158,9 @@ class AllAuctionsView(LoginRequiredMixin, View):
         balances = {}
         
         series_players = U.get_series_players(series_id) 
-        
 
         for team_id in filtered_teams:
+            print(team_id['id'])
             lp = list(all_team_players.filter(Q(bet__Team_id=team_id['id']) & Q(Role=C.Constant_Dicts.RoleChars['POR'])))
             ld = list(all_team_players.filter(Q(bet__Team_id=team_id['id']) & Q(Role=C.Constant_Dicts.RoleChars['DIF'])))
             lc = list(all_team_players.filter(Q(bet__Team_id=team_id['id']) & Q(Role=C.Constant_Dicts.RoleChars['CC'])))
@@ -178,9 +178,18 @@ class AllAuctionsView(LoginRequiredMixin, View):
             if(not balance):
                 continue
             balances[team_id['Name'].replace(' ','_')] = U.get_balance_for_bets(team_id['id'], balance[0]['Purchases_max'])
-            
+         
+        filtered_team_ids = {team['id'] for team in filtered_teams}
+        
+        team_players = {
+            team_name: [p for p in players if p.get('bet__Team_id') in filtered_team_ids]
+            for team_name, players in team_players.items()
+        }     
+               
         if(seriesid == myseries):
             team_players={user_team_name:team_players.pop(user_team_name), **team_players} #get user team as first
+            
+#        print(team_players)    
 
         params = { 
             'team_players' : json.dumps(team_players),
