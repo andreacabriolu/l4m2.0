@@ -45,9 +45,9 @@ def get_balance_for_bets(teamid, balance_max):
     sum = bet.Bet.objects.filter(Q(Team_id=teamid) & Q(Market_id=get_my_market(teamid).id)).aggregate(Sum('Amount'))
     #missing slot count
     num_active_bets = bet.Bet.objects.filter(Q(Team_id=teamid)).aggregate(Count('id'))
-    num_missing_slots = C.NUM_SLOTS - num_active_bets['id__count']
+    num_missing_slots = (C.NUM_SLOTS - num_active_bets['id__count']) - 1
 
-    return ((balance_max - sum['Amount__sum'] - num_missing_slots) if sum['Amount__sum'] is not None else balance_max)
+    return ((balance_max - sum['Amount__sum'] - num_missing_slots) if sum['Amount__sum'] is not None else balance_max - num_missing_slots)
 
 def get_my_best_bets(teamid, marketid):
     return bet.Bet.objects.\
@@ -152,7 +152,7 @@ def send_bet(data):
         #RESCUE OLD BET FROM BET_HISTORY TODO
         raise Exception(e) 
 
-    return (balance_for_bets - bet_obj.Amount), balance_max
+    return (balance_for_bets - bet_obj.Amount + 1), balance_max
     
 def finalize_bet(data):
 
