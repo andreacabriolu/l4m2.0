@@ -119,6 +119,11 @@
     background-color: #f9f9f9;
 }
 
+.I-row td:not(.role-label),
+.I-row th {
+    background-color: #D9D9C2;
+}
+
 .player-hover-wrapper {
     position: relative;
     display: inline-block;

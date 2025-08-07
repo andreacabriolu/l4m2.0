@@ -165,13 +165,20 @@ class AllAuctionsView(LoginRequiredMixin, View):
             ld = list(all_team_players.filter(Q(bet__Team_id=team_id['id']) & Q(Role=C.Constant_Dicts.RoleChars['DIF'])))
             lc = list(all_team_players.filter(Q(bet__Team_id=team_id['id']) & Q(Role=C.Constant_Dicts.RoleChars['CC'])))
             la = list(all_team_players.filter(Q(bet__Team_id=team_id['id']) & Q(Role=C.Constant_Dicts.RoleChars['ATT'])))
+            
 
+            li = [{'Surname': 'Monte Acquisti', 'Name': None, 'bet__Team_id': team_id['id'], 'bet__Amount': 300, 'bet__IsExpired': True, 'bet__Carognata': False, 'bet__Expiration_Date': '2025-08-05 16:32:09+00:00','id':"0", 'Role': 'I'},
+                  {'Surname': 'Restante', 'Name': None, 'bet__Team_id': team_id['id'], 'bet__Amount': 300, 'bet__IsExpired': True, 'bet__Carognata': False, 'bet__Expiration_Date': '2025-08-05 16:32:09+00:00','id':"0", 'Role': 'I'},
+                  {'Surname': 'Puntata Massima', 'Name': None, 'bet__Team_id': team_id['id'], 'bet__Amount': 276, 'bet__IsExpired': True, 'bet__Carognata': False, 'bet__Expiration_Date': '2025-08-05 16:32:09+00:00','id':"0", 'Role': 'I'},
+                  {'Surname': 'Carognate', 'Name': None, 'bet__Team_id': team_id['id'], 'bet__Amount': 3, 'bet__IsExpired': True, 'bet__Carognata': False, 'bet__Expiration_Date': '2025-08-05 16:32:09+00:00','id':"0", 'Role': 'I'},
+                  ]
+            
             lp = U.complete_list(lp, C.NUM_GK, C.Constant_Dicts.RoleChars['POR'])
             ld = U.complete_list(ld, C.NUM_DEF, C.Constant_Dicts.RoleChars['DIF'])
             lc = U.complete_list(lc, C.NUM_CC, C.Constant_Dicts.RoleChars['CC'])
             la = U.complete_list(la, C.NUM_FW, C.Constant_Dicts.RoleChars['ATT'])
 
-            team_players[team_id['Name'].replace(' ','_')] = lp + ld + lc + la
+            team_players[team_id['Name'].replace(' ','_')] = lp + ld + lc + la + li
 
             #TODO: manage more than 1 balance!
             balance = U.get_balance(team_id['id'])
@@ -181,15 +188,17 @@ class AllAuctionsView(LoginRequiredMixin, View):
          
         filtered_team_ids = {team['id'] for team in filtered_teams}
         
+
         team_players = {
             team_name: [p for p in players if p.get('bet__Team_id') in filtered_team_ids]
             for team_name, players in team_players.items()
         }     
-               
+
+
+        print(team_players)    
+
         if(seriesid == myseries):
             team_players={user_team_name:team_players.pop(user_team_name), **team_players} #get user team as first
-            
-#        print(team_players)    
 
         params = { 
             'team_players' : json.dumps(team_players),

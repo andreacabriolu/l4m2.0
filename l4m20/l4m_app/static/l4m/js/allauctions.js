@@ -1,5 +1,5 @@
 function fillSingleTableWithTeams() {
-    const roleCounts = { P: 3, D: 8, C: 8, A: 6 };
+    const roleCounts = { P: 3, D: 8, C: 8, A: 6, I: 4};
     const roles = Object.keys(roleCounts);
     const teamPlayers = JSON.parse($('#team_players').val());
     const teamNames = Object.keys(teamPlayers);
@@ -29,26 +29,13 @@ function fillSingleTableWithTeams() {
 
     // Build table
     let html = `<div style="overflow-x: auto;width:100%;">`;
+    // Tgis is bad: it should load dinamically available markets and league names
     html += `<div id="link-container" style="display: flex;gap: 10px;background-color: black;padding: 10px;justify-content: center;">
-  <div>
-    <a href="http://lega4mori.com/l4m/allauctions/1/" 
-       style="color: white; text-decoration: none; font-weight: bold; padding: 1px; display: block;">
-      Serie A                                                                   
-    </a>                                                                        
-  </div>                                                                        
-  <div>                                                                         
-    <a href="http://lega4mori.com/l4m/allauctions/2/"                           
-       style="color: white; text-decoration: none; font-weight: bold; padding: 1px; display: block;">
-      Bundesliga                                                                
-    </a>                                                                        
-  </div>                                                                        
-  <div>                                                                         
-    <a href="http://lega4mori.com/l4m/allauctions/3/"                           
-       style="color: white; text-decoration: none; font-weight: bold; padding: 1px; display: block;">
-      Liga
-    </a>
-  </div>
- </div>`;
+      <div><a href="http://lega4mori.com/l4m/allauctions/1/" style="color: white; text-decoration: none; font-weight: bold; padding: 1px; display: block;">Serie A</a></div>                                                                        
+      <div><a href="http://lega4mori.com/l4m/allauctions/2/" style="color: white; text-decoration: none; font-weight: bold; padding: 1px; display: block;">Bundesliga</a></div>                                                                        
+      <div><a href="http://lega4mori.com/l4m/allauctions/3/" style="color: white; text-decoration: none; font-weight: bold; padding: 1px; display: block;">Liga</a></div>
+     </div>`;
+     
     html += `<table class="table custom-table hover" id="allTeamsTable" cellspacing="0" cellpadding="5">`;
 
     html += `<thead><tr><th>Ruolo</th>`;
