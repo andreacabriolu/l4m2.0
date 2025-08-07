@@ -166,7 +166,7 @@ class AllAuctionsView(LoginRequiredMixin, View):
             la = list(all_team_players.filter(Q(bet__Team_id=team_id['id']) & Q(Role=C.Constant_Dicts.RoleChars['ATT'])))
             
             balance = U.get_balance(team_id['id'])[0] #TODO: filter by season/league
-            balance_for_bets = U.get_balance_for_bets(teamid, balance['Purchases_max'])
+            balance_for_bets = U.get_balance_for_bets(team_id['id'], balance['Purchases_max'])
             
             amount = balance['Purchases_amount']  # returns 300
             pmax = balance_for_bets
