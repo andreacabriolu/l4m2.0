@@ -17,6 +17,7 @@ class Bet(models.Model):
     IsExpired = models.BooleanField(default=False)
     IsRaised = models.BooleanField(default=False) #TODO move to Bet_history
     IsOfficial = models.BooleanField(default=False)
+    Mark_player =models.ForeignKey(on_delete=models.CASCADE, to=C.Constant_Strings.mark_players, null=True)
 
 class Bet_Obj():
     Name=str
