@@ -24,6 +24,12 @@ function showErrorAlert(response) {
     });
 }
 
+function openCarognataModal() {
+    
+    $('#carognataModal').modal('show');
+
+}
+
 function openPreOfficialModal(divid, playerid) {
 
     officialInfo = {
@@ -126,6 +132,7 @@ window.addEventListener('DOMContentLoaded', event => {
         player.betamount = $(this)[0].dataset.betamount;
         player.betexpdate = $(this)[0].dataset.betexpdate;
         player.betteam = $(this)[0].dataset.betteam;
+        player.carognata = $(this)[0].dataset.carognata;
 
         openPlayerDialog(player);
     });
@@ -170,8 +177,21 @@ function setPlayerDialog(player, mode='std') {
         $('#dlg_player_open').addClass('dlg-player');
         $('#notafford').attr('hidden', true);
         $('#btnSendBet').removeClass('no-pointer-events');
+    }
+
+    if(mode == "carognata") {
+        $('#dlg_player_open').removeClass('dlg-player');
+        $('#dlg_player_open').addClass('dlg-player-carognata');
+        // $('#carognata_span').attr('hidden', false);
+    }
+    else {
+        $('#dlg_player_open').removeClass('dlg-player-carognata');
+        $('#dlg_player_open').addClass('dlg-player');
+        // $('#span-betexpire').html("Scadenza");
+        // $('#carognata_span').attr('hidden', true);
 
     }
+
 }
 
 function openPlayerDialog(player) {
@@ -195,24 +215,29 @@ function openPlayerDialog(player) {
         balance_for_bets = response;    
 
         if (player.betamount != 'None') {
-        if(parseInt(player.betamount) >= parseInt(balance_for_bets)) { //UNAFFORDABLE
-            setPlayerDialog(player, 'high');
+            if (parseInt(player.betamount) >= parseInt(balance_for_bets)) { //UNAFFORDABLE
+                setPlayerDialog(player, 'high');
+            }
+            else {
+                setPlayerDialog(player);
+                $('#modal-pl-betamount').val(parseInt(player.betamount) + 1);
+                $('#modal-pl-betamount').attr({ "min": parseInt(player.betamount) + 1 });
+            }
         }
         else {
-            setPlayerDialog(player);
-            $('#modal-pl-betamount').val(parseInt(player.betamount) + 1);   
-            $('#modal-pl-betamount').attr({"min" : parseInt(player.betamount) + 1});
-        }
-        }
-        else {
-            if(parseInt(balance_for_bets) <= 0) {
+            if (parseInt(balance_for_bets) <= 0) {
                 setPlayerDialog(player, 'high');
             }
             else {
                 setPlayerDialog(player);
                 $('#modal-pl-betamount').val('');
-                $('#modal-pl-betamount').attr({"min" : 1});
-            } 
+                $('#modal-pl-betamount').attr({ "min": 1 });
+            }
+        }
+
+        if(player.carognata == "True") {
+            setPlayerDialog(player, "carognata");
+            // $('#span-betexpire').html(span-betexpire.text() + " (CAROGNATA) ");
         }
 
         $('#modal-label-bet').html($('#modal-label-bet').html()
@@ -229,11 +254,13 @@ function openPlayerDialog(player) {
         $('#modal-pl-bestbetteam').val(player.betteam);
         $('#modal-pl-betexpdate').val(new Date(player.betexpdate).toLocaleString("it-IT"));
         $('#modal-pl-bestbet').val(player.betamount);
+        $('#modal-pl-carognata').val(player.carognata);
     }
     else {
         $('#modal-pl-bestbetteam').val('');
         $('#modal-pl-betexpdate').val('');
         $('#modal-pl-bestbet').val('');
+        $('#modal-pl-carognata').val('');
     }
 
     plr_dlg = $('#dlg_player_open')[0];
@@ -321,6 +348,7 @@ function sendBet() {
     row.userteamname = $('#user_team_name').val();
     row.balancemax = $('#my_balance_max').val();
     row.market = $('#my_market').val();
+    row.carognata = $('#modal-pl-carognata').val();
     row.slot = current_div[0].id;
     jsonData = JSON.stringify(row);
 
@@ -345,13 +373,17 @@ function sendBet() {
         }
     }
 
+    if($('#modal-pl-carognata').val() == "True") {
+         showPopupErrorAlert("RILANCIO CAROGNA!");
+    }
+
     $.post("/l4m/auction/sendBet/", data, function (response) {
         if(response.startsWith ('error')) {
             showErrorAlert(response);
         }
         else {
             $('#main-balance').text(`${JSON.parse(response)['amount']} / ${JSON.parse(response)['max']} FML`);
-            //remove datalist entry
+            $('#main-carognate').text(`${JSON.parse(response)['n_carognate']} / 3`);
             entry = document.querySelector("dl.dl-class dt[data-id='"+row.playerid+"']");
             if(entry!=null) { 
                 entry.parentNode.removeChild(entry); 

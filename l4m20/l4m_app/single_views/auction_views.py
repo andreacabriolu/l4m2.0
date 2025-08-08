@@ -31,7 +31,7 @@ class AuctionView(LoginRequiredMixin, View):
         balance_for_bets = U.get_balance_for_bets(teamid, balance['Purchases_max'])
         if(balance_for_bets is None): 
             balance_for_bets = 0
-        n_carognate = U.get_carognate()
+        n_carognate = balance['N_carognate']
 
         params = { 
             'user_team': user_team,
@@ -61,14 +61,14 @@ class SendBetView(View):
             
             logger.debug(f"{uname} : SENDING BET: {data}")
 
-            bet_result, balance_max = U.send_bet(data)
+            bet_result, balance_max, n_carognate = U.send_bet(data)
 
             if(bet_result == C.SendBetResult.BET_OVERFLOW):
                 return HttpResponse(f'error PUNTATA TROPPO ALTA!')
         except Exception as e:
             return HttpResponse(f'error inserting bet and updating balance: {e}')
         
-        return HttpResponse(json.dumps({'amount': bet_result, 'max': balance_max}))
+        return HttpResponse(json.dumps({'amount': bet_result, 'max': balance_max, 'n_carognate': n_carognate}))
 
 class FinBetView(View):
     template_name = 'l4m/auction.html'
@@ -118,7 +118,9 @@ class GetBalanceForBetsView(View):
     def post(self, request):
         user_team = team.Team.objects.filter(Users__id=request.user.id).values('id')[0]
 
-        return HttpResponse(U.get_balance_for_bets(user_team['id'], U.get_balance(user_team['id'])[0]['Purchases_max']))
+        return HttpResponse(
+                U.get_balance_for_bets(user_team['id'], 
+                U.get_balance(user_team['id'])[0]['Purchases_max']))
 
 
 class AllAuctionsView(LoginRequiredMixin, View):

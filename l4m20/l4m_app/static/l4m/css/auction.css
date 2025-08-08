@@ -283,6 +283,17 @@
     }
   }
 
+  .dlg-player-carognata {
+    background-color: #7d7e53;
+    width: 50%;
+  }
+
+   @media (max-width:800px) {
+    .dlg-player-carognata {
+     width: 90%; 
+    }
+  }
+
   .modal-avatar {
     border-style: ridge;
   }
@@ -369,11 +380,13 @@
     margin: 5%;
     display: flex;
     flex-direction: column;
+    align-items: center;
   }
 
   .modal-label-bestbet {
     margin-left: 2%;
     margin-right: 2%;
+    font-weight: bold;
   }
 
   .modal-form-input-betteam {
@@ -409,6 +422,18 @@
     color: red;
     font-size: large;
     font-weight: bolder;
+ }
+
+ .carognate-label {
+    font-weight: bold;
+    color: #5e5f6f;
+    font-size: large;
+ }
+
+ .carognate-info {
+    font-weight: bold;
+    color: #333aa4;
+    font-size: large;
  }
 
  .main-div {
@@ -494,4 +519,15 @@ input:invalid {
 
 .btn-add-bet {
   margin-left: 1em;
+}
+
+.carognata-div {
+  display: flex;
+  justify-content: center;
+} 
+
+.carognata-span {
+    font-size: larger;
+    font-weight: bold;
+    color: #7d7e53;
 }

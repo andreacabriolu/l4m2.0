@@ -10,9 +10,9 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='market',
-            name='Players_',
-            field=models.ManyToManyField(to='l4m_app.player'),
-        ),
+        # migrations.AddField(
+        #     model_name='market',
+        #     name='Players_',
+        #     field=models.ManyToManyField(to='l4m_app.player'),
+        # ),
     ]

@@ -10,7 +10,7 @@ class Balance(models.Model):
     Wages_max = models.IntegerField(null=True)
     Purchases_max = models.IntegerField(null=True)
     Team = models.ForeignKey(C.Constant_Strings.team, on_delete=models.CASCADE, null=True)
-    N_carognate = models.PositiveSmallIntegerField(null=True, default=C.MAX_CAROGNATE)
+    N_carognate = models.IntegerField(null=True, default=0)
     
     def __str__(self):
         return " ".join([self.Name])
