@@ -42,6 +42,9 @@ def get_players(filter_role, teamid):
                'mark_players__bet__IsExpired', 'mark_players__bet__Market_id','mark_players__bet__Carognata').\
         order_by('Surname')
 
+def get_current_bets_amount(teamid):
+    return bet.Bet.objects.filter(Q(Team_id=teamid) & Q(Market_id=get_my_market(teamid).id)).aggregate(Sum('Amount'))['Amount__sum']
+
 def get_balance_for_bets(teamid, balance_max):
     sum = bet.Bet.objects.filter(Q(Team_id=teamid) & Q(Market_id=get_my_market(teamid).id)).aggregate(Sum('Amount'))
     #missing slot count

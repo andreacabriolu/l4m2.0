@@ -55,8 +55,12 @@ function fillSingleTableWithTeams() {
                 //html += `<td>${player.Surname}</td><td class="player-money">${player.bet__Amount}</td><td class="spacer-cell"></td>`;
                 const color = player['bet__IsExpired'] ? 'black' : 'red';
                 const date = new Date(player['bet__Expiration_Date']);
-                 const formatted = `${date.getHours().toString().padStart(2,'0')}:${date.getMinutes().toString().padStart(2,'0')} 
+                let formatted = `${date.getHours().toString().padStart(2,'0')}:${date.getMinutes().toString().padStart(2,'0')} 
                      ${date.getDate().toString().padStart(2,'0')}-${(date.getMonth()+1).toString().padStart(2,'0')}-${date.getFullYear()}`;
+
+                if(role == 'I') {
+                    formatted = "";
+                }
 
                 html += `<td>
                   <div style="color:${color}" class="player-hover-wrapper">
