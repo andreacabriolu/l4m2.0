@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
 #        ('l4m_app', '0025_balance_purchases_max_balance_wages_max_and_more'),
-	('l4m_app', '0025_merge_0022_merge_20250306_2340_0024_bet_isofficial'),
+        ('l4m_app', '0024_bet_isofficial'),
     ]
 
     operations = [

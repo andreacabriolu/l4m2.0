@@ -39,7 +39,8 @@ def get_players(filter_role, teamid):
         exclude(bet__Team_id=teamid).\
         values('id','Surname','Name','Role','RealTeam__Name','mark_players__bet__Amount',
                'mark_players__bet__Expiration_Date','mark_players__bet__Team_id__Name',
-               'mark_players__bet__IsExpired', 'mark_players__bet__Market_id').order_by('Surname')
+               'mark_players__bet__IsExpired', 'mark_players__bet__Market_id','mark_players__bet__Carognata').\
+        order_by('Surname')
 
 def get_balance_for_bets(teamid, balance_max):
     sum = bet.Bet.objects.filter(Q(Team_id=teamid) & Q(Market_id=get_my_market(teamid).id)).aggregate(Sum('Amount'))
@@ -62,10 +63,14 @@ def list_my_best_bets(mbb):
     lsr = lsr.replace('False','false')
     return lsr
 
+def get_balance_obj(teamid):
+    return balance.Balance.objects.\
+        filter(Team_id=teamid)
+
 def get_balance(teamid):
     return balance.Balance.objects.\
         filter(Team_id=teamid).\
-        values('Purchases_amount','Purchases_max')
+        values('Purchases_amount','Purchases_max','N_carognate')
 
 def get_total(mbb):
     #TODO implement
@@ -110,6 +115,7 @@ def send_bet(data):
     bet_obj.Slot = data['slot']
     bet_obj.Market = data['market']
     
+    carognata = data['carognata']
     balance_max = data['balancemax']
     exp_date_obj = datetime.datetime.strptime(bet_obj.Expiration_Date, '%d/%m/%Y, %H:%M:%S').replace(tzinfo=timezone.get_current_timezone())
 
@@ -118,6 +124,8 @@ def send_bet(data):
     market_ = get_object_or_404(market.Market, id=int(bet_obj.Market))
     mark_player_ = mark_players.Mark_Players.objects.filter(Q(Player_id=player_.id) & Q(Market_id=market_))
 
+    my_bal = get_balance_obj(bet_obj.Team)[0]
+    ncarognate = my_bal.N_carognate
     balance_for_bets = get_balance_for_bets(bet_obj.Team, int(balance_max))
     if(bet_obj.Amount > balance_for_bets):
         return C.SendBetResult.BET_OVERFLOW, balance_max
@@ -145,6 +153,15 @@ def send_bet(data):
                         Mark_player=mark_player_[0])
 
         bet_new.save()
+
+        if(carognata):
+            
+            my_bal.N_carognate = ncarognate + 1
+
+            if(my_bal.N_carognate > C.MAX_CAROGNATE): #penalty
+                my_bal.Purchases_max = my_bal.Purchases_max - 1
+
+            my_bal.save()
     
     except Exception as e:
         # if(bet_new is not None):
@@ -152,7 +169,7 @@ def send_bet(data):
         #RESCUE OLD BET FROM BET_HISTORY TODO
         raise Exception(e) 
 
-    return (balance_for_bets - bet_obj.Amount + 1), balance_max
+    return (balance_for_bets - bet_obj.Amount + 1), balance_max, (ncarognate + 1) if carognata else ncarognate
     
 def finalize_bet(data):
 
