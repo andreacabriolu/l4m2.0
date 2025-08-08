@@ -43,6 +43,7 @@ class AuctionView(LoginRequiredMixin, View):
                 'my_best_bets':my_best_bets,
                 'balance' : balance,
                 'balance_for_bets' : balance_for_bets,
+                'residual': balance['Purchases_max'] - U.get_current_bets_amount(teamid),
                 'my_market': my_market,
                 'max_carognate' : C.MAX_CAROGNATE,
                 'n_carognate' : n_carognate

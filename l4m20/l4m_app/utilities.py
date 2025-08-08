@@ -87,27 +87,6 @@ def get_all_team_players():
 
 def get_series_players(series_id):
 	print(series_id)
-   #my_series = get_my_series(teamid)
-   #if(len(my_series) <= 0): 
-   #    return
-   #my_markets = get_my_markets(my_series[0].id)
-   #if(len(my_markets) <= 0): 
-   #    return
-   #
-   #my_market = my_markets[0].id
-   #
-#~ #
-   #return player.Player.objects.\
-   #    filter(Role=filter_role).\
-   #    filter(RealTeam__isnull=False).\
-   #    filter(mark_players__Market_id=my_market).\
-   #    filter(Q(bet__Market_id=my_market) | Q(bet__isnull=True) | (Q(bet__isnull=False) & ~Q(bet__Market_id=my_market))).\
-   #    exclude(Q(bet__Market_id=my_market) & Q(bet__IsExpired=True)).\
-   #    exclude(bet__Team_id=teamid).\
-   #    values('id','Surname','Name','Role','RealTeam__Name','mark_players__bet__Amount',
-   #           'mark_players__bet__Expiration_Date','mark_players__bet__Team_id__Name',
-   #           'mark_players__bet__IsExpired', 'mark_players__bet__Market_id').order_by('Surname')
-
                 
 def send_bet(data):
     bet_obj =  bet.Bet_Obj()
@@ -172,7 +151,7 @@ def send_bet(data):
         #RESCUE OLD BET FROM BET_HISTORY TODO
         raise Exception(e) 
 
-    return (balance_for_bets - bet_obj.Amount + 1), balance_max, (ncarognate + 1) if carognata else ncarognate
+    return (my_bal.Purchases_max - get_current_bets_amount(bet_obj.Team)), balance_max, (ncarognate + 1) if carognata else ncarognate
     
 def finalize_bet(data):
 
