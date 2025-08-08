@@ -44,7 +44,7 @@ def get_players(filter_role, teamid):
 
 def get_current_bets_amount(teamid):
     sum = bet.Bet.objects.filter(Q(Team_id=teamid) & Q(Market_id=get_my_market(teamid).id)).aggregate(Sum('Amount'))['Amount__sum']
-    return sum if sum['Amount__sum'] is not None else 0
+    return sum if sum is not None else 0
 
 def get_balance_for_bets(teamid, balance_max):
     sum = bet.Bet.objects.filter(Q(Team_id=teamid) & Q(Market_id=get_my_market(teamid).id)).aggregate(Sum('Amount'))
