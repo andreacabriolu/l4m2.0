@@ -193,8 +193,6 @@ def finalize_bet(data):
     
 def get_user_team(userid):
     return team.Team.objects.filter(Users__id=userid).values('id','Name')[0]
-    
-
 
 def get_user_series():
     return get_object_or_404(series.Series, Name="serie A".lower()) #TODO: implement

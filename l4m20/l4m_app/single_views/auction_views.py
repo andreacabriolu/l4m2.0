@@ -16,36 +16,39 @@ class AuctionView(LoginRequiredMixin, View):
     login_url = '/login/'
 
     def get(self,request):
-        user_team = U.get_user_team(request.user.id)
-        teamid = user_team['id']
+        try:
+            user_team = U.get_user_team(request.user.id)
+            teamid = user_team['id']
 
-        players_gk = U.get_players("P", teamid)
-        players_def = U.get_players("D", teamid)
-        players_cc = U.get_players("C", teamid)
-        players_fw = U.get_players("A", teamid)
+            players_gk = U.get_players("P", teamid)
+            players_def = U.get_players("D", teamid)
+            players_cc = U.get_players("C", teamid)
+            players_fw = U.get_players("A", teamid)
 
-        my_market = U.get_my_markets(U.get_my_series(teamid)[0].id)[0].id #TODO: improve check
-        my_best_bets = U.list_my_best_bets(U.get_my_best_bets(teamid, my_market))
+            my_market = U.get_my_markets(U.get_my_series(teamid)[0].id)[0].id #TODO: improve check
+            my_best_bets = U.list_my_best_bets(U.get_my_best_bets(teamid, my_market))
 
-        balance = U.get_balance(teamid)[0] #TODO: filter by season/league
-        balance_for_bets = U.get_balance_for_bets(teamid, balance['Purchases_max'])
-        if(balance_for_bets is None): 
-            balance_for_bets = 0
-        n_carognate = balance['N_carognate']
+            balance = U.get_balance(teamid)[0] #TODO: improve check
+            balance_for_bets = U.get_balance_for_bets(teamid, balance['Purchases_max'])
+            if(balance_for_bets is None): 
+                balance_for_bets = 0
+            n_carognate = balance['N_carognate']
 
-        params = { 
-            'user_team': user_team,
-            'players_gk':players_gk,
-            'players_def':players_def,
-            'players_cc':players_cc,
-            'players_fw':players_fw,
-            'my_best_bets':my_best_bets,
-            'balance' : balance,
-            'balance_for_bets' : balance_for_bets,
-            'my_market': my_market,
-            'max_carognate' : C.MAX_CAROGNATE,
-            'n_carognate' : n_carognate
-          }
+            params = { 
+                'user_team': user_team,
+                'players_gk':players_gk,
+                'players_def':players_def,
+                'players_cc':players_cc,
+                'players_fw':players_fw,
+                'my_best_bets':my_best_bets,
+                'balance' : balance,
+                'balance_for_bets' : balance_for_bets,
+                'my_market': my_market,
+                'max_carognate' : C.MAX_CAROGNATE,
+                'n_carognate' : n_carognate
+            }
+        except Exception as e:
+            raise Exception(f'{e}')
         
         return render(request, self.template_name, params)
     
