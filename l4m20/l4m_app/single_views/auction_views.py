@@ -16,36 +16,40 @@ class AuctionView(LoginRequiredMixin, View):
     login_url = '/login/'
 
     def get(self,request):
-        user_team = U.get_user_team(request.user.id)
-        teamid = user_team['id']
+        try:
+            user_team = U.get_user_team(request.user.id)
+            teamid = user_team['id']
 
-        players_gk = U.get_players("P", teamid)
-        players_def = U.get_players("D", teamid)
-        players_cc = U.get_players("C", teamid)
-        players_fw = U.get_players("A", teamid)
+            players_gk = U.get_players("P", teamid)
+            players_def = U.get_players("D", teamid)
+            players_cc = U.get_players("C", teamid)
+            players_fw = U.get_players("A", teamid)
 
-        my_market = U.get_my_markets(U.get_my_series(teamid)[0].id)[0].id #TODO: improve check
-        my_best_bets = U.list_my_best_bets(U.get_my_best_bets(teamid, my_market))
+            my_market = U.get_my_markets(U.get_my_series(teamid)[0].id)[0].id #TODO: improve check
+            my_best_bets = U.list_my_best_bets(U.get_my_best_bets(teamid, my_market))
 
-        balance = U.get_balance(teamid)[0] #TODO: filter by season/league
-        balance_for_bets = U.get_balance_for_bets(teamid, balance['Purchases_max'])
-        if(balance_for_bets is None): 
-            balance_for_bets = 0
-        n_carognate = balance['N_carognate']
+            balance = U.get_balance(teamid)[0] #TODO: improve check
+            balance_for_bets = U.get_balance_for_bets(teamid, balance['Purchases_max'])
+            if(balance_for_bets is None): 
+                balance_for_bets = 0
+            n_carognate = balance['N_carognate']
 
-        params = { 
-            'user_team': user_team,
-            'players_gk':players_gk,
-            'players_def':players_def,
-            'players_cc':players_cc,
-            'players_fw':players_fw,
-            'my_best_bets':my_best_bets,
-            'balance' : balance,
-            'balance_for_bets' : balance_for_bets,
-            'my_market': my_market,
-            'max_carognate' : C.MAX_CAROGNATE,
-            'n_carognate' : n_carognate
-          }
+            params = { 
+                'user_team': user_team,
+                'players_gk':players_gk,
+                'players_def':players_def,
+                'players_cc':players_cc,
+                'players_fw':players_fw,
+                'my_best_bets':my_best_bets,
+                'balance' : balance,
+                'balance_for_bets' : balance_for_bets,
+                'residual': balance['Purchases_max'] - U.get_current_bets_amount(teamid),
+                'my_market': my_market,
+                'max_carognate' : C.MAX_CAROGNATE,
+                'n_carognate' : n_carognate
+            }
+        except Exception as e:
+            raise Exception(f'{e}')
         
         return render(request, self.template_name, params)
     
@@ -170,18 +174,22 @@ class AllAuctionsView(LoginRequiredMixin, View):
             lc = list(all_team_players.filter(Q(bet__Team_id=team_id['id']) & Q(Role=C.Constant_Dicts.RoleChars['CC'])))
             la = list(all_team_players.filter(Q(bet__Team_id=team_id['id']) & Q(Role=C.Constant_Dicts.RoleChars['ATT'])))
             
-            balance = U.get_balance(team_id['id'])[0] #TODO: filter by season/league
+            balances_ = U.get_balance(team_id['id'])
+            if len(balances_) <= 0: 
+                continue
+
+            balance = balances_[0]
             balance_for_bets = U.get_balance_for_bets(team_id['id'], balance['Purchases_max'])
             
             amount = balance['Purchases_amount']  # returns 300
             car = balance['N_carognate']  # returns 300
             pmax = balance_for_bets
-            
+            current_bets_amount = U.get_current_bets_amount(team_id['id'])
 
-            li = [{'Surname': 'Monte Acquisti', 'Name': None, 'bet__Team_id': team_id['id'], 'bet__Amount': amount, 'bet__IsExpired': True, 'bet__Carognata': False, 'bet__Expiration_Date': '2025-08-05 16:32:09+00:00','id':"0", 'Role': 'I'},
-                  {'Surname': 'Restante', 'Name': None, 'bet__Team_id': team_id['id'], 'bet__Amount': '-', 'bet__IsExpired': True, 'bet__Carognata': False, 'bet__Expiration_Date': '2025-08-05 16:32:09+00:00','id':"0", 'Role': 'I'},
-                  {'Surname': 'Puntata Massima', 'Name': None, 'bet__Team_id': team_id['id'], 'bet__Amount': pmax, 'bet__IsExpired': True, 'bet__Carognata': False, 'bet__Expiration_Date': '2025-08-05 16:32:09+00:00','id':"0", 'Role': 'I'},
-                  {'Surname': 'Carognate', 'Name': None, 'bet__Team_id': team_id['id'], 'bet__Amount': car, 'bet__IsExpired': True, 'bet__Carognata': False, 'bet__Expiration_Date': '2025-08-05 16:32:09+00:00','id':"0", 'Role': 'I'},
+            li = [{'Surname': 'Monte Acquisti', 'Name': None, 'bet__Team_id': team_id['id'], 'bet__Amount': amount, 'bet__IsExpired': True, 'bet__Carognata': False, 'bet__Expiration_Date': '','id':"0", 'Role': 'I'},
+                  {'Surname': 'Restante', 'Name': None, 'bet__Team_id': team_id['id'], 'bet__Amount': (amount - current_bets_amount), 'bet__IsExpired': True, 'bet__Carognata': False, 'bet__Expiration_Date': '','id':"0", 'Role': 'I'},
+                  {'Surname': 'Puntata Massima', 'Name': None, 'bet__Team_id': team_id['id'], 'bet__Amount': pmax, 'bet__IsExpired': True, 'bet__Carognata': False, 'bet__Expiration_Date': '','id':"0", 'Role': 'I'},
+                  {'Surname': 'Carognate', 'Name': None, 'bet__Team_id': team_id['id'], 'bet__Amount': balance['N_carognate'], 'bet__IsExpired': True, 'bet__Carognata': False, 'bet__Expiration_Date': '','id':"0", 'Role': 'I'},
                   ]
             
             lp = U.complete_list(lp, C.NUM_GK, C.Constant_Dicts.RoleChars['POR'])
@@ -191,11 +199,11 @@ class AllAuctionsView(LoginRequiredMixin, View):
 
             team_players[team_id['Name'].replace(' ','_')] = lp + ld + lc + la + li
 
-            #TODO: manage more than 1 balance!
-            balance = U.get_balance(team_id['id'])
-            if(not balance):
-                continue
-            balances[team_id['Name'].replace(' ','_')] = U.get_balance_for_bets(team_id['id'], balance[0]['Purchases_max'])
+            # #TODO: manage more than 1 balance!
+            # balance = U.get_balance(team_id['id'])
+            # if(not balance):
+            #     continue
+            balances[team_id['Name'].replace(' ','_')] = U.get_balance_for_bets(team_id['id'], balance['Purchases_max'])
             
          
         filtered_team_ids = {team['id'] for team in filtered_teams}

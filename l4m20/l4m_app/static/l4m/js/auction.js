@@ -194,6 +194,13 @@ function setPlayerDialog(player, mode='std') {
 
 }
 
+function set_bet_min_max(betamount, maxbet) {
+    $('#modal-label-bet').html($('#modal-label-bet').html()
+        .replace('_minbet_', betamount != 'None' ? `<strong>${parseInt(betamount)+1}</strong>` : '<strong>1</strong>')
+        .replace('_maxbet_', `<strong>${maxbet}</strong>`)
+    ); 
+}
+
 function openPlayerDialog(player) {
 
     if (!Object.is(player.name, undefined)) {
@@ -240,10 +247,8 @@ function openPlayerDialog(player) {
             // $('#span-betexpire').html(span-betexpire.text() + " (CAROGNATA) ");
         }
 
-        $('#modal-label-bet').html($('#modal-label-bet').html()
-            .replace('_minbet_', player.betamount != 'None' ? `<strong>${parseInt(player.betamount)+1}</strong>` : '<strong>1</strong>')
-            .replace('_maxbet_', `<strong>${balance_for_bets}</strong>`)
-        );            
+        set_bet_min_max(player.betamount, balance_for_bets);
+           
     });
 
     
@@ -334,7 +339,7 @@ function calculate_expiration_date() {
         minute: 'numeric',
         second: 'numeric'
     }
-    return new Date(new Date(now).setDate(now.getDate() + 2)).toLocaleString("it-IT", options) //TODO nighttime
+    return new Date(new Date(now).setDate(now.getDate() + 1)).toLocaleString("it-IT", options)
 }
 
 function sendBet() {
@@ -384,6 +389,7 @@ function sendBet() {
         else {
             $('#main-balance').text(`${JSON.parse(response)['amount']} / ${JSON.parse(response)['max']} FML`);
             $('#main-carognate').text(`${JSON.parse(response)['n_carognate']} / 3`);
+            set_bet_min_max(null, JSON.parse(response)['amount'])
             entry = document.querySelector("dl.dl-class dt[data-id='"+row.playerid+"']");
             if(entry!=null) { 
                 entry.parentNode.removeChild(entry); 
