@@ -339,7 +339,7 @@ function calculate_expiration_date() {
         minute: 'numeric',
         second: 'numeric'
     }
-    return new Date(new Date(now).setDate(now.getDate() + 2)).toLocaleString("it-IT", options) //TODO nighttime
+    return new Date(new Date(now).setDate(now.getDate() + 1)).toLocaleString("it-IT", options)
 }
 
 function sendBet() {
