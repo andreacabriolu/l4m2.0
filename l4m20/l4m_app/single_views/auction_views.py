@@ -174,13 +174,14 @@ class AllAuctionsView(LoginRequiredMixin, View):
             balance_for_bets = U.get_balance_for_bets(team_id['id'], balance['Purchases_max'])
             
             amount = balance['Purchases_amount']  # returns 300
+            car = balance['N_carognate']  # returns 300
             pmax = balance_for_bets
             
 
             li = [{'Surname': 'Monte Acquisti', 'Name': None, 'bet__Team_id': team_id['id'], 'bet__Amount': amount, 'bet__IsExpired': True, 'bet__Carognata': False, 'bet__Expiration_Date': '2025-08-05 16:32:09+00:00','id':"0", 'Role': 'I'},
                   {'Surname': 'Restante', 'Name': None, 'bet__Team_id': team_id['id'], 'bet__Amount': '-', 'bet__IsExpired': True, 'bet__Carognata': False, 'bet__Expiration_Date': '2025-08-05 16:32:09+00:00','id':"0", 'Role': 'I'},
                   {'Surname': 'Puntata Massima', 'Name': None, 'bet__Team_id': team_id['id'], 'bet__Amount': pmax, 'bet__IsExpired': True, 'bet__Carognata': False, 'bet__Expiration_Date': '2025-08-05 16:32:09+00:00','id':"0", 'Role': 'I'},
-                  {'Surname': 'Carognate', 'Name': None, 'bet__Team_id': team_id['id'], 'bet__Amount': 3, 'bet__IsExpired': True, 'bet__Carognata': False, 'bet__Expiration_Date': '2025-08-05 16:32:09+00:00','id':"0", 'Role': 'I'},
+                  {'Surname': 'Carognate', 'Name': None, 'bet__Team_id': team_id['id'], 'bet__Amount': car, 'bet__IsExpired': True, 'bet__Carognata': False, 'bet__Expiration_Date': '2025-08-05 16:32:09+00:00','id':"0", 'Role': 'I'},
                   ]
             
             lp = U.complete_list(lp, C.NUM_GK, C.Constant_Dicts.RoleChars['POR'])
