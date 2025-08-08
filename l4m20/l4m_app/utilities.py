@@ -40,7 +40,7 @@ def get_players(filter_role, teamid):
         values('id','Surname','Name','Role','RealTeam__Name','mark_players__bet__Amount',
                'mark_players__bet__Expiration_Date','mark_players__bet__Team_id__Name',
                'mark_players__bet__IsExpired', 'mark_players__bet__Market_id','mark_players__bet__Carognata').\
-        order_by('Surname')
+        order_by('Surname').distinct()
 
 def get_current_bets_amount(teamid):
     sum = bet.Bet.objects.filter(Q(Team_id=teamid) & Q(Market_id=get_my_market(teamid).id)).aggregate(Sum('Amount'))['Amount__sum']
