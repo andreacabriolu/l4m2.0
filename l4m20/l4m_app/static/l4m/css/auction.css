@@ -432,7 +432,7 @@
 
  .carognate-info {
     font-weight: bold;
-    color: #333aa4;
+    color: #202ddd;
     font-size: large;
  }
 
@@ -530,4 +530,12 @@ input:invalid {
     font-size: larger;
     font-weight: bold;
     color: #7d7e53;
+}
+
+.balances {
+  display: flex;
+}
+
+.balance {
+  margin-right: 1.5em;
 }
