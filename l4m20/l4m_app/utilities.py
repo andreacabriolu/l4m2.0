@@ -137,7 +137,7 @@ def send_bet(data):
 
         bet_new.save()
 
-        if(carognata):
+        if(carognata == "True"):
             
             my_bal.N_carognate = ncarognate + 1
 

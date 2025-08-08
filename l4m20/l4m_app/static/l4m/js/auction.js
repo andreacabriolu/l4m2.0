@@ -195,7 +195,9 @@ function setPlayerDialog(player, mode='std') {
 }
 
 function set_bet_min_max(betamount, maxbet) {
-    $('#modal-label-bet').html($('#modal-label-bet').html()
+    let baseStr = 'PUNTATA (MIN: _minbet_ MAX: _maxbet_)';
+
+    $('#modal-label-bet').html(baseStr
         .replace('_minbet_', betamount != 'None' ? `<strong>${parseInt(betamount)+1}</strong>` : '<strong>1</strong>')
         .replace('_maxbet_', `<strong>${maxbet}</strong>`)
     ); 

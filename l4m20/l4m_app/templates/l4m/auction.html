@@ -30,9 +30,15 @@
                 <span class="carognate-label">Carognate </span>
                 <span class="carognate-info" id="main-carognate">{{n_carognate}} / {{max_carognate}}</span>
             </div>
-            <div>
-                <span class="balance-label">Monte acquisti</span>
-                <span class="balance-info" id="main-balance">{{residual}} / {{balance.Purchases_max}} FML</span>
+            <div class="balances">
+                <div class="balance">
+                    <span class="balance-label">Monte acquisti</span>
+                    <span class="balance-info" id="main-balance">{{balance.Purchases_max}} FML</span>
+                </div>
+                <div class="balance">
+                    <span class="balance-label">Restante</span>
+                    <span class="balance-info" id="main-residual">{{residual}} FML</span>
+                </div>
             </div>
         </div>
         <!-- Canvas? React? Divs? -->
