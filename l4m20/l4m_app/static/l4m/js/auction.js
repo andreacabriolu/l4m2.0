@@ -82,7 +82,7 @@ function fillSlotContent(div_id, bet, expDate) {
 function fill_slots(mbb) {
     mbb.forEach(bet => {
         div_id = bet.Slot
-        expDate = bet.Expiration_Date.substr(0,19) //Format, TODO improve, I don't like it
+        expDate = new Date(bet.Expiration_Date).toLocaleString("it-IT", {timeZone: "UTC"})
         if (div_id != '') {
             $("#" + div_id).addClass('plr-full');
             $("#" + div_id).prop('onclick', null).off("click");
@@ -169,7 +169,9 @@ function setPlayerDialog(player, mode='std') {
         $('#dlg_player_open').removeClass('dlg-player');
         $('#dlg_player_open').addClass('dlg-player-high');
         $('#notafford').attr('hidden', false);
-        $('#modal-pl-betamount').val(parseInt(player.betamount));   
+        $('#modal-pl-betamount').val(parseInt(player.betamount) +1 );   
+        $('#modal-pl-betamount').attr({ "min": parseInt(player.betamount) });
+        $('#modal-pl-betamount').prop('disabled', true);
         $('#btnSendBet').addClass('no-pointer-events');
     }
     else {
@@ -177,6 +179,7 @@ function setPlayerDialog(player, mode='std') {
         $('#dlg_player_open').addClass('dlg-player');
         $('#notafford').attr('hidden', true);
         $('#btnSendBet').removeClass('no-pointer-events');
+        $('#modal-pl-betamount').prop('disabled', false);
     }
 
     if(mode == "carognata") {
@@ -239,7 +242,7 @@ function openPlayerDialog(player) {
             }
             else {
                 setPlayerDialog(player);
-                $('#modal-pl-betamount').val('');
+                $('#modal-pl-betamount').val(1);
                 $('#modal-pl-betamount').attr({ "min": 1 });
             }
         }
@@ -389,8 +392,10 @@ function sendBet() {
             showErrorAlert(response);
         }
         else {
-            $('#main-balance').text(`${JSON.parse(response)['amount']} / ${JSON.parse(response)['max']} FML`);
+            $('#main-balance').text(`${JSON.parse(response)['max']} FML`);
             $('#main-carognate').text(`${JSON.parse(response)['n_carognate']} / 3`);
+            new_residual = parseInt(JSON.parse(response)['amount']);
+            $('#main-residual').text(`${new_residual} FML`);
             set_bet_min_max(null, JSON.parse(response)['amount'])
             entry = document.querySelector("dl.dl-class dt[data-id='"+row.playerid+"']");
             if(entry!=null) { 

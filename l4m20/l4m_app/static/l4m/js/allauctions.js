@@ -54,9 +54,10 @@ function fillSingleTableWithTeams() {
             for (const player of roleRows[role][i]) {
                 //html += `<td>${player.Surname}</td><td class="player-money">${player.bet__Amount}</td><td class="spacer-cell"></td>`;
                 const color = player['bet__IsExpired'] ? 'black' : 'red';
-                const date = new Date(player['bet__Expiration_Date']);
-                let formatted = `${date.getHours().toString().padStart(2,'0')}:${date.getMinutes().toString().padStart(2,'0')} 
-                     ${date.getDate().toString().padStart(2,'0')}-${(date.getMonth()+1).toString().padStart(2,'0')}-${date.getFullYear()}`;
+                // const date = new Date(player['bet__Expiration_Date']);
+                // let formatted = `${date.getHours().toString().padStart(2,'0')}:${date.getMinutes().toString().padStart(2,'0')} 
+                //      ${date.getDate().toString().padStart(2,'0')}-${(date.getMonth()+1).toString().padStart(2,'0')}-${date.getFullYear()}`;
+                let formatted = new Date(player['bet__Expiration_Date']).toLocaleString("it-IT", {timeZone: "UTC"});
 
                 if(role == 'I') {
                     formatted = "";
