@@ -100,7 +100,7 @@ def send_bet(data):
     
     carognata = data['carognata']
     balance_max = data['balancemax']
-    exp_date_obj = datetime.datetime.strptime(bet_obj.Expiration_Date, '%d/%m/%Y, %H:%M:%S').replace(tzinfo=timezone.get_current_timezone())
+    exp_date_obj = datetime.datetime.strptime(bet_obj.Expiration_Date, '%d/%m/%Y, %H:%M:%S').replace(tzinfo=datetime.timezone.utc)   
 
     player_ = get_object_or_404(player.Player, id=bet_obj.Player)
     user_team = get_object_or_404(team.Team, id=bet_obj.Team) #TODO: how to avoid this double fetch?
@@ -111,12 +111,16 @@ def send_bet(data):
     ncarognate = my_bal.N_carognate
     balance_for_bets = get_balance_for_bets(bet_obj.Team, int(balance_max))
     if(bet_obj.Amount > balance_for_bets):
-        return C.SendBetResult.BET_OVERFLOW, balance_max
+        return C.SendBetResult.BET_OVERFLOW, balance_max, ncarognate
 
     try:
         bet_old = bet.Bet.objects.filter(Q(Player=player_) & Q(Market=market_))
         if len(list(bet_old)) == 1: #there is an old best bet
             _bet_old = bet_old[0]
+
+            if(bet_obj.Amount <= _bet_old.Amount):
+                return C.SendBetResult.BET_UNDERFLOW, balance_max, ncarognate
+
             bet_history_new = bet_history.Bet_History(
                 Amount=_bet_old.Amount,
                 Player=_bet_old.Player,

@@ -69,6 +69,10 @@ class SendBetView(View):
 
             if(bet_result == C.SendBetResult.BET_OVERFLOW):
                 return HttpResponse(f'error PUNTATA TROPPO ALTA!')
+            
+            if(bet_result == C.SendBetResult.BET_UNDERFLOW):
+                return HttpResponse(f'error PUNTATA TROPPO BASSA!')
+            
         except Exception as e:
             return HttpResponse(f'error inserting bet and updating balance: {e}')
         
@@ -181,8 +185,7 @@ class AllAuctionsView(LoginRequiredMixin, View):
             balance = balances_[0]
             balance_for_bets = U.get_balance_for_bets(team_id['id'], balance['Purchases_max'])
             
-            amount = balance['Purchases_amount']  # returns 300
-            car = balance['N_carognate']  # returns 300
+            amount = balance['Purchases_max']
             pmax = balance_for_bets
             current_bets_amount = U.get_current_bets_amount(team_id['id'])
 
