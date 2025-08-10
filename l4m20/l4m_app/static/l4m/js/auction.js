@@ -75,6 +75,7 @@ function fillSlotContent(div_id, bet, expDate) {
            `);
 
     $('#' + div_id).addClass(`${bet.Carognata ? 'carognata' : ''}`);
+    $('#' + div_id).addClass(`${bet.IsExpired && !bet.IsOfficial ? 'end-expired' : ''}`);
     $('#' + div_id).addClass(`${bet.IsOfficial ? 'end-official' : ''}`);
     
 }
@@ -250,6 +251,9 @@ function openPlayerDialog(player) {
         if(player.carognata == "True") {
             setPlayerDialog(player, "carognata");
             // $('#span-betexpire').html(span-betexpire.text() + " (CAROGNATA) ");
+        }
+        else {
+            setPlayerDialog(player);
         }
 
         set_bet_min_max(player.betamount, balance_for_bets);

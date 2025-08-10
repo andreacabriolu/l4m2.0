@@ -3,7 +3,7 @@ from django.db.models import Q, Sum, Count
 import json
 import datetime
 from django.shortcuts import get_object_or_404
-from django.utils import timezone
+from zoneinfo import ZoneInfo
 from l4m20 import constants as C
 
 def get_my_series(teamid):
@@ -11,6 +11,18 @@ def get_my_series(teamid):
 
 def get_my_markets(seriesid):
     return market.Market.objects.filter(Series_id=seriesid)
+
+def get_current_session(marketid):
+    nowtime = datetime.datetime.now(ZoneInfo('Europe/Rome'))
+
+    session_ = session.Session.objects.filter(Q(Market_id=marketid) &
+                                          Q(Begin__lte=nowtime) &
+                                          Q(End__gte=nowtime))
+    
+    if(len(session_) <=0): 
+        return None
+    
+    return session_[0]
 
 def get_my_market(teamid=None, userid=None):
     if teamid is None and userid is None:
@@ -100,7 +112,8 @@ def send_bet(data):
     
     carognata = data['carognata']
     balance_max = data['balancemax']
-    exp_date_obj = datetime.datetime.strptime(bet_obj.Expiration_Date, '%d/%m/%Y, %H:%M:%S').replace(tzinfo=datetime.timezone.utc)   
+    exp_date_obj = datetime.datetime.strptime(bet_obj.Expiration_Date, '%d/%m/%Y, %H:%M:%S').\
+        replace(tzinfo=datetime.timezone.utc)   
 
     player_ = get_object_or_404(player.Player, id=bet_obj.Player)
     user_team = get_object_or_404(team.Team, id=bet_obj.Team) #TODO: how to avoid this double fetch?

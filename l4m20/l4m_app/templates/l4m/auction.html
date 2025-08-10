@@ -23,9 +23,12 @@
             <span id="span-error-alert"></span>
     </div>
     <div class="bg-body p-5 main-div">
-        <div class="btnDiv">
-        </div>
         <div class="balance-div" id="balance_div">
+            {% if session %}
+            <div id="mkt_div" class="mkt-div" >
+                <span class="mkt-span">MERCATO: {{session.Name}} [APERTO]</span>
+            </div>
+            {% endif %}
             <div>
                 <span class="carognate-label">Carognate </span>
                 <span class="carognate-info" id="main-carognate">{{n_carognate}} / {{max_carognate}}</span>

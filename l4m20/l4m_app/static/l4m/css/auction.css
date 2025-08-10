@@ -477,6 +477,10 @@
     background-color: yellowgreen;
   }
 
+  .end-expired {
+    background-color: #cdf5cd;
+  }
+
   .official-modal-title {
     align-items: center;
   }
@@ -538,4 +542,9 @@ input:invalid {
 
 .balance {
   margin-right: 1.5em;
+}
+
+.mkt-span {
+  font-weight: bold;
+  color: maroon;
 }
