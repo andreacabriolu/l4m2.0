@@ -27,6 +27,7 @@ class AuctionView(LoginRequiredMixin, View):
 
             my_market = U.get_my_markets(U.get_my_series(teamid)[0].id)[0].id #TODO: improve check
             my_best_bets = U.list_my_best_bets(U.get_my_best_bets(teamid, my_market))
+            current_session = U.get_current_session(my_market)
 
             balance = U.get_balance(teamid)[0] #TODO: improve check
             balance_for_bets = U.get_balance_for_bets(teamid, balance['Purchases_max'])
@@ -45,6 +46,7 @@ class AuctionView(LoginRequiredMixin, View):
                 'balance_for_bets' : balance_for_bets,
                 'residual': balance['Purchases_max'] - U.get_current_bets_amount(teamid),
                 'my_market': my_market,
+                'session': current_session,
                 'max_carognate' : C.MAX_CAROGNATE,
                 'n_carognate' : n_carognate
             }

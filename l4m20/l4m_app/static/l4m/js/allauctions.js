@@ -19,6 +19,7 @@ function fillSingleTableWithTeams() {
 					Surname: playersOfRole[i].Surname, 
 					bet__Amount: playersOfRole[i].bet__Amount,
 					bet__IsExpired: playersOfRole[i].bet__IsExpired,
+					bet__Carognata: playersOfRole[i].bet__Carognata,
 					bet__Expiration_Date: playersOfRole[i].bet__Expiration_Date 
 				} : { Surname: "", bet__Amount: "", bet__IsExpired: "", bet__Expiration_Date: "" });
                 //row.push(playersOfRole[i] ? playersOfRole[i].Surname : "");
@@ -53,7 +54,7 @@ function fillSingleTableWithTeams() {
             }
             for (const player of roleRows[role][i]) {
                 //html += `<td>${player.Surname}</td><td class="player-money">${player.bet__Amount}</td><td class="spacer-cell"></td>`;
-                const color = player['bet__IsExpired'] ? 'black' : 'red';
+                const color = player['bet__IsExpired'] ? 'black' : (player['bet__Carognata'] ? 'blue' : 'red');
                 // const date = new Date(player['bet__Expiration_Date']);
                 // let formatted = `${date.getHours().toString().padStart(2,'0')}:${date.getMinutes().toString().padStart(2,'0')} 
                 //      ${date.getDate().toString().padStart(2,'0')}-${(date.getMonth()+1).toString().padStart(2,'0')}-${date.getFullYear()}`;
