@@ -139,7 +139,8 @@ def send_bet(data):
                 Amount=_bet_old.Amount,
                 Player=_bet_old.Player,
                 Team=_bet_old.Team,
-                Market=market_
+                Market=market_,
+                Carognata = True if carognata=="True" else False
             )
             bet_history_new.save()
 
