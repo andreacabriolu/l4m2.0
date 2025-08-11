@@ -48,7 +48,7 @@ def get_players(filter_role, teamid):
         filter(Status='A').\
         filter(mark_players__Market_id=my_market).\
         filter(Q(bet__Market_id=my_market) | Q(bet__isnull=True) | (Q(bet__isnull=False) & ~Q(bet__Market_id=my_market))).\
-        exclude(Q(bet__Market_id=my_market) & Q(bet__IsExpired=True)).\
+        exclude(bet__IsExpired=True).\
         exclude(bet__Team_id=teamid).\
         values('id','Surname','Name','Role','RealTeam__Name','mark_players__bet__Amount',
                'mark_players__bet__Expiration_Date','mark_players__bet__Team_id__Name',
