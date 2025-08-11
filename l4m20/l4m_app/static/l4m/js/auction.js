@@ -120,6 +120,9 @@ function fill_slots(mbb) {
 }
 
 window.addEventListener('DOMContentLoaded', event => {
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+    
     $('#official-alert').hide();
     fill_slots(JSON.parse($('#my_best_bets').val()));
 
@@ -436,6 +439,7 @@ function finalizeBet() {
         }
         else {
             $('#'+div_id).addClass('end-official');
+            $('#'+div_id).prop('background', 'red');
             $('#'+div_id+'_img').prop('hidden', true);
             $('#'+div_id).children().prop('disabled', true);
             $("#official-alert").fadeTo(2000, 500);

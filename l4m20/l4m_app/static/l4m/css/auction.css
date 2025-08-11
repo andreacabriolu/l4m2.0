@@ -540,8 +540,20 @@ input:invalid {
   display: flex;
 }
 
+@media (max-width:800px) {
+  .balances {
+      flex-direction: column;
+  }
+}
+
 .balance {
   margin-right: 1.5em;
+}
+
+@media (max-width:800px) {
+  .balance {
+      align-self: center;
+  }
 }
 
 .mkt-span {
