@@ -269,7 +269,7 @@ function openPlayerDialog(player) {
     if (player.betexpdate != 'None') {
         $('#modal-currentbet').show();
         $('#modal-pl-bestbetteam').val(player.betteam);
-        $('#modal-pl-betexpdate').val(new Date(player.betexpdate).toLocaleString("it-IT"), {timeZone: "UTC"});
+        $('#modal-pl-betexpdate').val(new Date(player.betexpdate).toLocaleString("it-IT", {timeZone: "UTC"}));
         $('#modal-pl-bestbet').val(player.betamount);
         $('#modal-pl-carognata').val(player.carognata);
     }
