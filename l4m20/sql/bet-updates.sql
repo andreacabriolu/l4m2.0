@@ -1,11 +1,17 @@
-CREATE PROCEDURE bet_update()
-LANGUAGE SQL
-BEGIN ATOMIC
-  	update public.l4m_app_bet
-	set "IsExpired"=true
-	where Cast(l4m_app_bet."Expiration_Date" as timestamp) <= NOW();
+-- PROCEDURE: public.bet_update()
 
-	update public.l4m_app_bet
-	set "Carognata"=true
-	where Cast(l4m_app_bet."Expiration_Date" as timestamp) <= NOW() - INTERVAL '0 DAY - 12 HOURS' ;
+-- DROP PROCEDURE IF EXISTS public.bet_update();
+
+CREATE OR REPLACE PROCEDURE public.bet_update(
+	)
+LANGUAGE 'sql'
+
+BEGIN ATOMIC
+ UPDATE l4m_app_bet SET "IsExpired" = true
+   WHERE (((l4m_app_bet."Expiration_Date")::timestamp without time zone AT TIME ZONE 'Europe/Rome'::text) <= (now() AT TIME ZONE 'Europe/Rome'::text));
+ UPDATE l4m_app_bet SET "Carognata" = true
+   WHERE (((l4m_app_bet."Expiration_Date")::timestamp without time zone AT TIME ZONE 'Europe/Rome'::text) <= ((now() AT TIME ZONE 'Europe/Rome'::text) - '-04:00:00'::interval));
 END;
+
+ALTER PROCEDURE public.bet_update()
+    OWNER TO postgres;

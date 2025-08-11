@@ -45,6 +45,7 @@ def get_players(filter_role, teamid):
     return player.Player.objects.\
         filter(Role=filter_role).\
         filter(RealTeam__isnull=False).\
+        filter(Status='A').\
         filter(mark_players__Market_id=my_market).\
         filter(Q(bet__Market_id=my_market) | Q(bet__isnull=True) | (Q(bet__isnull=False) & ~Q(bet__Market_id=my_market))).\
         exclude(Q(bet__Market_id=my_market) & Q(bet__IsExpired=True)).\
@@ -169,7 +170,7 @@ def send_bet(data):
         #RESCUE OLD BET FROM BET_HISTORY TODO
         raise Exception(e) 
 
-    return (my_bal.Purchases_max - get_current_bets_amount(bet_obj.Team)), balance_max, (ncarognate + 1) if carognata else ncarognate
+    return (my_bal.Purchases_max - get_current_bets_amount(bet_obj.Team)), balance_max, (ncarognate + 1) if (carognata == "True") else ncarognate
     
 def finalize_bet(data):
 

@@ -24,11 +24,21 @@
     </div>
     <div class="bg-body p-5 main-div">
         <div class="balance-div" id="balance_div">
-            {% if session %}
+            
             <div id="mkt_div" class="mkt-div" >
-                <span class="mkt-span">MERCATO: {{session.Name}} [APERTO]</span>
+                <span class="mkt-span">STATUS MERCATO </span>
+                    {% if session %}
+                        <img src="{% static 'l4m/images/green.png' %}">
+                        <img src="{% static 'l4m/images/info_mark.png' %}" 
+                            data-bs-toggle="tooltip" 
+                            data-bs-placement="right" 
+                            data-bs-html="true"
+                            data-bs-title="{{session.Name}}<br>INIZIO {{session.Begin}}<br>FINE {{session.End}}">
+                    {% else %} 
+                        <img src="{% static 'l4m/images/red.png' %}">
+                        <!-- <button></button> -->
+                     {% endif %}
             </div>
-            {% endif %}
             <div>
                 <span class="carognate-label">Carognate </span>
                 <span class="carognate-info" id="main-carognate">{{n_carognate}} / {{max_carognate}}</span>
