@@ -97,7 +97,7 @@ function fill_slots(mbb) {
                     $('#modal-pl-info-name').val(json_res.Sur);
                     $('#modal-pl-info-realteam').val(json_res.RealT);
                     $('#modal-pl-info-role').val(RoleNames[json_res.Rol]);
-                    $('#modal-pl-info-betexpdate').val(json_res.BetE);
+                    $('#modal-pl-info-betexpdate').val(new Date(json_res.BetE).toLocaleString("it-IT", {timeZone: "UTC"}));
                     $('#modal-pl-info-bestbetteam').val(json_res.BetT); 
                     $('#modal-pl-info-bestbet').val(json_res.BetA);
 
