@@ -429,7 +429,6 @@ function finalizeBet() {
     row.playername = $('#'+div_id+'_name').val();
     row.playerid = pl_id;
     row.amount = parseFloat($('#'+div_id+'_cost').val());
-    alert(div_id);
     row.userteamid = $('#user_team_id').val();
     
     jsonData = JSON.stringify(row);
