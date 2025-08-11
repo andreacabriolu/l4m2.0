@@ -3,6 +3,7 @@ from django.views import View
 from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 import json
+import datetime
 from django.db.models import Q
 
 from .. import utilities as U
@@ -113,7 +114,8 @@ class GetPlayerInfoView(View):
                              'Rol':pl['Role'],
                              'RealT':pl['RealTeam__Name'], 
                              'BetA':pl['mark_players__bet__Amount'],
-                             'BetE': pl['mark_players__bet__Expiration_Date'][:-6] if pl['mark_players__bet__Expiration_Date'] != None else pl['mark_players__bet__Expiration_Date'], #remove final timestamp
+                             'BetE': datetime.datetime.strptime(pl['mark_players__bet__Expiration_Date'], '%Y-%m-%d %H:%M:%S%z').\
+                                replace(tzinfo=datetime.timezone.utc).__str__() if pl['mark_players__bet__Expiration_Date'] != None else pl['mark_players__bet__Expiration_Date'], #remove final timestamp
                              'BetT': pl['mark_players__bet__Team_id__Name']})
 
         return HttpResponse(pl_obj)
