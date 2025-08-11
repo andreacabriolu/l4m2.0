@@ -75,7 +75,10 @@ class SendBetView(View):
             
             if(bet_result == C.SendBetResult.BET_UNDERFLOW):
                 return HttpResponse(f'error PUNTATA TROPPO BASSA!')
-            
+
+            if(bet_result == C.SendBetResult.BET_EXPIRED):
+                return HttpResponse(f'error GIOCATORE SCADUTO!')
+
         except Exception as e:
             return HttpResponse(f'error inserting bet and updating balance: {e}')
         

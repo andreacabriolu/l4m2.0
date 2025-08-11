@@ -32,5 +32,6 @@ class SendBetResult:
     BET_OK = 0
     BET_OVERFLOW = -1
     BET_UNDERFLOW = -2
+    BET_EXPIRED = -3
 
 
