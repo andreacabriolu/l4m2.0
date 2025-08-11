@@ -131,6 +131,9 @@ def send_bet(data):
         if len(list(bet_old)) == 1: #there is an old best bet
             _bet_old = bet_old[0]
 
+            if(_bet_old.IsExpired == True):
+                return C.SendBetResult.BET_EXPIRED, balance_max, ncarognate
+
             if(bet_obj.Amount <= _bet_old.Amount):
                 return C.SendBetResult.BET_UNDERFLOW, balance_max, ncarognate
 

@@ -396,7 +396,7 @@ function sendBet() {
 
     $.post("/l4m/auction/sendBet/", data, function (response) {
         if(response.startsWith ('error')) {
-            showErrorAlert(response);
+            showPopupErrorAlert(response);
         }
         else {
             $('#main-balance').text(`${JSON.parse(response)['max']} FML`);
