@@ -54,6 +54,21 @@ def get_players(filter_role, teamid):
                'mark_players__bet__IsExpired', 'mark_players__bet__Market_id','mark_players__bet__Carognata').\
         order_by('Surname').distinct()
 
+def check_max_n_bets(teamid, role):
+    num_bets = bet.Bet.objects.\
+        filter(Q(Team_id=teamid) & Q(Market_id=get_my_market(teamid).id) & Q(Player__Role=role)).\
+        aggregate(Count('id'))
+    max_num = \
+            C.NUM_GK if role == "P" else \
+            C.NUM_DEF if role == "D" else \
+            C.NUM_CC if role == "C" else \
+            C.NUM_FW if role == "A" else -1
+    
+    return (
+        True if num_bets['id__count'] < max_num else False
+    )
+
+
 def get_current_bets_amount(teamid):
     sum = bet.Bet.objects.filter(Q(Team_id=teamid) & Q(Market_id=get_my_market(teamid).id)).aggregate(Sum('Amount'))['Amount__sum']
     return sum if sum is not None else 0
@@ -123,6 +138,10 @@ def send_bet(data):
     my_bal = get_balance_obj(bet_obj.Team)[0]
     ncarognate = my_bal.N_carognate
     balance_for_bets = get_balance_for_bets(bet_obj.Team, int(balance_max))
+
+    if(not check_max_n_bets(user_team.id, player_.Role)):
+        return C.SendBetResult.BET_SLOT_EXCEED, balance_max, ncarognate
+
     if(bet_obj.Amount > balance_for_bets):
         return C.SendBetResult.BET_OVERFLOW, balance_max, ncarognate
 

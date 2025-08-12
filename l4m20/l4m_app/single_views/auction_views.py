@@ -78,6 +78,9 @@ class SendBetView(View):
 
             if(bet_result == C.SendBetResult.BET_EXPIRED):
                 return HttpResponse(f'error GIOCATORE SCADUTO!')
+            
+            if(bet_result == C.SendBetResult.BET_SLOT_EXCEED):
+                return HttpResponse(f'error NUMERO MASSIMO DI GIOCATORI PER RUOLO!')
 
         except Exception as e:
             return HttpResponse(f'error inserting bet and updating balance: {e}')
