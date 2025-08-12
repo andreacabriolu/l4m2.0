@@ -30,11 +30,12 @@ function openCarognataModal() {
 
 }
 
-function openPreOfficialModal(divid, playerid) {
+function openPreOfficialModal(divid, playerid, betamount) {
 
     officialInfo = {
         'divid' : divid,
-        'playerid' : playerid
+        'playerid' : playerid,
+        'betAmount' : betamount
     };
 
     $('#preOfficialModal').modal('show');
@@ -105,7 +106,7 @@ function fill_slots(mbb) {
                         openPlayerModal(json_res.Sur, json_res.BetA);
                     }
                     else if(bet.IsExpired && !bet.IsOfficial) {
-                        openPreOfficialModal(div_id, bet.Player_id);
+                        openPreOfficialModal(div_id, bet.Player_id, json_res.BetA);
                     }
                     else if(bet.IsOfficial) {
                         openPlayerModal(json_res.Sur, json_res.BetA, official=true);
@@ -422,13 +423,13 @@ function finalizeBet() {
 
     div_id = officialInfo['divid'];
     pl_id = officialInfo['playerid'];
+    pl_amount = officialInfo['betAmount'];
     
     const token = Cookies.get('csrftoken');
     const row = new Object();
     
-    row.playername = $('#'+div_id+'_name').val();
     row.playerid = pl_id;
-    row.amount = parseFloat($('#'+div_id+'_cost').val());
+    row.amount = parseInt(pl_amount);
     row.userteamid = $('#user_team_id').val();
     
     jsonData = JSON.stringify(row);
@@ -436,10 +437,10 @@ function finalizeBet() {
 	var data = { 'jsonData': jsonData, 'csrfmiddlewaretoken': token };
     $.post("/l4m/auction/finalizeBet/", data, function (response) {
         if(response.startsWith ('error')) {
+            showErrorAlert(response);
         }
         else {
             $('#'+div_id).addClass('end-official');
-            $('#'+div_id).prop('background', 'red');
             $('#'+div_id+'_img').prop('hidden', true);
             $('#'+div_id).children().prop('disabled', true);
             $("#official-alert").fadeTo(2000, 500);
