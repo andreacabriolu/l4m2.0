@@ -11,4 +11,4 @@ class Real_calendar(models.Model):
     RealTeamAway = models.ForeignKey(C.Constant_Strings.real_team, on_delete=models.CASCADE, related_name="team_away")
     
     def __str__(self):
-       return f"{self.RealTeamHome.name} vs {self.RealTeamAway.name}"
+       return f"{self.RealTeamHome.Name} vs {self.RealTeamAway.Name}"
