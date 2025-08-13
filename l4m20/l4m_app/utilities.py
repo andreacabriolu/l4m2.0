@@ -1,8 +1,9 @@
 from .models import *
-from django.db.models import Q, Sum, Count
+from django.db.models import Q, Sum, Count, Case, When, Value, F, OuterRef, Subquery
 import json
 import datetime
 from django.shortcuts import get_object_or_404
+from django.db.models.functions import Coalesce
 from zoneinfo import ZoneInfo
 from l4m20 import constants as C
 
@@ -54,6 +55,36 @@ def get_players(filter_role, teamid):
                'mark_players__bet__IsExpired', 'mark_players__bet__Market_id','mark_players__bet__Carognata').\
         order_by('Surname').distinct()
 
+def get_players_my_series(filter_role, teamid, filtered_teams_ids):
+              
+    bet_qs =  bet.Bet.objects.filter(
+        Player_id=OuterRef('pk'),
+        Team_id__in=filtered_teams_ids
+    ).order_by('id')  # or order by some priority if needed
+    
+    qs = player.Player.objects.filter(
+        Role=filter_role,
+        RealTeam__isnull=False,
+        Status='A',
+    ).exclude(
+        bet__Team_id=teamid
+    ).annotate(
+      bet__Amount=Coalesce(Subquery(bet_qs.values('Amount')[:1]), Value(None)),
+      bet__Team_id__Name=Coalesce(Subquery(bet_qs.values('Team_id__Name')[:1]), Value(None)),
+      bet__IsExpired=Coalesce(Subquery(bet_qs.values('IsExpired')[:1]), Value(None)),
+      bet__Carognata=Coalesce(Subquery(bet_qs.values('Carognata')[:1]), Value(None)),
+      bet__Expiration_Date=Coalesce(Subquery(bet_qs.values('Expiration_Date')[:1]), Value(None)),
+    ).exclude(
+        Q(bet__IsExpired=True) &
+        Q(bet__Team_id__in=filtered_teams_ids)    
+    ).values(
+        'id', 'Surname', 'Name', 'Role', 'RealTeam__Name',
+        'bet__Amount','bet__Team_id__Name', 'bet__IsExpired','bet__Carognata','bet__Expiration_Date'
+    ).order_by('Surname')
+        
+    return qs
+
+        
 def check_max_n_bets(teamid, role):
     num_bets = bet.Bet.objects.\
         filter(Q(Team_id=teamid) & Q(Market_id=get_my_market(teamid).id) & Q(Player__Role=role)).\

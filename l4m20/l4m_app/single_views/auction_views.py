@@ -21,10 +21,29 @@ class AuctionView(LoginRequiredMixin, View):
             user_team = U.get_user_team(request.user.id)
             teamid = user_team['id']
 
-            players_gk = U.get_players("P", teamid)
-            players_def = U.get_players("D", teamid)
-            players_cc = U.get_players("C", teamid)
-            players_fw = U.get_players("A", teamid)
+            series_mine = U.get_my_series(teamid)
+            seriesid=series_mine[0].id
+
+            team_ids = team.Team.objects.all().values('id','Name')
+            team_ids_to_filter = team.Team.objects.all().values('id','Name')
+            filtered_teams = []
+            for team_id in team_ids_to_filter:
+                tid=team_id['id']
+                foreign_series = U.get_my_series(tid)
+                if foreign_series.exists():
+                   fsid = foreign_series[0].id
+                   if fsid == seriesid:
+                       filtered_teams.append(team_id)
+            
+            filtered_teams_ids = [team['id'] for team in filtered_teams]
+            
+            
+            #players_gk = U.get_players("P", teamid)
+            players_gk = U.get_players_my_series("P", teamid, filtered_teams_ids)
+            players_def = U.get_players_my_series("D", teamid, filtered_teams_ids)
+            players_cc = U.get_players_my_series("C", teamid, filtered_teams_ids)
+            players_fw = U.get_players_my_series("A", teamid, filtered_teams_ids)
+            
 
             my_market = U.get_my_markets(U.get_my_series(teamid)[0].id)[0].id #TODO: improve check
             my_best_bets = U.list_my_best_bets(U.get_my_best_bets(teamid, my_market))
@@ -227,7 +246,7 @@ class AllAuctionsView(LoginRequiredMixin, View):
             for team_name, players in team_players.items()
         }     
 
-
+        
         if(seriesid == myseries):
             team_players={user_team_name:team_players.pop(user_team_name), **team_players} #get user team as first
 
