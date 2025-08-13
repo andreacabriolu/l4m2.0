@@ -60,9 +60,9 @@ def get_players_my_series(filter_role, teamid, filtered_teams_ids):
     bet_qs =  bet.Bet.objects.filter(
         Player_id=OuterRef('pk'),
         Team_id__in=filtered_teams_ids
-    ).order_by('id')  # or order by some priority if needed
+    ).order_by('id')
     
-    qs = player.Player.objects.filter(
+    return player.Player.objects.filter(
         Role=filter_role,
         RealTeam__isnull=False,
         Status='A',
@@ -81,8 +81,6 @@ def get_players_my_series(filter_role, teamid, filtered_teams_ids):
         'id', 'Surname', 'Name', 'Role', 'RealTeam__Name',
         'bet__Amount','bet__Team_id__Name', 'bet__IsExpired','bet__Carognata','bet__Expiration_Date'
     ).order_by('Surname')
-        
-    return qs
 
         
 def check_max_n_bets(teamid, role):

@@ -5,6 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 import json
 import datetime
 from django.db.models import Q
+import time
 
 from .. import utilities as U
 from ..models import *
@@ -20,32 +21,20 @@ class AuctionView(LoginRequiredMixin, View):
         try:
             user_team = U.get_user_team(request.user.id)
             teamid = user_team['id']
-
-            series_mine = U.get_my_series(teamid)
-            seriesid=series_mine[0].id
-
-            team_ids = team.Team.objects.all().values('id','Name')
-            team_ids_to_filter = team.Team.objects.all().values('id','Name')
-            filtered_teams = []
-            for team_id in team_ids_to_filter:
-                tid=team_id['id']
-                foreign_series = U.get_my_series(tid)
-                if foreign_series.exists():
-                   fsid = foreign_series[0].id
-                   if fsid == seriesid:
-                       filtered_teams.append(team_id)
+            seriesid=U.get_my_series(teamid)[0].id
             
-            filtered_teams_ids = [team['id'] for team in filtered_teams]
+            filtered_teams = team.Team.objects.filter(Series__id=seriesid)
+            filtered_teams_ids = [team.id for team in filtered_teams]
             
-            
-            #players_gk = U.get_players("P", teamid)
+            start = time.time()
             players_gk = U.get_players_my_series("P", teamid, filtered_teams_ids)
             players_def = U.get_players_my_series("D", teamid, filtered_teams_ids)
             players_cc = U.get_players_my_series("C", teamid, filtered_teams_ids)
             players_fw = U.get_players_my_series("A", teamid, filtered_teams_ids)
-            
+            end = time.time()
+            print(f'TIME: {end-start}')
 
-            my_market = U.get_my_markets(U.get_my_series(teamid)[0].id)[0].id #TODO: improve check
+            my_market = U.get_my_markets(seriesid)[0].id #TODO: improve check
             my_best_bets = U.list_my_best_bets(U.get_my_best_bets(teamid, my_market))
             current_session = U.get_current_session(my_market)
 
