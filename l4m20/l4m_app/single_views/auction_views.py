@@ -118,19 +118,19 @@ class GetPlayerInfoView(View):
         my_market = U.get_my_market(userid=request.user.id)
 
         pl = player.Player.objects.\
-        filter(mark_players__Market_id=my_market.id).\
-        values('id','Surname','Name','Role','RealTeam__Name','mark_players__bet__Amount','mark_players__bet__Expiration_Date',
-               'mark_players__bet__Team_id__Name','mark_players__Market_id').\
-        get(pk=id)
+            filter(bet__Market_id=my_market).\
+            values('id','Surname','Name','Role','RealTeam__Name','bet__Amount','bet__Expiration_Date',
+               'bet__Team_id__Name').\
+            get(pk=id)
 
         pl_obj = json.dumps({'Sur':pl['Surname'], 
                              'Nam':pl['Name'], 
                              'Rol':pl['Role'],
                              'RealT':pl['RealTeam__Name'], 
-                             'BetA':pl['mark_players__bet__Amount'],
-                             'BetE': datetime.datetime.strptime(pl['mark_players__bet__Expiration_Date'], '%Y-%m-%d %H:%M:%S%z').\
-                                replace(tzinfo=datetime.timezone.utc).__str__() if pl['mark_players__bet__Expiration_Date'] != None else pl['mark_players__bet__Expiration_Date'], #remove final timestamp
-                             'BetT': pl['mark_players__bet__Team_id__Name']})
+                             'BetA':pl['bet__Amount'],
+                             'BetE': datetime.datetime.strptime(pl['bet__Expiration_Date'], '%Y-%m-%d %H:%M:%S%z').\
+                                replace(tzinfo=datetime.timezone.utc).__str__() if pl['bet__Expiration_Date'] != None else pl['bet__Expiration_Date'], #remove final timestamp
+                             'BetT': pl['bet__Team_id__Name']})
 
         return HttpResponse(pl_obj)
 

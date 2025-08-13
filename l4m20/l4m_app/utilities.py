@@ -39,24 +39,8 @@ def get_my_market(teamid=None, userid=None):
         return
     return mymarkets[0]
 
-def get_players(filter_role, teamid):
-
-    my_market = get_my_market(teamid).id
-#~
-    return player.Player.objects.\
-        filter(Role=filter_role).\
-        filter(RealTeam__isnull=False).\
-        filter(Status='A').\
-        filter(mark_players__Market_id=my_market).\
-        filter(Q(bet__Market_id=my_market) | Q(bet__isnull=True) | (Q(bet__isnull=False) & ~Q(bet__Market_id=my_market))).\
-        exclude(bet__Team_id=teamid).\
-        values('id','Surname','Name','Role','RealTeam__Name','mark_players__bet__Amount',
-               'mark_players__bet__Expiration_Date','mark_players__bet__Team_id__Name',
-               'mark_players__bet__IsExpired', 'mark_players__bet__Market_id','mark_players__bet__Carognata').\
-        order_by('Surname').distinct()
-
 def get_players_my_series(filter_role, teamid, filtered_teams_ids):
-              
+              #~
     bet_qs =  bet.Bet.objects.filter(
         Player_id=OuterRef('pk'),
         Team_id__in=filtered_teams_ids
@@ -162,7 +146,6 @@ def send_bet(data):
     player_ = get_object_or_404(player.Player, id=bet_obj.Player)
     user_team = get_object_or_404(team.Team, id=bet_obj.Team) #TODO: how to avoid this double fetch?
     market_ = get_object_or_404(market.Market, id=int(bet_obj.Market))
-    mark_player_ = mark_players.Mark_Players.objects.filter(Q(Player_id=player_.id) & Q(Market_id=market_))
 
     my_bal = get_balance_obj(bet_obj.Team)[0]
     ncarognate = my_bal.N_carognate
@@ -201,8 +184,7 @@ def send_bet(data):
                         Team = user_team,
                         Expiration_Date=exp_date_obj,
                         Slot=bet_obj.Slot,
-                        Market=market_,
-                        Mark_player=mark_player_[0])
+                        Market=market_)
 
         bet_new.save()
 
