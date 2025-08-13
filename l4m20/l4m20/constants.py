@@ -35,4 +35,6 @@ class SendBetResult:
     BET_EXPIRED = -3
     BET_SLOT_EXCEED = -4
 
+class ErrorCodes:
+    ALREADY_OFFICIAL = -1
 

@@ -1,3 +1,6 @@
+function showPopupErrorAlert(response) {
+    alert(response);
+}
 
 function showErrorAlert(response) {
     $("#error-alert").prop('hidden', false);
@@ -57,17 +60,29 @@ function manage_mod(val) { //show and hide, TODO: real the best way?
 
 }
 
-function removeSelectedOptionsFromOtherDropdowns(current) {
+function removeSelectedOptionsFromOtherDropdowns(current, previous) {
 
     var id = current.children('option:selected').data().id;
     $('#l_ups select').each(function (i) {
         if (!($(this).is(current))) {
             if ($(this).children('option:selected').data().id == id) {
-                    $(this).children(`[data-id="${id}"]`).each(function () {
-                        $(this).parent().val('');
-                        $(this).prop('selected', false);
-                    });
+                $(this).children(`[data-id="${id}"]`).each(function () {
+                    $(this).parent().val('');
+                    $(this).prop('selected', false);
+                });
             }
+
+            //TODO: put old value in all dropdowns
+            $(this).each(function () {
+                $(this).children('option').each(function () {
+                    if ($(this).data().id == id) {
+                        $(this).hide();
+                    }
+
+                    
+                });
+            });
+
         }
     });
 }
@@ -126,8 +141,10 @@ window.addEventListener('DOMContentLoaded', event => {
 
     });
 
-    $('#l_ups select').on('change', function () {
-        removeSelectedOptionsFromOtherDropdowns($(this));
+    $('#l_ups select').on('focus', function(){
+        prevVal = this.value;
+    }).change(function () {
+        removeSelectedOptionsFromOtherDropdowns($(this), prevVal);
     });
 
     $('#btnSaveLineup').on('click', function(){
@@ -144,7 +161,7 @@ window.addEventListener('DOMContentLoaded', event => {
             }
 
             if(!allFilled) {
-                showErrorAlert('RIEMPI TUTTI GLI SLOT TITOLARI PRIMA DI CONFERMARE');
+                showPopupErrorAlert('RIEMPI TUTTI GLI SLOT TITOLARI PRIMA DI CONFERMARE');
                 // return; //TODO: set this
             }
 
@@ -194,7 +211,7 @@ window.addEventListener('DOMContentLoaded', event => {
                 return; //duplicate
             }
 
-            $('#captain').append(sel_pl[0]);
+            // $('#captain').append(sel_pl[0]);
         }
     });
 

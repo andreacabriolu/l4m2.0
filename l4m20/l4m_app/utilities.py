@@ -210,11 +210,19 @@ def finalize_bet(data):
     my_market_id = get_my_market(fin_obj.Team).id
     my_market = get_object_or_404(market.Market, id=my_market_id)
     last_bet = bet.Bet.objects.filter(Q(Player=player_) & Q(Market=my_market))
+
+    if(len(last_bet) < 0):
+        return
+    
+    if(last_bet[0].IsOfficial == True):
+        return C.ErrorCodes.ALREADY_OFFICIAL
+    
     last_bet.update(IsOfficial=True)
 
     fin_new = squads.Squads(Amount=fin_obj.Amount,
                 Player = player_,
-                Team = user_team)
+                Team = user_team,
+                Last_bet = last_bet[0])
     fin_new.save()            
 
     
