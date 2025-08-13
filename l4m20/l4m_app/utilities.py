@@ -116,18 +116,11 @@ def get_balance(teamid):
         filter(Team_id=teamid).\
         values('Purchases_amount','Purchases_max','N_carognate')
 
-def get_total(mbb):
-    #TODO implement
-    pass
-
 def get_all_team_players():
     return player.Player.objects.\
         values('id','Surname','Name','Role','bet__Team_id','bet__Amount',\
                'bet__IsExpired','bet__Carognata','bet__Expiration_Date')
 
-
-def get_series_players(series_id):
-	print(series_id)
                 
 def send_bet(data):
     bet_obj =  bet.Bet_Obj()

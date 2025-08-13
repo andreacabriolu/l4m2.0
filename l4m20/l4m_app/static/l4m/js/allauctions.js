@@ -28,19 +28,18 @@ function fillSingleTableWithTeams() {
         }
     }
 
-    // Build table
     let html = `<div style="overflow-x: auto;width:100%;">`;
     // Tgis is bad: it should load dinamically available markets and league names
     html += `<div id="link-container" style="display: flex;gap: 10px;background-color: black;padding: 10px;justify-content: center;">
-      <div><a href="http://lega4mori.com/l4m/allauctions/1/" style="color: white; text-decoration: none; font-weight: bold; padding: 1px; display: block;">Serie A</a></div>                                                                        
-      <div><a href="http://lega4mori.com/l4m/allauctions/2/" style="color: white; text-decoration: none; font-weight: bold; padding: 1px; display: block;">Bundesliga</a></div>                                                                        
-      <div><a href="http://lega4mori.com/l4m/allauctions/3/" style="color: white; text-decoration: none; font-weight: bold; padding: 1px; display: block;">Liga</a></div>
+      <div><a href="/l4m/allauctions/1/" style="color: white; text-decoration: none; font-weight: bold; padding: 1px; display: block;">Serie A</a></div>                                                                        
+      <div><a href="/l4m/allauctions/2/" style="color: white; text-decoration: none; font-weight: bold; padding: 1px; display: block;">Bundesliga</a></div>                                                                        
+      <div><a href="/l4m/allauctions/3/" style="color: white; text-decoration: none; font-weight: bold; padding: 1px; display: block;">Liga</a></div>
      </div>`;
      
     html += `<table class="table custom-table hover" id="allTeamsTable" cellspacing="0" cellpadding="5">`;
 
     html += `<thead><tr><th>Ruolo</th>`;
-    //html += `<tr class="role-separator"><td colspan="${teamNames.length + 1}"></td></tr>`;
+
     for (const teamName of teamNames) {
         html += `<th class="team-header fixed-width">${teamName}</th><th></th><th class="spacer-cell"></th>`;
     }
@@ -55,9 +54,6 @@ function fillSingleTableWithTeams() {
             for (const player of roleRows[role][i]) {
                 //html += `<td>${player.Surname}</td><td class="player-money">${player.bet__Amount}</td><td class="spacer-cell"></td>`;
                 const color = player['bet__IsExpired'] ? 'black' : (player['bet__Carognata'] ? 'blue' : 'red');
-                // const date = new Date(player['bet__Expiration_Date']);
-                // let formatted = `${date.getHours().toString().padStart(2,'0')}:${date.getMinutes().toString().padStart(2,'0')} 
-                //      ${date.getDate().toString().padStart(2,'0')}-${(date.getMonth()+1).toString().padStart(2,'0')}-${date.getFullYear()}`;
                 let formatted = new Date(player['bet__Expiration_Date']).toLocaleString("it-IT", {timeZone: "UTC"});
 
                 if(role == 'I') {

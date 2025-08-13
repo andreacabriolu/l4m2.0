@@ -5,7 +5,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 import json
 import datetime
 from django.db.models import Q
-import time
 
 from .. import utilities as U
 from ..models import *
@@ -26,13 +25,10 @@ class AuctionView(LoginRequiredMixin, View):
             filtered_teams = team.Team.objects.filter(Series__id=seriesid)
             filtered_teams_ids = [team.id for team in filtered_teams]
             
-            start = time.time()
             players_gk = U.get_players_my_series("P", teamid, filtered_teams_ids)
             players_def = U.get_players_my_series("D", teamid, filtered_teams_ids)
             players_cc = U.get_players_my_series("C", teamid, filtered_teams_ids)
             players_fw = U.get_players_my_series("A", teamid, filtered_teams_ids)
-            end = time.time()
-            print(f'TIME: {end-start}')
 
             my_market = U.get_my_markets(seriesid)[0].id #TODO: improve check
             my_best_bets = U.list_my_best_bets(U.get_my_best_bets(teamid, my_market))
@@ -152,44 +148,19 @@ class GetBalanceForBetsView(View):
 class AllAuctionsView(LoginRequiredMixin, View):
     template_name = 'l4m/allauctions.html'
 
-    def get(self,request,series_id=None):
+    def get(self,request):
 
         user_team = U.get_user_team(request.user.id)
         teamid = user_team['id']
-        series_mine = U.get_my_series(teamid)
-        myseries=series_mine[0].id
-                
-        if series_id is None:
-          user_team = U.get_user_team(request.user.id)
-          teamid = user_team['id']
-          series_id = U.get_my_series(teamid)
-          seriesid = series_id[0].id
-        
-        else:
-          seriesid = series_id
-         
-         
+    
+        seriesid = U.get_my_series(teamid)
         all_team_players = U.get_all_team_players()
-        
-        team_ids = team.Team.objects.all().values('id','Name')
-        team_ids_to_filter = team.Team.objects.all().values('id','Name')
-        filtered_teams = []
-        for team_id in team_ids_to_filter:
-            tid=team_id['id']
-            foreign_series = U.get_my_series(tid)
-            if foreign_series.exists():
-               fsid = foreign_series[0].id
-               if fsid == seriesid:
-                   filtered_teams.append(team_id)
-                   
-
+        filtered_teams = team.Team.objects.filter(Series__id=seriesid)
         
         user_team_name = U.get_user_team(request.user.id)['Name'].replace(' ','_')
         team_players = {}
         balances = {}
         
-        series_players = U.get_series_players(series_id) 
-
         for team_id in filtered_teams:
             lp = list(all_team_players.filter(Q(bet__Team_id=team_id['id']) & Q(Role=C.Constant_Dicts.RoleChars['POR'])))
             ld = list(all_team_players.filter(Q(bet__Team_id=team_id['id']) & Q(Role=C.Constant_Dicts.RoleChars['DIF'])))
@@ -234,10 +205,8 @@ class AllAuctionsView(LoginRequiredMixin, View):
             team_name: [p for p in players if p.get('bet__Team_id') in filtered_team_ids]
             for team_name, players in team_players.items()
         }     
-
         
-        if(seriesid == myseries):
-            team_players={user_team_name:team_players.pop(user_team_name), **team_players} #get user team as first
+        team_players={user_team_name:team_players.pop(user_team_name), **team_players} #get user team as first
 
         params = { 
             'team_players' : json.dumps(team_players),
