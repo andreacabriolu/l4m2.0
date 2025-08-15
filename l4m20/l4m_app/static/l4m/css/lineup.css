@@ -89,3 +89,34 @@ label {
     min-width: 12em !important;
     font-size: large !important;
   }
+
+.hide-lineup-label {
+    color: whitesmoke;
+    margin-right: 1em;
+    padding: unset;
+    overflow: auto;
+}
+
+
+.hide-lineup-div {
+    margin-right: 1em;
+}
+
+.form-switch.form-switch-md .form-check-input {
+  height: 1.5rem;
+  width: calc(2rem + 0.75rem);
+  border-radius: 3rem;
+  margin-right: 1em;
+}
+
+.switches {
+    display: flex;
+    flex-direction: column;
+    margin-right: 2em;
+}
+
+@media (max-width:800px) {
+    .switches{
+        margin-bottom: 1.5em;
+    }
+  }
