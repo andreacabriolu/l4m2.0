@@ -60,7 +60,32 @@ function manage_mod(val) { //show and hide, TODO: real the best way?
 
 }
 
-function removeSelectedOptionsFromOtherDropdowns(current, previous) {
+let options_ids = {
+    'gk': [],
+    'def': [],
+    'cc': [],
+    'fw': []
+}
+
+function fill_options() {
+    $('#gk_tit').children('option').each(function(){
+        options_ids['gk'].push($(this).data().id);
+    });
+
+    $('#d1_tit').children('option').each(function(){
+        options_ids['def'].push($(this).data().id);
+    });
+
+    $('#c1_tit').children('option').each(function(){
+        options_ids['cc'].push($(this).data().id);
+    });
+
+    $('#a1_tit').children('option').each(function(){
+        options_ids['fw'].push($(this).data().id);
+    });
+}
+
+function removeSelectedOptionsFromOtherDropdowns(current) {
 
     var id = current.children('option:selected').data().id;
     $('#l_ups select').each(function (i) {
@@ -71,20 +96,72 @@ function removeSelectedOptionsFromOtherDropdowns(current, previous) {
                     $(this).prop('selected', false);
                 });
             }
-
-            //TODO: put old value in all dropdowns
-            $(this).each(function () {
-                $(this).children('option').each(function () {
-                    if ($(this).data().id == id) {
-                        $(this).hide();
-                    }
-
-                    
-                });
-            });
-
         }
     });
+}
+
+function adjustOtherDropdowns(current) {
+    var currentid = current.children('option:selected').data().id;
+
+    $('#l_ups select').each(function (i) {
+
+        /* 1. Removing player selected in other options */
+        if (!($(this).is(current))) {
+            if ($(this).children('option:selected').data().id == currentid) {
+                $(this).children(`[data-id="${currentid}"]`).each(function () {
+                    $(this).parent().val('');
+                    $(this).prop('selected', false);
+                });
+            }
+        }
+
+        /* 2. Removing player from other dropdowns and added the old one */
+        // $(this).each(function () { //for each dropdown
+        //     $(this).data('prev', prev);
+        //     $(this).data('role', roleStr);
+
+        //     if (!($(this).is(current)) &&
+        //         ($(this)[0].id.slice(0, 1) == $(this).data('role'))) { //if other dropdowns for the same role
+        //             $(this).children('option').each(function () { //for each option
+        //                 $(this).data('prev', prev);
+        //                 if ($(this).data().id == currentid) { //hide the selected one
+        //                     $(this).hide();
+        //                 }
+
+        //                 prev = $(this).data('prev');
+        //                 if (typeof prev !== 'undefined') { //if there was an old value
+        //                     if ($(this).data().id == prev) { //show it again
+        //                         $(this).show();
+        //                     }
+        //                 }
+
+        //         });
+        //     }
+        // });
+
+
+    });
+
+
+}
+
+function adjust_captain() {
+    tits = []; //titolars...
+    $('#main_lineup select:visible').each(function () {
+        var id = $(this).children('option:selected').data().id;
+        if (typeof id !== 'undefined') {
+            tits.push(id);
+        }
+    });
+
+    reset_captain();
+
+    $('#captain').children('option').each(function() {
+        if(tits.includes($(this).data().id)) { 
+            $(this).show(); 
+        }   
+    });
+
 }
 
 function load_lineup(lineup) {
@@ -124,9 +201,13 @@ function load_last_lineup() {
 
             }
         });
+}
 
-
-
+function reset_captain() {
+    $('#captain').children('option').each(function () { 
+        $(this).hide();
+    });
+    $('#captain').val('option');
 }
 
 window.addEventListener('DOMContentLoaded', event => {
@@ -134,18 +215,19 @@ window.addEventListener('DOMContentLoaded', event => {
     const token = Cookies.get('csrftoken');
 
     load_last_lineup();
+    fill_options();
+    reset_captain();
 
     $('#mods').on('change', function () {
         var val = $(this).val();
         manage_mod(val);
-
+        adjust_captain();
     });
 
-    $('#l_ups select').on('focus', function(){
-        prevVal = this.value;
-    }).change(function () {
-        removeSelectedOptionsFromOtherDropdowns($(this), prevVal);
-    });
+    $('#l_ups select').on('change', (function() {
+        adjustOtherDropdowns($(this));
+        adjust_captain();
+    }));
 
     $('#btnSaveLineup').on('click', function(){
         var allFilled = true;
@@ -194,25 +276,16 @@ window.addEventListener('DOMContentLoaded', event => {
         $('#secondary_lineup').each(function () { 
             $(this).children().children().val('');
         });
+
+        reset_captain();
     });
 
     $('#btnResetMainLineup').on('click', function() {
         $('#main_lineup').each(function () { 
             $(this).children().children().val('');
         });
-    });
 
-    $("select[id$='tit']").on('change', function() {
-        if($(this.length > 0)) {
-            sel_pl = $(this).children('option:selected');
-
-            // pl = $(`#${this}`).children(`option[data-id=${sel_pl.data().id}]`);
-            if($('#captain').children(`option[data-id=${sel_pl.data().id}]`).length > 0) {
-                return; //duplicate
-            }
-
-            // $('#captain').append(sel_pl[0]);
-        }
+        reset_captain();
     });
 
 })

@@ -37,6 +37,10 @@
             </div>
             <div class="form-floating cap">
                 <select class="form-select form-select-lg mb-3 form-select-custom form-select-player" id="captain">
+                    {% for pl in players_all %}
+                        <option value="{{pl}}" data-id="{{pl.id}}">{{pl.Player__Surname}} ({{pl.Player__RealTeam__Name}})</option>
+                    {% endfor %}
+                    <option value="" disabled selected></option>
                 </select>
                 <label for="captain">Capitano</label>
             </div>
