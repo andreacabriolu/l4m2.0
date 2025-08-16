@@ -56,12 +56,16 @@
                 class="fas fa-bars"></i></button>
 
         <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
-            <div class="input-group" hidden>
+            <div class="input-group">
                 <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..."
-                    aria-describedby="btnNavbarSearch" />
-                <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i
-                        class="fas fa-search"></i></button>
+                    aria-describedby="btnNavbarSearch" hidden />
+                <button class="btn btn-primary" id="btnNavbarSearch" type="button" hidden>
+                <i class="fas fa-search" hidden></i></button>
+                <a class="nav-link nav-link-custom" href="/l4m/live/">
+                    LIVE!
+                </a>
             </div>
+            
         </form>
 
         <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
@@ -70,7 +74,7 @@
                     aria-expanded="false">
                     <i class="fas fa-user fa-fw"></i></a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="#!">About</a></li>
+                    <li><a class="dropdown-item" href="#!">Informazioni</a></li>
                     <li>
                         <hr class="dropdown-divider" />
                     </li>
@@ -111,6 +115,13 @@
                             </div>
                             <a class="nav-link nav-link-custom" href="/l4m/lineup/">
                              SCHIERA FORMAZIONE
+                            </a>
+                            <div class="sb-sidenav-menu-heading sidenav-custom">
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-futbol"></i></div>
+                                <span class="nav-span">LIVE</span> 
+                            </div>
+                            <a class="nav-link nav-link-custom" href="/l4m/live/">
+                             PARTITE IN CORSO
                             </a>
                         </div>
                     </div>
