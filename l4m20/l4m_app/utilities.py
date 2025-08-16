@@ -229,9 +229,6 @@ def finalize_bet(data):
 def get_user_team(userid):
     return team.Team.objects.filter(Users__id=userid).values('id','Name')[0]
 
-def get_user_series():
-    return get_object_or_404(series.Series, Name="serie A".lower()) #TODO: implement
-
 def get_my_players(filter_role, teamid):
 
     return squads.Squads.objects.\
@@ -262,7 +259,9 @@ def save_lineup(lineup_info):
         Version = lineup_info['version'],
         Team = get_object_or_404(team.Team, id=lineup_info['team']),
         Timestamp = lineup_info['timestamp'],
-        Series = lineup_info['series']
+        Series = lineup_info['series'],
+        HideLineup = lineup_info['hideLineup'],
+        ModNoGk = lineup_info['modNoGk'],
         )
 
     lineup_new.save()

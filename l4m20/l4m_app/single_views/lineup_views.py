@@ -42,8 +42,13 @@ class LineupView(LoginRequiredMixin, View):
 class SaveLineupView(View):
   def post(self, request):
     try:
-        data = json.loads(request.POST.get("jsonData"))
-        if (data is None): return
+        tits = request.POST['tits']
+        options = request.POST['options']
+
+        if (tits is None or options is None): return
+
+        lineup = json.loads(tits)
+        options = json.loads(options)
 
         last_version = 0
         day = U.get_current_day()
@@ -54,12 +59,14 @@ class SaveLineupView(View):
             last_version = last_lineup[0].Version
 
         lineup_info = {
-            "line": data,
+            "line": lineup,
             "day": day,
             "team": teamid,
             "version": last_version + 1,
             "timestamp": datetime.now(),
-            "series": U.get_user_series() #TODO: implement get_series
+            "series": U.get_my_series(teamid)[0],
+            "hideLineup": options['hideLineup'],
+            "modNoGk": options['modNoGk'],
         }
 
         U.save_lineup(lineup_info)
