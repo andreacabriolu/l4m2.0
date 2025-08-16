@@ -14,9 +14,8 @@ class LiveView(LoginRequiredMixin, View):
     template_name = 'l4m/live.html'
 
     def get(self,request):
-        
-
         params = { 
+
           }
         
         return render(request, self.template_name, params)

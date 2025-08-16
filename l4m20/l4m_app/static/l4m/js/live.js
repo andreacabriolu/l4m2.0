@@ -18,7 +18,7 @@ function showInfoAlert(response) {
 const token = Cookies.get('csrftoken');
 
 window.addEventListener('DOMContentLoaded', event => {
-    
 
+    
 
 })
