@@ -83,6 +83,7 @@
     color: white;
     vertical-align: middle;
     font-weight: bold;
+    width: 5%;
 }
 
 #allTeamsTable tr.role-separator td {
@@ -121,5 +122,10 @@
     background-color: #f9f9f9;
 }
 
-.player-money {
+.row-like {
+    background-color: #D9D9D9;
+}
+.spacer td {
+  height: 15px;   /* adjust space */
+  border: none;   /* remove border if your table has it */
 }

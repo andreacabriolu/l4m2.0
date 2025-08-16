@@ -8,18 +8,16 @@
 {% endblock %}
 
 {% block scripts %}
-<script type="text/javascript">
-    const teamName = "{{ team_name|escapejs }}";
-    //const players = JSON.parse(`{{ players_json|escapejs }}`);
-</script>
 <script src="{% static 'l4m/js/squad.js' %}"></script>
 {% endblock %}
 
 {% block content %}
 <div id="layoutSidenav_content" class="custom-layout">
     <div class="bg-body-tertiary p-5 main-div" id="allTeamsDiv">
-        <h2>Team: <span id="team-name"></span></h2>
+        <!--h2>Team: <span id="team-name"></span></h2-->
+           <input type="hidden" id="team_info" value='{{ tinfo_json|safe }}'>
            <input type="hidden" id="team_players" value='{{ players_json|safe }}'>
+           
 
         <div id="players-table"></div>
     </div>

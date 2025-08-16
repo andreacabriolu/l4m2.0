@@ -249,12 +249,13 @@ def get_user_team(userid):
 def get_user_series():
     return get_object_or_404(series.Series, Name="serie A".lower()) #TODO: implement
 
-def get_my_players(filter_role, teamid):
 
+def get_my_players(teamid):
+    # list all players for teamid
     return squads.Squads.objects.\
         filter(Team_id=teamid).\
-        filter(Player__Role=filter_role).\
         values('id','Player__Surname','Player__RealTeam__Name','Amount','Player__Role')
+        
 
 
 def complete_list(l, num_max, role):
