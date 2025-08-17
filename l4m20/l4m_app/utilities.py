@@ -234,7 +234,7 @@ def get_my_players(filter_role, teamid):
     return squads.Squads.objects.\
         filter(Team_id=teamid).\
         filter(Player__Role=filter_role).\
-        values('id','Player__Surname','Player__RealTeam__Name','Amount','Player__Role').\
+        values('id','Player__id','Player__Surname','Player__RealTeam__Name','Amount','Player__Role').\
         order_by('Player__Surname')
 
 
@@ -272,3 +272,26 @@ def cleanJSON(jsonData):
     jsonData = jsonData.replace("\\","") #remove extra \
 
     return jsonData    
+
+def get_my_opponent(teamid, day):
+    #TODO implement
+    return 4
+
+def get_couples_from_calendar(seriesid, day):
+    #TODO implement
+    return [ (1,4) , (2,7) ]
+
+def get_votes(lineup):
+    if(lineup is None):
+        return None
+    votes = []
+    line = json.loads(cleanJSON(lineup.Line))
+    for l in line.items():
+        if(l[0] == 'mod'): 
+            continue
+        _vote = vote.Vote.objects.filter(Player_id=l[1])
+        if(len(_vote) > 0):
+            votes.append(_vote[0])
+
+    return votes
+    

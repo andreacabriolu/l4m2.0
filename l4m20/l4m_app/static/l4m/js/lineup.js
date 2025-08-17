@@ -145,7 +145,7 @@ function adjustOtherDropdowns(current) {
 
 }
 
-function adjust_captain(reset=True) {
+function adjust_captain(reset=true) {
     tits = []; //titolars...
     $('#main_lineup select:visible').each(function () {
         var id = $(this).children('option:selected').data().id;

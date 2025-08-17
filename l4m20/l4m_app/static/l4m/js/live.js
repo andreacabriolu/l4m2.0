@@ -15,10 +15,10 @@ function showInfoAlert(response) {
     });
 }
 
-const token = Cookies.get('csrftoken');
 
 window.addEventListener('DOMContentLoaded', event => {
+const token = Cookies.get('csrftoken');
 
-    
+
 
 })

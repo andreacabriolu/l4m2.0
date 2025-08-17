@@ -4,7 +4,7 @@
 { % block title % } L4M2.0 - LIVE! { % endblock % }
 
 {% block links %}
-<link href="{% static 'l4m/css/lineup.css' %}" rel="stylesheet">
+<link href="{% static 'l4m/css/live.css' %}" rel="stylesheet">
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 
 {% endblock %}
@@ -23,8 +23,31 @@
     <div class="alert alert-success" role="alert" id="info-alert" hidden>
             <span id="span-info-alert"></span>
     </div>
-    <div class="bg-body-tertiary main-div p-5" id="liveMainDiv">
+    <div class="bg-body-tertiary main-div p-5 live-tables" id="liveMainDiv">
         
+        {% for match_votes in all_votes %}
+        <div>
+            {% for team_votes in match_votes %}
+
+            <table class="table table-striped-columns table-dark">
+                <th>GIOCATORE</th>
+                <th>VOTO</th>
+                <th>BONUS</th>
+                {% for vote in team_votes %}
+
+                <tr>
+                    <td>{{vote.Player.Surname}}</td>
+                    <td>{{vote.Vote}}</td>
+                    <td>{{vote.GoalSc}}</td>
+                </tr>
+                {% endfor %}
+    
+            </table>
+
+            {% endfor %}
+            
+        </div>
+        {% endfor %}
         
     </div>
 </div>

@@ -27,4 +27,4 @@ class Vote(models.Model):
     
 
     def __str__(self):
-        return f"{self.player} - Giornata {self.day} ({self.vote})"
+        return f"{self.Player} - Giornata {self.Day} ({self.Vote})"
