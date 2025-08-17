@@ -17,7 +17,6 @@ class LiveView(LoginRequiredMixin, View):
 
         current_day = U.get_current_day()
         teamid = U.get_user_team(request.user.id)['id']
-        opponent_team_id = U.get_my_opponent(teamid, current_day) #TODO: read from Calendar
         seriesid = U.get_my_series(teamid)[0].id
 
         series_teams = team.Team.objects.filter(Series__id=seriesid)
@@ -32,11 +31,10 @@ class LiveView(LoginRequiredMixin, View):
         lineup_couples = [ (last_lineups_d[c[0]], last_lineups_d[c[1]]) for c in couples ]
 
         all_votes = []
-        # all_votes = {}
 
         for lineup_couple in lineup_couples:
             votes_home = U.get_votes(lineup_couple[0])
-            votes_away = U.get_votes(lineup_couple[1])
+            votes_away = U.get_votes(lineup_couple[1], home=False)
             all_votes.append( \
                 [votes_home, votes_away]
             )

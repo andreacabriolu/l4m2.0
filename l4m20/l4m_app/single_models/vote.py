@@ -1,6 +1,7 @@
 from l4m20 import constants as C
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from . import player
 
 
 class Vote(models.Model):
@@ -28,3 +29,26 @@ class Vote(models.Model):
 
     def __str__(self):
         return f"{self.Player} - Giornata {self.Day} ({self.Vote})"
+    
+    class Vote_Obj():
+        Competition = str
+        Player = player
+        Day = int             
+        Vote = float   
+        GoalSc = int  
+        GoalTa = int
+        GoalDe = int
+        PenSc = int 
+        PenMi = int
+        PenSa = int 
+        Own = int  
+        Yel = int  
+        Red = int     
+        AssS = int  
+        AssH = int   
+        AssL = int    
+        AssP = int   
+        SubJ = int  
+        Sub = int
+        Cap = bool
+        TotVote = float

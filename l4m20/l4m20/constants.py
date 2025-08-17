@@ -38,3 +38,19 @@ class SendBetResult:
 class ErrorCodes:
     ALREADY_OFFICIAL = -1
 
+class Scores:
+    ASS_LOW = 1
+    ASS_HIGH = 1
+    ASS_STD = 1
+    CAP = 0.5
+    GOAL = 3
+    GOAL_TAKEN = -1
+    GOAL_DECIDER = 1
+    PENALTY_SCORED = 2
+    PENALTY_MISSED = -2
+    PENALTY_SAVED = 3
+    OWN_GOAL = -2
+    YELLOW = -0.5
+    RED = -1
+    PENALTY_PROCURED = 1
+

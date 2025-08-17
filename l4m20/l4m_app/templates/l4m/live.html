@@ -7,6 +7,14 @@
 <link href="{% static 'l4m/css/live.css' %}" rel="stylesheet">
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+    href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap"
+    rel="stylesheet">
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Mozilla+Headline:wght@200..700&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
+</style>
 {% endblock %}
 
 {% block scripts %}
@@ -18,37 +26,152 @@
 <div id="layoutSidenav_content" class="custom-layout">
 
     <div class="alert alert-danger" role="alert" id="error-alert" hidden>
-            <span id="span-error-alert"></span>
+        <span id="span-error-alert"></span>
     </div>
     <div class="alert alert-success" role="alert" id="info-alert" hidden>
-            <span id="span-info-alert"></span>
+        <span id="span-info-alert"></span>
     </div>
-    <div class="bg-body-tertiary main-div p-5 live-tables" id="liveMainDiv">
-        
+    <div class="bg-body-tertiary main-div p-5 live-tables bg-success bg-opacity-50" id="liveMainDiv">
+
         {% for match_votes in all_votes %}
-        <div>
+        <div class="match-div">
             {% for team_votes in match_votes %}
+            <table class="table table-striped-columns table-dark table-match rounded-3 table-bordered rounded-pill">
+                <thead>
+                    <tr>
+                        <th colspan="5" class="display-6 mozilla-headline-teamname w-30 team-name">{{team_votes.1}}</th>
+                    </tr>
+                    <tr>
+                        <th colspan="5" class="team-score mozilla-headline-teamname display-6">1</th>
+                    </tr>
+                    <!-- <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr> -->
+                </thead>
+                <tbody class="table-group-divider">
 
-            <table class="table table-striped-columns table-dark">
-                <th>GIOCATORE</th>
-                <th>VOTO</th>
-                <th>BONUS</th>
-                {% for vote in team_votes %}
+                    {% for vote in team_votes %}
+                        {% if forloop.counter0 > 1 and not forloop.last %}
+                        <tr>
+                            <td>{{vote.Player.Role}}</td>
+                            <td {% if vote.Cap %} class="captain-td" {% endif %}>{% if vote.Cap %} [CAP] {% endif %}
+                                {{vote.Player.Surname}}</td>
+                            <td>{{vote.Vote|floatformat}}</td>
+                            <td>{{vote.TotVote|floatformat}}</td>
+                            <td>
+                                <!--BONUS ICONS -->
+                                {% with ''|center:vote.GoalSc as range %}
+                                    {% for _ in range %}
+                                        <img src="{% static 'l4m/images/goal.png' %}">
+                                    {% endfor %}
+                                {% endwith %}
 
-                <tr>
-                    <td>{{vote.Player.Surname}}</td>
-                    <td>{{vote.Vote}}</td>
-                    <td>{{vote.GoalSc}}</td>
-                </tr>
-                {% endfor %}
-    
+                                {% with ''|center:vote.Yel as range %}
+                                    {% for _ in range %}
+                                        <img src="{% static 'l4m/images/yel.png' %}">
+                                    {% endfor %}
+                                {% endwith %}
+
+                                {% with ''|center:vote.Red as range %}
+                                    {% for _ in range %}
+                                        <img src="{% static 'l4m/images/redcard.png' %}">
+                                    {% endfor %}
+                                {% endwith %}
+
+                                {% with ''|center:vote.AssS as range %}
+                                    {% for _ in range %}
+                                        <img src="{% static 'l4m/images/assist.png' %}">
+                                    {% endfor %}
+                                {% endwith %}
+
+                                {% with ''|center:vote.GoalTa as range %}
+                                    {% for _ in range %}
+                                        <img src="{% static 'l4m/images/goal_taken.png' %}">
+                                    {% endfor %}
+                                {% endwith %}
+
+                                {% with ''|center:vote.Own as range %}
+                                    {% for _ in range %}
+                                        <img src="{% static 'l4m/images/own.png' %}">
+                                    {% endfor %}
+                                {% endwith %}
+
+                                {% with ''|center:vote.PenMi as range %}
+                                    {% for _ in range %}
+                                        <img src="{% static 'l4m/images/pen_mis.png' %}">
+                                    {% endfor %}
+                                {% endwith %}
+
+                                {% with ''|center:vote.PenSc as range %}
+                                    {% for _ in range %}
+                                        <img src="{% static 'l4m/images/pen_sco.png' %}">
+                                    {% endfor %}
+                                {% endwith %}
+
+                                {% with ''|center:vote.PenSa as range %}
+                                    {% for _ in range %}
+                                        <img src="{% static 'l4m/images/pen_sav_2.png' %}">
+                                    {% endfor %}
+                                {% endwith %}
+
+                            </td>
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+                <tfoot class="table-group-divider">
+                    <tr>
+                        <td />
+                        <td />
+                        <td />
+                        <td class="tot-score">{% if team_votes %}  {{team_votes|last|floatformat}} {% endif %}</td>
+                        <td />
+                    </tr>
+                    <tr>
+                        <td />
+                        <td>Modificatore</td>
+                        <td />
+                        <td class="tot-score">1</td>
+                        <td />
+                    </tr>
+                    <tr>
+                        <td />
+                        <td>Bonus capitano</td>
+                        <td />
+                        <td class="tot-score">0.5</td>
+                        <td />
+                    </tr>
+                    <tr>
+                        <td />
+                        <td>Bonus disciplina</td>
+                        <td />
+                        <td class="tot-score">-0.5</td>
+                        <td />
+                    </tr>
+                    <tr>
+                        <td />
+                        <td>Bonus sufficienze</td>
+                        <td />
+                        <td class="tot-score">-0.5</td>
+                        <td />
+                    </tr>
+                    <tr class="table-group-divider">
+                        <td />
+                        <td>PUNTEGGIO</td>
+                        <td />
+                        <td class="tot-score">70</td>
+                        <td />
+                    </tr>
+                </tfoot>
             </table>
 
             {% endfor %}
-            
+
         </div>
         {% endfor %}
-        
+
     </div>
 </div>
 {% endblock %}

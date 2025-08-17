@@ -281,17 +281,79 @@ def get_couples_from_calendar(seriesid, day):
     #TODO implement
     return [ (1,4) , (2,7) ]
 
-def get_votes(lineup):
+def make_empty_vote_obj(pl_id, cap_id):
+    v_obj = vote.Vote.Vote_Obj()
+    pl = player.Player.objects.get(pk=pl_id)
+    v_obj.Player = pl if pl is not None else None
+    if(pl_id == cap_id):
+        v_obj.Cap = True
+    v_obj.TotVote = 0
+    
+    return v_obj
+
+def make_vote_obj(_vote:vote.Vote, cap_id):
+    v_obj = vote.Vote.Vote_Obj()
+    v_obj.AssH = _vote.AssH
+    v_obj.AssL = _vote.AssL
+    v_obj.AssP = _vote.AssP
+    v_obj.AssS = _vote.AssS
+    v_obj.Player = _vote.Player
+    v_obj.Competition = _vote.Competition
+    v_obj.Day = _vote.Day
+    v_obj.GoalDe = _vote.GoalDe
+    v_obj.GoalSc = _vote.GoalSc
+    v_obj.GoalTa = _vote.GoalTa
+    v_obj.Own = _vote.Own
+    v_obj.PenMi = _vote.PenMi
+    v_obj.PenSa = _vote.PenSa
+    v_obj.PenSc = _vote.PenSc
+    v_obj.Red = _vote.Red
+    v_obj.Sub = _vote.Sub
+    v_obj.SubJ = _vote.SubJ
+    v_obj.Yel = _vote.Yel
+    v_obj.Vote = _vote.Vote
+    v_obj.TotVote = calculate_total(_vote)
+    if(_vote.Player_id == cap_id):
+        v_obj.Cap = True
+
+    return v_obj
+
+def calculate_total(v):
+    sum = v.Vote
+
+    sum += \
+    (v.AssH * C.Scores.ASS_HIGH) + \
+    (v.AssL * C.Scores.ASS_LOW) + \
+    (v.AssP * C.Scores.PENALTY_PROCURED) + \
+    (v.AssS * C.Scores.ASS_STD) + \
+    (v.GoalDe * C.Scores.GOAL_DECIDER) + \
+    (v.GoalTa * C.Scores.GOAL_TAKEN) + \
+    (v.GoalSc * C.Scores.GOAL) + \
+    (v.Own * C.Scores.OWN_GOAL) + \
+    (v.PenMi * C.Scores.PENALTY_MISSED) + \
+    (v.PenSa * C.Scores.PENALTY_SAVED) + \
+    (v.PenSc * C.Scores.PENALTY_SCORED) + \
+    (v.Red * C.Scores.RED) + \
+    (v.Yel * C.Scores.YELLOW)         
+
+    return sum
+
+def get_votes(lineup, home=True):
     if(lineup is None):
         return None
     votes = []
+    votes.append(home)
+    votes.append(lineup.Team.Name)
     line = json.loads(cleanJSON(lineup.Line))
+    cap_id = line['captain']
     for l in line.items():
-        if(l[0] == 'mod'): 
+        if(l[0] == 'mod' or l[0] == 'captain'): 
             continue
         _vote = vote.Vote.objects.filter(Player_id=l[1])
-        if(len(_vote) > 0):
-            votes.append(_vote[0])
+        votes.append(make_vote_obj(_vote[0], cap_id) if len(_vote) > 0 else make_empty_vote_obj(l[1], cap_id))
+    
+    grand_total = sum([v.TotVote for v in votes if type(v) is vote.Vote.Vote_Obj])
+    votes.append(grand_total) 
 
     return votes
     
