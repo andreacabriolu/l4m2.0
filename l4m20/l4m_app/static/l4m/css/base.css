@@ -30,3 +30,9 @@
 .topbar-items {
   display: flex;
 }
+
+.live-toplink {
+  display: flex;
+  align-items: baseline;
+  margin-left: 2.5rem;
+}
