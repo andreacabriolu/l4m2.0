@@ -4,10 +4,10 @@ from django.utils.translation import gettext_lazy as _
 
 
 class Player(models.Model):
-    ROLES = (("PT", _("Portiere")), 
-            ("DF", _("Difensore")), 
-            ("CC", _("Centrocampista")), 
-            ("AT", _("Attaccante")),)
+    ROLES = (("P", _("Portiere")), 
+            ("D", _("Difensore")), 
+            ("C", _("Centrocampista")), 
+            ("A", _("Attaccante")),)
     
     STATUSES = (("A", _("Active")),
                 ("E", _("Estero")),

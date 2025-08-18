@@ -437,7 +437,7 @@ function finalizeBet() {
 	var data = { 'jsonData': jsonData, 'csrfmiddlewaretoken': token };
     $.post("/l4m/auction/finalizeBet/", data, function (response) {
         if(response.startsWith ('error')) {
-            showErrorAlert(response);
+            showPopupErrorAlert(response);
         }
         else {
             $('#'+div_id).addClass('end-official');

@@ -35,4 +35,42 @@ class SendBetResult:
     BET_EXPIRED = -3
     BET_SLOT_EXCEED = -4
 
+class ErrorCodes:
+    ALREADY_OFFICIAL = -1
+
+class Scores:
+    ASS_LOW = 1
+    ASS_HIGH = 1
+    ASS_STD = 1
+    CAP = 0.5
+    GOAL = 3
+    GOAL_TAKEN = -1
+    GOAL_DECIDER = 1
+    PENALTY_SCORED = 2
+    PENALTY_MISSED = -2
+    PENALTY_SAVED = 3
+    OWN_GOAL = -2
+    YELLOW = -0.5
+    RED = -1
+    PENALTY_PROCURED = 1
+
+class Modifier_Scores:
+    _LT_6 = 0
+    _6_625 = 0.5
+    _625_65 = 1
+    _65_675 = 2
+    _675_7 = 3
+    _7_725 = 4
+    _725_75 = 4.5
+    _GT_75 = 6
+
+class Various:
+    BASE_SCORE = 66
+    THRESHOLD_GOL = 6
+
+class PlayerStatus:
+    PLAYING = 0
+    NOT_PLAYED = 1
+    PLAYED = 2
+    YET_TO_PLAY = 3
 

@@ -1,0 +1,70 @@
+.main-div {
+    background-color: whitesmoke;
+}
+
+.live-tables {
+    display: flex;
+    flex-direction: column;
+}
+
+.match-div {
+    display: flex;
+    text-align: center;
+    /* border-radius: 3px;
+    overflow: hidden; */
+}
+
+.table-match {
+    margin-right: 1.5em;
+    margin-bottom: 2.5rem !important;
+}
+
+.captain-td {
+    background: lightslategray !important;
+}
+
+.team-name {
+    text-wrap: nowrap;
+}
+
+.team-score {
+    width: auto;
+    font-weight: bold !important;
+}
+
+.tot-score {
+    font-weight: bolder !important;
+    color: rgb(76, 119, 65) !important;
+    font-size: larger;
+}
+
+.nunito-sans-teamname {
+  font-family: "Nunito Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100,
+    "YTLC" 500;
+}
+
+
+.mozilla-headline-teamname {
+  font-family: "Mozilla Headline", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
+}
+
+table .w-30 { 
+    width:30%; 
+}
+
+
+@media (max-width:800px) {
+    .custom-layout{
+        width: fit-content;
+    }
+  }

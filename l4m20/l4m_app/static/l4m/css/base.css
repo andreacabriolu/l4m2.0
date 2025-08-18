@@ -14,3 +14,25 @@
 .nav-span {
   margin-left: 10%;
 }
+
+.live-link {
+  font-size: larger !important;
+  margin-right: 2em;
+  margin-left: 1.5em;
+  align-content: flex-end;
+}
+
+.team-name {
+  font-size: x-large;
+  margin-left: 2em;
+}
+
+.topbar-items {
+  display: flex;
+}
+
+.live-toplink {
+  display: flex;
+  align-items: baseline;
+  margin-left: 2.5rem;
+}
