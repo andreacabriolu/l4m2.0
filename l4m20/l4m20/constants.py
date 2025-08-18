@@ -54,3 +54,17 @@ class Scores:
     RED = -1
     PENALTY_PROCURED = 1
 
+class Modifier_Scores:
+    _LT_6 = 0
+    _6_625 = 0.5
+    _625_65 = 1
+    _65_675 = 2
+    _675_7 = 3
+    _7_725 = 4
+    _725_75 = 4.5
+    _GT_75 = 6
+
+class Various:
+    BASE_SCORE = 66
+    THRESHOLD_GOL = 6
+
