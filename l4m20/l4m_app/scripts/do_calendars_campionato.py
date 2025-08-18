@@ -5,8 +5,8 @@ from collections import defaultdict
 # REMOTE
 conn = psycopg2.connect(
      dbname="l4m20_db",
-     user="giamba",
-     password="pg_aresu!",
+     user="",
+     password="",
      host="127.0.0.1",
      #host="209.38.103.87",
      port="5432"
