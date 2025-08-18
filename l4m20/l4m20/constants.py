@@ -68,3 +68,9 @@ class Various:
     BASE_SCORE = 66
     THRESHOLD_GOL = 6
 
+class PlayerStatus:
+    PLAYING = 0
+    NOT_PLAYED = 1
+    PLAYED = 2
+    YET_TO_PLAY = 3
+

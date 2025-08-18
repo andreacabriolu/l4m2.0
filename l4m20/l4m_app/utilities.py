@@ -288,7 +288,9 @@ def make_empty_vote_obj(pl_id, cap_id):
     v_obj.Player = pl if pl is not None else None
     if(pl_id == cap_id):
         v_obj.Cap = True
-    v_obj.TotVote = 0
+    v_obj.Vote = 6
+    v_obj.TotVote = 6
+    v_obj.Status = C.PlayerStatus.YET_TO_PLAY #TODO
     
     return v_obj
 
@@ -309,7 +311,8 @@ def make_vote_obj(_vote:vote.Vote, cap_id):
     v_obj.PenSa = _vote.PenSa
     v_obj.PenSc = _vote.PenSc
     v_obj.Red = _vote.Red
-    v_obj.Sub = _vote.Sub
+    v_obj.Sub = _vote.Sub 
+    v_obj.Status = C.PlayerStatus.PLAYED #TODO
     v_obj.SubJ = _vote.SubJ
     v_obj.Yel = _vote.Yel
     v_obj.Vote = _vote.Vote
@@ -381,17 +384,19 @@ def get_votes(lineup, home=True):
 
     line = json.loads(cleanJSON(lineup.Line))
     cap_id = line['captain']
+    cap_vote = 0
     for l in line.items():
         if(l[0] == 'mod' or l[0] == 'captain'): 
             continue
         _vote = vote.Vote.objects.filter(Player_id=l[1])
         votes.append(make_vote_obj(_vote[0], cap_id) if len(_vote) > 0 else make_empty_vote_obj(l[1], cap_id))
-        if(l[1] == cap_id):
-            cap_vote = _vote[0].Vote
-        if (_vote[0].Yel or _vote[0].Red):
-            _noCards = False
-        if(_vote[0].Vote < 6):
-            _noBadVotes = False
+        if len(_vote) > 0:
+            if(l[1] == cap_id):
+                cap_vote = _vote[0].Vote
+            if (_vote[0].Yel or _vote[0].Red):
+                _noCards = False
+            if(_vote[0].Vote < 6):
+                _noBadVotes = False
 
     total = sum([v.TotVote for v in votes if type(v) is vote.Vote.Vote_Obj])
     _items.append(total) 
@@ -407,6 +412,7 @@ def get_votes(lineup, home=True):
     _items.append(val)
     _items.append(modifier)
 
+    #bonus capitano
     if cap_vote > 6:
         bonus_cap = 0.5
     elif cap_vote < 6:
@@ -414,7 +420,9 @@ def get_votes(lineup, home=True):
     else:
         bonus_cap = 0
 
+    #bonus disciplina
     bonus_disc = 0.5 if _noCards else 0
+    #bonus prestazioni
     bonus_prest = 0.5 if _noBadVotes else 0
 
     _items.append(bonus_cap)

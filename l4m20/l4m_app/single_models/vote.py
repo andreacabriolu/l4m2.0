@@ -52,3 +52,5 @@ class Vote(models.Model):
         Sub = int
         Cap = bool
         TotVote = float
+        Status = int
+

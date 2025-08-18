@@ -61,3 +61,10 @@
 table .w-30 { 
     width:30%; 
 }
+
+
+@media (max-width:800px) {
+    .custom-layout{
+        width: fit-content;
+    }
+  }
