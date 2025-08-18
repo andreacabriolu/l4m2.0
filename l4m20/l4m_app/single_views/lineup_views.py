@@ -19,10 +19,10 @@ class LineupView(LoginRequiredMixin, View):
         teamid = user_team['id']
         mods = C.Constant_Lists.Modules
 
-        players_gk = U.get_my_players("P", teamid)
-        players_def = U.get_my_players("D", teamid)
-        players_cc = U.get_my_players("C", teamid)
-        players_fw = U.get_my_players("A", teamid)
+        players_gk = U.get_my_players_filtered("P", teamid)
+        players_def = U.get_my_players_filtered("D", teamid)
+        players_cc = U.get_my_players_filtered("C", teamid)
+        players_fw = U.get_my_players_filtered("A", teamid)
         players_my = list(players_def) + list(players_cc)+ list(players_fw)
         players_all = players_my + list(players_gk)
 
