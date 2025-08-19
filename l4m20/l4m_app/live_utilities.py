@@ -3,6 +3,7 @@ import json
 from l4m20 import constants as C
 import statistics
 from . import utilities as U
+from django.db.models import Q
 
 def get_couples_from_calendar(seriesid, day):
     #TODO: filter per series?
@@ -127,49 +128,85 @@ def check_role_with_module(role, module):
     
     return True
 
+def calculate_new_module(current_module, role_tit, role_ris):
+    role_combo = (role_tit, role_ris)
+    return C.Modules.matrix[current_module][role_combo]
+
 def search_substitute(votes_ris, vote_tit, module):
-    same_role = [v for v in votes_ris if v.Player.Role == vote_tit.Player.Role]
+    good_statuses = [C.PlayerStatus.YET_TO_PLAY, C.PlayerStatus.PLAYING, C.PlayerStatus.PLAYED]
+    same_role = [v for v in votes_ris if v.Player.Role == vote_tit.Player.Role 
+                 and v.Status in good_statuses
+                 and v.ChangedIn != ""]
     
     if len(same_role) > 0: #found
-        return same_role[0]
+        same_role[0].ChangedIn = vote_tit.Player.Surname
+        vote_tit.ChangedOut = same_role[0].Player.Surname
+        return same_role[0], module
     else: #try other role, first player yet to play or with vote   
         for vote_ris in votes_ris:
-            if(vote_ris.Status in [C.PlayerStatus.PLAYING, C.PlayerStatus.YET_TO_PLAY] and 
+            if(vote_ris.Status in good_statuses and 
+               vote_ris.Player.Role != 'P' and
                check_role_with_module(vote_ris.Player.Role, module)
                ):
-                return vote_ris
+                vote_ris.ChangedIn = vote_tit.Player.Surname
+                vote_tit.ChangedOut = vote_ris.Player.Surname
+                module = calculate_new_module(module, vote_tit.Player.Role, vote_ris.Player.Role)
+                return vote_ris, module
 
     null_vote = make_null_vote_obj(vote_tit.Player.id)
-    return null_vote
+    return null_vote, module
 
-def get_votes(lineup, home=True):
+def check_valid_module_change_for_modifier(orig, current):
+    if(orig == current): return True
+    
+    if(orig in [C.Modules._433, C.Modules._442, C.Modules._451] and 
+       current in [C.Modules._433, C.Modules._442, C.Modules._451]):
+        return True
+    
+    if(orig in [C.Modules._532, C.Modules._541] and 
+       current in [C.Modules._532, C.Modules._541]):
+        return True
+    
+    if(orig in [C.Modules._343, C.Modules._352]):
+        return False
+
+    #TODO: manage modifier change from 5 to 4
+
+def get_votes(lineup, current_day, my_teamid, home=True):
     votes_tit = []
     votes_ris = []
     module = C.Modules._442
     _items = []
 
     if(type(lineup) is str): #NO SHOW
-        _items.append(home)
+        _items.append("noshow")
         _items.append(lineup)
         return [votes_tit, _items, votes_ris] 
 
     _items.append(home)
     _items.append(lineup.Team.Name)
-    _noCards = True
-    _noBadVotes = True
 
     line = json.loads(U.cleanJSON(lineup.Line))
+
+    if(lineup.HideLineup and lineup.Team.id != my_teamid): #HIDDEN LINEUP
+        _items.append(home)
+        _items.append(lineup)
+        return [votes_tit, _items, votes_ris]
+
     cap_id = line['captain'] if 'captain' in line.keys() else 0
+    orig_module = line['mod'].replace('-','')
     cap_vote = 0
     for l in line.items(): #loop players in lineup
-        if(l[0] == 'mod'): # or l[0] == 'captain'): 
-            module = l[0] 
+        if l[0] == 'captain':
+            continue
+        if(l[0] == 'mod'):  
+            module = l[1].replace('-','')
             continue
         
         pl = player.Player.objects.get(pk=l[1])
         already_played = check_already_played(pl.RealTeam)
 
-        _vote = vote.Vote.objects.filter(Player_id=l[1])
+        _vote = vote.Vote.objects.filter(Q(Player_id=l[1]) & Q(Day=current_day))
         if(l[0].endswith('tit')):
             votes_tit.append(make_vote_obj(_vote[0], cap_id, already_played) if len(_vote) > 0 else \
                              make_empty_vote_obj(l[1], cap_id, already_played))
@@ -180,30 +217,38 @@ def get_votes(lineup, home=True):
         if len(_vote) > 0:
             if(l[1] == cap_id):
                 cap_vote = _vote[0].Vote
-            if (_vote[0].Yel or _vote[0].Red):
-                _noCards = False
-            if(_vote[0].Vote < 6):
-                _noBadVotes = False
 
     #manage module change HERE
-    votes_tot = votes_tit + votes_ris
-    is_completed = C.PlayerStatus.YET_TO_PLAY not in [v.Status for v in votes_tot] and \
-                   C.PlayerStatus.PLAYING not in [v.Status for v in votes_tot]
+    # votes_tot = votes_tit + votes_ris
+    # is_completed = C.PlayerStatus.YET_TO_PLAY not in [v.Status for v in votes_tot] and \
+    #                C.PlayerStatus.PLAYING not in [v.Status for v in votes_tot]
     
     valid_votes = []
     ## get the 11 valid votes ###################
     for vote_tit in votes_tit:
         if(vote_tit.Status == C.PlayerStatus.NOT_PLAYED):
-            sub = search_substitute(votes_ris, vote_tit, module)
+            sub, module = search_substitute(votes_ris, vote_tit, module)
+            if(sub.Status == C.PlayerStatus.NO_PLAY_AT_ALL): 
+                vote_tit.Status = C.PlayerStatus.NO_PLAY_AT_ALL
+            vote_tit.Vote = None
+            vote_tit.TotVote = None
 
-    votes = votes_tit
-    total = sum([v.TotVote for v in votes])
+            if(sub.Status not in [C.PlayerStatus.NO_PLAY_AT_ALL]):
+                valid_votes.append(sub)
+                t_i = votes_tit.index(vote_tit)
+                t_r = votes_ris.index(sub)
+                votes_tit[t_i], votes_ris[t_r] = votes_ris[t_r], votes_tit[t_i] #swap
+
+        elif(vote_tit.Status in [C.PlayerStatus.PLAYED, C.PlayerStatus.PLAYING, C.PlayerStatus.YET_TO_PLAY]):
+            valid_votes.append(vote_tit)
+
+    total = sum([v.TotVote for v in valid_votes])
     _items.append(total) 
 
     #modificatore
-    def_votes = [v.Vote for v in votes if v.Player.Role=='D']
-    if (len(def_votes) >= 4): 
-        gk_vote = [v.Vote for v in votes if v.Player.Role=='P']
+    def_votes = [v.Vote for v in valid_votes if v.Player.Role=='D']
+    if (len(def_votes) >= 4 and check_valid_module_change_for_modifier(orig_module, module)): 
+        gk_vote = [v.Vote for v in valid_votes if v.Player.Role=='P']
         val, modifier = calculate_modifier(gk_vote, def_votes, lineup.ModNoGk)
     else:
         val, modifier = 0 , 0
@@ -219,6 +264,9 @@ def get_votes(lineup, home=True):
     else:
         bonus_cap = 0
 
+    _noCards = len([v for v in valid_votes if v.Red or v.Yel]) == 0
+    _noBadVotes = len([v for v in valid_votes if v.Vote < 6]) == 0
+
     #bonus disciplina
     bonus_disc = 0.5 if _noCards else 0
     #bonus prestazioni
@@ -233,6 +281,11 @@ def get_votes(lineup, home=True):
 
     n_goals = calculate_n_goals(grand_total)
     _items.append(n_goals)
+    _items.append(module)
+    if(orig_module != module):
+        _items.append(orig_module)
+
+    votes_tit.sort(key=lambda vote:C.Constant_Dicts.RoleInts[vote.Player.Role])
 
     return [votes_tit, _items, votes_ris]
     

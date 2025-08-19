@@ -17,8 +17,9 @@ function showInfoAlert(response) {
 
 
 window.addEventListener('DOMContentLoaded', event => {
-const token = Cookies.get('csrftoken');
-
+// const token = Cookies.get('csrftoken');
+const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
 
 
 })

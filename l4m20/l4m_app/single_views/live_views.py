@@ -34,8 +34,8 @@ class LiveView(LoginRequiredMixin, View):
         all_votes = []
 
         for lineup_couple in lineup_couples:
-            votes_home = LU.get_votes(lineup_couple[0])
-            votes_away = LU.get_votes(lineup_couple[1], home=False)
+            votes_home = LU.get_votes(lineup_couple[0], current_day, teamid)
+            votes_away = LU.get_votes(lineup_couple[1], current_day, teamid, home=False)
             all_votes.append( \
                 [votes_home, votes_away]
             )
