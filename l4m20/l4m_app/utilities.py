@@ -112,7 +112,6 @@ def get_my_best_bets(teamid, marketid):
 	
     bets = bet.Bet.objects.\
         filter(Q(Team_id=teamid) & Q(Market_id=marketid)).\
-        exclude(Q(Player_id=idq)).\
         values('Amount','Player_id','Player_id__Surname','Expiration_Date','Slot',
                'IsRaised','IsExpired','id','Team_id','IsOfficial','Carognata')
                
