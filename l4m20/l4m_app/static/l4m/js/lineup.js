@@ -166,6 +166,14 @@ function adjust_captain(reset=true) {
 
 }
 
+function load_options(lineup) {
+    var hideLineup = lineup[2];
+    var modNoGk = lineup[3];
+
+    $('#hideLineupSwitch').attr('checked', hideLineup);
+    $('#modNoportSwitch').attr('checked', modNoGk);
+}
+
 function load_lineup(lineup) {
     for (item in lineup) {
         if (item == "mod") { continue; }
@@ -195,6 +203,7 @@ function load_last_lineup() {
                 $('#mods').val(mod);
                 manage_mod(mod);
                 load_lineup(last_lineup[0]);
+                load_options(last_lineup);
                 adjust_captain(reset=false);
             }
             catch {
@@ -232,10 +241,10 @@ window.addEventListener('DOMContentLoaded', event => {
 
     $('#btnSaveLineup').on('click', function () {
         var allFilled = true;
-        var titSlots = {};
+        var playerSlots = {};
         var options = {};
 
-        titSlots = {
+        playerSlots = {
             mod: $("#mods").val()
         };
 
@@ -252,17 +261,23 @@ window.addEventListener('DOMContentLoaded', event => {
             if ($(this).get(0).hidden == false) {
                 slot = $(this).children().get(0).id;
                 id = $(this).children().children('option:selected').data().id;
-                titSlots[slot] = id;
+                playerSlots[slot] = id;
             }
         });
 
-        if($('#captain').val() == "") {
+        $('#secondary_lineup').children().each(function () {
+            slot = $(this).children().get(0).id;
+            id = $(this).children().children('option:selected').data().id;
+            playerSlots[slot] = id;
+        });
+
+        if($('#captain').val() == null) {
             // showPopupErrorAlert('IMPOSTA IL CAPITANO'); TODO: check with giamba
             // return false;
         }
 
-        if($('#captain').val() != "") {
-            titSlots["captain"] = $('#captain').children('option:selected').data().id;
+        if($('#captain').val() != null) {
+            playerSlots["captain"] = $('#captain').children('option:selected').data().id;
         }
 
         if (allFilled) {
@@ -271,10 +286,10 @@ window.addEventListener('DOMContentLoaded', event => {
                 modNoGk: $('#modNoportSwitch').is(':checked'),
             };
 
-            jsonTits = JSON.stringify(titSlots);
+            jsonPlayers = JSON.stringify(playerSlots);
             jsonOpts = JSON.stringify(options);
 
-            var data = { 'tits': jsonTits, 'options': jsonOpts, 'csrfmiddlewaretoken': token };
+            var data = { 'tits': jsonPlayers, 'options': jsonOpts, 'csrfmiddlewaretoken': token };
 
             $.post("/l4m/lineup/save/", data, function (response) {
                 if (response.startsWith('error')) {
