@@ -137,7 +137,8 @@ def get_votes(lineup, home=True):
     cap_id = line['captain'] if 'captain' in line.keys() else 0
     cap_vote = 0
     for l in line.items(): #loop players in lineup
-        if(l[0] == 'mod' or l[0] == 'captain'): 
+        if(l[0] == 'mod'): # or l[0] == 'captain'): 
+            module = l[0] 
             continue
         
         pl = player.Player.objects.get(pk=l[1])
@@ -168,7 +169,7 @@ def get_votes(lineup, home=True):
     ## get the 11 valid votes ###################
     for vote_tit in votes_tit:
         if(vote_tit.Status == C.PlayerStatus.NOT_PLAYED):
-            search_substitute(votes_ris, vote_tit.Player.Role)
+            search_substitute(votes_ris, vote_tit.Player.Role, module)
 
     votes = votes_tit
     total = sum([v.TotVote for v in votes])
