@@ -7,6 +7,7 @@ class MatchesResults(models.Model):
 
     MatchesCalendar = models.ForeignKey(on_delete=models.CASCADE,to='l4m_app.MatchesCalendar', null=True)
     Team = models.ForeignKey(on_delete=models.CASCADE,to=C.Constant_Strings.team, null=True)    
+    Series = models.ForeignKey(on_delete=models.CASCADE,to=C.Constant_Strings.series, null=True)    
     Fp = models.FloatField()    # Fp
     FpO = models.FloatField()    # Fp Overtime
     Pen = models.IntegerField()    # Penalties

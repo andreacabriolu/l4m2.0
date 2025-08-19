@@ -7,6 +7,7 @@ import json
 from django.db.models import Q
 
 from .. import utilities as U
+from .. import live_utilities as LU
 from ..models import *
 from l4m20 import constants as C
 
@@ -27,14 +28,14 @@ class LiveView(LoginRequiredMixin, View):
         
         last_lineups_d={teamid:last_lineups_d.pop(teamid), **last_lineups_d} #get user lineup as first
 
-        couples = U.get_couples_from_calendar(seriesid, current_day)
+        couples = LU.get_couples_from_calendar(seriesid, current_day)
         lineup_couples = [ (last_lineups_d[c[0]], last_lineups_d[c[1]]) for c in couples ]
 
         all_votes = []
 
         for lineup_couple in lineup_couples:
-            votes_home = U.get_votes(lineup_couple[0])
-            votes_away = U.get_votes(lineup_couple[1], home=False)
+            votes_home = LU.get_votes(lineup_couple[0])
+            votes_away = LU.get_votes(lineup_couple[1], home=False)
             all_votes.append( \
                 [votes_home, votes_away]
             )

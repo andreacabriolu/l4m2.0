@@ -37,24 +37,24 @@ class AllAuctionsView(LoginRequiredMixin, View):
         balances = {}
         
         for _team in filtered_teams:
-	        # Get id of quarantined players from this team id
             qplayer = squads.Squads.objects.\
-                filter(Q(Team_id=_team.id) & Q(Quarantine=True)).first()
+             filter(Q(Team_id=_team.id) & Q(Quarantine=True)).first()
+            
             if(qplayer):
-                idq=qplayer.Player_id
-                surq=qplayer.Player.Surname
-                bet=qplayer.Last_bet
+                idq = qplayer.Player_id
+                surq = qplayer.Player.Surname
+                bet = qplayer.Last_bet
                 if(bet):
-                   qam=bet.Amount
+                   qam = bet.Amount
             else:
-                idq=-1    
-                surq=''
-                qam=''
-
-            lp = list(all_team_players.filter(Q(bet__Team_id=_team.id) & Q(Role=C.Constant_Dicts.RoleChars['POR'])).exclude(id=idq))
-            ld = list(all_team_players.filter(Q(bet__Team_id=_team.id) & Q(Role=C.Constant_Dicts.RoleChars['DIF'])).exclude(id=idq))
-            lc = list(all_team_players.filter(Q(bet__Team_id=_team.id) & Q(Role=C.Constant_Dicts.RoleChars['CC'])).exclude(id=idq))
-            la = list(all_team_players.filter(Q(bet__Team_id=_team.id) & Q(Role=C.Constant_Dicts.RoleChars['ATT'])).exclude(id=idq))
+                idq = -1
+                surq = '-'
+                qam = ''
+                        
+            lp = list(all_team_players.filter(Q(bet__Team_id=_team.id) & Q(Role=C.Constant_Dicts.RoleChars['POR'])).exclude(Q(id=idq)))
+            ld = list(all_team_players.filter(Q(bet__Team_id=_team.id) & Q(Role=C.Constant_Dicts.RoleChars['DIF'])).exclude(Q(id=idq)))
+            lc = list(all_team_players.filter(Q(bet__Team_id=_team.id) & Q(Role=C.Constant_Dicts.RoleChars['CC'])).exclude(Q(id=idq)))
+            la = list(all_team_players.filter(Q(bet__Team_id=_team.id) & Q(Role=C.Constant_Dicts.RoleChars['ATT'])).exclude(Q(id=idq)))
             
             balances_ = U.get_balance(_team.id)
             if len(balances_) <= 0: 

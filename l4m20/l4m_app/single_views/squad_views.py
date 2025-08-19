@@ -14,10 +14,10 @@ class SquadView(LoginRequiredMixin, View):
         tname = user_team['Name']
 
         # Get all players for the team, any role
-        players = list(U.get_my_players('P', tid))  # pass '' or modify to get all roles
-        players += list(U.get_my_players('D', tid))  # pass '' or modify to get all roles
-        players += list(U.get_my_players('C', tid))  # pass '' or modify to get all roles
-        players += list(U.get_my_players('A', tid))  # pass '' or modify to get all roles
+        players = list(U.get_my_players_filtered('P', tid))  # pass '' or modify to get all roles
+        players += list(U.get_my_players_filtered('D', tid))  # pass '' or modify to get all roles
+        players += list(U.get_my_players_filtered('C', tid))  # pass '' or modify to get all roles
+        players += list(U.get_my_players_filtered('A', tid))  # pass '' or modify to get all roles
 
         context = {
             'team_name': tname,
