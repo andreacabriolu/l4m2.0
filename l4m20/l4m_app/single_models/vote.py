@@ -8,6 +8,7 @@ class Vote(models.Model):
 
     Competition = models.ForeignKey(on_delete=models.CASCADE,to=C.Constant_Strings.competition, null=True)
     Player = models.ForeignKey(on_delete=models.CASCADE, to=C.Constant_Strings.player, null=True)
+    RealTeam = models.ForeignKey(on_delete=models.CASCADE,to=C.Constant_Strings.real_team, null=True)
     Day = models.IntegerField()              # day of play
     Vote = models.FloatField(default=0.0)    # vote
     GoalSc = models.IntegerField(default=0)  # gol scored

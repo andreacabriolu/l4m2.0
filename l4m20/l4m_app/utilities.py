@@ -69,9 +69,21 @@ def get_players_my_series(filter_role, teamid, filtered_teams_ids):
 
         
 def check_max_n_bets(teamid, role):
+    qplayer = squads.Squads.objects.\
+      filter(Q(Team_id=teamid) & Q(Quarantine=True)).first()
+    
+    if(qplayer):
+        idq = qplayer.Player_id   
+    else:
+        idq = -1
+
     num_bets = bet.Bet.objects.\
         filter(Q(Team_id=teamid) & Q(Market_id=get_my_market(teamid).id) & Q(Player__Role=role)).\
+        exclude(Q(Player_id = idq)).\
         aggregate(Count('id'))
+        
+    print(num_bets)    
+    print(idq)    
     max_num = \
             C.NUM_GK if role == "P" else \
             C.NUM_DEF if role == "D" else \
@@ -96,11 +108,21 @@ def get_balance_for_bets(teamid, balance_max):
     return ((balance_max - sum['Amount__sum'] - num_missing_slots) if sum['Amount__sum'] is not None else balance_max - num_missing_slots)
 
 def get_my_best_bets(teamid, marketid):
-    return bet.Bet.objects.\
+	
+    qplayer = squads.Squads.objects.\
+      filter(Q(Team_id=teamid) & Q(Quarantine=True)).first()
+	
+    bets = bet.Bet.objects.\
         filter(Q(Team_id=teamid) & Q(Market_id=marketid)).\
         values('Amount','Player_id','Player_id__Surname','Expiration_Date','Slot',
                'IsRaised','IsExpired','id','Team_id','IsOfficial','Carognata')
-
+               
+    if(qplayer is not None):
+       bets = bets.exclude(Q(Player_id=qplayer.Player_id))
+       
+    return bets   
+       
+       
 def list_my_best_bets(mbb):
     ls = list(mbb).__str__()
     lsr = ls.replace('\'','"')
