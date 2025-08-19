@@ -279,8 +279,10 @@ def get_my_opponent(teamid, day):
     return 4
 
 def get_couples_from_calendar(seriesid, day):
-    #TODO implement
-    return [ (1,4) ]
+    #TODO: filter per series?
+    matches_ = matches_calendar.MatchesCalendar.objects.filter(CompetitionCalendar__Day=day)
+    couples = [(match.HomeTeam.id, match.AwayTeam.id) for match in matches_]
+    return couples
 
 def make_empty_vote_obj(pl_id, cap_id):
     v_obj = vote.Vote.Vote_Obj()
@@ -373,11 +375,15 @@ def calculate_n_goals(grand_total):
     return int(diff / C.Various.THRESHOLD_GOL) + 1
 
 def get_votes(lineup, home=True):
-    if(lineup is None):
-        return None
     votes_tit = []
     votes_ris = []
     _items = []
+
+    if(type(lineup) is str): #NO SHOW
+        _items.append(home)
+        _items.append(lineup)
+        return [votes_tit, _items, votes_ris] 
+
     _items.append(home)
     _items.append(lineup.Team.Name)
     _noCards = True

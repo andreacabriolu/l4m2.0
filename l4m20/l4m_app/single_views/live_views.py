@@ -23,7 +23,7 @@ class LiveView(LoginRequiredMixin, View):
         last_lineups_d = {}
         for t in series_teams:
             l = U.get_last_lineup(t, current_day)
-            last_lineups_d[t.id] = l[0] if len(l) > 0 else None
+            last_lineups_d[t.id] = l[0] if len(l) > 0 else t.Name #TODO: get last valid lineup
         
         last_lineups_d={teamid:last_lineups_d.pop(teamid), **last_lineups_d} #get user lineup as first
 
