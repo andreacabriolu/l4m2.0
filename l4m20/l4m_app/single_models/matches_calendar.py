@@ -6,6 +6,7 @@ from django.utils.translation import gettext_lazy as _
 class MatchesCalendar(models.Model):
 
     CompetitionCalendar = models.ForeignKey(on_delete=models.CASCADE,to='l4m_app.CompetitionCalendar', null=True)
+    Series = models.ForeignKey(on_delete=models.CASCADE,to=C.Constant_Strings.series, null=True)    
     HomeTeam = models.ForeignKey(on_delete=models.CASCADE,to=C.Constant_Strings.team, null=True, related_name='home_team')
     AwayTeam = models.ForeignKey(on_delete=models.CASCADE,to=C.Constant_Strings.team, null=True, related_name='away_team')    
 
