@@ -37,14 +37,29 @@ class AllAuctionsView(LoginRequiredMixin, View):
         balances = {}
         
         for _team in filtered_teams:
-            lp = list(all_team_players.filter(Q(bet__Team_id=_team.id) & Q(Role=C.Constant_Dicts.RoleChars['POR'])))
-            ld = list(all_team_players.filter(Q(bet__Team_id=_team.id) & Q(Role=C.Constant_Dicts.RoleChars['DIF'])))
-            lc = list(all_team_players.filter(Q(bet__Team_id=_team.id) & Q(Role=C.Constant_Dicts.RoleChars['CC'])))
-            la = list(all_team_players.filter(Q(bet__Team_id=_team.id) & Q(Role=C.Constant_Dicts.RoleChars['ATT'])))
+	        # Get id of quarantined players from this team id
+            qplayer = squads.Squads.objects.\
+                filter(Q(Team_id=_team.id) & Q(Quarantine=True)).first()
+            if(qplayer):
+                idq=qplayer.Player_id
+                surq=qplayer.Player.Surname
+                bet=qplayer.Last_bet
+                if(bet):
+                   qam=bet.Amount
+            else:
+                idq=-1    
+                surq=''
+                qam=''
+
+            lp = list(all_team_players.filter(Q(bet__Team_id=_team.id) & Q(Role=C.Constant_Dicts.RoleChars['POR'])).exclude(id=idq))
+            ld = list(all_team_players.filter(Q(bet__Team_id=_team.id) & Q(Role=C.Constant_Dicts.RoleChars['DIF'])).exclude(id=idq))
+            lc = list(all_team_players.filter(Q(bet__Team_id=_team.id) & Q(Role=C.Constant_Dicts.RoleChars['CC'])).exclude(id=idq))
+            la = list(all_team_players.filter(Q(bet__Team_id=_team.id) & Q(Role=C.Constant_Dicts.RoleChars['ATT'])).exclude(id=idq))
             
             balances_ = U.get_balance(_team.id)
             if len(balances_) <= 0: 
                 continue
+
 
             balance = balances_[0]
             balance_for_bets = U.get_balance_for_bets(_team.id, balance['Purchases_max'])
@@ -57,6 +72,7 @@ class AllAuctionsView(LoginRequiredMixin, View):
                   {'Surname': 'Restante', 'Name': None, 'bet__Team_id': _team.id, 'bet__Amount': (amount - current_bets_amount), 'bet__IsExpired': True, 'bet__Carognata': False, 'bet__Expiration_Date': '','id':"0", 'Role': 'I'},
                   {'Surname': 'Puntata Massima', 'Name': None, 'bet__Team_id': _team.id, 'bet__Amount': pmax, 'bet__IsExpired': True, 'bet__Carognata': False, 'bet__Expiration_Date': '','id':"0", 'Role': 'I'},
                   {'Surname': 'Carognate', 'Name': None, 'bet__Team_id': _team.id, 'bet__Amount': balance['N_carognate'], 'bet__IsExpired': True, 'bet__Carognata': False, 'bet__Expiration_Date': '','id':"0", 'Role': 'I'},
+                  {'Surname': 'Q: '+str(surq), 'Name': None, 'bet__Team_id': _team.id, 'bet__Amount': qam, 'bet__IsExpired': True, 'bet__Carognata': False, 'bet__Expiration_Date': '','id':"0", 'Role': 'I'},
                   ]
             
             lp = U.complete_list(lp, C.NUM_GK, C.Constant_Dicts.RoleChars['POR'])

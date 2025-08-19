@@ -69,9 +69,16 @@ def get_players_my_series(filter_role, teamid, filtered_teams_ids):
 
         
 def check_max_n_bets(teamid, role):
+	# Get id of quarantined players from this team id
+    qplayer = squads.Squads.objects.\
+        filter(Q(Team_id=teamid) & Q(Quarantine=True)).first()
+    idq=qplayer.Player_id    
+        
     num_bets = bet.Bet.objects.\
         filter(Q(Team_id=teamid) & Q(Market_id=get_my_market(teamid).id) & Q(Player__Role=role)).\
+        exclude(Q(Player__id=idq)).\
         aggregate(Count('id'))
+        
     max_num = \
             C.NUM_GK if role == "P" else \
             C.NUM_DEF if role == "D" else \
@@ -96,8 +103,14 @@ def get_balance_for_bets(teamid, balance_max):
     return ((balance_max - sum['Amount__sum'] - num_missing_slots) if sum['Amount__sum'] is not None else balance_max - num_missing_slots)
 
 def get_my_best_bets(teamid, marketid):
+	# Get id of quarantined players from this team id
+    qplayer = squads.Squads.objects.\
+        filter(Q(Team_id=teamid) & Q(Quarantine=True)).first()
+    idq=qplayer.Player_id    
+
     return bet.Bet.objects.\
         filter(Q(Team_id=teamid) & Q(Market_id=marketid)).\
+        exclude(Q(Player_id=idq)).\
         values('Amount','Player_id','Player_id__Surname','Expiration_Date','Slot',
                'IsRaised','IsExpired','id','Team_id','IsOfficial','Carognata')
 
@@ -230,13 +243,19 @@ def finalize_bet(data):
 def get_user_team(userid):
     return team.Team.objects.filter(Users__id=userid).values('id','Name')[0]
 
-def get_my_players(filter_role, teamid):
-
+def get_my_players_filtered(filter_role, teamid):
+    # list all players for teamid
     return squads.Squads.objects.\
         filter(Team_id=teamid).\
         filter(Player__Role=filter_role).\
         values('id','Player__id','Player__Surname','Player__RealTeam__Name','Amount','Player__Role').\
         order_by('Player__Surname')
+
+def get_my_players(teamid):
+    # list all players for teamid
+    return squads.Squads.objects.\
+        filter(Team_id=teamid).\
+        values('id','Player__id','Player__Surname','Player__RealTeam__Name','Amount','Player__Role')
 
 
 def complete_list(l, num_max, role):
@@ -279,10 +298,8 @@ def get_my_opponent(teamid, day):
     return 4
 
 def get_couples_from_calendar(seriesid, day):
-    #TODO: filter per series?
-    matches_ = matches_calendar.MatchesCalendar.objects.filter(CompetitionCalendar__Day=day)
-    couples = [(match.HomeTeam.id, match.AwayTeam.id) for match in matches_]
-    return couples
+    #TODO implement
+    return [ (1,4) ]
 
 def make_empty_vote_obj(pl_id, cap_id):
     v_obj = vote.Vote.Vote_Obj()
@@ -375,15 +392,10 @@ def calculate_n_goals(grand_total):
     return int(diff / C.Various.THRESHOLD_GOL) + 1
 
 def get_votes(lineup, home=True):
-    votes_tit = []
-    votes_ris = []
+    if(lineup is None):
+        return None
+    votes = []
     _items = []
-
-    if(type(lineup) is str): #NO SHOW
-        _items.append(home)
-        _items.append(lineup)
-        return [votes_tit, _items, votes_ris] 
-
     _items.append(home)
     _items.append(lineup.Team.Name)
     _noCards = True
@@ -395,13 +407,8 @@ def get_votes(lineup, home=True):
     for l in line.items():
         if(l[0] == 'mod' or l[0] == 'captain'): 
             continue
-
         _vote = vote.Vote.objects.filter(Player_id=l[1])
-        if(l[0].endswith('tit')):
-            votes_tit.append(make_vote_obj(_vote[0], cap_id) if len(_vote) > 0 else make_empty_vote_obj(l[1], cap_id))
-        else:
-            votes_ris.append(make_vote_obj(_vote[0], cap_id) if len(_vote) > 0 else make_empty_vote_obj(l[1], cap_id))
-
+        votes.append(make_vote_obj(_vote[0], cap_id) if len(_vote) > 0 else make_empty_vote_obj(l[1], cap_id))
         if len(_vote) > 0:
             if(l[1] == cap_id):
                 cap_vote = _vote[0].Vote
@@ -410,7 +417,6 @@ def get_votes(lineup, home=True):
             if(_vote[0].Vote < 6):
                 _noBadVotes = False
 
-    votes = votes_tit
     total = sum([v.TotVote for v in votes if type(v) is vote.Vote.Vote_Obj])
     _items.append(total) 
 
@@ -448,5 +454,5 @@ def get_votes(lineup, home=True):
     n_goals = calculate_n_goals(grand_total)
     _items.append(n_goals)
 
-    return [votes_tit, _items, votes_ris]
+    return [votes, _items]
     
