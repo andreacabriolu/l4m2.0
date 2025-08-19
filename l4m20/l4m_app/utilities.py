@@ -375,7 +375,8 @@ def calculate_n_goals(grand_total):
 def get_votes(lineup, home=True):
     if(lineup is None):
         return None
-    votes = []
+    votes_tit = []
+    votes_ris = []
     _items = []
     _items.append(home)
     _items.append(lineup.Team.Name)
@@ -388,8 +389,13 @@ def get_votes(lineup, home=True):
     for l in line.items():
         if(l[0] == 'mod' or l[0] == 'captain'): 
             continue
+
         _vote = vote.Vote.objects.filter(Player_id=l[1])
-        votes.append(make_vote_obj(_vote[0], cap_id) if len(_vote) > 0 else make_empty_vote_obj(l[1], cap_id))
+        if(l[0].endswith('tit')):
+            votes_tit.append(make_vote_obj(_vote[0], cap_id) if len(_vote) > 0 else make_empty_vote_obj(l[1], cap_id))
+        else:
+            votes_ris.append(make_vote_obj(_vote[0], cap_id) if len(_vote) > 0 else make_empty_vote_obj(l[1], cap_id))
+
         if len(_vote) > 0:
             if(l[1] == cap_id):
                 cap_vote = _vote[0].Vote
@@ -398,6 +404,7 @@ def get_votes(lineup, home=True):
             if(_vote[0].Vote < 6):
                 _noBadVotes = False
 
+    votes = votes_tit
     total = sum([v.TotVote for v in votes if type(v) is vote.Vote.Vote_Obj])
     _items.append(total) 
 
@@ -435,5 +442,5 @@ def get_votes(lineup, home=True):
     n_goals = calculate_n_goals(grand_total)
     _items.append(n_goals)
 
-    return [votes, _items]
+    return [votes_tit, _items, votes_ris]
     
