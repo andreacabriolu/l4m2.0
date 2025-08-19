@@ -10,6 +10,18 @@ def get_couples_from_calendar(seriesid, day):
     couples = [(match.HomeTeam.id, match.AwayTeam.id) for match in matches_]
     return couples
 
+def make_null_vote_obj(pl_id, cap_id=None):
+    v_obj = vote.Vote.Vote_Obj()
+    pl = player.Player.objects.get(pk=pl_id)
+    v_obj.Player = pl if pl is not None else None
+    if(pl_id == cap_id):
+        v_obj.Cap = True
+    v_obj.Vote = 0
+    v_obj.TotVote = 0
+    v_obj.Status = C.PlayerStatus.NO_PLAY_AT_ALL
+    
+    return v_obj
+
 def make_empty_vote_obj(pl_id, cap_id, already_played):
     v_obj = vote.Vote.Vote_Obj()
     pl = player.Player.objects.get(pk=pl_id)
@@ -105,17 +117,30 @@ def check_already_played(real_team):
     #TODO check if votes in the current day contains the player real team
     return True
 
-def search_substitute(votes_ris, role):
-    same_role = [v for v in votes_ris if v.Player.Role == role]
+def check_role_with_module(role, module):
+    if(role == 'D' and module in [C.Modules._532, C.Modules._541]):
+        return False
+    if(role == 'C' and module in [C.Modules._352, C.Modules._451]):
+        return False
+    if(role == 'A' and module in [C.Modules._343, C.Modules._433]):
+        return False
+    
+    return True
+
+def search_substitute(votes_ris, vote_tit, module):
+    same_role = [v for v in votes_ris if v.Player.Role == vote_tit.Player.Role]
     
     if len(same_role) > 0: #found
         return same_role[0]
     else: #try other role, first player yet to play or with vote   
         for vote_ris in votes_ris:
-            if(vote_ris.Status in [C.PlayerStatus.PLAYING, C.PlayerStatus.YET_TO_PLAY]):
+            if(vote_ris.Status in [C.PlayerStatus.PLAYING, C.PlayerStatus.YET_TO_PLAY] and 
+               check_role_with_module(vote_ris.Player.Role, module)
+               ):
                 return vote_ris
 
-    return -1
+    null_vote = make_null_vote_obj(vote_tit.Player.id)
+    return null_vote
 
 def get_votes(lineup, home=True):
     votes_tit = []
@@ -169,7 +194,7 @@ def get_votes(lineup, home=True):
     ## get the 11 valid votes ###################
     for vote_tit in votes_tit:
         if(vote_tit.Status == C.PlayerStatus.NOT_PLAYED):
-            search_substitute(votes_ris, vote_tit.Player.Role, module)
+            sub = search_substitute(votes_ris, vote_tit, module)
 
     votes = votes_tit
     total = sum([v.TotVote for v in votes])

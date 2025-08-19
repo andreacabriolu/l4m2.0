@@ -73,6 +73,7 @@ class PlayerStatus:
     NOT_PLAYED = 1
     PLAYED = 2
     YET_TO_PLAY = 3
+    NO_PLAY_AT_ALL = 4
 
 class Modules:
     _352 = '3-5-2'
