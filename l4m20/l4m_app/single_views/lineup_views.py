@@ -83,7 +83,8 @@ class GetLastLineupView(View):
           if (not last_lineup):
               return HttpResponse("")
           else: 
-              ret_json = json.dumps([last_lineup[0].Line, last_lineup[0].Timestamp.__str__()])
+              ret_json = json.dumps([last_lineup[0].Line, last_lineup[0].Timestamp.__str__(), 
+                                     last_lineup[0].HideLineup, last_lineup[0].ModNoGk])
               return HttpResponse(U.cleanJSON(ret_json))        
         except Exception as e:
             return HttpResponse(f"error: {e}")

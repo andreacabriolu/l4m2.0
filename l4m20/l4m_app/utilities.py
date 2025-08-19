@@ -69,9 +69,19 @@ def get_players_my_series(filter_role, teamid, filtered_teams_ids):
 
         
 def check_max_n_bets(teamid, role):
+    qplayer = squads.Squads.objects.\
+      filter(Q(Team_id=teamid) & Q(Quarantine=True)).first()
+    
+    if(qplayer):
+        idq = qplayer.Player_id   
+    else:
+        idq = -1
+
     num_bets = bet.Bet.objects.\
         filter(Q(Team_id=teamid) & Q(Market_id=get_my_market(teamid).id) & Q(Player__Role=role)).\
+        exclude(Q(Player_id = idq)).\
         aggregate(Count('id'))
+        
     max_num = \
             C.NUM_GK if role == "P" else \
             C.NUM_DEF if role == "D" else \
@@ -96,11 +106,21 @@ def get_balance_for_bets(teamid, balance_max):
     return ((balance_max - sum['Amount__sum'] - num_missing_slots) if sum['Amount__sum'] is not None else balance_max - num_missing_slots)
 
 def get_my_best_bets(teamid, marketid):
-    return bet.Bet.objects.\
+	
+    qplayer = squads.Squads.objects.\
+      filter(Q(Team_id=teamid) & Q(Quarantine=True)).first()
+	
+    bets = bet.Bet.objects.\
         filter(Q(Team_id=teamid) & Q(Market_id=marketid)).\
         values('Amount','Player_id','Player_id__Surname','Expiration_Date','Slot',
                'IsRaised','IsExpired','id','Team_id','IsOfficial','Carognata')
-
+               
+    if(qplayer is not None):
+       bets = bets.exclude(Q(Player_id=qplayer.Player_id))
+       
+    return bets   
+       
+       
 def list_my_best_bets(mbb):
     ls = list(mbb).__str__()
     lsr = ls.replace('\'','"')
@@ -231,19 +251,12 @@ def get_user_team(userid):
     return team.Team.objects.filter(Users__id=userid).values('id','Name')[0]
 
 def get_my_players_filtered(filter_role, teamid):
-    # list all players for teamid
+
     return squads.Squads.objects.\
         filter(Team_id=teamid).\
         filter(Player__Role=filter_role).\
         values('id','Player__id','Player__Surname','Player__RealTeam__Name','Amount','Player__Role').\
         order_by('Player__Surname')
-
-def get_my_players(teamid):
-    # list all players for teamid
-    return squads.Squads.objects.\
-        filter(Team_id=teamid).\
-        values('id','Player__id','Player__Surname','Player__RealTeam__Name','Amount','Player__Role')
-
 
 def complete_list(l, num_max, role):
     if(len(l) < num_max):
@@ -279,167 +292,3 @@ def cleanJSON(jsonData):
     jsonData = jsonData.replace("\\","") #remove extra \
 
     return jsonData    
-
-def get_my_opponent(teamid, day):
-    #TODO implement
-    return 4
-
-def get_couples_from_calendar(seriesid, day):
-    #TODO implement
-    return [ (1,4) ]
-
-def make_empty_vote_obj(pl_id, cap_id):
-    v_obj = vote.Vote.Vote_Obj()
-    pl = player.Player.objects.get(pk=pl_id)
-    v_obj.Player = pl if pl is not None else None
-    if(pl_id == cap_id):
-        v_obj.Cap = True
-    v_obj.Vote = 6
-    v_obj.TotVote = 6
-    v_obj.Status = C.PlayerStatus.YET_TO_PLAY #TODO
-    
-    return v_obj
-
-def make_vote_obj(_vote:vote.Vote, cap_id):
-    v_obj = vote.Vote.Vote_Obj()
-    v_obj.AssH = _vote.AssH
-    v_obj.AssL = _vote.AssL
-    v_obj.AssP = _vote.AssP
-    v_obj.AssS = _vote.AssS
-    v_obj.Player = _vote.Player
-    v_obj.Competition = _vote.Competition
-    v_obj.Day = _vote.Day
-    v_obj.GoalDe = _vote.GoalDe
-    v_obj.GoalSc = _vote.GoalSc
-    v_obj.GoalTa = _vote.GoalTa
-    v_obj.Own = _vote.Own
-    v_obj.PenMi = _vote.PenMi
-    v_obj.PenSa = _vote.PenSa
-    v_obj.PenSc = _vote.PenSc
-    v_obj.Red = _vote.Red
-    v_obj.Sub = _vote.Sub 
-    v_obj.Status = C.PlayerStatus.PLAYED #TODO
-    v_obj.SubJ = _vote.SubJ
-    v_obj.Yel = _vote.Yel
-    v_obj.Vote = _vote.Vote
-    v_obj.TotVote = calculate_total(_vote)
-    if(_vote.Player_id == cap_id):
-        v_obj.Cap = True
-
-    return v_obj
-
-def calculate_total(v):
-    sum = v.Vote
-
-    sum += \
-    (v.AssH * C.Scores.ASS_HIGH) + \
-    (v.AssL * C.Scores.ASS_LOW) + \
-    (v.AssP * C.Scores.PENALTY_PROCURED) + \
-    (v.AssS * C.Scores.ASS_STD) + \
-    (v.GoalDe * C.Scores.GOAL_DECIDER) + \
-    (v.GoalTa * C.Scores.GOAL_TAKEN) + \
-    (v.GoalSc * C.Scores.GOAL) + \
-    (v.Own * C.Scores.OWN_GOAL) + \
-    (v.PenMi * C.Scores.PENALTY_MISSED) + \
-    (v.PenSa * C.Scores.PENALTY_SAVED) + \
-    (v.PenSc * C.Scores.PENALTY_SCORED) + \
-    (v.Red * C.Scores.RED) + \
-    (v.Yel * C.Scores.YELLOW)         
-
-    return sum
-
-def calculate_modifier(gk_vote, def_votes, modNoGk):
-    if(modNoGk):
-        mod = statistics.mean(def_votes)
-    else:
-        mod = statistics.mean(sorted(def_votes)[1:] + gk_vote)
-    
-    if mod < 6:
-        return mod, C.Modifier_Scores._LT_6
-    if 6 <= mod < 6.25:
-        return mod, C.Modifier_Scores._6_625
-    if 6.25 <= mod < 6.5:
-        return mod, C.Modifier_Scores._625_65
-    if 6.5 <= mod < 6.75:
-        return mod, C.Modifier_Scores._65_675
-    if 6.75 <= mod < 7:
-        return mod, C.Modifier_Scores._675_7
-    if 7 <= mod < 7.25:
-        return mod, C.Modifier_Scores._7_725
-    if 7.25 <= mod < 7.5:
-        return mod, C.Modifier_Scores._725_75
-    if mod >= 7.5:
-        return mod, C.Modifier_Scores._GT_75
-    
-def calculate_n_goals(grand_total):
-    diff = grand_total - C.Various.BASE_SCORE
-    if (diff < 0):
-        return 0
-    
-    return int(diff / C.Various.THRESHOLD_GOL) + 1
-
-def get_votes(lineup, home=True):
-    if(lineup is None):
-        return None
-    votes = []
-    _items = []
-    _items.append(home)
-    _items.append(lineup.Team.Name)
-    _noCards = True
-    _noBadVotes = True
-
-    line = json.loads(cleanJSON(lineup.Line))
-    cap_id = line['captain']
-    cap_vote = 0
-    for l in line.items():
-        if(l[0] == 'mod' or l[0] == 'captain'): 
-            continue
-        _vote = vote.Vote.objects.filter(Player_id=l[1])
-        votes.append(make_vote_obj(_vote[0], cap_id) if len(_vote) > 0 else make_empty_vote_obj(l[1], cap_id))
-        if len(_vote) > 0:
-            if(l[1] == cap_id):
-                cap_vote = _vote[0].Vote
-            if (_vote[0].Yel or _vote[0].Red):
-                _noCards = False
-            if(_vote[0].Vote < 6):
-                _noBadVotes = False
-
-    total = sum([v.TotVote for v in votes if type(v) is vote.Vote.Vote_Obj])
-    _items.append(total) 
-
-    #modificatore
-    def_votes = [v.Vote for v in votes if type(v) is vote.Vote.Vote_Obj and v.Player.Role=='D']
-    if (len(def_votes) >= 4): 
-        gk_vote = [v.Vote for v in votes if type(v) is vote.Vote.Vote_Obj and v.Player.Role=='P']
-        val, modifier = calculate_modifier(gk_vote, def_votes, lineup.ModNoGk)
-    else:
-        val, modifier = 0 , 0
-
-    _items.append(val)
-    _items.append(modifier)
-
-    #bonus capitano
-    if cap_vote > 6:
-        bonus_cap = 0.5
-    elif cap_vote < 6:
-        bonus_cap = -0.5
-    else:
-        bonus_cap = 0
-
-    #bonus disciplina
-    bonus_disc = 0.5 if _noCards else 0
-    #bonus prestazioni
-    bonus_prest = 0.5 if _noBadVotes else 0
-
-    _items.append(bonus_cap)
-    _items.append(bonus_disc)     
-    _items.append(bonus_prest)     
-
-    grand_total = total + modifier + bonus_cap + bonus_disc + bonus_prest
-    _items.append(grand_total)
-
-    n_goals = calculate_n_goals(grand_total)
-    _items.append(n_goals)
-
-    return [votes, _items]
-    

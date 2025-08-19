@@ -68,3 +68,8 @@ table .w-30 {
         width: fit-content;
     }
   }
+
+.top-table-line {
+    border-top-color: whitesmoke;
+    border-width: 2px !important;
+}

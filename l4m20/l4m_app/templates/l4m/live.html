@@ -39,99 +39,92 @@
             <table class="table table-striped-columns table-dark table-match rounded-3 table-bordered rounded-pill">
                 <thead>
                     <tr>
-                        <th colspan="5" class="display-6 mozilla-headline-teamname w-30 team-name">{{team_votes.1.1}}</th>
+                        <th colspan="5" class="display-6 mozilla-headline-teamname w-30 team-name">{{team_votes.1.1}}
+                        </th>
                     </tr>
                     <tr>
                         <th colspan="5" class="team-score mozilla-headline-teamname display-6">{{team_votes.1.9}}</th>
                     </tr>
-                    <!-- <tr>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                    </tr> -->
                 </thead>
                 <tbody class="table-group-divider">
                     {% for vote in team_votes.0 %}
-                        <tr>
-                            <td>{{vote.Player.Role}}</td>
-                            <td {% if vote.Cap %} class="captain-td" {% endif %}>{% if vote.Cap %} [CAP] {% endif %}
-                                {{vote.Player.Surname}}</td>
-                            <td>{{vote.Vote|floatformat}}</td>
-                            <td>{{vote.TotVote|floatformat}}</td>
-                            <td>
-                                <!--BONUS ICONS -->
-                                {% with ''|center:vote.GoalSc as range %}
-                                    {% for _ in range %}
-                                        <img src="{% static 'l4m/images/goal.png' %}">
-                                    {% endfor %}
-                                {% endwith %}
-
-                                {% with ''|center:vote.Yel as range %}
-                                    {% for _ in range %}
-                                        <img src="{% static 'l4m/images/yel.png' %}">
-                                    {% endfor %}
-                                {% endwith %}
-
-                                {% with ''|center:vote.Red as range %}
-                                    {% for _ in range %}
-                                        <img src="{% static 'l4m/images/redcard.png' %}">
-                                    {% endfor %}
-                                {% endwith %}
-
-                                {% with ''|center:vote.AssS as range %}
-                                    {% for _ in range %}
-                                        <img src="{% static 'l4m/images/assist.png' %}">
-                                    {% endfor %}
-                                {% endwith %}
-
-                                {% with ''|center:vote.GoalTa as range %}
-                                    {% for _ in range %}
-                                        <img src="{% static 'l4m/images/goal_taken.png' %}">
-                                    {% endfor %}
-                                {% endwith %}
-
-                                {% with ''|center:vote.Own as range %}
-                                    {% for _ in range %}
-                                        <img src="{% static 'l4m/images/own.png' %}">
-                                    {% endfor %}
-                                {% endwith %}
-
-                                {% with ''|center:vote.PenMi as range %}
-                                    {% for _ in range %}
-                                        <img src="{% static 'l4m/images/pen_mis.png' %}">
-                                    {% endfor %}
-                                {% endwith %}
-
-                                {% with ''|center:vote.PenSc as range %}
-                                    {% for _ in range %}
-                                        <img src="{% static 'l4m/images/pen_sco.png' %}">
-                                    {% endfor %}
-                                {% endwith %}
-
-                                {% with ''|center:vote.PenSa as range %}
-                                    {% for _ in range %}
-                                        <img src="{% static 'l4m/images/pen_sav_2.png' %}">
-                                    {% endfor %}
-                                {% endwith %}
-
-                                {% if vote.Sub > 0 %}
-                                    <img src="{% static 'l4m/images/in.png' %}">
-                                    <span>({{vote.Sub|floatformat}}'')</span>
-                                {% elif vote.Sub < 0 %}
-                                    <img src="{% static 'l4m/images/out.png' %}">
-                                    <span>({{vote.Sub|floatformat|slice:"1:"}}')</span>
-                                {% endif %}
-
-                                {% if vote.Status == 3 %}
-                                    <span>DEVE ANCORA GIOCARE</span>
-                                {% endif %}
-
-                            </td>
-                        </tr>
-                        {% endfor %}
-                </tbody>
-                <tfoot class="table-group-divider">
                     <tr>
+                        <td>{{vote.Player.Role}}</td>
+                        <td {% if vote.Cap %} class="captain-td" {% endif %}>{% if vote.Cap %} [CAP] {% endif %}
+                            {{vote.Player.Surname}}</td>
+                        <td>{{vote.Vote|floatformat}}</td>
+                        <td>{{vote.TotVote|floatformat}}</td>
+                        <td>
+                            <!--BONUS ICONS -->
+                            {% with ''|center:vote.GoalSc as range %}
+                            {% for _ in range %}
+                            <img src="{% static 'l4m/images/goal.png' %}">
+                            {% endfor %}
+                            {% endwith %}
+
+                            {% with ''|center:vote.Yel as range %}
+                            {% for _ in range %}
+                            <img src="{% static 'l4m/images/yel.png' %}">
+                            {% endfor %}
+                            {% endwith %}
+
+                            {% with ''|center:vote.Red as range %}
+                            {% for _ in range %}
+                            <img src="{% static 'l4m/images/redcard.png' %}">
+                            {% endfor %}
+                            {% endwith %}
+
+                            {% with ''|center:vote.AssS as range %}
+                            {% for _ in range %}
+                            <img src="{% static 'l4m/images/assist.png' %}">
+                            {% endfor %}
+                            {% endwith %}
+
+                            {% with ''|center:vote.GoalTa as range %}
+                            {% for _ in range %}
+                            <img src="{% static 'l4m/images/goal_taken.png' %}">
+                            {% endfor %}
+                            {% endwith %}
+
+                            {% with ''|center:vote.Own as range %}
+                            {% for _ in range %}
+                            <img src="{% static 'l4m/images/own.png' %}">
+                            {% endfor %}
+                            {% endwith %}
+
+                            {% with ''|center:vote.PenMi as range %}
+                            {% for _ in range %}
+                            <img src="{% static 'l4m/images/pen_mis.png' %}">
+                            {% endfor %}
+                            {% endwith %}
+
+                            {% with ''|center:vote.PenSc as range %}
+                            {% for _ in range %}
+                            <img src="{% static 'l4m/images/pen_sco.png' %}">
+                            {% endfor %}
+                            {% endwith %}
+
+                            {% with ''|center:vote.PenSa as range %}
+                            {% for _ in range %}
+                            <img src="{% static 'l4m/images/pen_sav_2.png' %}">
+                            {% endfor %}
+                            {% endwith %}
+
+                            {% if vote.Sub > 0 %}
+                            <img src="{% static 'l4m/images/in.png' %}">
+                            <span>({{vote.Sub|floatformat}}'')</span>
+                            {% elif vote.Sub < 0 %} <img src="{% static 'l4m/images/out.png' %}">
+                                <span>({{vote.Sub|floatformat|slice:"1:"}}')</span>
+                                {% endif %}
+
+                            {% if vote.Status == 3 %}
+                            <span>DEVE ANCORA GIOCARE</span>
+                            {% endif %}
+
+                        </td>
+                    </tr>
+                    {% endfor %}
+                                    <tr class="top-table-line">
                         <td />
                         <td />
                         <td />
@@ -173,7 +166,88 @@
                         <td class="tot-score">{{team_votes.1.8|floatformat}}</td>
                         <td />
                     </tr>
+                </tbody>
+
+                <tfoot class="table-group-divider">
+
+                {% for vote in team_votes.2 %}
+                <tr>
+                    <td>{{vote.Player.Role}}</td>
+                    <td>{{vote.Player.Surname}}</td>
+                    <td>{{vote.Vote|floatformat}}</td>
+                    <td>{{vote.TotVote|floatformat}}</td>
+                    <td>
+                        {% with ''|center:vote.GoalSc as range %}
+                        {% for _ in range %}
+                        <img src="{% static 'l4m/images/goal.png' %}">
+                        {% endfor %}
+                        {% endwith %}
+
+                        {% with ''|center:vote.Yel as range %}
+                        {% for _ in range %}
+                        <img src="{% static 'l4m/images/yel.png' %}">
+                        {% endfor %}
+                        {% endwith %}
+
+                        {% with ''|center:vote.Red as range %}
+                        {% for _ in range %}
+                        <img src="{% static 'l4m/images/redcard.png' %}">
+                        {% endfor %}
+                        {% endwith %}
+
+                        {% with ''|center:vote.AssS as range %}
+                        {% for _ in range %}
+                        <img src="{% static 'l4m/images/assist.png' %}">
+                        {% endfor %}
+                        {% endwith %}
+
+                        {% with ''|center:vote.GoalTa as range %}
+                        {% for _ in range %}
+                        <img src="{% static 'l4m/images/goal_taken.png' %}">
+                        {% endfor %}
+                        {% endwith %}
+
+                        {% with ''|center:vote.Own as range %}
+                        {% for _ in range %}
+                        <img src="{% static 'l4m/images/own.png' %}">
+                        {% endfor %}
+                        {% endwith %}
+
+                        {% with ''|center:vote.PenMi as range %}
+                        {% for _ in range %}
+                        <img src="{% static 'l4m/images/pen_mis.png' %}">
+                        {% endfor %}
+                        {% endwith %}
+
+                        {% with ''|center:vote.PenSc as range %}
+                        {% for _ in range %}
+                        <img src="{% static 'l4m/images/pen_sco.png' %}">
+                        {% endfor %}
+                        {% endwith %}
+
+                        {% with ''|center:vote.PenSa as range %}
+                        {% for _ in range %}
+                        <img src="{% static 'l4m/images/pen_sav_2.png' %}">
+                        {% endfor %}
+                        {% endwith %}
+
+                        {% if vote.Sub > 0 %}
+                        <img src="{% static 'l4m/images/in.png' %}">
+                        <span>({{vote.Sub|floatformat}}'')</span>
+                        {% elif vote.Sub < 0 %} <img src="{% static 'l4m/images/out.png' %}">
+                            <span>({{vote.Sub|floatformat|slice:"1:"}}')</span>
+                            {% endif %}
+
+                        {% if vote.Status == 3 %}
+                        <span>DEVE ANCORA GIOCARE</span>
+                        {% endif %}
+
+                    </td>
+                </tr>
+
+                {% endfor %}
                 </tfoot>
+
             </table>
 
             {% endfor %}

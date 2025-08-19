@@ -17,12 +17,14 @@ class SquadView(LoginRequiredMixin, View):
         series_mine = U.get_my_series(tid)
         myseries=series_mine[0].Name
         uname='-'
-
-        # Get all players for the team, any role
-        players = list(U.get_my_players(tid))
         
         tinfo = {"team_name": tname,"team_series": myseries,"team_user":uname}
         
+        players = list(U.get_my_players_filtered('P', tid))  # pass '' or modify to get all roles
+        players += list(U.get_my_players_filtered('D', tid))  # pass '' or modify to get all roles
+        players += list(U.get_my_players_filtered('C', tid))  # pass '' or modify to get all roles
+        players += list(U.get_my_players_filtered('A', tid))  # pass '' or modify to get all roles
+
         context = {
             'tinfo_json': json.dumps(tinfo),
             'players_json': json.dumps(players),

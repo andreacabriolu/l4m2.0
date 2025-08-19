@@ -12,6 +12,7 @@ class Squads(models.Model):
     Years = models.IntegerField(null=True)
     Jersey_num = models.IntegerField(null=True)
     Quot = models.IntegerField(null=True)
+    Quarantine = models.BooleanField(default=False)
     Suspended = models.BooleanField(default=False)
     
 
@@ -24,4 +25,5 @@ class Squads_Obj():
     Years=int
     Jersey_num=int
     Quot=int
+    Quarantine=bool
     Suspended=bool
