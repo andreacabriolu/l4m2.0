@@ -14,7 +14,10 @@ class Squads(models.Model):
     Quot = models.IntegerField(null=True)
     Quarantine = models.BooleanField(default=False)
     Suspended = models.BooleanField(default=False)
-    
+
+    def __str__(self):
+        return f"{self.Team.Name}_{self.Player.Surname}"
+
 
 class Squads_Obj():
     Team=str
@@ -27,3 +30,4 @@ class Squads_Obj():
     Quot=int
     Quarantine=bool
     Suspended=bool
+

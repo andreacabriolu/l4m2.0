@@ -19,6 +19,9 @@ class Bet(models.Model):
     IsOfficial = models.BooleanField(default=False)
     Mark_player =models.ForeignKey(on_delete=models.CASCADE, to=C.Constant_Strings.mark_players, null=True)
 
+    def __str__(self):
+        return f"bet_{self.Team.Name}_{self.Player.Surname}_{self.Market.Name}"
+
 class Bet_Obj():
     Name=str
     Time=str
