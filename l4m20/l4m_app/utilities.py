@@ -266,8 +266,14 @@ def complete_list(l, num_max, role):
     return l
 
 def get_current_day():
-    #TODO: to be implemented, get the current day based on calendar
-    return 1 #TEMP
+    #approach 1: take the first future match's day, starting from now + 24hh
+    #  
+    tomorrow = datetime.datetime.now() + datetime.timedelta(1)
+    r = real_calendar.Real_calendar.objects.filter(Date__gte=tomorrow).values('Day').first()
+    if(r is None):
+        return 0
+    
+    return r['Day']
 
 def get_last_lineup(teamid, day):
     return lineup.Lineup.objects.filter(Team=teamid, Day=day).order_by('-Version')[:1]

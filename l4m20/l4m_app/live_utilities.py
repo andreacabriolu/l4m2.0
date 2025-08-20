@@ -6,8 +6,7 @@ from . import utilities as U
 from django.db.models import Q
 
 def get_couples_from_calendar(seriesid, day):
-    #TODO: filter per series?
-    matches_ = matches_calendar.MatchesCalendar.objects.filter(CompetitionCalendar__Day=day)
+    matches_ = matches_calendar.MatchesCalendar.objects.filter(Q(CompetitionCalendar__Day=day) & Q(Series_id=seriesid))
     couples = [(match.HomeTeam.id, match.AwayTeam.id) for match in matches_]
     return couples
 
@@ -114,9 +113,9 @@ def calculate_n_goals(grand_total):
     
     return int(diff / C.Various.THRESHOLD_GOL) + 1
 
-def check_already_played(real_team):
-    #TODO check if votes in the current day contains the player real team
-    return True
+def check_already_played(current_day, real_team):
+    day_votes = vote.Vote.objects.filter(Q(Day=current_day) & Q(RealTeam_id=real_team.id))
+    return len(day_votes) > 0 
 
 def check_role_with_module(role, module):
     if(role == 'D' and module in [C.Modules._532, C.Modules._541]):
@@ -133,6 +132,7 @@ def calculate_new_module(current_module, role_tit, role_ris):
     return C.Modules.matrix[current_module][role_combo]
 
 def search_substitute(votes_ris, vote_tit, module):
+    #TODO: check on max 5 substitutions
     good_statuses = [C.PlayerStatus.YET_TO_PLAY, C.PlayerStatus.PLAYING, C.PlayerStatus.PLAYED]
     same_role = [v for v in votes_ris if v.Player.Role == vote_tit.Player.Role 
                  and v.Status in good_statuses
@@ -175,7 +175,7 @@ def check_valid_module_change_for_modifier(orig, current):
 def get_votes(lineup, current_day, my_teamid, home=True):
     votes_tit = []
     votes_ris = []
-    module = C.Modules._442
+    module = C.Modules._442 #default
     _items = []
 
     if(type(lineup) is str): #NO SHOW
@@ -204,7 +204,7 @@ def get_votes(lineup, current_day, my_teamid, home=True):
             continue
         
         pl = player.Player.objects.get(pk=l[1])
-        already_played = check_already_played(pl.RealTeam)
+        already_played = check_already_played(current_day, pl.RealTeam)
 
         _vote = vote.Vote.objects.filter(Q(Player_id=l[1]) & Q(Day=current_day))
         if(l[0].endswith('tit')):
@@ -224,7 +224,7 @@ def get_votes(lineup, current_day, my_teamid, home=True):
     #                C.PlayerStatus.PLAYING not in [v.Status for v in votes_tot]
     
     valid_votes = []
-    ## get the 11 valid votes ###################
+    ## get the valid votes ###################
     for vote_tit in votes_tit:
         if(vote_tit.Status == C.PlayerStatus.NOT_PLAYED):
             sub, module = search_substitute(votes_ris, vote_tit, module)
