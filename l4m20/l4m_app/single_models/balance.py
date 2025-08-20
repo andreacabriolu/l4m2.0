@@ -13,4 +13,4 @@ class Balance(models.Model):
     N_carognate = models.IntegerField(null=True, default=0)
     
     def __str__(self):
-        return " ".join([self.Name])
+        return f"balance_{self.Team.Name}"
