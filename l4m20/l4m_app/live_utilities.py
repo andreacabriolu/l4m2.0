@@ -186,12 +186,13 @@ def get_votes(lineup, current_day, my_teamid, home=True):
     _items.append(home)
     _items.append(lineup.Team.Name)
 
-    line = json.loads(U.cleanJSON(lineup.Line))
-
     if(lineup.HideLineup and lineup.Team.id != my_teamid): #HIDDEN LINEUP
-        _items.append(home)
+        _items.append("hidden")
         _items.append(lineup)
         return [votes_tit, _items, votes_ris]
+
+
+    line = json.loads(U.cleanJSON(lineup.Line))
 
     cap_id = line['captain'] if 'captain' in line.keys() else 0
     orig_module = line['mod'].replace('-','')

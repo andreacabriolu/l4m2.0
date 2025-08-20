@@ -53,17 +53,17 @@
                             <span class="tot-score">FORMAZIONE NON ANCORA SCHIERATA</span>
                         </td>
                     </tr>
-                    {% elif team.votes.1.0 == "hidden" %}
+                    {% elif team_votes.1.2 == "hidden" %}
                     <tr>
                         <td>
-                            <span class="tot-score">FORMAZIONE NASCOSTA</span>
+                            <span class="tot-score">FORMAZIONE VISIBILE SOLO AL MISTER</span>
                         </td>
                     </tr>
                     {% else %}
                     {% for vote in team_votes.0 %}
                     <tr>
                         <td>{{vote.Player.Role}}</td>
-                        <td>{% if vote.Cap %} <img src="{% static 'l4m/images/cap.png' %}">{% endif %}
+                        <td>{% if vote.Cap %} <img class="cap-img" src="{% static 'l4m/images/cap.png' %}">{% endif %}
                             {{vote.Player.Surname}}</td>
                         <td>{{vote.Vote|floatformat}}</td>
                         <td>{{vote.TotVote|floatformat}}</td>

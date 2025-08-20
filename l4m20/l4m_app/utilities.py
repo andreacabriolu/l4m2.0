@@ -267,13 +267,15 @@ def complete_list(l, num_max, role):
 
 def get_current_day():
     #approach 1: take the first future match's day, starting from now + 24hh
-    #  
-    tomorrow = datetime.datetime.now() + datetime.timedelta(1)
-    r = real_calendar.Real_calendar.objects.filter(Date__gte=tomorrow).values('Day').first()
-    if(r is None):
-        return 0
-    
-    return r['Day']
+    #      # tomorrow = datetime.datetime.now() + datetime.timedelta(1)
+    # r = real_calendar.Real_calendar.objects.filter(Date__gte=tomorrow).values('Day').first()
+    # if(r is None):
+    #     return 0
+    # return r['Day']
+
+    #approach 2: get from db (static)
+    day = config.Config.objects.filter(Name="CurrentDay").first()
+    return day.Value
 
 def get_last_lineup(teamid, day):
     return lineup.Lineup.objects.filter(Team=teamid, Day=day).order_by('-Version')[:1]
