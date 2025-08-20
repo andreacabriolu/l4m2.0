@@ -1,0 +1,2231 @@
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 7.0, 0, 3, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1092, 1)
+            
+✅ Inserito voto per Carnesecchi (Atalanta)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1815, 1)
+            
+✅ Inserito voto per Cuadrado (Atalanta)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 1, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1180, 1)
+            
+✅ Inserito voto per Djimsiti (Atalanta)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 1, 0, 0, 0,
+                        0, 0, 1, 1155, 1)
+            
+✅ Inserito voto per Bellanova (Atalanta)
+⚠️ Giocatore non trovato: Ruggeri
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1172, 1)
+            
+✅ Inserito voto per Kossounou (Atalanta)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1220, 1)
+            
+✅ Inserito voto per Posch (Atalanta)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1264, 1)
+            
+✅ Inserito voto per Palestra (Atalanta)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1384, 1)
+            
+✅ Inserito voto per Pasalic (Atalanta)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 7.5, 2, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1385, 1)
+            
+✅ Inserito voto per Maldini (Atalanta)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1398, 1)
+            
+✅ Inserito voto per Brescianini (Atalanta)
+⚠️ Giocatore non trovato: Ederson_Ds
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1451, 1)
+            
+✅ Inserito voto per Sulemana_I (Atalanta)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1503, 1)
+            
+✅ Inserito voto per Lookman (Atalanta)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1511, 1)
+            
+✅ Inserito voto per De_Ketelaere (Atalanta)
+⚠️ Giocatore non trovato: Retegui
+⚠️ Giocatore non trovato: Gasperini
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 3, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1108, 2)
+            
+✅ Inserito voto per Ravaglia_F (Bologna)
+⚠️ Giocatore non trovato: Calabria
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1241, 2)
+            
+✅ Inserito voto per De_Silvestri (Bologna)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.0, 0, 0, 0, 0, 0, 0,
+                        0, 1, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1221, 2)
+            
+✅ Inserito voto per Lykogiannis (Bologna)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 1, 0, 0, 0,
+                        0, 0, 1, 1240, 2)
+            
+✅ Inserito voto per Casale (Bologna)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 4.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1184, 2)
+            
+✅ Inserito voto per Holm (Bologna)
+⚠️ Giocatore non trovato: Lucumi'
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1367, 2)
+            
+✅ Inserito voto per Freuler (Bologna)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.5, 1, 0, 0, 0, 0, 0,
+                        0, 1, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1330, 2)
+            
+✅ Inserito voto per Orsolini (Bologna)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1399, 2)
+            
+✅ Inserito voto per Pobega (Bologna)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1338, 2)
+            
+✅ Inserito voto per Ndoye (Bologna)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.0, 0, 0, 0, 0, 0, 0,
+                        0, 1, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1452, 2)
+            
+✅ Inserito voto per Aebischer (Bologna)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1368, 2)
+            
+✅ Inserito voto per Ferguson (Bologna)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1377, 2)
+            
+✅ Inserito voto per Fabbian (Bologna)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1542, 2)
+            
+✅ Inserito voto per Cambiaghi (Bologna)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1520, 2)
+            
+✅ Inserito voto per Castro_S (Bologna)
+⚠️ Giocatore non trovato: Italiano
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1116, 3)
+            
+✅ Inserito voto per Ciocci (Cagliari)
+⚠️ Giocatore non trovato: Sherri
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1200, 3)
+            
+✅ Inserito voto per Luperto (Cagliari)
+⚠️ Giocatore non trovato: Palomino
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1201, 3)
+            
+✅ Inserito voto per Mina (Cagliari)
+⚠️ Giocatore non trovato: Augello
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1149, 3)
+            
+✅ Inserito voto per Zortea (Cagliari)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1214, 3)
+            
+✅ Inserito voto per Zappa (Cagliari)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1242, 3)
+            
+✅ Inserito voto per Obert (Cagliari)
+⚠️ Giocatore non trovato: Viola
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1439, 3)
+            
+✅ Inserito voto per Deiola (Cagliari)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1438, 3)
+            
+✅ Inserito voto per Adopo (Cagliari)
+⚠️ Giocatore non trovato: Marin
+⚠️ Giocatore non trovato: Makoumbou
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1524, 3)
+            
+✅ Inserito voto per Piccoli (Cagliari)
+⚠️ Giocatore non trovato: Mutandwa
+⚠️ Giocatore non trovato: Nicola
+⚠️ Giocatore non trovato: Reina
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 1, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1096, 25)
+            
+✅ Inserito voto per Butez (Como)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1215, 25)
+            
+✅ Inserito voto per Vojvoda (Como)
+⚠️ Giocatore non trovato: Iovine
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1216, 25)
+            
+✅ Inserito voto per Valle (Como)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1245, 25)
+            
+✅ Inserito voto per Van_Der_Brempt (Como)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1300, 25)
+            
+✅ Inserito voto per Smolcic_I (Como)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 1, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1346, 25)
+            
+✅ Inserito voto per Strefezza (Como)
+⚠️ Giocatore non trovato: Ikonè
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1357, 25)
+            
+✅ Inserito voto per Caqueret (Como)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1358, 25)
+            
+✅ Inserito voto per Da_Cunha (Como)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1401, 25)
+            
+✅ Inserito voto per Perrone (Como)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1479, 25)
+            
+✅ Inserito voto per Engelhardt (Como)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1337, 25)
+            
+✅ Inserito voto per Paz_N (Como)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1544, 25)
+            
+✅ Inserito voto per Cutrone (Como)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1550, 25)
+            
+✅ Inserito voto per Douvikas (Como)
+⚠️ Giocatore non trovato: Fabregas
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 2, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1145, 4)
+            
+✅ Inserito voto per Vasquez_D (Empoli)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1224, 4)
+            
+✅ Inserito voto per Pezzella_Giu (Empoli)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.0, 0, 0, 0, 0, 0, 0,
+                        0, 1, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1196, 4)
+            
+✅ Inserito voto per Ismajli (Empoli)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1248, 4)
+            
+✅ Inserito voto per Viti (Empoli)
+⚠️ Giocatore non trovato: Cacace
+⚠️ Giocatore non trovato: Sambia
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1816, 4)
+            
+✅ Inserito voto per Goglichidze (Empoli)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1454, 4)
+            
+✅ Inserito voto per Grassi (Empoli)
+⚠️ Giocatore non trovato: Henderson_L
+⚠️ Giocatore non trovato: Gyasi
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 7.0, 1, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1369, 4)
+            
+✅ Inserito voto per Fazzini (Empoli)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1382, 4)
+            
+✅ Inserito voto per Anjorin (Empoli)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1558, 4)
+            
+✅ Inserito voto per Esposito_Se (Empoli)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1537, 4)
+            
+✅ Inserito voto per Colombo (Empoli)
+⚠️ Giocatore non trovato: Solbakken
+⚠️ Giocatore non trovato: Konate_Is
+⚠️ Giocatore non trovato: D'Aversa
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 2, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1093, 5)
+            
+✅ Inserito voto per De_Gea (Fiorentina)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 1, 0, 0, 0,
+                        0, 0, 1, 1148, 5)
+            
+✅ Inserito voto per Gosens (Fiorentina)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1204, 5)
+            
+✅ Inserito voto per Ranieri_L (Fiorentina)
+⚠️ Giocatore non trovato: Mari'
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1225, 5)
+            
+✅ Inserito voto per Pongracic (Fiorentina)
+⚠️ Giocatore non trovato: Dodo'
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 7.0, 1, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1202, 5)
+            
+✅ Inserito voto per Comuzzo (Fiorentina)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1347, 5)
+            
+✅ Inserito voto per Mandragora (Fiorentina)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 7.0, 1, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1403, 5)
+            
+✅ Inserito voto per Fagioli (Fiorentina)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1481, 5)
+            
+✅ Inserito voto per Ndour (Fiorentina)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 1, 0, 0, 0,
+                        0, 0, 1, 1455, 5)
+            
+✅ Inserito voto per Richardson (Fiorentina)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.5, 1, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1501, 5)
+            
+✅ Inserito voto per Kean (Fiorentina)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1334, 5)
+            
+✅ Inserito voto per Gudmundsson_A (Fiorentina)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 1, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1557, 5)
+            
+✅ Inserito voto per Beltran_L (Fiorentina)
+⚠️ Giocatore non trovato: Palladino
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 7.0, 0, 1, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1123, 7)
+            
+✅ Inserito voto per Sommariva (Genoa)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1122, 7)
+            
+✅ Inserito voto per Siegrist (Genoa)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1227, 7)
+            
+✅ Inserito voto per Sabelli (Genoa)
+⚠️ Giocatore non trovato: Bani
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 1, 0, 0, 0,
+                        0, 0, 1, 1166, 7)
+            
+✅ Inserito voto per Martin (Genoa)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1185, 7)
+            
+✅ Inserito voto per De_Winter (Genoa)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1274, 7)
+            
+✅ Inserito voto per Norton-Cuffy (Genoa)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 1, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1303, 7)
+            
+✅ Inserito voto per Otoa (Genoa)
+⚠️ Giocatore non trovato: Cornet
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1404, 7)
+            
+✅ Inserito voto per Messias (Genoa)
+⚠️ Giocatore non trovato: Onana_J
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1441, 7)
+            
+✅ Inserito voto per Masini (Genoa)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 8.0, 2, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1470, 7)
+            
+✅ Inserito voto per Venturino (Genoa)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1583, 7)
+            
+✅ Inserito voto per Ekuban (Genoa)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 7.5, 1, 0, 0, 0, 0, 0,
+                        0, 0, 0, 1, 0, 0, 0,
+                        0, 0, 1, 1538, 7)
+            
+✅ Inserito voto per Vitinha_O (Genoa)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1591, 7)
+            
+✅ Inserito voto per Ekhator (Genoa)
+⚠️ Giocatore non trovato: Vieira_P
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1087, 8)
+            
+✅ Inserito voto per Sommer (Inter)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1147, 8)
+            
+✅ Inserito voto per Dimarco (Inter)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 7.0, 1, 0, 0, 0, 0, 0,
+                        0, 1, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1177, 8)
+            
+✅ Inserito voto per De_Vrij (Inter)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1175, 8)
+            
+✅ Inserito voto per Acerbi (Inter)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1249, 8)
+            
+✅ Inserito voto per Darmian (Inter)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1146, 8)
+            
+✅ Inserito voto per Dumfries (Inter)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1167, 8)
+            
+✅ Inserito voto per Carlos_Augusto (Inter)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1176, 8)
+            
+✅ Inserito voto per Bisseck (Inter)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1348, 8)
+            
+✅ Inserito voto per Barella (Inter)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.5, 0, 0, 0, 0, 0, 0,
+                        0, 1, 0, 1, 0, 0, 0,
+                        0, 0, 1, 1335, 8)
+            
+✅ Inserito voto per Calhanoglu (Inter)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 7.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1423, 8)
+            
+✅ Inserito voto per Zalewski (Inter)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1456, 8)
+            
+✅ Inserito voto per Asllani (Inter)
+⚠️ Giocatore non trovato: Topalovic
+⚠️ Giocatore non trovato: Correa
+⚠️ Giocatore non trovato: Arnautovic
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 1, 0, 0, 0,
+                        0, 0, 1, 1574, 8)
+            
+✅ Inserito voto per Taremi (Inter)
+⚠️ Giocatore non trovato: Inzaghi_S
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.5, 0, 2, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1088, 9)
+            
+✅ Inserito voto per Di_Gregorio (Juventus)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 1, 0, 0, 0,
+                        0, 0, 1, 1151, 9)
+            
+✅ Inserito voto per Cambiaso (Juventus)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1187, 9)
+            
+✅ Inserito voto per Gatti (Juventus)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1205, 9)
+            
+✅ Inserito voto per Kelly_L (Juventus)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1276, 9)
+            
+✅ Inserito voto per Savona (Juventus)
+⚠️ Giocatore non trovato: Alberto_Costa
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 7.5, 0, 0, 0, 0, 1, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1361, 9)
+            
+✅ Inserito voto per Locatelli (Juventus)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1415, 9)
+            
+✅ Inserito voto per Weah (Juventus)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1379, 9)
+            
+✅ Inserito voto per McKennie (Juventus)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1341, 9)
+            
+✅ Inserito voto per Thuram_K (Juventus)
+⚠️ Giocatore non trovato: Veiga_R
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1339, 9)
+            
+✅ Inserito voto per Conceicao (Juventus)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1509, 9)
+            
+✅ Inserito voto per Vlahovic (Juventus)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 1, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1539, 9)
+            
+✅ Inserito voto per Gonzalez_N (Juventus)
+⚠️ Giocatore non trovato: Kolo_Muani
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 7.5, 1, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1508, 9)
+            
+✅ Inserito voto per Yildiz (Juventus)
+⚠️ Giocatore non trovato: Tudor
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 1, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1109, 10)
+            
+✅ Inserito voto per Mandas (Lazio)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1279, 10)
+            
+✅ Inserito voto per Hysaj (Lazio)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 0, 0, 0, 0,
+                        0, 0, 1, 1189, 10)
+            
+✅ Inserito voto per Romagnoli (Lazio)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1190, 10)
+            
+✅ Inserito voto per Marusic (Lazio)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1278, 10)
+            
+✅ Inserito voto per Pellegrini_Lu (Lazio)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1159, 10)
+            
+✅ Inserito voto per Tavares_N (Lazio)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.0, 0, 0, 0, 0, 0, 0,
+                        0, 1, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1179, 10)
+            
+✅ Inserito voto per Gila (Lazio)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1424, 10)
+            
+✅ Inserito voto per Vecino (Lazio)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1332, 10)
+            
+✅ Inserito voto per Zaccagni (Lazio)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 1, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1371, 10)
+            
+✅ Inserito voto per Guendouzi (Lazio)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1407, 10)
+            
+✅ Inserito voto per Rovella (Lazio)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.5, 0, 0, 0, 0, 0, 0,
+                        0, 1, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1533, 10)
+            
+✅ Inserito voto per Pedro (Lazio)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1515, 10)
+            
+✅ Inserito voto per Dia (Lazio)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1512, 10)
+            
+✅ Inserito voto per Castellanos (Lazio)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1351, 10)
+            
+✅ Inserito voto per Isaksen (Lazio)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1560, 10)
+            
+✅ Inserito voto per Noslin (Lazio)
+⚠️ Giocatore non trovato: Baroni
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 7.5, 0, 0, 0, 0, 0, 0,
+                        0, 1, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1102, 11)
+            
+✅ Inserito voto per Falcone (Lecce)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1229, 11)
+            
+✅ Inserito voto per Gallo (Lecce)
+⚠️ Giocatore non trovato: Guilbert
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1191, 11)
+            
+✅ Inserito voto per Baschirotto (Lecce)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 7.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1192, 11)
+            
+✅ Inserito voto per Gaspar_K (Lecce)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1321, 11)
+            
+✅ Inserito voto per Veiga_D (Lecce)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 7.5, 1, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1416, 11)
+            
+✅ Inserito voto per Coulibaly_L (Lecce)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1408, 11)
+            
+✅ Inserito voto per Helgason (Lecce)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1472, 11)
+            
+✅ Inserito voto per Berisha_M (Lecce)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1427, 11)
+            
+✅ Inserito voto per Ramadani (Lecce)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1492, 11)
+            
+✅ Inserito voto per Kaba (Lecce)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1579, 11)
+            
+✅ Inserito voto per Karlsson (Lecce)
+⚠️ Giocatore non trovato: Burnete
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 1, 0, 0, 0,
+                        0, 0, 1, 1516, 11)
+            
+✅ Inserito voto per Krstovic (Lecce)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 4.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 0, 0, 0, 0,
+                        0, 0, 1, 1380, 11)
+            
+✅ Inserito voto per Pierotti (Lecce)
+⚠️ Giocatore non trovato: Giampaolo
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1089, 12)
+            
+✅ Inserito voto per Maignan (Milan)
+⚠️ Giocatore non trovato: Florenzi
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 7.0, 1, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1217, 12)
+            
+✅ Inserito voto per Gabbia (Milan)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1193, 12)
+            
+✅ Inserito voto per Tomori (Milan)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1206, 12)
+            
+✅ Inserito voto per Pavlovic (Milan)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1281, 12)
+            
+✅ Inserito voto per Bartesaghi (Milan)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1230, 12)
+            
+✅ Inserito voto per Jimenez_A (Milan)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1331, 12)
+            
+✅ Inserito voto per Pulisic (Milan)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1409, 12)
+            
+✅ Inserito voto per Loftus-Cheek (Milan)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1373, 12)
+            
+✅ Inserito voto per Fofana_Y (Milan)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 7.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 1, 0, 0, 0,
+                        0, 0, 1, 1460, 12)
+            
+✅ Inserito voto per Chukwueze (Milan)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1428, 12)
+            
+✅ Inserito voto per Musah (Milan)
+⚠️ Giocatore non trovato: Reijnders
+⚠️ Giocatore non trovato: Jovic
+⚠️ Giocatore non trovato: Joao_Felix
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1540, 12)
+            
+✅ Inserito voto per Camarda (Milan)
+⚠️ Giocatore non trovato: Conceicao_S
+⚠️ Giocatore non trovato: Pizzignacco
+⚠️ Giocatore non trovato: Mazza
+⚠️ Giocatore non trovato: Izzo
+⚠️ Giocatore non trovato: Pereira_P
+⚠️ Giocatore non trovato: Kyriakopoulos
+⚠️ Giocatore non trovato: Carboni_A
+⚠️ Giocatore non trovato: Caldirola
+⚠️ Giocatore non trovato: Birindelli
+⚠️ Giocatore non trovato: Sensi
+⚠️ Giocatore non trovato: Castrovilli
+⚠️ Giocatore non trovato: Akpa_Akpro
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 1, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1490, 13)
+            
+✅ Inserito voto per Bianco (Monza)
+⚠️ Giocatore non trovato: Ciurria
+⚠️ Giocatore non trovato: Keita_B
+⚠️ Giocatore non trovato: Petagna
+⚠️ Giocatore non trovato: Caprari
+⚠️ Giocatore non trovato: Nesta
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1090, 14)
+            
+✅ Inserito voto per Meret (Napoli)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1207, 14)
+            
+✅ Inserito voto per Spinazzola (Napoli)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1153, 14)
+            
+✅ Inserito voto per Di_Lorenzo (Napoli)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1163, 14)
+            
+✅ Inserito voto per Rrahmani (Napoli)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1285, 14)
+            
+✅ Inserito voto per Mazzocchi (Napoli)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1169, 14)
+            
+✅ Inserito voto per Olivera (Napoli)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.5, 0, 0, 0, 0, 0, 0,
+                        0, 1, 0, 1, 0, 0, 0,
+                        0, 0, 1, 1344, 14)
+            
+✅ Inserito voto per Politano (Napoli)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1343, 14)
+            
+✅ Inserito voto per Zambo_Anguissa (Napoli)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 7.5, 1, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1333, 14)
+            
+✅ Inserito voto per McTominay (Napoli)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1417, 14)
+            
+✅ Inserito voto per Gilmour (Napoli)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1353, 14)
+            
+✅ Inserito voto per Neres (Napoli)
+⚠️ Giocatore non trovato: Billing
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1552, 14)
+            
+✅ Inserito voto per Simeone (Napoli)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 7.0, 1, 0, 0, 0, 0, 0,
+                        0, 1, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1502, 14)
+            
+✅ Inserito voto per Lukaku (Napoli)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1534, 14)
+            
+✅ Inserito voto per Raspadori (Napoli)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1548, 14)
+            
+✅ Inserito voto per Ngonge (Napoli)
+⚠️ Giocatore non trovato: Conte
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 2, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1100, 31)
+            
+✅ Inserito voto per Suzuki (Parma)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1255, 31)
+            
+✅ Inserito voto per Valenti (Parma)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 4.5, 0, 0, 0, 0, 0, 0,
+                        0, 1, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1286, 31)
+            
+✅ Inserito voto per Balogh (Parma)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1170, 31)
+            
+✅ Inserito voto per Valeri (Parma)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1231, 31)
+            
+✅ Inserito voto per Circati (Parma)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1194, 31)
+            
+✅ Inserito voto per Delprato (Parma)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1418, 31)
+            
+✅ Inserito voto per Hernani (Parma)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1483, 31)
+            
+✅ Inserito voto per Estevez (Parma)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1364, 31)
+            
+✅ Inserito voto per Sohm (Parma)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 7.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 1, 0, 0, 0,
+                        0, 0, 1, 1374, 31)
+            
+✅ Inserito voto per Bernabè (Parma)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 7.0, 1, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1305, 31)
+            
+✅ Inserito voto per Hainaut (Parma)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1429, 31)
+            
+✅ Inserito voto per Keita_M (Parma)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 7.5, 2, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1354, 31)
+            
+✅ Inserito voto per Ondrejka (Parma)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1580, 31)
+            
+✅ Inserito voto per Cancellieri (Parma)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 1, 0, 0, 0,
+                        0, 0, 1, 1568, 31)
+            
+✅ Inserito voto per Bonny (Parma)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1535, 31)
+            
+✅ Inserito voto per Pellegrino_M (Parma)
+⚠️ Giocatore non trovato: Chivu
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1091, 15)
+            
+✅ Inserito voto per Svilar (Roma)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1164, 15)
+            
+✅ Inserito voto per Mancini (Roma)
+⚠️ Giocatore non trovato: Hummels
+⚠️ Giocatore non trovato: N'Dicka
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 1, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1209, 15)
+            
+✅ Inserito voto per Celik (Roma)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1152, 15)
+            
+✅ Inserito voto per Angelino (Roma)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1233, 15)
+            
+✅ Inserito voto per Rensch (Roma)
+⚠️ Giocatore non trovato: Paredes
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1394, 15)
+            
+✅ Inserito voto per Cristante (Roma)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1410, 15)
+            
+✅ Inserito voto per El_Shaarawy (Roma)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 7.5, 1, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1362, 15)
+            
+✅ Inserito voto per Saelemaekers (Roma)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1352, 15)
+            
+✅ Inserito voto per Konè_M (Roma)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1411, 15)
+            
+✅ Inserito voto per Baldanzi (Roma)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1419, 15)
+            
+✅ Inserito voto per Pisilli (Roma)
+⚠️ Giocatore non trovato: Shomurodov
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 7.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 1, 0, 0, 0,
+                        0, 0, 1, 1517, 15)
+            
+✅ Inserito voto per Soulè (Roma)
+⚠️ Giocatore non trovato: Ranieri_C
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 2, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1106, 18)
+            
+✅ Inserito voto per Milinkovic-Savic_V (Torino)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1292, 18)
+            
+✅ Inserito voto per Masina (Torino)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1197, 18)
+            
+✅ Inserito voto per Biraghi (Torino)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1235, 18)
+            
+✅ Inserito voto per Walukiewicz (Torino)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1211, 18)
+            
+✅ Inserito voto per Lazaro (Torino)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 1, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1210, 18)
+            
+✅ Inserito voto per Maripan (Torino)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1328, 18)
+            
+✅ Inserito voto per Dembelè_A (Torino)
+⚠️ Giocatore non trovato: Linetty
+⚠️ Giocatore non trovato: Elmas
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1381, 18)
+            
+✅ Inserito voto per Ricci_S (Torino)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1345, 18)
+            
+✅ Inserito voto per Vlasic (Torino)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1366, 18)
+            
+✅ Inserito voto per Casadei (Torino)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1449, 18)
+            
+✅ Inserito voto per Gineitis (Torino)
+⚠️ Giocatore non trovato: Perciun
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1532, 18)
+            
+✅ Inserito voto per Adams_C (Torino)
+⚠️ Giocatore non trovato: Gabellini
+⚠️ Giocatore non trovato: Vanoli
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 3, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1103, 19)
+            
+✅ Inserito voto per Okoye (Udinese)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 7.0, 1, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1294, 19)
+            
+✅ Inserito voto per Kabasele (Udinese)
+⚠️ Giocatore non trovato: Bijol
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1237, 19)
+            
+✅ Inserito voto per Ehizibue (Udinese)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1295, 19)
+            
+✅ Inserito voto per Zemura (Udinese)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1329, 19)
+            
+✅ Inserito voto per Palma (Udinese)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1165, 19)
+            
+✅ Inserito voto per Solet (Udinese)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1485, 19)
+            
+✅ Inserito voto per Zarraga (Udinese)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 1, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1436, 19)
+            
+✅ Inserito voto per Karlstrom (Udinese)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1383, 19)
+            
+✅ Inserito voto per Ekkelenkamp (Udinese)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1437, 19)
+            
+✅ Inserito voto per Atta (Udinese)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1562, 19)
+            
+✅ Inserito voto per Sanchez (Udinese)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1541, 19)
+            
+✅ Inserito voto per Davis_K (Udinese)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 7.0, 1, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1529, 19)
+            
+✅ Inserito voto per Lucca (Udinese)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1563, 19)
+            
+✅ Inserito voto per Bravo (Udinese)
+⚠️ Giocatore non trovato: Runjaic
+⚠️ Giocatore non trovato: Radu_I
+⚠️ Giocatore non trovato: Haps
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1272, 6)
+            
+✅ Inserito voto per Marcandalli (Venezia)
+⚠️ Giocatore non trovato: Sverko
+⚠️ Giocatore non trovato: Schingtienne
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1830, 6)
+            
+✅ Inserito voto per Candè (Venezia)
+⚠️ Giocatore non trovato: Nicolussi_Caviglia
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 1, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1475, 6)
+            
+✅ Inserito voto per Zerbin (Venezia)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1442, 6)
+            
+✅ Inserito voto per Ellertsson (Venezia)
+⚠️ Giocatore non trovato: Oristanio
+⚠️ Giocatore non trovato: Doumbia_I
+⚠️ Giocatore non trovato: Yeboah_J
+⚠️ Giocatore non trovato: Perez_K
+⚠️ Giocatore non trovato: Gytkjaer
+⚠️ Giocatore non trovato: Maric
+⚠️ Giocatore non trovato: Fila
+⚠️ Giocatore non trovato: Di_Francesco
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 1, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1144, 20)
+            
+✅ Inserito voto per Perilli (Verona)
+⚠️ Giocatore non trovato: Dawidowicz
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 7.0, 1, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1802, 20)
+            
+✅ Inserito voto per Bradaric (Verona)
+⚠️ Giocatore non trovato: Coppola_D
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 1, 0, 0, 0,
+                        0, 0, 1, 1198, 20)
+            
+✅ Inserito voto per Tchatchoua (Verona)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1261, 20)
+            
+✅ Inserito voto per Ghilardi (Verona)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1297, 20)
+            
+✅ Inserito voto per Frese (Verona)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 1, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1262, 20)
+            
+✅ Inserito voto per Valentini_N (Verona)
+⚠️ Giocatore non trovato: Duda
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 7.0, 1, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1450, 20)
+            
+✅ Inserito voto per Serdar (Verona)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1397, 20)
+            
+✅ Inserito voto per Suslov (Verona)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1464, 20)
+            
+✅ Inserito voto per Bernede (Verona)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 5.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1553, 20)
+            
+✅ Inserito voto per Sarr_A (Verona)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.0, 0, 0, 0, 0, 0, 0,
+                        0, 1, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1564, 20)
+            
+✅ Inserito voto per Mosquera (Verona)
+
+                INSERT INTO l4m_app_vote
+                ("Day", "Vote", "GoalSc", "GoalTa","GoalDe", "PenSc", "PenMi", "PenSa", "Own", "Yel", "Red",
+                 "AssS", "AssH", "AssL", "AssP", "SubJ", "Sub", "Competition_id", "Player_id", "RealTeam_id")
+                VALUES (1, 6.5, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 1, 1582, 20)
+            
+✅ Inserito voto per Rocha_Livramento (Verona)
+⚠️ Giocatore non trovato: Zanetti
