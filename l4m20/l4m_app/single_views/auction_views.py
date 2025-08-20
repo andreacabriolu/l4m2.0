@@ -3,7 +3,6 @@ from django.views import View
 from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 import json
-import datetime
 from django.db.models import Q
 
 from .. import utilities as U
@@ -17,47 +16,40 @@ class AuctionView(LoginRequiredMixin, View):
     login_url = '/login/'
 
     def get(self,request):
-        try:
-            user_team = U.get_user_team(request.user.id)
-            teamid = user_team['id']
-            seriesid=U.get_my_series(teamid)[0].id
-            
-            filtered_teams = team.Team.objects.filter(Series__id=seriesid)
-            filtered_teams_ids = [team.id for team in filtered_teams]
-            
-            players_gk = U.get_players_my_series("P", teamid, filtered_teams_ids)
-            players_def = U.get_players_my_series("D", teamid, filtered_teams_ids)
-            players_cc = U.get_players_my_series("C", teamid, filtered_teams_ids)
-            players_fw = U.get_players_my_series("A", teamid, filtered_teams_ids)
+        user_team = U.get_user_team(request.user.id)
+        teamid = user_team['id']
 
-            my_market = U.get_my_markets(seriesid)[0].id #TODO: improve check
-            my_best_bets = U.list_my_best_bets(U.get_my_best_bets(teamid, my_market))
-            current_session = U.get_current_session(my_market)
-
-            balance = U.get_balance(teamid)[0] #TODO: improve check
-            balance_for_bets = U.get_balance_for_bets(teamid, balance['Purchases_max'])
-            if(balance_for_bets is None): 
-                balance_for_bets = 0
-            n_carognate = balance['N_carognate']
-
-            params = { 
-                'user_team': user_team,
-                'players_gk':players_gk,
-                'players_def':players_def,
-                'players_cc':players_cc,
-                'players_fw':players_fw,
-                'my_best_bets':my_best_bets,
-                'balance' : balance,
-                'balance_for_bets' : balance_for_bets,
-                'residual': balance['Purchases_max'] - U.get_current_bets_amount(teamid),
-                'my_market': my_market,
-                'session': current_session,
-                'max_carognate' : C.MAX_CAROGNATE,
-                'n_carognate' : n_carognate
-            }
-        except Exception as e:
-            raise Exception(f'{e}')
+        players_gk = U.get_players("P", teamid)
         
+        print(players_gk)
+        
+        players_def = U.get_players("D", teamid)
+        players_cc = U.get_players("C", teamid)
+        players_fw = U.get_players("A", teamid)
+
+        my_market = U.get_my_markets(U.get_my_series(teamid)[0].id)[0].id #TODO: improve check
+        my_best_bets = U.list_my_best_bets(U.get_my_best_bets(teamid, my_market))
+
+        balance = U.get_balance(teamid)[0] #TODO: filter by season/league
+        balance_for_bets = U.get_balance_for_bets(teamid, balance['Purchases_max'])
+        if(balance_for_bets is None): 
+            balance_for_bets = 0
+        n_carognate = balance['N_carognate']
+
+        params = { 
+            'user_team': user_team,
+            'players_gk':players_gk,
+            'players_def':players_def,
+            'players_cc':players_cc,
+            'players_fw':players_fw,
+            'my_best_bets':my_best_bets,
+            'balance' : balance,
+            'balance_for_bets' : balance_for_bets,
+            'my_market': my_market,
+            'max_carognate' : C.MAX_CAROGNATE,
+            'n_carognate' : n_carognate
+          }
+        #print(params)
         return render(request, self.template_name, params)
     
 class SendBetView(View):
@@ -76,16 +68,6 @@ class SendBetView(View):
 
             if(bet_result == C.SendBetResult.BET_OVERFLOW):
                 return HttpResponse(f'error PUNTATA TROPPO ALTA!')
-            
-            if(bet_result == C.SendBetResult.BET_UNDERFLOW):
-                return HttpResponse(f'error PUNTATA TROPPO BASSA!')
-
-            if(bet_result == C.SendBetResult.BET_EXPIRED):
-                return HttpResponse(f'error GIOCATORE SCADUTO!')
-            
-            if(bet_result == C.SendBetResult.BET_SLOT_EXCEED):
-                return HttpResponse(f'error NUMERO MASSIMO DI GIOCATORI PER RUOLO!')
-
         except Exception as e:
             return HttpResponse(f'error inserting bet and updating balance: {e}')
         
@@ -100,12 +82,10 @@ class FinBetView(View):
             if (data is None): return
             
             msg = U.finalize_bet(data)
-            if(msg == C.ErrorCodes.ALREADY_OFFICIAL):
-                return HttpResponse('error GIOCATORE GIÀ UFFICIALE')
 
             return HttpResponse(msg)
-        except Exception as e:
-            return HttpResponse(f'error inserting bet: {e}')
+        except:
+            return HttpResponse('error inserting bet and updating balance')
 
     
 class GetPlayerInfoView(View):
@@ -116,19 +96,18 @@ class GetPlayerInfoView(View):
         my_market = U.get_my_market(userid=request.user.id)
 
         pl = player.Player.objects.\
-            filter(bet__Market_id=my_market).\
-            values('id','Surname','Name','Role','RealTeam__Name','bet__Amount','bet__Expiration_Date',
-               'bet__Team_id__Name').\
-            get(pk=id)
+        filter(mark_players__Market_id=my_market.id).\
+        values('id','Surname','Name','Role','RealTeam__Name','mark_players__bet__Amount','mark_players__bet__Expiration_Date',
+               'mark_players__bet__Team_id__Name','mark_players__Market_id').\
+        get(pk=id)
 
         pl_obj = json.dumps({'Sur':pl['Surname'], 
                              'Nam':pl['Name'], 
                              'Rol':pl['Role'],
                              'RealT':pl['RealTeam__Name'], 
-                             'BetA':pl['bet__Amount'],
-                             'BetE': datetime.datetime.strptime(pl['bet__Expiration_Date'], '%Y-%m-%d %H:%M:%S%z').\
-                                replace(tzinfo=datetime.timezone.utc).__str__() if pl['bet__Expiration_Date'] != None else pl['bet__Expiration_Date'], #remove final timestamp
-                             'BetT': pl['bet__Team_id__Name']})
+                             'BetA':pl['mark_players__bet__Amount'],
+                             'BetE': pl['mark_players__bet__Expiration_Date'][:-6] if pl['mark_players__bet__Expiration_Date'] != None else pl['mark_players__bet__Expiration_Date'], #remove final timestamp
+                             'BetT': pl['mark_players__bet__Team_id__Name']})
 
         return HttpResponse(pl_obj)
 
@@ -145,3 +124,98 @@ class GetBalanceForBetsView(View):
         return HttpResponse(
                 U.get_balance_for_bets(user_team['id'], 
                 U.get_balance(user_team['id'])[0]['Purchases_max']))
+
+
+class AllAuctionsView(LoginRequiredMixin, View):
+    template_name = 'l4m/allauctions.html'
+
+    def get(self,request,series_id=None):
+
+        user_team = U.get_user_team(request.user.id)
+        teamid = user_team['id']
+        series_mine = U.get_my_series(teamid)
+        myseries=series_mine[0].id
+                
+        if series_id is None:
+          user_team = U.get_user_team(request.user.id)
+          teamid = user_team['id']
+          series_id = U.get_my_series(teamid)
+          seriesid = series_id[0].id
+        
+        else:
+          seriesid = series_id
+         
+         
+        all_team_players = U.get_all_team_players()
+        
+        team_ids = team.Team.objects.all().values('id','Name')
+        team_ids_to_filter = team.Team.objects.all().values('id','Name')
+        filtered_teams = []
+        for team_id in team_ids_to_filter:
+            tid=team_id['id']
+            foreign_series = U.get_my_series(tid)
+            if foreign_series.exists():
+               fsid = foreign_series[0].id
+               if fsid == seriesid:
+                   filtered_teams.append(team_id)
+                   
+
+        
+        user_team_name = U.get_user_team(request.user.id)['Name'].replace(' ','_')
+        team_players = {}
+        balances = {}
+        
+        series_players = U.get_series_players(series_id) 
+
+        for team_id in filtered_teams:
+            lp = list(all_team_players.filter(Q(bet__Team_id=team_id['id']) & Q(Role=C.Constant_Dicts.RoleChars['POR'])))
+            ld = list(all_team_players.filter(Q(bet__Team_id=team_id['id']) & Q(Role=C.Constant_Dicts.RoleChars['DIF'])))
+            lc = list(all_team_players.filter(Q(bet__Team_id=team_id['id']) & Q(Role=C.Constant_Dicts.RoleChars['CC'])))
+            la = list(all_team_players.filter(Q(bet__Team_id=team_id['id']) & Q(Role=C.Constant_Dicts.RoleChars['ATT'])))
+            
+            balance = U.get_balance(team_id['id'])[0] #TODO: filter by season/league
+            balance_for_bets = U.get_balance_for_bets(team_id['id'], balance['Purchases_max'])
+            
+            amount = balance['Purchases_amount']  # returns 300
+            car = balance['N_carognate']  # returns 300
+            pmax = balance_for_bets
+            
+
+            li = [{'Surname': 'Monte Acquisti', 'Name': None, 'bet__Team_id': team_id['id'], 'bet__Amount': amount, 'bet__IsExpired': True, 'bet__Carognata': False, 'bet__Expiration_Date': '2025-08-05 16:32:09+00:00','id':"0", 'Role': 'I'},
+                  {'Surname': 'Restante', 'Name': None, 'bet__Team_id': team_id['id'], 'bet__Amount': '-', 'bet__IsExpired': True, 'bet__Carognata': False, 'bet__Expiration_Date': '2025-08-05 16:32:09+00:00','id':"0", 'Role': 'I'},
+                  {'Surname': 'Puntata Massima', 'Name': None, 'bet__Team_id': team_id['id'], 'bet__Amount': pmax, 'bet__IsExpired': True, 'bet__Carognata': False, 'bet__Expiration_Date': '2025-08-05 16:32:09+00:00','id':"0", 'Role': 'I'},
+                  {'Surname': 'Carognate', 'Name': None, 'bet__Team_id': team_id['id'], 'bet__Amount': car, 'bet__IsExpired': True, 'bet__Carognata': False, 'bet__Expiration_Date': '2025-08-05 16:32:09+00:00','id':"0", 'Role': 'I'},
+                  ]
+            
+            lp = U.complete_list(lp, C.NUM_GK, C.Constant_Dicts.RoleChars['POR'])
+            ld = U.complete_list(ld, C.NUM_DEF, C.Constant_Dicts.RoleChars['DIF'])
+            lc = U.complete_list(lc, C.NUM_CC, C.Constant_Dicts.RoleChars['CC'])
+            la = U.complete_list(la, C.NUM_FW, C.Constant_Dicts.RoleChars['ATT'])
+
+            team_players[team_id['Name'].replace(' ','_')] = lp + ld + lc + la + li
+
+            #TODO: manage more than 1 balance!
+            balance = U.get_balance(team_id['id'])
+            if(not balance):
+                continue
+            balances[team_id['Name'].replace(' ','_')] = U.get_balance_for_bets(team_id['id'], balance[0]['Purchases_max'])
+            
+         
+        filtered_team_ids = {team['id'] for team in filtered_teams}
+        
+
+        team_players = {
+            team_name: [p for p in players if p.get('bet__Team_id') in filtered_team_ids]
+            for team_name, players in team_players.items()
+        }     
+
+
+        if(seriesid == myseries):
+            team_players={user_team_name:team_players.pop(user_team_name), **team_players} #get user team as first
+
+        params = { 
+            'team_players' : json.dumps(team_players),
+            'balances' : json.dumps(balances)
+          }
+        
+        return render(request, self.template_name, params)
