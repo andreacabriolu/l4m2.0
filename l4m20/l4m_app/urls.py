@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .single_views import login_views, auction_views, lineup_views, squad_views, allauction_views, live_views
+from .single_views import login_views, auction_views, lineup_views, squad_views, allauction_views, live_views, rules_views
 
 app_name = "l4m"
 
@@ -18,9 +18,10 @@ urlpatterns = [
     path("l4m/allauctions/", allauction_views.AllAuctionsView.as_view(), name="allauction"),
     path("l4m/allauctions/<int:series_id>/", allauction_views.AllAuctionsView.as_view(), name="allauction_series"),
     path("l4m/lineup/", lineup_views.LineupView.as_view(), name="lineup"),
+    path("l4m/rules/", rules_views.RulesView.as_view(), name="rules"),
     path("l4m/squad/", squad_views.SquadView.as_view(), name="squad"),
     path("l4m/lineup/save/", lineup_views.SaveLineupView.as_view(), name="save_lineup"),
     path("l4m/lineup/getLast/", lineup_views.GetLastLineupView.as_view(), name="get_last_lineup"),
-   path("l4m/live/", live_views.LiveView.as_view(), name="live"),
+    path("l4m/live/", live_views.LiveView.as_view(), name="live"),
 
 ]

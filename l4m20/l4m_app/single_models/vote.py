@@ -54,4 +54,6 @@ class Vote(models.Model):
         Cap = bool
         TotVote = float
         Status = int
+        ChangedIn = str
+        ChangedOut = str
 

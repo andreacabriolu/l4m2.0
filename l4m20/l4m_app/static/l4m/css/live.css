@@ -73,3 +73,9 @@ table .w-30 {
     border-top-color: whitesmoke;
     border-width: 2px !important;
 }
+
+.old-mod {
+    font-weight: bold !important;
+    color: rgb(208, 59, 59) !important;
+    font-size: large;
+}
