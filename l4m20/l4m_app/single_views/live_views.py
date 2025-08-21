@@ -15,7 +15,6 @@ class LiveView(LoginRequiredMixin, View):
     template_name = 'l4m/live.html'
 
     def get(self,request):
-
         current_day = U.get_current_day()
         teamid = U.get_user_team(request.user.id)['id']
         seriesid = U.get_my_series(teamid)[0].id

@@ -79,3 +79,8 @@ table .w-30 {
     color: rgb(208, 59, 59) !important;
     font-size: large;
 }
+
+.cap-img {
+    vertical-align: top;
+    margin-right: .2em;
+}
