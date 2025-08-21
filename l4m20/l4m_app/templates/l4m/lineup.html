@@ -40,7 +40,7 @@
                     {% for pl in players_all %}
                         <option value="{{pl}}" data-id="{{pl.Player__id}}">[{{pl.Player__Role}}] {{pl.Player__Surname}} ({{pl.Player__RealTeam__Name}})</option>
                     {% endfor %}
-                    <option value="" disabled selected></option>
+                    <option value="" selected></option>
                 </select>
                 <label for="captain">Capitano</label>
             </div>
@@ -74,7 +74,7 @@
                         {% for gk in players_gk %}
                         <option value="{{gk}}" data-id="{{gk.Player__id}}">[{{gk.Player__Role}}] {{gk.Player__Surname}} ({{gk.Player__RealTeam__Name}})</option>
                         {% endfor %}
-                        <option value="" disabled selected></option>
+                        <option value="" selected></option>
                     </select>
                     <label for="gk_tit">Portiere titolare</label>
                 </div>
@@ -84,7 +84,7 @@
                         {% for def in players_def %}
                         <option value="{{def}}" data-id="{{def.Player__id}}">[{{def.Player__Role}}] {{def.Player__Surname}} ({{def.Player__RealTeam__Name}})</option>
                         {% endfor %}
-                        <option value="" disabled selected></option>
+                        <option value="" selected></option>
                     </select>
                     <label for="d1_tit">Difensore 1 titolare</label>
                 </div>
@@ -94,7 +94,7 @@
                         {% for def in players_def %}
                         <option value="{{def}}" data-id="{{def.Player__id}}">[{{def.Player__Role}}] {{def.Player__Surname}} ({{def.Player__RealTeam__Name}})</option>
                         {% endfor %}
-                        <option value="" disabled selected></option>
+                        <option value="" selected></option>
                     </select>
                     <label for="d2_tit">Difensore 2 titolare</label>
                 </div>
@@ -104,7 +104,7 @@
                         {% for def in players_def %}
                         <option value="{{def}}" data-id="{{def.Player__id}}">[{{def.Player__Role}}] {{def.Player__Surname}} ({{def.Player__RealTeam__Name}})</option>
                         {% endfor %}
-                        <option value="" disabled selected></option>
+                        <option value="" selected></option>
                     </select>
                     <label for="d3_tit">Difensore 3 titolare</label>
                 </div>
@@ -114,7 +114,7 @@
                         {% for def in players_def %}
                         <option value="{{def}}" data-id="{{def.Player__id}}">[{{def.Player__Role}}] {{def.Player__Surname}} ({{def.Player__RealTeam__Name}})</option>
                         {% endfor %}
-                        <option value="" disabled selected></option>
+                        <option value="" selected></option>
                     </select>
                     <label for="d4_tit">Difensore 4 titolare</label>
                 </div>
@@ -124,7 +124,7 @@
                         {% for def in players_def %}
                         <option value="{{def}}" data-id="{{def.Player__id}}">[{{def.Player__Role}}] {{def.Player__Surname}} ({{def.Player__RealTeam__Name}})</option>
                         {% endfor %}
-                        <option value="" disabled selected></option>
+                        <option value="" selected></option>
                     </select>
                     <label for="d5_tit">Difensore 5 titolare</label>
                 </div>
@@ -134,7 +134,7 @@
                         {% for cc in players_cc %}
                         <option value="{{cc}}" data-id="{{cc.Player__id}}">[{{cc.Player__Role}}] {{cc.Player__Surname}} ({{cc.Player__RealTeam__Name}})</option>
                         {% endfor %}
-                        <option value="" disabled selected></option>
+                        <option value="" selected></option>
                     </select>
                     <label for="c1_tit">Centrocampista 1 titolare</label>
                 </div>
@@ -144,7 +144,7 @@
                         {% for cc in players_cc %}
                         <option value="{{cc}}" data-id="{{cc.Player__id}}">[{{cc.Player__Role}}] {{cc.Player__Surname}} ({{cc.Player__RealTeam__Name}})</option>
                         {% endfor %}
-                        <option value="" disabled selected></option>
+                        <option value="" selected></option>
                     </select>
                     <label for="c2_tit">Centrocampista 2 titolare</label>
                 </div>
@@ -154,7 +154,7 @@
                         {% for cc in players_cc %}
                         <option value="{{cc}}" data-id="{{cc.Player__id}}">[{{cc.Player__Role}}] {{cc.Player__Surname}} ({{cc.Player__RealTeam__Name}})</option>
                         {% endfor %}
-                        <option value="" disabled selected></option>
+                        <option value="" selected></option>
                     </select>
                     <label for="c3_tit">Centrocampista 3 titolare</label>
                 </div>
@@ -164,7 +164,7 @@
                         {% for cc in players_cc %}
                         <option value="{{cc}}" data-id="{{cc.Player__id}}">[{{cc.Player__Role}}] {{cc.Player__Surname}} ({{cc.Player__RealTeam__Name}})</option>
                         {% endfor %}
-                        <option value="" disabled selected></option>
+                        <option value="" selected></option>
                     </select>
                     <label for="c4_tit">Centrocampista 4 titolare</label>
                 </div>
@@ -174,7 +174,7 @@
                         {% for cc in players_cc %}
                         <option value="{{cc}}" data-id="{{cc.Player__id}}">[{{cc.Player__Role}}] {{cc.Player__Surname}} ({{cc.Player__RealTeam__Name}})</option>
                         {% endfor %}
-                        <option value="" disabled selected></option>
+                        <option value="" selected></option>
                     </select>
                     <label for="c5_tit">Centrocampista 5 titolare</label>
                 </div>
@@ -184,7 +184,7 @@
                         {% for fw in players_fw %}
                         <option value="{{fw}}" data-id="{{fw.Player__id}}">[{{fw.Player__Role}}] {{fw.Player__Surname}} ({{fw.Player__RealTeam__Name}})</option>
                         {% endfor %}
-                        <option value="" disabled selected></option>
+                        <option value="" selected></option>
                     </select>
                     <label for="a1_tit">Attaccante 1 titolare</label>
                 </div>
@@ -194,7 +194,7 @@
                         {% for fw in players_fw %}
                         <option value="{{fw}}" data-id="{{fw.Player__id}}">[{{fw.Player__Role}}] {{fw.Player__Surname}} ({{fw.Player__RealTeam__Name}})</option>
                         {% endfor %}
-                        <option value="" disabled selected></option>
+                        <option value="" selected></option>
                     </select>
                     <label for="a2_tit">Attaccante 2 titolare</label>
                 </div>
@@ -204,7 +204,7 @@
                         {% for fw in players_fw %}
                         <option value="{{fw}}" data-id="{{fw.Player__id}}">[{{fw.Player__Role}}] {{fw.Player__Surname}} ({{fw.Player__RealTeam__Name}})</option>
                         {% endfor %}
-                        <option value="" disabled selected></option>
+                        <option value="" selected></option>
                     </select>
                     <label for="a3_tit">Attaccante 3 titolare</label>
                 </div> 
@@ -220,7 +220,7 @@
                         {% for gk in players_gk %}
                         <option value="{{gk}}" data-id="{{gk.Player__id}}">[{{gk.Player__Role}}] {{gk.Player__Surname}} ({{gk.Player__RealTeam__Name}})</option>
                         {% endfor %}
-                        <option value="" disabled selected></option>
+                        <option value="" selected></option>
                     </select>
                     <label for="gk1_ris">Portiere 1 riserva</label>
                 </div>
@@ -230,7 +230,7 @@
                         {% for gk in players_gk %}
                         <option value="{{gk}}" data-id="{{gk.Player__id}}">[{{gk.Player__Role}}] {{gk.Player__Surname}} ({{gk.Player__RealTeam__Name}})</option>
                         {% endfor %}
-                        <option value="" disabled selected></option>
+                        <option value="" selected></option>
                     </select>
                     <label for="gk2_ris">Portiere 2 riserva</label>
                 </div>
@@ -240,7 +240,7 @@
                         {% for pl in players_my %}
                         <option value="{{pl}}" data-id="{{pl.Player__id}}">[{{pl.Player__Role}}] {{pl.Player__Surname}} ({{pl.Player__RealTeam__Name}})</option>
                         {% endfor %}
-                        <option value="" disabled selected></option>
+                        <option value="" selected></option>
                     </select>
                     <label for="p1_ris">Giocatore di riserva</label>
                 </div>
@@ -250,7 +250,7 @@
                         {% for pl in players_my %}
                         <option value="{{pl}}" data-id="{{pl.Player__id}}">[{{pl.Player__Role}}] {{pl.Player__Surname}} ({{pl.Player__RealTeam__Name}})</option>
                         {% endfor %}
-                        <option value="" disabled selected></option>
+                        <option value="" selected></option>
                     </select>
                     <label for="p2_ris">Giocatore di riserva</label>
                 </div>
@@ -260,7 +260,7 @@
                         {% for pl in players_my %}
                         <option value="{{pl}}" data-id="{{pl.Player__id}}">[{{pl.Player__Role}}] {{pl.Player__Surname}} ({{pl.Player__RealTeam__Name}})</option>
                         {% endfor %}
-                        <option value="" disabled selected></option>
+                        <option value="" selected></option>
                     </select>
                     <label for="p3_ris">Giocatore di riserva</label>
                 </div>
@@ -270,7 +270,7 @@
                         {% for pl in players_my %}
                         <option value="{{pl}}" data-id="{{pl.Player__id}}">[{{pl.Player__Role}}] {{pl.Player__Surname}} ({{pl.Player__RealTeam__Name}})</option>
                         {% endfor %}
-                        <option value="" disabled selected></option>
+                        <option value="" selected></option>
                     </select>
                     <label for="p4_ris">Giocatore di riserva</label>
                 </div>
@@ -280,7 +280,7 @@
                         {% for pl in players_my %}
                         <option value="{{pl}}" data-id="{{pl.Player__id}}">[{{pl.Player__Role}}] {{pl.Player__Surname}} ({{pl.Player__RealTeam__Name}})</option>
                         {% endfor %}
-                        <option value="" disabled selected></option>
+                        <option value="" selected></option>
                     </select>
                     <label for="p5_ris">Giocatore di riserva</label>
                 </div>
@@ -290,7 +290,7 @@
                         {% for pl in players_my %}
                         <option value="{{pl}}" data-id="{{pl.Player__id}}">[{{pl.Player__Role}}] {{pl.Player__Surname}} ({{pl.Player__RealTeam__Name}})</option>
                         {% endfor %}
-                        <option value="" disabled selected></option>
+                        <option value="" selected></option>
                     </select>
                     <label for="p6_ris">Giocatore di riserva</label>
                 </div>
@@ -300,7 +300,7 @@
                         {% for pl in players_my %}
                         <option value="{{pl}}" data-id="{{pl.Player__id}}">[{{pl.Player__Role}}] {{pl.Player__Surname}} ({{pl.Player__RealTeam__Name}})</option>
                         {% endfor %}
-                        <option value="" disabled selected></option>
+                        <option value="" selected></option>
                     </select>
                     <label for="p7_ris">Giocatore di riserva</label>
                 </div>
@@ -310,7 +310,7 @@
                         {% for pl in players_my %}
                         <option value="{{pl}}" data-id="{{pl.Player__id}}">[{{pl.Player__Role}}] {{pl.Player__Surname}} ({{pl.Player__RealTeam__Name}})</option>
                         {% endfor %}
-                        <option value="" disabled selected></option>
+                        <option value="" selected></option>
                     </select>
                     <label for="p8_ris">Giocatore di riserva</label>
                 </div>
@@ -320,7 +320,7 @@
                         {% for pl in players_my %}
                         <option value="{{pl}}" data-id="{{pl.Player__id}}">[{{pl.Player__Role}}] {{pl.Player__Surname}} ({{pl.Player__RealTeam__Name}})</option>
                         {% endfor %}
-                        <option value="" disabled selected></option>
+                        <option value="" selected></option>
                     </select>
                     <label for="p9_ris">Giocatore di riserva</label>
                 </div>
@@ -330,7 +330,7 @@
                         {% for pl in players_my %}
                         <option value="{{pl}}" data-id="{{pl.Player__id}}">[{{pl.Player__Role}}] {{pl.Player__Surname}} ({{pl.Player__RealTeam__Name}})</option>
                         {% endfor %}
-                        <option value="" disabled selected></option>
+                        <option value="" selected></option>
                     </select>
                     <label for="p10_ris">Giocatore di riserva</label>
                 </div>
@@ -340,7 +340,7 @@
                         {% for pl in players_my %}
                         <option value="{{pl}}" data-id="{{pl.Player__id}}">[{{pl.Player__Role}}] {{pl.Player__Surname}} ({{pl.Player__RealTeam__Name}})</option>
                         {% endfor %}
-                        <option value="" disabled selected></option>
+                        <option value="" selected></option>
                     </select>
                     <label for="p11_ris">Giocatore di riserva</label>
                 </div>
@@ -350,7 +350,7 @@
                         {% for pl in players_my %}
                         <option value="{{pl}}" data-id="{{pl.Player__id}}">[{{pl.Player__Role}}] {{pl.Player__Surname}} ({{pl.Player__RealTeam__Name}})</option>
                         {% endfor %}
-                        <option value="" disabled selected></option>
+                        <option value="" selected></option>
                     </select>
                     <label for="p12_ris">Giocatore di riserva</label>
                 </div>
