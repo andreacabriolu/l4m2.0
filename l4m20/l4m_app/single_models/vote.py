@@ -56,4 +56,5 @@ class Vote(models.Model):
         Status = int
         ChangedIn = str
         ChangedOut = str
+        Msg = str
 

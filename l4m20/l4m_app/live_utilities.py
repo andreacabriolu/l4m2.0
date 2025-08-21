@@ -1,3 +1,4 @@
+import locale
 from .models import *
 import json
 from l4m20 import constants as C
@@ -16,22 +17,26 @@ def make_null_vote_obj(pl_id, cap_id=None):
     v_obj.Player = pl if pl is not None else None
     if(pl_id == cap_id):
         v_obj.Cap = True
-    v_obj.Vote = 0
-    v_obj.TotVote = 0
+    v_obj.Vote = None
+    v_obj.TotVote = None
     v_obj.Status = C.PlayerStatus.NO_PLAY_AT_ALL
     
     return v_obj
 
-def make_empty_vote_obj(pl_id, cap_id, already_played):
+def make_empty_vote_obj(pl_id, cap_id, already_played, current_day):
     v_obj = vote.Vote.Vote_Obj()
     pl = player.Player.objects.get(pk=pl_id)
     v_obj.Player = pl if pl is not None else None
     if(pl_id == cap_id):
         v_obj.Cap = True
-    v_obj.Vote = 6
-    v_obj.TotVote = 6
+    v_obj.Vote = 6 if not already_played else None
+    v_obj.TotVote = 6 if not already_played else None
     v_obj.Status = C.PlayerStatus.YET_TO_PLAY if not already_played else C.PlayerStatus.NOT_PLAYED
-    
+    real_match = real_calendar.Real_calendar.objects.filter(Q(Day=current_day) & \
+                                                            (Q(RealTeamHome_id=pl.RealTeam) | Q(RealTeamAway_id=pl.RealTeam)))
+    locale.setlocale(locale.LC_ALL, 'it_IT')
+    v_obj.Msg = real_match[0].Date.strftime('%d %B %Y alle %H:%M') if real_match else ""
+
     return v_obj
 
 def make_vote_obj(_vote:vote.Vote, cap_id, already_played):
@@ -191,12 +196,11 @@ def get_votes(lineup, current_day, my_teamid, home=True):
         _items.append(lineup)
         return [votes_tit, _items, votes_ris]
 
-
     line = json.loads(U.cleanJSON(lineup.Line))
 
     cap_id = line['captain'] if 'captain' in line.keys() else 0
     orig_module = line['mod'].replace('-','')
-    cap_vote = 0
+    cap_vote = 6
     for l in line.items(): #loop players in lineup
         if l[0] == 'captain':
             continue
@@ -210,10 +214,10 @@ def get_votes(lineup, current_day, my_teamid, home=True):
         _vote = vote.Vote.objects.filter(Q(Player_id=l[1]) & Q(Day=current_day))
         if(l[0].endswith('tit')):
             votes_tit.append(make_vote_obj(_vote[0], cap_id, already_played) if len(_vote) > 0 else \
-                             make_empty_vote_obj(l[1], cap_id, already_played))
+                             make_empty_vote_obj(l[1], cap_id, already_played, current_day))
         else:
             votes_ris.append(make_vote_obj(_vote[0], cap_id, already_played) if len(_vote) > 0 else \
-                             make_empty_vote_obj(l[1], cap_id, already_played))
+                             make_empty_vote_obj(l[1], cap_id, already_played, current_day))
 
         if len(_vote) > 0:
             if(l[1] == cap_id):
@@ -225,6 +229,7 @@ def get_votes(lineup, current_day, my_teamid, home=True):
     #                C.PlayerStatus.PLAYING not in [v.Status for v in votes_tot]
     
     valid_votes = []
+    n_subs = 0
     ## get the valid votes ###################
     for vote_tit in votes_tit:
         if(vote_tit.Status == C.PlayerStatus.NOT_PLAYED):
@@ -235,6 +240,9 @@ def get_votes(lineup, current_day, my_teamid, home=True):
             vote_tit.TotVote = None
 
             if(sub.Status not in [C.PlayerStatus.NO_PLAY_AT_ALL]):
+                if(n_subs == C.MAX_SUBS): #max 5 substitutions
+                    continue
+                n_subs = n_subs + 1
                 valid_votes.append(sub)
                 t_i = votes_tit.index(vote_tit)
                 t_r = votes_ris.index(sub)
