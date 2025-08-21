@@ -17,8 +17,18 @@ class LiveView(LoginRequiredMixin, View):
     def get(self,request):
         current_day = U.get_current_day()
         teamid = U.get_user_team(request.user.id)['id']
-        seriesid = U.get_my_series(teamid)[0].id
+        seriesid = U.get_my_series(teamid)[0].id        
+                
+        # Working on b11
+        kk = U.get_my_players_filtered('P',teamid)
+        dd = U.get_my_players_filtered('D',teamid)
+        cc = U.get_my_players_filtered('C',teamid)
+        aa = U.get_my_players_filtered('A',teamid)
+        
+        print(kk)
 
+        
+        
         series_teams = team.Team.objects.filter(Series__id=seriesid)
         last_lineups_d = {}
         for t in series_teams:
