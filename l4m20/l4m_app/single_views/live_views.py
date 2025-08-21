@@ -25,8 +25,19 @@ class LiveView(LoginRequiredMixin, View):
         cc = U.get_my_players_filtered('C',teamid)
         aa = U.get_my_players_filtered('A',teamid)
         
-        print(kk)
-
+        for keep in kk:
+            idpl=keep["Player__id"]
+            cap_id=-1
+            pl = player.Player.objects.get(pk=idpl)
+            already_played = LU.check_already_played(current_day,pl.RealTeam)
+            _vote = vote.Vote.objects.filter(Q(Player_id=idpl) & Q(Day=current_day))
+            votes_pl = LU.make_vote_obj(_vote[0], cap_id, already_played) if len(_vote) > 0 else \
+                             LU.make_empty_vote_obj(pl.id, cap_id, already_played, current_day) 
+            pl.votes = votes_pl 
+            print(pl.Surname+str(pl.votes.Vote)+str(pl.votes.TotVote))
+            #print(keep["Player__RealTeam__Name"])
+            #if(_vote):
+            #    print(_vote[0])
         
         
         series_teams = team.Team.objects.filter(Series__id=seriesid)
