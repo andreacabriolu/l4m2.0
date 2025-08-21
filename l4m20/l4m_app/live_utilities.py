@@ -122,12 +122,15 @@ def check_already_played(current_day, real_team):
     day_votes = vote.Vote.objects.filter(Q(Day=current_day) & Q(RealTeam_id=real_team.id))
     return len(day_votes) > 0 
 
-def check_role_with_module(role, module):
-    if(role == 'D' and module in [C.Modules._532, C.Modules._541]):
-        return False
-    if(role == 'C' and module in [C.Modules._352, C.Modules._451]):
-        return False
-    if(role == 'A' and module in [C.Modules._343, C.Modules._433]):
+def check_role_with_module(role_tit, role_ris, current_module):
+    if(
+        ((role_tit == 'D') and current_module in [C.Modules._343, C.Modules._352]) or \
+        ((role_tit == 'C') and current_module in [C.Modules._433, C.Modules._532]) or \
+        ((role_tit == 'A') and current_module in [C.Modules._541, C.Modules._451]) or \
+        ((role_ris == 'D') and current_module in [C.Modules._532, C.Modules._541]) or \
+        ((role_ris == 'C') and current_module in [C.Modules._352, C.Modules._451]) or \
+        ((role_ris == 'A') and current_module in [C.Modules._343, C.Modules._433])
+    ):    
         return False
     
     return True
@@ -151,7 +154,7 @@ def search_substitute(votes_ris, vote_tit, module):
         for vote_ris in votes_ris:
             if(vote_ris.Status in good_statuses and 
                vote_ris.Player.Role != 'P' and
-               check_role_with_module(vote_ris.Player.Role, module)
+               check_role_with_module(vote_tit.Player.Role, vote_ris.Player.Role, module)
                ):
                 vote_ris.ChangedIn = vote_tit.Player.Surname
                 vote_tit.ChangedOut = vote_ris.Player.Surname
@@ -234,6 +237,8 @@ def get_votes(lineup, current_day, my_teamid, home=True):
     for vote_tit in votes_tit:
         if(vote_tit.Status == C.PlayerStatus.NOT_PLAYED):
             sub, module = search_substitute(votes_ris, vote_tit, module)
+            if(module == 'KO'):
+                return #here it should NEVER come
             if(sub.Status == C.PlayerStatus.NO_PLAY_AT_ALL): 
                 vote_tit.Status = C.PlayerStatus.NO_PLAY_AT_ALL
             vote_tit.Vote = None
