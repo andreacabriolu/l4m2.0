@@ -1,0 +1,40 @@
+{% extends "./base.html" %}
+{% load static %}
+
+{ % block title % } L4M2.0 - BEST11 { % endblock % }
+
+{% block links %}
+<link href="{% static 'l4m/css/live.css' %}" rel="stylesheet">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+    href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap"
+    rel="stylesheet">
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Mozilla+Headline:wght@200..700&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
+</style>
+{% endblock %}
+
+{% block scripts %}
+<!-- <script type="text/javascript" src="{% static 'l4m/js/live.js' %}"></script> -->
+
+{% endblock %}
+
+{% block content %}
+<div id="layoutSidenav_content" class="custom-layout">
+
+    <div class="alert alert-danger" role="alert" id="error-alert" hidden>
+        <span id="span-error-alert"></span>
+    </div>
+    <div class="alert alert-success" role="alert" id="info-alert" hidden>
+        <span id="span-info-alert"></span>
+    </div>
+    <div class="bg-body-tertiary main-div p-5 live-tables bg-success bg-opacity-50" id="b11MainDiv">
+
+        
+
+    </div>
+</div>
+{% endblock %}

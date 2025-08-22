@@ -12,7 +12,7 @@ from ..models import *
 from l4m20 import constants as C
 
 class LiveB11View(LoginRequiredMixin, View):
-    template_name = 'l4m/live.html'
+    template_name = 'l4m/live_b11.html'
 
     def get(self, request):
         current_day = U.get_current_day()
