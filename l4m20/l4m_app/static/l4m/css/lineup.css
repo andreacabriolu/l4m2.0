@@ -154,3 +154,11 @@ label {
     font-weight: bold;
     font-size: large;
   }
+
+  .played {
+    color: red !important;
+  }
+
+  .blocked {
+    background-color: rgb(159,159,159) !important;
+  }

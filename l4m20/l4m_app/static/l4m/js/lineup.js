@@ -100,6 +100,24 @@ function removeSelectedOptionsFromOtherDropdowns(current) {
     });
 }
 
+function removeAlreadyPlayedPlayerFromOtherDropdowns(item) {
+    var currentid = item.data().id;
+    $('#l_ups select').each(function () {
+
+        if (!($(this).is(item.prevObject))) {
+                $(this).children('option').each(function() {
+                    if ($(this).data().id == currentid) {
+                        $(this).hide(); 
+                    }
+                });
+                // $(this).children(`[data-id="${currentid}"]`).each(function () {
+                //     $(this).parent().val('');
+                //     $(this).prop('selected', false);
+                // });
+            }
+    });
+}
+
 function adjustOtherDropdowns(current) {
     var currentid = current.children('option:selected').data().id;
 
@@ -181,6 +199,11 @@ function load_lineup(lineup) {
         pl = $(`#${item}`).children(`option[data-id=${lineup[item]}]`);
         if (pl.length <= 0) { continue; }
         $(`#${item}`).val(pl[0].value);
+        if(pl.data().limit == "True") {
+            $(`#${item}`).addClass('played');
+            $(`#${item}`).prop('disabled', true);
+            removeAlreadyPlayedPlayerFromOtherDropdowns(pl);
+        }
     }
 }
 
@@ -221,6 +244,14 @@ function reset_captain() {
         }
     });
     $('#captain').val('option');
+}
+
+function freeze_who_played() {
+    $('#l_ups select').each(function () {
+        if($(this).children('option:selected').data().limit == 'True') {
+            $(this).addClass('played'); 
+        }
+    });
 }
 
 window.addEventListener('DOMContentLoaded', event => {

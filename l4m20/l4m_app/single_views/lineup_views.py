@@ -19,8 +19,9 @@ class LineupView(LoginRequiredMixin, View):
         user_team = U.get_user_team(request.user.id)
         teamid = user_team['id']
         mods = C.Constant_Lists.Modules
+        current_day = U.get_current_day()
         
-        today_matches = real_calendar.Real_calendar.objects.filter(Day=U.get_current_day()).values('Date').order_by('Date')
+        today_matches = real_calendar.Real_calendar.objects.filter(Day=current_day).values('Date').order_by('Date')
         day_time_limit = today_matches.first()['Date'].astimezone(ZoneInfo(key='Europe/Rome')) if len(today_matches) > 0 else None
         day_already_started = datetime.now(ZoneInfo('Europe/Rome')) >= day_time_limit
 
@@ -28,6 +29,35 @@ class LineupView(LoginRequiredMixin, View):
         players_def = U.get_my_players_filtered("D", teamid)
         players_cc = U.get_my_players_filtered("C", teamid)
         players_fw = U.get_my_players_filtered("A", teamid)
+
+        for gk in players_gk:
+            real_match = real_calendar.Real_calendar.objects.filter(Q(Day=current_day) & \
+                                                            (Q(RealTeamHome_id=gk['Player__RealTeam__id']) | Q(RealTeamAway_id=gk['Player__RealTeam__id'])))
+            if(len(real_match) <= 0):
+                continue
+            gk['played'] = datetime.now(ZoneInfo('Europe/Rome')) >= real_match[0].Date.astimezone(ZoneInfo(key='Europe/Rome'))
+
+        for df in players_def:
+            real_match = real_calendar.Real_calendar.objects.filter(Q(Day=current_day) & \
+                                                            (Q(RealTeamHome_id=df['Player__RealTeam__id']) | Q(RealTeamAway_id=df['Player__RealTeam__id'])))
+            if(len(real_match) <= 0):
+                continue
+            df['played'] = datetime.now(ZoneInfo('Europe/Rome')) >= real_match[0].Date.astimezone(ZoneInfo(key='Europe/Rome'))
+
+        for cc in players_cc:
+            real_match = real_calendar.Real_calendar.objects.filter(Q(Day=current_day) & \
+                                                            (Q(RealTeamHome_id=cc['Player__RealTeam__id']) | Q(RealTeamAway_id=cc['Player__RealTeam__id'])))
+            if(len(real_match) <= 0):
+                continue
+            cc['played'] = datetime.now(ZoneInfo('Europe/Rome')) >= real_match[0].Date.astimezone(ZoneInfo(key='Europe/Rome'))
+
+        for fw in players_fw:
+            real_match = real_calendar.Real_calendar.objects.filter(Q(Day=current_day) & \
+                                                            (Q(RealTeamHome_id=fw['Player__RealTeam__id']) | Q(RealTeamAway_id=fw['Player__RealTeam__id'])))
+            if(len(real_match) <= 0):
+                continue
+            fw['played'] = datetime.now(ZoneInfo('Europe/Rome')) >= real_match[0].Date.astimezone(ZoneInfo(key='Europe/Rome'))
+
         players_my = list(players_def) + list(players_cc)+ list(players_fw)
         players_all = players_my + list(players_gk)
 

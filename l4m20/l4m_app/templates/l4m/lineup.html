@@ -28,7 +28,7 @@
     <div class="bg-body-tertiary main-div p-5" id="lineupDiv">
         <div class="form-floating top-line">
             <div class="mod">
-                <select class="form-select form-select-lg mb-3 form-select-custom" id="mods">
+                <select class="form-select form-select-lg mb-3 form-select-custom {% if day_already_started %} blocked {% endif %}" id="mods" {% if day_already_started %} disabled {% endif %}>
                     {% for mod in mods %}
                     <option value="{{mod}}">{{mod}}</option>
                     {% endfor %}
@@ -36,7 +36,7 @@
                 <label for="mods">Modulo</label>
             </div>
             <div class="form-floating cap">
-                <select class="form-select form-select-lg mb-3 form-select-custom form-select-player" id="captain">
+                <select class="form-select form-select-lg mb-3 form-select-custom form-select-player {% if day_already_started %} blocked {% endif %}" id="captain" {% if day_already_started %} disabled {% endif %}>
                     {% for pl in players_all %}
                         <option value="{{pl}}" data-id="{{pl.Player__id}}">[{{pl.Player__Role}}] {{pl.Player__Surname}} ({{pl.Player__RealTeam__Name}})</option>
                     {% endfor %}
@@ -82,7 +82,9 @@
                 <div class="form-floating">
                     <select class="form-select form-select-lg mb-3 form-select-player" id="gk_tit">
                         {% for gk in players_gk %}
-                        <option value="{{gk}}" data-limit="{{gk.Player__RealtTeam__}}" data-id="{{gk.Player__id}}">[{{gk.Player__Role}}] {{gk.Player__Surname}} ({{gk.Player__RealTeam__Name}})</option>
+                        <option value="{{gk}}" data-limit="{{gk.played}}" data-id="{{gk.Player__id}}" {% if gk.played %} class="played" {% endif %}>
+                            [{{gk.Player__Role}}] {{gk.Player__Surname}} ({{gk.Player__RealTeam__Name}})
+                        </option>
                         {% endfor %}
                         <option value="" selected></option>
                     </select>
@@ -92,7 +94,9 @@
                 <div class="form-floating" id="d1">
                     <select class="form-select form-select-lg mb-3 form-select-player" id="d1_tit">
                         {% for def in players_def %}
-                        <option value="{{def}}" data-id="{{def.Player__id}}">[{{def.Player__Role}}] {{def.Player__Surname}} ({{def.Player__RealTeam__Name}})</option>
+                        <option value="{{def}}" data-limit="{{def.played}}" data-id="{{def.Player__id}}" {% if def.played %} class="played" {% endif %}>
+                            [{{def.Player__Role}}] {{def.Player__Surname}} ({{def.Player__RealTeam__Name}})
+                        </option>
                         {% endfor %}
                         <option value="" selected></option>
                     </select>
@@ -102,7 +106,9 @@
                 <div class="form-floating" id="d2">
                     <select class="form-select form-select-lg mb-3 form-select-player" id="d2_tit">
                         {% for def in players_def %}
-                        <option value="{{def}}" data-id="{{def.Player__id}}">[{{def.Player__Role}}] {{def.Player__Surname}} ({{def.Player__RealTeam__Name}})</option>
+                        <option value="{{def}}" data-limit="{{def.played}}" data-id="{{def.Player__id}}" {% if def.played %} class="played" {% endif %}>
+                            [{{def.Player__Role}}] {{def.Player__Surname}} ({{def.Player__RealTeam__Name}})
+                        </option>
                         {% endfor %}
                         <option value="" selected></option>
                     </select>
@@ -112,7 +118,9 @@
                 <div class="form-floating" id="d3">
                     <select class="form-select form-select-lg mb-3 form-select-player" id="d3_tit">
                         {% for def in players_def %}
-                        <option value="{{def}}" data-id="{{def.Player__id}}">[{{def.Player__Role}}] {{def.Player__Surname}} ({{def.Player__RealTeam__Name}})</option>
+                        <option value="{{def}}" data-limit="{{def.played}}" data-id="{{def.Player__id}}" {% if def.played %} class="played" {% endif %}>
+                            [{{def.Player__Role}}] {{def.Player__Surname}} ({{def.Player__RealTeam__Name}})
+                        </option>
                         {% endfor %}
                         <option value="" selected></option>
                     </select>
@@ -122,7 +130,9 @@
                 <div class="form-floating" id="d4" hidden>
                     <select class="form-select form-select-lg mb-3 form-select-player" id="d4_tit">
                         {% for def in players_def %}
-                        <option value="{{def}}" data-id="{{def.Player__id}}">[{{def.Player__Role}}] {{def.Player__Surname}} ({{def.Player__RealTeam__Name}})</option>
+                        <option value="{{def}}" data-limit="{{def.played}}" data-id="{{def.Player__id}}" {% if def.played %} class="played" {% endif %}>
+                            [{{def.Player__Role}}] {{def.Player__Surname}} ({{def.Player__RealTeam__Name}})
+                        </option>
                         {% endfor %}
                         <option value="" selected></option>
                     </select>
@@ -132,7 +142,9 @@
                 <div class="form-floating" id="d5" hidden>
                     <select class="form-select form-select-lg mb-3 form-select-player" id="d5_tit">
                         {% for def in players_def %}
-                        <option value="{{def}}" data-id="{{def.Player__id}}">[{{def.Player__Role}}] {{def.Player__Surname}} ({{def.Player__RealTeam__Name}})</option>
+                        <option value="{{def}}" data-limit="{{def.played}}" data-id="{{def.Player__id}}" {% if def.played %} class="played" {% endif %}>
+                            [{{def.Player__Role}}] {{def.Player__Surname}} ({{def.Player__RealTeam__Name}})
+                        </option>
                         {% endfor %}
                         <option value="" selected></option>
                     </select>
@@ -142,7 +154,9 @@
                 <div class="form-floating" id="c1">
                     <select class="form-select form-select-lg mb-3 form-select-player" id="c1_tit">
                         {% for cc in players_cc %}
-                        <option value="{{cc}}" data-id="{{cc.Player__id}}">[{{cc.Player__Role}}] {{cc.Player__Surname}} ({{cc.Player__RealTeam__Name}})</option>
+                        <option value="{{cc}}" data-limit="{{cc.played}}" data-id="{{cc.Player__id}}" {% if cc.played %} class="played" {% endif %}>
+                            [{{cc.Player__Role}}] {{cc.Player__Surname}} ({{cc.Player__RealTeam__Name}})
+                        </option>
                         {% endfor %}
                         <option value="" selected></option>
                     </select>
@@ -152,7 +166,9 @@
                 <div class="form-floating" id="c2">
                     <select class="form-select form-select-lg mb-3 form-select-player" id="c2_tit">
                         {% for cc in players_cc %}
-                        <option value="{{cc}}" data-id="{{cc.Player__id}}">[{{cc.Player__Role}}] {{cc.Player__Surname}} ({{cc.Player__RealTeam__Name}})</option>
+                        <option value="{{cc}}" data-limit="{{cc.played}}" data-id="{{cc.Player__id}}" {% if cc.played %} class="played" {% endif %}>
+                            [{{cc.Player__Role}}] {{cc.Player__Surname}} ({{cc.Player__RealTeam__Name}})
+                        </option>
                         {% endfor %}
                         <option value="" selected></option>
                     </select>
@@ -162,7 +178,9 @@
                 <div class="form-floating" id="c3">
                     <select class="form-select form-select-lg mb-3 form-select-player" id="c3_tit">
                         {% for cc in players_cc %}
-                        <option value="{{cc}}" data-id="{{cc.Player__id}}">[{{cc.Player__Role}}] {{cc.Player__Surname}} ({{cc.Player__RealTeam__Name}})</option>
+                        <option value="{{cc}}" data-limit="{{cc.played}}" data-id="{{cc.Player__id}}" {% if cc.played %} class="played" {% endif %}>
+                            [{{cc.Player__Role}}] {{cc.Player__Surname}} ({{cc.Player__RealTeam__Name}})
+                        </option>
                         {% endfor %}
                         <option value="" selected></option>
                     </select>
@@ -172,7 +190,9 @@
                 <div class="form-floating" id="c4">
                     <select class="form-select form-select-lg mb-3 form-select-player" id="c4_tit">
                         {% for cc in players_cc %}
-                        <option value="{{cc}}" data-id="{{cc.Player__id}}">[{{cc.Player__Role}}] {{cc.Player__Surname}} ({{cc.Player__RealTeam__Name}})</option>
+                        <option value="{{cc}}" data-limit="{{cc.played}}" data-id="{{cc.Player__id}}" {% if cc.played %} class="played" {% endif %}>
+                            [{{cc.Player__Role}}] {{cc.Player__Surname}} ({{cc.Player__RealTeam__Name}})
+                        </option>
                         {% endfor %}
                         <option value="" selected></option>
                     </select>
@@ -182,7 +202,9 @@
                 <div class="form-floating" id="c5">
                     <select class="form-select form-select-lg mb-3 form-select-player" id="c5_tit">
                         {% for cc in players_cc %}
-                        <option value="{{cc}}" data-id="{{cc.Player__id}}">[{{cc.Player__Role}}] {{cc.Player__Surname}} ({{cc.Player__RealTeam__Name}})</option>
+                        <option value="{{cc}}" data-limit="{{cc.played}}" data-id="{{cc.Player__id}}" {% if cc.played %} class="played" {% endif %}>
+                            [{{cc.Player__Role}}] {{cc.Player__Surname}} ({{cc.Player__RealTeam__Name}})
+                        </option>
                         {% endfor %}
                         <option value="" selected></option>
                     </select>
@@ -192,7 +214,9 @@
                 <div class="form-floating" id="a1">
                     <select class="form-select form-select-lg mb-3 form-select-player" id="a1_tit">
                         {% for fw in players_fw %}
-                        <option value="{{fw}}" data-id="{{fw.Player__id}}">[{{fw.Player__Role}}] {{fw.Player__Surname}} ({{fw.Player__RealTeam__Name}})</option>
+                        <option value="{{fw}}" data-limit="{{fw.played}}" data-id="{{fw.Player__id}}" {% if fw.played %} class="played" {% endif %}>
+                            [{{fw.Player__Role}}] {{fw.Player__Surname}} ({{fw.Player__RealTeam__Name}})
+                        </option>
                         {% endfor %}
                         <option value="" selected></option>
                     </select>
@@ -202,7 +226,9 @@
                 <div class="form-floating" id="a2">
                     <select class="form-select form-select-lg mb-3 form-select-player" id="a2_tit">
                         {% for fw in players_fw %}
-                        <option value="{{fw}}" data-id="{{fw.Player__id}}">[{{fw.Player__Role}}] {{fw.Player__Surname}} ({{fw.Player__RealTeam__Name}})</option>
+                        <option value="{{fw}}" data-limit="{{fw.played}}" data-id="{{fw.Player__id}}" {% if fw.played %} class="played" {% endif %}>
+                            [{{fw.Player__Role}}] {{fw.Player__Surname}} ({{fw.Player__RealTeam__Name}})
+                        </option>
                         {% endfor %}
                         <option value="" selected></option>
                     </select>
@@ -212,7 +238,9 @@
                 <div class="form-floating" id="a3" hidden>
                     <select class="form-select form-select-lg mb-3 form-select-player" id="a3_tit">
                         {% for fw in players_fw %}
-                        <option value="{{fw}}" data-id="{{fw.Player__id}}">[{{fw.Player__Role}}] {{fw.Player__Surname}} ({{fw.Player__RealTeam__Name}})</option>
+                        <option value="{{fw}}" data-limit="{{fw.played}}" data-id="{{fw.Player__id}}" {% if fw.played %} class="played" {% endif %}>
+                            [{{fw.Player__Role}}] {{fw.Player__Surname}} ({{fw.Player__RealTeam__Name}})
+                        </option>
                         {% endfor %}
                         <option value="" selected></option>
                     </select>
