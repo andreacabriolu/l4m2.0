@@ -11,6 +11,36 @@ from .. import live_utilities as LU
 from ..models import *
 from l4m20 import constants as C
 
+class LiveB11View(LoginRequiredMixin, View):
+    template_name = 'l4m/live.html'
+
+    def get(self, request):
+        current_day = U.get_current_day()
+        teamid = U.get_user_team(request.user.id)['id']
+
+        team_ids = team.Team.objects.values_list("id", flat=True)
+        last_lineups_d = {}
+
+        # crea best 11 per ogni squadra
+        for tid in team_ids:
+            keepers = LU.enrich_and_sort_players('P', tid, current_day)
+            defenders = LU.enrich_and_sort_players('D', tid, current_day)
+            midfielders = LU.enrich_and_sort_players('C', tid, current_day)
+            attackers = LU.enrich_and_sort_players('A', tid, current_day)
+            best = LU.pick_best_11(keepers, defenders, midfielders, attackers)
+            last_lineups_d[tid] = best
+            
+
+
+        all_votes = []
+
+    
+        params = {
+            'all_votes': all_votes
+        }
+
+        return render(request, self.template_name, params)
+
 class LiveView(LoginRequiredMixin, View):
     template_name = 'l4m/live.html'
 
@@ -24,23 +54,7 @@ class LiveView(LoginRequiredMixin, View):
         for t in series_teams:
             l = U.get_last_lineup(t, current_day)
             last_lineups_d[t.id] = l[0] if len(l) > 0 else t.Name #TODO: get last valid lineup
-            
-            # best 11 bit
-            keep = LU.enrich_and_sort_players('P', t.id, current_day)
-            difs = LU.enrich_and_sort_players('D', t.id, current_day)
-            mids = LU.enrich_and_sort_players('C', t.id, current_day)
-            atts = LU.enrich_and_sort_players('A', t.id, current_day)
-            
-            best = LU.pick_best_11(keep, difs, mids, atts)
-            
-            if(best):
-              print("Team:", t.Name,"Best module:", best["module"], ", modif:", best["modif"], ", modif tot:", best["modif_tot"], ", modno_keep:", 
-              best["modifier_from_no_gk"], ", captain:", best["captain"], ", all six:", best["all_six_bonus"], 
-              ", no yell:", best["no_yellow_bonus"], ", score:", best["score"])
-              for p in best["players"]:
-                 print(p.Surname, p.votes.Vote, p.votes.TotVote)
-            #####                       
-        
+
         last_lineups_d={teamid:last_lineups_d.pop(teamid), **last_lineups_d} #get user lineup as first
 
         couples = LU.get_couples_from_calendar(seriesid, current_day)
@@ -54,7 +68,7 @@ class LiveView(LoginRequiredMixin, View):
             all_votes.append( \
                 [votes_home, votes_away]
             )
-            
+        print(all_votes)    
         params = { 
             'all_votes' : all_votes,
           }
