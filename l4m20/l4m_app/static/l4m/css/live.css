@@ -84,3 +84,15 @@ table .w-30 {
     vertical-align: top;
     margin-right: .2em;
 }
+
+.series-label {
+    font-family: 'Mozilla Headline';
+    font-size: larger;
+    color: #7a3e3e;
+    font-weight: bolder;
+}
+
+.form-select-series {
+    width: fit-content !important;
+    min-width: 10em;
+}

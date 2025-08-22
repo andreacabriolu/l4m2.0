@@ -14,3 +14,13 @@ window.addEventListener('DOMContentLoaded', event => {
     }
 
 });
+
+class Utilities {
+    static buildForm(url, token, jsonData) {
+
+        return $('<form action="' + url + '" method="post">' +
+        '<input type="text" name="jsonData" value="'+jsonData+'" />' +
+        '<input type="hidden" name="csrfmiddlewaretoken" value="'+token+'" />' +
+        '</form>');
+    }
+}
