@@ -62,12 +62,14 @@ label {
 
 .top-line {
     display: flex;
+    flex-wrap: wrap;
 }
 
 @media (max-width:800px) {
     .top-line{
         display: flex;
         flex-direction: column-reverse;
+        flex-wrap: nowrap;
     }
   }
 
@@ -121,4 +123,34 @@ label {
     .switches{
         margin-bottom: 1.5em;
     }
+  }
+
+  @media (max-width:800px) {
+    .top-panel-btn {
+        margin-bottom: .5em;
+    }
+  }
+  
+  @media (max-width:800px) {
+    .btn-panel {
+        text-align: center;
+        margin-bottom: .5em;
+    }
+  }
+
+  @media (max-width:800px) {
+    .cap {
+        width: 100%;
+    }
+  }
+
+    @media (max-width:800px) {
+        .alert-panel {
+        margin-bottom: 1em;
+    }
+  }
+
+  .alert-limit {
+    font-weight: bold;
+    font-size: large;
   }

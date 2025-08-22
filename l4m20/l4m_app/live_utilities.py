@@ -1,5 +1,6 @@
 import datetime
 import locale
+from zoneinfo import ZoneInfo
 from .models import *
 import json
 from l4m20 import constants as C
@@ -36,7 +37,7 @@ def make_empty_vote_obj(pl_id, cap_id, already_played, current_day):
     real_match = real_calendar.Real_calendar.objects.filter(Q(Day=current_day) & \
                                                             (Q(RealTeamHome_id=pl.RealTeam) | Q(RealTeamAway_id=pl.RealTeam)))
     # locale.setlocale(locale.LC_ALL, 'it_IT')
-    v_obj.Msg = real_match[0].Date.replace(tzinfo=datetime.timezone.utc).strftime('%d-%m-%Y alle %H:%M') if real_match else ""
+    v_obj.Msg = real_match[0].Date.astimezone(ZoneInfo(key='Europe/Rome')).strftime('%d-%m-%Y alle %H:%M') if real_match else ""
 
     return v_obj
 
@@ -279,7 +280,7 @@ def get_votes(lineup, current_day, my_teamid = None, home=True):
     else:
         bonus_cap = 0
 
-    _noCards = len([v for v in valid_votes if v.Red or v.Yel]) == 0
+    _noCards = len([v for v in valid_votes if (v.Red==1 or v.Yel==1)]) == 0
     _noBadVotes = len([v for v in valid_votes if v.Vote < 6]) == 0
 
     #bonus disciplina

@@ -1,4 +1,5 @@
 from datetime import datetime
+from zoneinfo import ZoneInfo
 from django.shortcuts import render
 from django.views import View
 from django.http import HttpResponse
@@ -18,6 +19,10 @@ class LineupView(LoginRequiredMixin, View):
         user_team = U.get_user_team(request.user.id)
         teamid = user_team['id']
         mods = C.Constant_Lists.Modules
+        
+        today_matches = real_calendar.Real_calendar.objects.filter(Day=U.get_current_day()).values('Date').order_by('Date')
+        day_time_limit = today_matches.first()['Date'].astimezone(ZoneInfo(key='Europe/Rome')) if len(today_matches) > 0 else None
+        day_already_started = datetime.now(ZoneInfo('Europe/Rome')) >= day_time_limit
 
         players_gk = U.get_my_players_filtered("P", teamid)
         players_def = U.get_my_players_filtered("D", teamid)
@@ -34,7 +39,9 @@ class LineupView(LoginRequiredMixin, View):
             'players_cc':players_cc,
             'players_fw':players_fw,
             'players_my':players_my,
-            'players_all':players_all
+            'players_all':players_all,
+            'day_time_limit':day_time_limit.strftime('%d-%m-%Y alle %H:%M'),
+            'day_already_started': day_already_started,
           }
         
         return render(request, self.template_name, params)

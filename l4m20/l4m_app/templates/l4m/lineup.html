@@ -55,15 +55,25 @@
                 </div>
             </div>
             <div class="btn-panel" id="btn_panel">
-                <button type="button" class="btn btn-primary" id="btnSaveLineup">
+                <button type="button" class="btn btn-primary top-panel-btn" id="btnSaveLineup">
                     CONFERMA
                 </button>
-                <button type="button" class="btn btn-primary" id="btnResetMainLineup">
+                <button type="button" class="btn btn-primary top-panel-btn" id="btnResetMainLineup">
                     RESET TITOLARI
                 </button>
-                <button type="button" class="btn btn-primary" id="btnResetLineup">
+                <button type="button" class="btn btn-primary top-panel-btn" id="btnResetLineup">
                     RESET TUTTI
                 </button>
+            </div>
+
+            <div class="alert-panel" id="alert_panel">
+                {% if not day_already_started %}
+                <img src="{% static 'l4m/images/green.png' %}">
+                <span class="alert-limit">FORMAZIONE SCHIERABILE FINO A {{day_time_limit}}</span>
+                {% else %}
+                <img src="{% static 'l4m/images/orange.png' %}">
+                <span class="alert-limit">GIORNATA INIZIATA, FORMAZIONE MODIFICABILE AI LIMITI DEL REGOLAMENTO</span>
+                {% endif %}
             </div>
             
         </div>
@@ -72,7 +82,7 @@
                 <div class="form-floating">
                     <select class="form-select form-select-lg mb-3 form-select-player" id="gk_tit">
                         {% for gk in players_gk %}
-                        <option value="{{gk}}" data-id="{{gk.Player__id}}">[{{gk.Player__Role}}] {{gk.Player__Surname}} ({{gk.Player__RealTeam__Name}})</option>
+                        <option value="{{gk}}" data-limit="{{gk.Player__RealtTeam__}}" data-id="{{gk.Player__id}}">[{{gk.Player__Role}}] {{gk.Player__Surname}} ({{gk.Player__RealTeam__Name}})</option>
                         {% endfor %}
                         <option value="" selected></option>
                     </select>

@@ -253,6 +253,9 @@ def finalize_bet(data):
 def get_user_team(userid):
     return team.Team.objects.filter(Users__id=userid).values('id','Name')[0]
 
+def get_my_players_filtered_for_lineup(filter_role, teamid):
+    pass
+
 def get_my_players_filtered(filter_role, teamid):
 
     return squads.Squads.objects.\
