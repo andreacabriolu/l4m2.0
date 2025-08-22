@@ -6,10 +6,13 @@ from django.shortcuts import get_object_or_404
 from django.db.models.functions import Coalesce
 from zoneinfo import ZoneInfo
 from l4m20 import constants as C
-import statistics
 
 def get_my_series(teamid):
     return series.Series.objects.filter(team__id=teamid)
+
+def get_all_series(competitionid):
+    competitionid = 1 #TODO: get competition
+    return series.Series.objects.filter(Competition_id=competitionid)
 
 def get_my_markets(seriesid):
     return market.Market.objects.filter(Series_id=seriesid)

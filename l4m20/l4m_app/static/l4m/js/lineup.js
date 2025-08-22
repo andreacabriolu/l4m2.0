@@ -216,7 +216,9 @@ function load_last_lineup() {
 
 function reset_captain() {
     $('#captain').children('option').each(function () {
-        $(this).hide();
+        if($(this).val() != '') {
+            $(this).hide(); 
+        }
     });
     $('#captain').val('option');
 }

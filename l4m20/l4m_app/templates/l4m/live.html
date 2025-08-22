@@ -31,7 +31,15 @@
     <div class="alert alert-success" role="alert" id="info-alert" hidden>
         <span id="span-info-alert"></span>
     </div>
+    <input type="hidden" value="{{current_series}}" id="current_series">
     <div class="bg-body-tertiary main-div p-5 live-tables bg-success bg-opacity-50" id="liveMainDiv">
+
+        <label for="select_series" class="series-label">SERIE</label>
+        <select class="form-select form-select-lg mb-3 form-select-custom form-select-series" id="select_series">
+            {% for series in all_series %}
+                <option value="{{series}}" data-id="{{series.id}}">{{series.Name}}</option>
+            {% endfor %}
+        </select>
 
         {% for match_votes in all_votes %}
         <div class="match-div">
@@ -65,7 +73,8 @@
                         <td>{{vote.Player.Role}}</td>
                         <td>{{vote.Player.RealTeam|upper|slice:":3"}}</td>
                         <td>{% if vote.Cap %} <img class="cap-img" src="{% static 'l4m/images/cap.png' %}">{% endif %}
-                            {{vote.Player.Surname}}</td>
+                            {{vote.Player.Surname}}
+                            {% if vote.ChangedIn != '' %}<img src="{% static 'l4m/images/in.png' %}">{% endif %}</td>
                         <td>{{vote.Vote|floatformat}}</td>
                         <td>{{vote.TotVote|floatformat}}</td>
                         <td>
@@ -125,9 +134,9 @@
                             {% endwith %}
 
                             {% if vote.Sub > 0 %}
-                            <img src="{% static 'l4m/images/in.png' %}">
+                            <img src="{% static 'l4m/images/changein.png' %}">
                             <span>({{vote.Sub|floatformat}}'')</span>
-                            {% elif vote.Sub < 0 %} <img src="{% static 'l4m/images/out.png' %}">
+                            {% elif vote.Sub < 0 %} <img src="{% static 'l4m/images/changeout.png' %}">
                                 <span>({{vote.Sub|floatformat|slice:"1:"}}')</span>
                                 {% endif %}
 
@@ -144,8 +153,7 @@
                                 {% endif %}
 
                                 {% if vote.ChangedIn != '' %}
-                                <img src="{% static 'l4m/images/changein.png' %}" data-bs-toggle="tooltip"
-                                    data-bs-placement="right" data-bs-title="Entrato per {{vote.ChangedIn}}">
+                                    <img src="{% static 'l4m/images/out.png' %}"> <span>{{vote.ChangedIn|upper}}</span>
                                 {% endif %}
 
                         </td>
@@ -218,7 +226,10 @@
                     <tr>
                         <td>{{vote.Player.Role}}</td>
                         <td>{{vote.Player.RealTeam|upper|slice:":3"}}</td>
-                        <td>{{vote.Player.Surname}}</td>
+                        <td>{{vote.Player.Surname}}              
+                            {% if vote.ChangedOut != '' %}
+                                <img src="{% static 'l4m/images/out.png' %}"></td>
+                            {% endif %}
                         <td>{{vote.Vote|floatformat}}</td>
                         <td>{{vote.TotVote|floatformat}}</td>
                         <td>
@@ -277,9 +288,9 @@
                             {% endwith %}
 
                             {% if vote.Sub > 0 %}
-                            <img src="{% static 'l4m/images/in.png' %}">
+                            <img src="{% static 'l4m/images/changein.png' %}">
                             <span>({{vote.Sub|floatformat}}'')</span>
-                            {% elif vote.Sub < 0 %} <img src="{% static 'l4m/images/out.png' %}">
+                            {% elif vote.Sub < 0 %} <img src="{% static 'l4m/images/changeout.png' %}">
                                 <span>({{vote.Sub|floatformat|slice:"1:"}}')</span>
                                 {% endif %}
 
@@ -288,8 +299,7 @@
                                 {% endif %}
 
                                 {% if vote.ChangedOut != '' %}
-                                <img src="{% static 'l4m/images/changeout.png' %}" data-bs-toggle="tooltip"
-                                    data-bs-placement="right" data-bs-title="Uscito per {{vote.ChangedOut}}">
+                                    <img src="{% static 'l4m/images/in.png' %}"> <span>{{vote.ChangedOut|upper}}</span>
                                 {% endif %}
 
                         </td>
