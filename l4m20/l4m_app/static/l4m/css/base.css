@@ -36,3 +36,7 @@
   align-items: baseline;
   margin-left: 2.5rem;
 }
+
+.rule-icon {
+  align-content: center;
+}
