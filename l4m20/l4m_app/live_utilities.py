@@ -298,3 +298,205 @@ def get_votes(lineup, current_day, my_teamid, home=True):
 
     return [votes_tit, _items, votes_ris]
     
+    
+def enrich_and_sort_players(role, teamid, current_day, cap_id=-1):
+    # needed by b11 (associates votes to pl, sorts by totvote and then vote)
+    players = U.get_my_players_filtered(role, teamid)
+    enriched_players = []
+
+    for keep in players:
+        idpl = keep["Player__id"]
+        pl = player.Player.objects.get(pk=idpl)
+        already_played = check_already_played(current_day, pl.RealTeam)
+
+        _vote = vote.Vote.objects.filter(Q(Player_id=idpl) & Q(Day=current_day))
+        votes_pl = make_vote_obj(_vote[0], cap_id, already_played) if len(_vote) > 0 else \
+                   make_empty_vote_obj(pl.id, cap_id, already_played, current_day)
+
+        pl.votes = votes_pl
+        enriched_players.append(pl)
+
+    sorted_players = sorted(
+        enriched_players,
+        key=lambda p: (
+            p.votes.TotVote if p.votes.TotVote is not None else -1,
+            p.votes.Vote if p.votes.Vote is not None else -1
+        ),
+        reverse=True
+    )
+
+    return sorted_players
+
+def pick_best_11_2(keepers, defenders, midfielders, attackers):
+	# Find the best 11 out of the current squad for a given team
+	
+    best_lineup = None
+    best_score = -1
+    
+    # These are probably somewhere already
+    ALLOWED_MODULES = [
+        (3, 4, 3),
+        (3, 5, 2),
+        (4, 3, 3),
+        (4, 4, 2),
+        (4, 5, 1),
+        (5, 4, 1),
+        (5, 3, 2),
+    ]    
+   
+    for d, m, a in ALLOWED_MODULES:
+        try:
+            lineup = []
+            lineup.append(keepers[0])
+            lineup += defenders[:d]
+            lineup += midfielders[:m]
+            lineup += attackers[:a]
+            
+            # sum tot votes
+            score = sum(
+                (p.votes.TotVote if p.votes.TotVote is not None else -1)
+                for p in lineup
+            )
+            
+            # get votes for modif and calc
+            gk_vote = [keepers[0].votes.Vote] if keepers[0].votes.Vote is not None else []
+            def_votes = [p.votes.Vote for p in defenders[:d] if p.votes.Vote is not None]
+
+            if(d>3):
+               mod_k, mod_score_k = calculate_modifier(gk_vote, def_votes, modNoGk=False)
+               mod_nok, mod_score_nok = calculate_modifier(gk_vote, def_votes, modNoGk=True)
+               winner = max(
+                   [(mod_k, mod_score_k, False), (mod_nok, mod_score_nok, True)],
+                   key=lambda x: x[1] 
+               )
+               mod, mod_score, modNoGk_used = winner
+            else:
+               mod_score = 0.
+               mod = 0.
+               modNoGk_used = False
+            score += mod_score
+            
+            # cabriolu suga (easter egg (in culo)) - bonus capitanal
+            captain = ''
+            bonus_cap=0.
+            bonus_six=0.5
+            for p in lineup:
+                if p.votes.Vote is not None and p.votes.Vote > 6:
+                    bonus_cap = 0.5
+                    captain= p.Surname
+                    break
+            for p in lineup:
+                if p.votes.Vote is None or p.votes.Vote < 6:
+                    bonus_six = 0.
+
+            score = score + bonus_six + bonus_cap
+              
+            if score > best_score:
+                best_score = score
+                best_lineup = {
+                    "module": f"{d}-{m}-{a}",
+                    "players": lineup,
+                    "modif": mod_score,
+                    "keeper": modNoGk_used,
+                    "captain": captain,
+                    "all six": bonus_six,
+                    "score": score
+                }
+        except IndexError:
+            # not enough players to fill that module → skip
+            continue
+
+    return best_lineup        
+
+def pick_best_11(keepers, defenders, midfielders, attackers):
+    best_lineup = None
+    best_score = -1
+
+    ALLOWED_MODULES = [
+        (3, 4, 3),
+        (3, 5, 2),
+        (4, 3, 3),
+        (4, 4, 2),
+        (4, 5, 1),
+        (5, 4, 1),
+        (5, 3, 2),
+    ]
+
+    for d, m, a in ALLOWED_MODULES:
+        try:
+            # initial slice
+            lineup = [keepers[0]] + defenders[:d] + midfielders[:m] + attackers[:a]
+
+            # --- Yellow-card swap ---
+            for i, p in enumerate(lineup):
+                if getattr(p.votes, "YellowCard", False):
+                    if p.role == "P":
+                        role_list = keepers
+                    elif p.role == "D":
+                        role_list = defenders
+                    elif p.role == "C":
+                        role_list = midfielders
+                    else:
+                        role_list = attackers
+
+                    for candidate in role_list:
+                        if (candidate.votes.TotVote == p.votes.TotVote and
+                            not getattr(candidate.votes, "YellowCard", False) and
+                            candidate not in lineup):
+                            lineup[i] = candidate
+                            break
+
+            # sum TotVote
+            score = sum((p.votes.TotVote or -1) for p in lineup)
+
+            # modifier calc
+            gk_vote = [keepers[0].votes.Vote] if keepers[0].votes.Vote is not None else []
+            def_votes = [p.votes.Vote for p in defenders[:d] if p.votes.Vote is not None]
+
+            if d > 3:
+                mod_k, mod_score_k = calculate_modifier(gk_vote, def_votes, modNoGk=False)
+                mod_nok, mod_score_nok = calculate_modifier(gk_vote, def_votes, modNoGk=True)
+                mod, mod_score, modNoGk_used = max(
+                    [(mod_k, mod_score_k, False), (mod_nok, mod_score_nok, True)],
+                    key=lambda x: x[1]
+                )
+            else:
+                mod, mod_score, modNoGk_used = 0., 0., False
+
+            score += mod_score
+
+            # captain bonus
+            captain = None
+            bonus_cap = 0.
+            for p in lineup:
+                if p.votes.Vote is not None and p.votes.Vote > 6:
+                    bonus_cap = 0.5
+                    captain = p
+                    break
+
+            # all-six bonus
+            bonus_six = 0.5 if all(p.votes.Vote is not None and p.votes.Vote >= 6 for p in lineup) else 0.
+
+            # no-yellow bonus
+            no_yellow_bonus = 0.5 if not any(getattr(p.votes, "YellowCard", False) for p in lineup) else 0.
+
+            total_score = score + bonus_cap + bonus_six + no_yellow_bonus
+
+            if total_score > best_score:
+                best_score = total_score
+                best_lineup = {
+                    "module": f"{d}-{m}-{a}",
+                    "players": lineup,
+                    "modif": mod_score,
+                    "modif_tot": mod,
+                    "modifier_from_no_gk": modNoGk_used,
+                    "captain": captain,
+                    "all_six_bonus": bonus_six,
+                    "no_yellow_bonus": no_yellow_bonus,
+                    "score": total_score
+                }
+
+        except IndexError:
+            continue
+
+    return best_lineup
