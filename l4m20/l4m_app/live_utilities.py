@@ -327,86 +327,7 @@ def enrich_and_sort_players(role, teamid, current_day, cap_id=-1):
 
     return sorted_players
 
-def pick_best_11_2(keepers, defenders, midfielders, attackers):
-	# Find the best 11 out of the current squad for a given team
-	
-    best_lineup = None
-    best_score = -1
-    
-    # These are probably somewhere already
-    ALLOWED_MODULES = [
-        (3, 4, 3),
-        (3, 5, 2),
-        (4, 3, 3),
-        (4, 4, 2),
-        (4, 5, 1),
-        (5, 4, 1),
-        (5, 3, 2),
-    ]    
-   
-    for d, m, a in ALLOWED_MODULES:
-        try:
-            lineup = []
-            lineup.append(keepers[0])
-            lineup += defenders[:d]
-            lineup += midfielders[:m]
-            lineup += attackers[:a]
-            
-            # sum tot votes
-            score = sum(
-                (p.votes.TotVote if p.votes.TotVote is not None else -1)
-                for p in lineup
-            )
-            
-            # get votes for modif and calc
-            gk_vote = [keepers[0].votes.Vote] if keepers[0].votes.Vote is not None else []
-            def_votes = [p.votes.Vote for p in defenders[:d] if p.votes.Vote is not None]
 
-            if(d>3):
-               mod_k, mod_score_k = calculate_modifier(gk_vote, def_votes, modNoGk=False)
-               mod_nok, mod_score_nok = calculate_modifier(gk_vote, def_votes, modNoGk=True)
-               winner = max(
-                   [(mod_k, mod_score_k, False), (mod_nok, mod_score_nok, True)],
-                   key=lambda x: x[1] 
-               )
-               mod, mod_score, modNoGk_used = winner
-            else:
-               mod_score = 0.
-               mod = 0.
-               modNoGk_used = False
-            score += mod_score
-            
-            # cabriolu suga (easter egg (in culo)) - bonus capitanal
-            captain = ''
-            bonus_cap=0.
-            bonus_six=0.5
-            for p in lineup:
-                if p.votes.Vote is not None and p.votes.Vote > 6:
-                    bonus_cap = 0.5
-                    captain= p.Surname
-                    break
-            for p in lineup:
-                if p.votes.Vote is None or p.votes.Vote < 6:
-                    bonus_six = 0.
-
-            score = score + bonus_six + bonus_cap
-              
-            if score > best_score:
-                best_score = score
-                best_lineup = {
-                    "module": f"{d}-{m}-{a}",
-                    "players": lineup,
-                    "modif": mod_score,
-                    "keeper": modNoGk_used,
-                    "captain": captain,
-                    "all six": bonus_six,
-                    "score": score
-                }
-        except IndexError:
-            # not enough players to fill that module → skip
-            continue
-
-    return best_lineup        
 
 def pick_best_11(keepers, defenders, midfielders, attackers):
     best_lineup = None
@@ -477,11 +398,11 @@ def pick_best_11(keepers, defenders, midfielders, attackers):
             # all-six bonus
             bonus_six = 0.5 if all(p.votes.Vote is not None and p.votes.Vote >= 6 for p in lineup) else 0.
 
-            # no-yellow bonus
+            # no-yellow bonus NOT COMPLETE 
             no_yellow_bonus = 0.5 if not any(getattr(p.votes, "YellowCard", False) for p in lineup) else 0.
 
             total_score = score + bonus_cap + bonus_six + no_yellow_bonus
-
+            # Cabriolu suga -> easter egg (in culo)
             if total_score > best_score:
                 best_score = total_score
                 best_lineup = {
