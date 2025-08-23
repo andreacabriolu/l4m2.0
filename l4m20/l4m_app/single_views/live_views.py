@@ -20,6 +20,8 @@ class LiveB11View(LoginRequiredMixin, View):
 
         team_ids = team.Team.objects.values_list("id", flat=True)
         last_lineups_d = {}
+        
+        all_best = []
 
         # crea best 11 per ogni squadra
         for tid in team_ids:
@@ -29,14 +31,18 @@ class LiveB11View(LoginRequiredMixin, View):
             attackers = LU.enrich_and_sort_players('A', tid, current_day)
             best = LU.pick_best_11(keepers, defenders, midfielders, attackers)
             last_lineups_d[tid] = best
-            
+            all_best.append(best)
 
-
-        all_votes = []
-
+        sorted_best = sorted(
+            (b for b in all_best if b is not None),
+            key=lambda x: x['score'],
+            reverse=True
+        )
+        
+        print(sorted_best)
     
         params = {
-            'all_votes': all_votes
+#            send sorted_best to html
         }
 
         return render(request, self.template_name, params)
