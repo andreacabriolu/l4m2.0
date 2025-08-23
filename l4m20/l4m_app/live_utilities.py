@@ -409,6 +409,8 @@ def pick_best_11(keepers, defenders, midfielders, attackers):
                 Tvote = p.votes.TotVote
                 players_list.append({
                     "player_id": p.id,
+                    "player_rt": p.RealTeam,
+                    "player_role": p.Role,
                     "player_surname": getattr(p, "surname", getattr(p, "name", str(p))),
                     "player_vote": vote,
                     "player_totvote": Tvote  
