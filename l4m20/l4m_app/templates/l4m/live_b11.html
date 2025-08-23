@@ -44,7 +44,12 @@
                 <tbody class="table-group-divider">
                     {% for player in best.players %}
                         <tr>
+                            <td>{{player.RealTeam|upper|slice:":3"}}</td>
                             <td>{{player.Surname}}</td>
+                            <td>{% if best.captain %} <img class="cap-img" src="{% static 'l4m/images/cap.png' %}">{% endif %}
+                                {{player.Surname}}</td>
+                            <td>{{vote.Vote|floatformat}}</td>
+                            <td>{{vote.TotVote|floatformat}}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
