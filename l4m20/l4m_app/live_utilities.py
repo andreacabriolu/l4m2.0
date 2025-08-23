@@ -196,7 +196,9 @@ def get_votes(lineup, current_day, my_teamid = None, home=True):
     _items.append(home)
     _items.append(lineup.Team.Name)
 
-    if(lineup.HideLineup and lineup.Team.id != my_teamid): #HIDDEN LINEUP
+    day_already_started, _ = U.check_day_already_started()
+
+    if(lineup.HideLineup and lineup.Team.id != my_teamid and not day_already_started): #HIDDEN LINEUP
         _items.append("hidden")
         _items.append(lineup)
         return [votes_tit, _items, votes_ris]
@@ -228,7 +230,6 @@ def get_votes(lineup, current_day, my_teamid = None, home=True):
             if(l[1] == cap_id):
                 cap_vote = _vote[0].Vote
 
-    #manage module change HERE
     # votes_tot = votes_tit + votes_ris
     # is_completed = C.PlayerStatus.YET_TO_PLAY not in [v.Status for v in votes_tot] and \
     #                C.PlayerStatus.PLAYING not in [v.Status for v in votes_tot]
@@ -300,6 +301,7 @@ def get_votes(lineup, current_day, my_teamid = None, home=True):
     _items.append(module)
     if(orig_module != module):
         _items.append(orig_module)
+    _items.append(lineup.ModNoGk)
 
     votes_tit.sort(key=lambda vote:C.Constant_Dicts.RoleInts[vote.Player.Role])
 

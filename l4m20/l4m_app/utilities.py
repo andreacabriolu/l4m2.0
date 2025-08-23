@@ -303,3 +303,8 @@ def cleanJSON(jsonData):
     jsonData = jsonData.replace("\\","") #remove extra \
 
     return jsonData    
+
+def check_day_already_started():
+    today_matches = real_calendar.Real_calendar.objects.filter(Day=get_current_day()).values('Date').order_by('Date')
+    day_time_limit = today_matches.first()['Date'].astimezone(ZoneInfo(key='Europe/Rome')) if len(today_matches) > 0 else None
+    return datetime.datetime.now(ZoneInfo('Europe/Rome')) >= day_time_limit, day_time_limit

@@ -20,11 +20,9 @@ class LineupView(LoginRequiredMixin, View):
         teamid = user_team['id']
         mods = C.Constant_Lists.Modules
         current_day = U.get_current_day()
-        
-        today_matches = real_calendar.Real_calendar.objects.filter(Day=current_day).values('Date').order_by('Date')
-        day_time_limit = today_matches.first()['Date'].astimezone(ZoneInfo(key='Europe/Rome')) if len(today_matches) > 0 else None
-        day_already_started = datetime.now(ZoneInfo('Europe/Rome')) >= day_time_limit
 
+        day_already_started, day_time_limit = U.check_day_already_started()
+        
         players_gk = U.get_my_players_filtered("P", teamid)
         players_def = U.get_my_players_filtered("D", teamid)
         players_cc = U.get_my_players_filtered("C", teamid)
