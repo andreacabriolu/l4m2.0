@@ -96,3 +96,7 @@ table .w-30 {
     width: fit-content !important;
     min-width: 10em;
 }
+
+.cap-select {
+    width: 100% !important;
+}

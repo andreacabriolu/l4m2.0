@@ -15,6 +15,14 @@ function showInfoAlert(response) {
     });
 }
 
+function buildForm(url, token, jsonData) {
+
+        return $('<form action="' + url + '" method="post">' +
+        '<input type="text" name="jsonData" value="'+jsonData+'" />' +
+        '<input type="hidden" name="csrfmiddlewaretoken" value="'+token+'" />' +
+        '</form>');
+    }
+
 window.addEventListener('DOMContentLoaded', event => {
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
@@ -30,7 +38,7 @@ window.addEventListener('DOMContentLoaded', event => {
 
         jsonData = JSON.stringify(data);
         var url = '/l4m/live/';
-        form = Utilities.buildForm(url, token, jsonData=data['series']);
+        form = buildForm(url, token, jsonData=data['series']);
 
         $('body').append(form);
 

@@ -36,7 +36,7 @@
                 <label for="mods">Modulo</label>
             </div>
             <div class="form-floating cap">
-                <select class="form-select form-select-lg mb-3 form-select-custom form-select-player {% if day_already_started %} blocked {% endif %}" id="captain" {% if day_already_started %} disabled {% endif %}>
+                <select class="form-select form-select-lg mb-3 form-select-player cap-select {% if day_already_started %} blocked {% endif %}" id="captain" {% if day_already_started %} disabled {% endif %}>
                     {% for pl in players_all %}
                         <option value="{{pl}}" data-id="{{pl.Player__id}}">[{{pl.Player__Role}}] {{pl.Player__Surname}} ({{pl.Player__RealTeam__Name}})</option>
                     {% endfor %}
