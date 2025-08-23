@@ -7,8 +7,6 @@
 <link href="{% static 'l4m/css/live.css' %}" rel="stylesheet">
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link
     href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap"
     rel="stylesheet">
@@ -18,7 +16,7 @@
 {% endblock %}
 
 {% block scripts %}
-<!-- <script type="text/javascript" src="{% static 'l4m/js/live.js' %}"></script> -->
+<script type="text/javascript" src="{% static 'l4m/js/live_b11.js' %}"></script>
 
 {% endblock %}
 
@@ -31,9 +29,31 @@
     <div class="alert alert-success" role="alert" id="info-alert" hidden>
         <span id="span-info-alert"></span>
     </div>
-    <div class="bg-body-tertiary main-div p-5 live-tables bg-success bg-opacity-50" id="b11MainDiv">
+    <!-- <h1 class="display-2">BEST 11 - LIVE</h1> -->
+    <div class="bg-body-tertiary main-div p-5 b11-live-tables bg-success bg-opacity-50" id="b11MainDiv">
+        {% for best in sorted_best %}
+            <table class="table table-striped-columns table-dark table-match rounded-3 table-bordered rounded-pill">
+                <thead>
+                    <tr>
+                        <th colspan="6" class="display-6 mozilla-headline-teamname w-30 team-name">Team Name</th>
+                    </tr>
+                    <tr>
+                        <th colspan="6" class="team-score mozilla-headline-teamname display-6">{{best.score}}</th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    {% for player in best.players %}
+                        <tr>
+                            <td>{{player.Surname}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
 
-        
+                </tfoot>
+            </table>
+
+        {% endfor %}
 
     </div>
 </div>

@@ -39,10 +39,8 @@ class LiveB11View(LoginRequiredMixin, View):
             reverse=True
         )
         
-        print(sorted_best)
-    
         params = {
-#            send sorted_best to html
+            'sorted_best': sorted_best
         }
 
         return render(request, self.template_name, params)
