@@ -35,7 +35,7 @@
             <table class="table table-striped-columns table-dark table-match rounded-3 table-bordered rounded-pill">
                 <thead>
                     <tr>
-                        <th colspan="6" class="display-6 mozilla-headline-teamname w-30 team-name">Team Name</th>
+                        <th colspan="6" class="display-6 mozilla-headline-teamname w-30 team-name">{{best.team_name}}</th>
                     </tr>
                     <tr>
                         <th colspan="6" class="team-score mozilla-headline-teamname display-6">{{best.score}}</th>
@@ -44,9 +44,37 @@
                 <tbody class="table-group-divider">
                     {% for player in best.players %}
                         <tr>
-                            <td>{{player.Surname}}</td>
+                            <td>{{player.player_surname}}</td>
+                            <td>{{player.player_vote}}</td>
+                            <td>{{player.player_totvote}}</td>
                         </tr>
                     {% endfor %}
+                    <tr><td></td><td></td><td></td></tr>
+                    <tr>
+                      <td>Modulo</td>
+                      <td>{{best.module}}</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>Modificatore</td>
+                      <td>{{best.modif}}</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>Bonus capitano</td>
+                      <td>{{best.bcaptain}}</td>
+                      <td>{{best.captain}}</td>
+                    </tr>
+                    <tr>
+                      <td>Bonus prestazioni</td>
+                      <td>{{best.no_yellow_bonus}}</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>Bonus voti</td>
+                      <td>{{best.all_six_bonus}}</td>
+                      <td></td>
+                    </tr>
                 </tbody>
                 <tfoot>
 

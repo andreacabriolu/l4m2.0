@@ -400,18 +400,32 @@ def pick_best_11(keepers, defenders, midfielders, attackers):
 
             # no-yellow bonus NOT COMPLETE 
             no_yellow_bonus = 0.5 if not any(getattr(p.votes, "YellowCard", False) for p in lineup) else 0.
+            
 
+            # info players
+            players_list = []
+            for p in lineup:
+                vote = p.votes.Vote
+                Tvote = p.votes.TotVote
+                players_list.append({
+                    "player_id": p.id,
+                    "player_surname": getattr(p, "surname", getattr(p, "name", str(p))),
+                    "player_vote": vote,
+                    "player_totvote": Tvote  
+                })
+        
             total_score = score + bonus_cap + bonus_six + no_yellow_bonus
             # Cabriolu suga -> easter egg (in culo)
             if total_score > best_score:
                 best_score = total_score
                 best_lineup = {
                     "module": f"{d}-{m}-{a}",
-                    "players": lineup,
                     "modif": mod_score,
                     "modif_tot": mod,
+                    "players": players_list,
                     "modifier_from_no_gk": modNoGk_used,
                     "captain": captain,
+                    "bcaptain": bonus_cap,
                     "all_six_bonus": bonus_six,
                     "no_yellow_bonus": no_yellow_bonus,
                     "score": total_score
