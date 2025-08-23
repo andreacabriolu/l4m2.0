@@ -145,7 +145,11 @@
                                 {% endif %}
 
                                 {% if vote.Status == 3 %}
-                                <span>DEVE GIOCARE IL {{vote.Msg}}</span>
+                                <span class="desktop">DEVE GIOCARE IL {{vote.Msg}}</span>
+                                <img src="{% static 'l4m/images/calendar.png' %}"
+                                    data-bs-toggle="tooltip" 
+                                    data-bs-placement="right" 
+                                    data-bs-title="GIOCA IL {{vote.Msg}}" class="mobile">
                                 {% endif %}
 
                                 {% if vote.Status == 4 %}
@@ -188,7 +192,8 @@
                     <tr>
                         <td />
                         <td />
-                        <td>Bonus capitano</td>
+                        <td><span class="desktop">Bonus capitano</span>
+                            <img class="mobile" src="{% static 'l4m/images/bonus_cap.png' %}"></td>
                         <td />
                         <td class="tot-score">{{team_votes.1.5}}</td>
                         <td />
@@ -196,7 +201,10 @@
                     <tr>
                         <td />
                         <td />
-                        <td>Bonus disciplina</td>
+                        <td>
+                            <span class="desktop">Bonus disciplina</span>
+                            <img class="mobile" src="{% static 'l4m/images/bonus_disc.png' %}">
+                        </td>
                         <td />
                         <td class="tot-score">{{team_votes.1.6}}</td>
                         <td />
@@ -204,7 +212,8 @@
                     <tr>
                         <td />
                         <td />
-                        <td>Bonus prestazioni</td>
+                        <td><span class="desktop">Bonus prestazioni</span>
+                            <img class="mobile" src="{% static 'l4m/images/bonus_prest.png' %}"></td>
                         <td />
                         <td class="tot-score">{{team_votes.1.7}}</td>
                         <td />
@@ -295,7 +304,11 @@
                                 {% endif %}
 
                                 {% if vote.Status == 3 %}
-                                <span>DEVE GIOCARE IL {{vote.Msg}}</span>
+                                <span class="desktop">DEVE GIOCARE IL {{vote.Msg}}</span>
+                                <img src="{% static 'l4m/images/calendar.png' %}"
+                                    data-bs-toggle="tooltip" 
+                                    data-bs-placement="right" 
+                                    data-bs-title="GIOCA IL {{vote.Msg}}" class="mobile">
                                 {% endif %}
 
                                 {% if vote.ChangedOut != '' %}

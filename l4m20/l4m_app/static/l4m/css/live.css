@@ -14,6 +14,12 @@
     overflow: hidden; */
 }
 
+@media (max-width:800px) {
+    .match-div{
+        width: fit-content;
+    }
+  }
+
 .table-match {
     margin-right: 1.5em;
     margin-bottom: 2.5rem !important;
@@ -100,3 +106,22 @@ table .w-30 {
 .cap-select {
     width: 100% !important;
 }
+
+@media (max-width:800px) {
+    .desktop {
+        display: none !important;
+    }
+  }
+
+  .mobile {
+    display: none;
+  }
+
+  @media (max-width:800px) {
+    .mobile {
+        display: block !important;
+        justify-self: center;
+    }
+  }
+
+  
