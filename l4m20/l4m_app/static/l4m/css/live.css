@@ -128,10 +128,6 @@ table .w-30 {
     height: 2.5rem;
   }
 
-  .bonus-td {
-    white-space: nowrap;
-  }
-
   .bonus-div {
     display: flex;
     flex-wrap: nowrap;
