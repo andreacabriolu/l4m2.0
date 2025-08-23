@@ -77,7 +77,8 @@
                             {% if vote.ChangedIn != '' %}<img src="{% static 'l4m/images/in.png' %}">{% endif %}</td>
                         <td>{{vote.Vote|floatformat}}</td>
                         <td>{{vote.TotVote|floatformat}}</td>
-                        <td class="bonus-td">
+                        <td>
+                            <div class="bonus-div">
                             <!--BONUS ICONS -->
                             {% with ''|center:vote.GoalSc as range %}
                             {% for _ in range %}
@@ -160,7 +161,7 @@
                                     <img src="{% static 'l4m/images/out.png' %}"> 
                                     <!-- <span>{{vote.ChangedIn}}</span> -->
                                 {% endif %}
-
+                            </div>
                         </td>
                     </tr>
                     {% endfor %}
@@ -244,7 +245,7 @@
                             {% endif %}
                         <td>{{vote.Vote|floatformat}}</td>
                         <td>{{vote.TotVote|floatformat}}</td>
-                        <td class="bonus-td">
+                        <td>
                             {% with ''|center:vote.GoalSc as range %}
                             {% for _ in range %}
                             <img src="{% static 'l4m/images/goal.png' %}">

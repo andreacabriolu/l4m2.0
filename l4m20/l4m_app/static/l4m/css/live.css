@@ -129,6 +129,12 @@ table .w-30 {
   }
 
   .bonus-td {
-    text-wrap-mode: nowrap;
+    white-space: nowrap;
+  }
+
+  .bonus-div {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
   }
   
