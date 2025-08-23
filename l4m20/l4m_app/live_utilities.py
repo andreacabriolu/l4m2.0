@@ -301,7 +301,10 @@ def get_votes(lineup, current_day, my_teamid = None, home=True):
     _items.append(module)
     if(orig_module != module):
         _items.append(orig_module)
+    else:
+        _items.append('same_module')
     _items.append(lineup.ModNoGk)
+    _items.append(14 - len(votes_ris)) #missing slots
 
     votes_tit.sort(key=lambda vote:C.Constant_Dicts.RoleInts[vote.Player.Role])
 

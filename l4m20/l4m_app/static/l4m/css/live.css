@@ -124,4 +124,11 @@ table .w-30 {
     }
   }
 
+  .empty-row {
+    height: 2.5rem;
+  }
+
+  .bonus-td {
+    text-wrap-mode: nowrap;
+  }
   

@@ -77,7 +77,7 @@
                             {% if vote.ChangedIn != '' %}<img src="{% static 'l4m/images/in.png' %}">{% endif %}</td>
                         <td>{{vote.Vote|floatformat}}</td>
                         <td>{{vote.TotVote|floatformat}}</td>
-                        <td>
+                        <td class="bonus-td">
                             <!--BONUS ICONS -->
                             {% with ''|center:vote.GoalSc as range %}
                             {% for _ in range %}
@@ -145,11 +145,11 @@
                                 {% endif %}
 
                                 {% if vote.Status == 3 %}
-                                <span class="desktop">DEVE GIOCARE IL {{vote.Msg}}</span>
+                                <!-- <span class="desktop">DEVE GIOCARE IL {{vote.Msg}}</span> -->
                                 <img src="{% static 'l4m/images/calendar.png' %}"
                                     data-bs-toggle="tooltip" 
                                     data-bs-placement="right" 
-                                    data-bs-title="GIOCA IL {{vote.Msg}}" class="mobile">
+                                    data-bs-title="GIOCA IL {{vote.Msg}}">
                                 {% endif %}
 
                                 {% if vote.Status == 4 %}
@@ -157,7 +157,8 @@
                                 {% endif %}
 
                                 {% if vote.ChangedIn != '' %}
-                                    <img src="{% static 'l4m/images/out.png' %}"> <span>{{vote.ChangedIn|upper}}</span>
+                                    <img src="{% static 'l4m/images/out.png' %}"> 
+                                    <!-- <span>{{vote.ChangedIn}}</span> -->
                                 {% endif %}
 
                         </td>
@@ -177,14 +178,14 @@
                         <td />
                         <td>MODULO</td>
                         <td />
-                        <td class="tot-score">{% if team_votes.1.11 %} <span class="old-mod">{{team_votes.1.11}}</span>
+                        <td class="tot-score">{% if team_votes.1.11 != 'same_module'%} <span class="old-mod">{{team_votes.1.11}}</span>
                             -> {% endif %} {{team_votes.1.10}} </td>
                         <td />
                     </tr>
                     <tr>
                         <td />
                         <td />
-                        <td>MODIFICATORE ({% if team_votes.1.12 %}NP{% endif %})</td>
+                        <td>MODIFICATORE{% if team_votes.1.12 %} (NP) {% endif %}</td>
                         <td>{% if team_votes.1.3 %}{{team_votes.1.3}}{% endif %}</td>
                         <td class="tot-score">{{team_votes.1.4}}</td>
                         <td />
@@ -192,8 +193,9 @@
                     <tr>
                         <td />
                         <td />
-                        <td><span class="desktop">BONUS CAPITANO</span>
-                            <img class="mobile" src="{% static 'l4m/images/bonus_cap.png' %}"></td>
+                        <td>
+                            <!-- <span class="desktop">BONUS CAPITANO</span> -->
+                            <img src="{% static 'l4m/images/bonus_cap.png' %}"></td>
                         <td />
                         <td class="tot-score">{{team_votes.1.5}}</td>
                         <td />
@@ -202,8 +204,8 @@
                         <td />
                         <td />
                         <td>
-                            <span class="desktop">BONUS DISCIPLINA</span>
-                            <img class="mobile" src="{% static 'l4m/images/bonus_disc.png' %}">
+                            <!-- <span class="desktop">BONUS DISCIPLINA</span> -->
+                            <img src="{% static 'l4m/images/bonus_disc.png' %}">
                         </td>
                         <td />
                         <td class="tot-score">{{team_votes.1.6}}</td>
@@ -212,8 +214,9 @@
                     <tr>
                         <td />
                         <td />
-                        <td><span class="desktop">BONUS PRESTAZIONI</span>
-                            <img class="mobile" src="{% static 'l4m/images/bonus_prest.png' %}"></td>
+                        <td>
+                            <!-- <span class="desktop">BONUS PRESTAZIONI</span> -->
+                            <img src="{% static 'l4m/images/bonus_prest.png' %}"></td>
                         <td />
                         <td class="tot-score">{{team_votes.1.7}}</td>
                         <td />
@@ -241,7 +244,7 @@
                             {% endif %}
                         <td>{{vote.Vote|floatformat}}</td>
                         <td>{{vote.TotVote|floatformat}}</td>
-                        <td>
+                        <td class="bonus-td">
                             {% with ''|center:vote.GoalSc as range %}
                             {% for _ in range %}
                             <img src="{% static 'l4m/images/goal.png' %}">
@@ -304,21 +307,32 @@
                                 {% endif %}
 
                                 {% if vote.Status == 3 %}
-                                <span class="desktop">DEVE GIOCARE IL {{vote.Msg}}</span>
+                                <!-- <span class="desktop">DEVE GIOCARE IL {{vote.Msg}}</span> -->
                                 <img src="{% static 'l4m/images/calendar.png' %}"
                                     data-bs-toggle="tooltip" 
                                     data-bs-placement="right" 
-                                    data-bs-title="GIOCA IL {{vote.Msg}}" class="mobile">
+                                    data-bs-title="GIOCA IL {{vote.Msg}}">
                                 {% endif %}
 
                                 {% if vote.ChangedOut != '' %}
-                                    <img src="{% static 'l4m/images/in.png' %}"> <span>{{vote.ChangedOut|upper}}</span>
+                                    <img src="{% static 'l4m/images/in.png' %}"> <span>{{vote.ChangedOut}}</span>
                                 {% endif %}
 
                         </td>
                     </tr>
 
                     {% endfor %}
+
+                    {% if team_votes.1.13 %}
+                    {% with ''|center:team_votes.1.13 as range %}
+                    {% for _ in range %}
+                        <tr>
+                            <td colspan="6" class="empty-row"></td>
+                        </tr>
+                    {% endfor %}
+                    {% endwith %}
+                    {% endif %}
+
                 </tfoot>
 
             </table>
