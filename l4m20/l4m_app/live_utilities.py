@@ -96,22 +96,21 @@ def calculate_modifier(gk_vote, def_votes, modNoGk):
     else:
         mod = statistics.mean(sorted(def_votes)[1:] + gk_vote)
     
+    ndef = len(def_votes)
     if mod < 6:
-        return mod, C.Modifier_Scores._LT_6
+        return mod, (C.Modifier_Scores_4._LT_6 if ndef < 5 else C.Modifier_Scores_5._LT_6)
     if 6 <= mod < 6.25:
-        return mod, C.Modifier_Scores._6_625
+        return mod, (C.Modifier_Scores_4._6_625 if ndef < 5 else C.Modifier_Scores_5._6_625)
     if 6.25 <= mod < 6.5:
-        return mod, C.Modifier_Scores._625_65
+        return mod, (C.Modifier_Scores_4._625_65 if ndef < 5 else C.Modifier_Scores_5._625_65)
     if 6.5 <= mod < 6.75:
-        return mod, C.Modifier_Scores._65_675
+        return mod, (C.Modifier_Scores_4._65_675 if ndef < 5 else C.Modifier_Scores_5._65_675)
     if 6.75 <= mod < 7:
-        return mod, C.Modifier_Scores._675_7
-    if 7 <= mod < 7.25:
-        return mod, C.Modifier_Scores._7_725
-    if 7.25 <= mod < 7.5:
-        return mod, C.Modifier_Scores._725_75
+        return mod, (C.Modifier_Scores_4._675_7 if ndef < 5 else C.Modifier_Scores_5._675_7)
+    if 7 <= mod < 7.5:
+        return mod, (C.Modifier_Scores_4._7_75 if ndef < 5 else C.Modifier_Scores_5._7_75)
     if mod >= 7.5:
-        return mod, C.Modifier_Scores._GT_75
+        return mod, (C.Modifier_Scores_4._GT_75 if ndef < 5 else C.Modifier_Scores_5._GT_75)
     
 def calculate_n_goals(grand_total):
     diff = grand_total - C.Various.BASE_SCORE
@@ -170,11 +169,11 @@ def check_valid_module_change_for_modifier(orig, current):
     if(orig == current): return True
     
     if(orig in [C.Modules._433, C.Modules._442, C.Modules._451] and 
-       current in [C.Modules._433, C.Modules._442, C.Modules._451]):
+       current in [C.Modules._433, C.Modules._442, C.Modules._451, C.Modules._532, C.Modules._541]):
         return True
     
     if(orig in [C.Modules._532, C.Modules._541] and 
-       current in [C.Modules._532, C.Modules._541]):
+       current in [C.Modules._532, C.Modules._541, C.Modules._433, C.Modules._442, C.Modules._451]):
         return True
     
     if(orig in [C.Modules._343, C.Modules._352]):

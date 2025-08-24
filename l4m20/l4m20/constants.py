@@ -56,15 +56,23 @@ class Scores:
     RED = -1
     PENALTY_PROCURED = 1
 
-class Modifier_Scores:
+class Modifier_Scores_4:
     _LT_6 = 0
     _6_625 = 0.5
     _625_65 = 1
-    _65_675 = 2
-    _675_7 = 3
-    _7_725 = 4
-    _725_75 = 4.5
+    _65_675 = 1.5
+    _675_7 = 2
+    _7_75 = 3
     _GT_75 = 6
+
+class Modifier_Scores_5:
+    _LT_6 = 0
+    _6_625 = 1
+    _625_65 = 2
+    _65_675 = 3
+    _675_7 = 4
+    _7_75 = 5
+    _GT_75 = 8
 
 class Various:
     BASE_SCORE = 66
