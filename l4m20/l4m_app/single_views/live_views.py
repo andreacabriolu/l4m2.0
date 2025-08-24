@@ -31,11 +31,9 @@ def LiveView(request):
     for t in series_teams:
         l = U.get_last_lineup(t, current_day)
         last_lineups_d[t.id] = l[0] if len(l) > 0 else t.Name #TODO: get last valid lineup
-    
-    if(teamid is not None):
-        last_lineups_d={teamid:last_lineups_d.pop(teamid), **last_lineups_d} #get user lineup as first
 
     couples = LU.get_couples_from_calendar(seriesid, current_day)
+    couples = [couples.pop(couples.index(i)) for i in couples if (i[0]==teamid or i[1]==teamid)]+couples #get user match as first
     lineup_couples = [ (last_lineups_d[c[0]], last_lineups_d[c[1]]) for c in couples ]
 
     all_votes = []
