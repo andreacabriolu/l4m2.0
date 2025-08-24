@@ -76,7 +76,7 @@
                             {{vote.Player.Surname}}
                             {% if vote.ChangedIn != '' %}<img src="{% static 'l4m/images/in.png' %}">{% endif %}</td>
                         <td>{{vote.Vote|floatformat}}</td>
-                        <td>{{vote.TotVote|floatformat}}</td>
+                        <td {% if vote.Status == 3 %} class="yettoplay"{% endif %}>{{vote.TotVote|floatformat}}</td>
                         <td>
                             <div class="bonus-div">
                             <!--BONUS ICONS -->

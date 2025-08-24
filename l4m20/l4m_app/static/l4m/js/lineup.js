@@ -133,31 +133,6 @@ function adjustOtherDropdowns(current) {
             }
         }
 
-        /* 2. Removing player from other dropdowns and added the old one */
-        // $(this).each(function () { //for each dropdown
-        //     $(this).data('prev', prev);
-        //     $(this).data('role', roleStr);
-
-        //     if (!($(this).is(current)) &&
-        //         ($(this)[0].id.slice(0, 1) == $(this).data('role'))) { //if other dropdowns for the same role
-        //             $(this).children('option').each(function () { //for each option
-        //                 $(this).data('prev', prev);
-        //                 if ($(this).data().id == currentid) { //hide the selected one
-        //                     $(this).hide();
-        //                 }
-
-        //                 prev = $(this).data('prev');
-        //                 if (typeof prev !== 'undefined') { //if there was an old value
-        //                     if ($(this).data().id == prev) { //show it again
-        //                         $(this).show();
-        //                     }
-        //                 }
-
-        //         });
-        //     }
-        // });
-
-
     });
 
 
@@ -269,7 +244,13 @@ window.addEventListener('DOMContentLoaded', event => {
 
     $('#l_ups select').on('change', (function () {
         adjustOtherDropdowns($(this));
-        adjust_captain();
+        if($('#captain').val() != null && 
+           $(this).children('option:selected').data().id == $('#captain').children('option:selected').data().id) {
+                adjust_captain(reset=false);
+        }
+        else {
+            adjust_captain();
+        }
     }));
 
     $('#btnSaveLineup').on('click', function () {
@@ -282,9 +263,11 @@ window.addEventListener('DOMContentLoaded', event => {
         };
 
         $('#main_lineup').children('div:visible').each(function () {
-            if ($(this).children().val() == null) {
-                allFilled = false;
-            }
+            $(this).children('select').each(function() {  
+                if ($(this).val() == '') {
+                    allFilled = false;
+                }
+            });
 
             if (!allFilled) {
                 showPopupErrorAlert('RIEMPI TUTTI GLI SLOT TITOLARI PRIMA DI CONFERMARE');

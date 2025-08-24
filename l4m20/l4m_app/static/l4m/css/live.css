@@ -134,3 +134,7 @@ table .w-30 {
     justify-content: center;
   }
   
+  .yettoplay {
+    color: rgb(222, 53, 67);
+    font-weight: bolder;
+  }
