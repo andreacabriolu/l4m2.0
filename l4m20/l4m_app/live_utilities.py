@@ -417,11 +417,10 @@ def pick_best_11(keepers, defenders, midfielders, attackers):
                 })
         
             total_score = score + bonus_cap + bonus_six + no_yellow_bonus
-            # Cabriolu suga -> easter egg (in culo)
             if total_score > best_score:
                 best_score = total_score
                 best_lineup = {
-                    "module": f"{d}-{m}-{a}",
+                    "module": f"{d}{m}{a}",
                     "modif": mod_score,
                     "modif_tot": mod,
                     "players": players_list,

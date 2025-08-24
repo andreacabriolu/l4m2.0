@@ -4,7 +4,7 @@
 { % block title % } L4M2.0 - BEST11 { % endblock % }
 
 {% block links %}
-<link href="{% static 'l4m/css/live.css' %}" rel="stylesheet">
+<link href="{% static 'l4m/css/live_b11.css' %}" rel="stylesheet">
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 
 <link
@@ -32,56 +32,85 @@
     <!-- <h1 class="display-2">BEST 11 - LIVE</h1> -->
     <div class="bg-body-tertiary main-div p-5 b11-live-tables bg-success bg-opacity-50" id="b11MainDiv">
         {% for best in sorted_best %}
-         <table class="table table-striped-columns table-dark table-match rounded-3 table-bordered rounded-pill">
-             <thead>
-                 <tr>
-                     <th colspan="6" class="display-6 mozilla-headline-teamname w-30 team-name">
-                         {{best.team_name}}
-                     </th>
-                 </tr>
-                 <!-- Clickable score row -->
-                 <tr data-bs-toggle="collapse" data-bs-target="#collapse-{{best.team_id}}" aria-expanded="false" style="cursor:pointer;">
-                     <th colspan="6" class="team-score mozilla-headline-teamname display-6">
-                         {{best.score}} <small class="ms-2 text-muted">(vedi best 11)</small>
-                     </th>
-                 </tr>
-             </thead>
-         
-             <!-- Collapsible content starts here -->
-             <tbody id="collapse-{{best.team_id}}" class="collapse table-group-divider">
-                 {% for player in best.players %}
-                     <tr>
-                         <td style="width:1%;">{{player.player_role}}</td>
-                         <td style="width:1%;">{{player.player_rt|upper|slice:":3"}}</td>
-                         <td>{{player.player_surname}}</td>
-                         <td>{{player.player_vote}}</td>
-                         <td>{{player.player_totvote}}</td>
-                     </tr>
-                 {% endfor %}
-                 <tr><td></td><td></td><td></td><td></td><td></td></tr>
-                 <tr>
-                   <td></td><td></td><td>Modulo</td>
-                   <td><span>{{best.module}}</span></td><td></td>
-                 </tr>
-                 <tr>
-                   <td></td><td></td><td>Modificatore</td>
-                   <td>{{best.modif}}</td><td></td>
-                 </tr>
-                 <tr>
-                   <td></td><td></td><td>Bonus capitano</td>
-                   <td>{{best.bcaptain}}</td><td>{{best.captain}}</td>
-                 </tr>
-                 <tr>
-                   <td></td><td></td><td>Bonus prestazioni</td>
-                   <td>{{best.no_yellow_bonus}}</td><td></td>
-                 </tr>
-                 <tr>
-                   <td></td><td></td><td>Bonus voti</td>
-                   <td>{{best.all_six_bonus}}</td><td></td>
-                 </tr>
-                 <tr><td></td><td></td><td></td><td></td><td></td></tr>
-             </tbody>
-         </table>
+        <table class="table table-striped-columns table-dark table-match rounded-3 table-bordered rounded-pill">
+            <thead>
+                <tr>
+                    <th colspan="6" class="display-6 mozilla-headline-teamname w-30 team-name">
+                        {{best.team_name}}
+                    </th>
+                </tr>
+                <!-- Clickable score row -->
+                <tr data-bs-toggle="collapse" data-bs-target="#collapse-{{best.team_id}}" aria-expanded="false"
+                    style="cursor:pointer;">
+                    <th colspan="6" class="team-score mozilla-headline-teamname display-6 main-score">
+                        {{best.score}} <br>
+                        <small class="ms-2 text-muted">(vedi best 11)</small>
+                    </th>
+                </tr>
+            </thead>
+
+            <!-- Collapsible content starts here -->
+            <tbody id="collapse-{{best.team_id}}" class="collapse table-group-divider">
+                {% for player in best.players %}
+                <tr>
+                    <td style="width:1%;">{{player.player_role}}</td>
+                    <td style="width:1%;">{{player.player_rt|upper|slice:":3"}}</td>
+                    <td>{{player.player_surname}}</td>
+                    <td>{{player.player_vote}}</td>
+                    <td>{{player.player_totvote}}</td>
+                </tr>
+                {% endfor %}
+                <tr class="top-table-line">
+                    <td />
+                    <td />
+                    <td />
+                    <td />
+                    <td />
+                </tr>
+                <tr>
+                    <td />
+                    <td />
+                    <td>Modulo</td>
+                    <td><span class="tot-score">{{best.module}}</span></td>
+                    <td />
+                </tr>
+                <tr>
+                    <td />
+                    <td />
+                    <td>Modificatore</td>
+                    <td class="tot-score">{{best.modif}}</td>
+                    <td />
+                </tr>
+                <tr>
+                    <td />
+                    <td />
+                    <td>Bonus capitano</td>
+                    <td class="tot-score">{{best.bcaptain}}</td>
+                    <td class="tot-score">{{best.captain}}</td>
+                </tr>
+                <tr>
+                    <td />
+                    <td />
+                    <td>Bonus prestazioni</td>
+                    <td class="tot-score">{{best.no_yellow_bonus}}</td>
+                    <td />
+                </tr>
+                <tr>
+                    <td />
+                    <td />
+                    <td>Bonus voti</td>
+                    <td class="tot-score">{{best.all_six_bonus}}</td>
+                    <td />
+                </tr>
+                <tr>
+                    <td />
+                    <td />
+                    <td />
+                    <td />
+                    <td />
+                </tr>
+            </tbody>
+        </table>
         {% endfor %}
 
     </div>

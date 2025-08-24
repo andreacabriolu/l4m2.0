@@ -1,3 +1,46 @@
 .b11-live-table {
     background-color: black;
 }
+
+.team-score {
+    width: auto;
+    font-weight: bold !important;
+}
+
+.team-name {
+    text-wrap: nowrap;
+}
+
+.mozilla-headline-teamname {
+  font-family: "Mozilla Headline", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
+}
+
+.top-table-line {
+    border-top-color: whitesmoke;
+    border-width: 2px !important;
+}
+
+.table-match {
+    margin-right: 1.5em;
+    margin-bottom: 2.5rem !important;
+    width: 50% !important;
+    place-self: anchor-center;
+    text-align: center;
+}
+
+.tot-score {
+    font-weight: bolder !important;
+    color: rgb(76, 119, 65) !important;
+    font-size: larger;
+}
+
+.main-score {
+    font-weight: bolder !important;
+    color: rgb(79, 97, 156) !important;
+    font-size: larger;
+}
