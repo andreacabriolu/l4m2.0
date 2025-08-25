@@ -246,10 +246,10 @@ window.addEventListener('DOMContentLoaded', event => {
         adjustOtherDropdowns($(this));
         if($('#captain').val() != null && 
            $(this).children('option:selected').data().id == $('#captain').children('option:selected').data().id) {
-                adjust_captain(reset=false);
+                adjust_captain();
         }
         else {
-            adjust_captain();
+            adjust_captain(reset=false);
         }
     }));
 

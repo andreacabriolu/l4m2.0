@@ -51,7 +51,6 @@ class LiveB11View(LoginRequiredMixin, View):
 
         return render(request, self.template_name, params)
 
-class LiveView(LoginRequiredMixin, View):
 def LiveView(request):
     template_name = 'l4m/live.html'
 
