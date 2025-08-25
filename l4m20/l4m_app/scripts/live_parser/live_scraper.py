@@ -20,12 +20,17 @@ url = "https://www.fantacalcio.it/serie-a/calendario/1/2025-26/atalanta-pisa/166
 
 session = HTMLSession()
 response = session.get(url)
-response.html.render()
+script_id = 'playersListsTemplate'
+response.html.render(script=script_id)
 html_resp = response.html.html
 
 # page = urlopen(url)
 # html_base = page.read()
 # html = html_base.decode('utf-8')
+
+votes_temp = {
+    
+}
 
 soup = BeautifulSoup(html_resp, 'html.parser')
 
@@ -35,8 +40,19 @@ divs = grades_section.find_all('div')
 for div in divs:
     if(div_has_class(div, 'home')):
         ul_section = div.find('ul')
+        lis = ul_section.find_all('li')
+        for li in lis:
+            pspan = li.find('span')
+            pname = pspan.text if pspan != '' else ''
+            grade_div = li.find('div', {'class':'player-grade'})
+            if(grade_div != ''):
+                votes_temp[pname] = grade_div['data-value']
+            eventstrips = li.find('div', {'class':'player-events-strip'})
+            if eventstrips != '':
+                event_figure = eventstrips.find('figure').attrs
+
+            
         pass
 
 
-# parser = LiveHTMLParser().feed(html)
 
