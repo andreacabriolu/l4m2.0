@@ -44,3 +44,11 @@
     color: rgb(79, 97, 156) !important;
     font-size: larger;
 }
+
+@media (max-width:800px) {
+    .table-match{
+        width: 100% !important;
+        place-self: anchor-center;
+        text-align: center;
+    }
+  }
