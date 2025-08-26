@@ -362,24 +362,27 @@ def pick_best_11(keepers, defenders, midfielders, attackers):
             # initial slice
             lineup = [keepers[0]] + defenders[:d] + midfielders[:m] + attackers[:a]
 
-            # --- Yellow-card swap ---
-            for i, p in enumerate(lineup):
-                if getattr(p.votes, "YellowCard", False):
-                    if p.role == "P":
-                        role_list = keepers
-                    elif p.role == "D":
-                        role_list = defenders
-                    elif p.role == "C":
-                        role_list = midfielders
-                    else:
-                        role_list = attackers
-
-                    for candidate in role_list:
-                        if (candidate.votes.TotVote == p.votes.TotVote and
-                            not getattr(candidate.votes, "YellowCard", False) and
-                            candidate not in lineup):
-                            lineup[i] = candidate
-                            break
+            # bench slice
+            lineup_bench = keepers[1:] + defenders[d:] + midfielders[m:] + attackers[a:]
+            
+            ## --- Yellow-card swap ---
+            #for i, p in enumerate(lineup):
+            #    if getattr(p.votes, "YellowCard", False):
+            #        if p.role == "P":
+            #            role_list = keepers
+            #        elif p.role == "D":
+            #            role_list = defenders
+            #        elif p.role == "C":
+            #            role_list = midfielders
+            #        else:
+            #            role_list = attackers
+			#
+            #        for candidate in role_list:
+            #            if (candidate.votes.TotVote == p.votes.TotVote and
+            #                not getattr(candidate.votes, "YellowCard", False) and
+            #                candidate not in lineup):
+            #                lineup[i] = candidate
+            #                break
 
             # sum TotVote
             score = sum((p.votes.TotVote or -1) for p in lineup)
@@ -429,7 +432,20 @@ def pick_best_11(keepers, defenders, midfielders, attackers):
                     "player_vote": vote,
                     "player_totvote": Tvote  
                 })
-        
+                
+            for p in lineup_bench:
+                vote = p.votes.Vote
+                Tvote = p.votes.TotVote
+                players_list.append({
+                    "player_id": p.id,
+                    "player_rt": p.RealTeam,
+                    "player_role": p.Role,
+                    "player_surname": getattr(p, "surname", getattr(p, "name", str(p))),
+                    "player_vote": vote,
+                    "player_totvote": Tvote  
+                })
+                
+            
             total_score = score + bonus_cap + bonus_six + no_yellow_bonus
             if total_score > best_score:
                 best_score = total_score
