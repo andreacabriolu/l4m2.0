@@ -20,7 +20,6 @@ url_fg = "https://www.fantacalcio.it/serie-a/calendario/1/2025-26/atalanta-pisa/
 if(not TEST):
     url = "https://publicapi.fantamaster.it/livescores/?tcache=1756165942189"
     resp = req.get(url)
-    resp_text = resp.text
     resp_content = resp.content
 
     resp_json = json.loads(resp_content)
@@ -81,7 +80,7 @@ for _,vote in votes.items():
     vote.Competition = int(1) #TODO magic number: campionato
 
 
-#write only final votes
+#write ONLY final votes
 U.insert_votes(conn, votes)
 conn.commit()
 

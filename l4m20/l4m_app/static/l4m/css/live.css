@@ -136,5 +136,9 @@ table .w-30 {
   
   .yettoplay {
     color: rgb(222, 53, 67);
-    font-weight: bolder;
+  }
+
+  .live-row {
+    color: green;
+    --bs-table-striped-color: green;
   }

@@ -6,6 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 import json
 from django.db.models import Q
 
+
 from .. import utilities as U
 from .. import live_utilities as LU
 from ..models import *
@@ -76,9 +77,12 @@ def LiveView(request):
 
     all_votes = []
 
+    #get all live players
+    live_votes = LU.get_live_votes(current_day)
+
     for lineup_couple in lineup_couples:
-        votes_home = LU.get_votes(lineup_couple[0], current_day, teamid)
-        votes_away = LU.get_votes(lineup_couple[1], current_day, teamid, home=False)
+        votes_home = LU.get_votes(lineup_couple[0], current_day, live_votes, teamid)
+        votes_away = LU.get_votes(lineup_couple[1], current_day, live_votes, teamid, home=False)
         all_votes.append( \
             [votes_home, votes_away]
         )

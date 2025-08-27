@@ -7,6 +7,191 @@ from l4m20 import constants as C
 import statistics
 from . import utilities as U
 from django.db.models import Q
+import requests as req
+
+def fill_with_events(events, votes): 
+    
+    for event in events:
+        
+        _type = event['type']
+        match _type:
+            case C.Events.YELLOW_CARD:
+                pl = player.Player.objects.filter(Surname=event['player'])
+                if len(pl) == 0:
+                    continue
+                pl = pl[0]
+                
+                vote = votes[pl.id]
+                vote.Yel = 1
+            case C.Events.RED_CARD:
+                pl = player.Player.objects.filter(Surname=event['player'])
+                if len(pl) == 0:
+                    continue
+                pl = pl[0]
+                
+                vote = votes[pl.id]
+                vote.Red = 1
+
+            case C.Events.GOAL:
+                pl = player.Player.objects.filter(Surname=event['player'])
+                if len(pl) == 0:
+                    continue
+                pl = pl[0]
+                
+                if event['details'] != '':
+                    pl_assist = player.Player.objects.filter(Surname=event['details'])
+                    pl_assist = pl_assist[0]
+                    vote = votes[pl_assist.id]
+                    vote.AssS = vote.AssS + 1
+
+                vote = votes[pl.id]
+                vote.GoalSc = vote.GoalSc + 1
+
+            case C.Events.GOAL_TAKEN:
+                pl = player.Player.objects.filter(Surname=event['player'])
+                if len(pl) == 0:
+                    continue
+                pl = pl[0]
+
+                vote = votes[pl.id]
+                vote.GoalTa = vote.GoalTa + 1
+
+            case C.Events.OWN_GOAL:
+                pl = player.Player.objects.filter(Surname=event['player'])
+                if len(pl) == 0:
+                    continue
+                pl = pl[0]
+
+                vote = votes[pl.id]
+                vote.Own = vote.Own + 1
+
+            case C.Events.SUB:
+                pl_in = player.Player.objects.filter(Surname=event['in'])
+                pl_out = player.Player.objects.filter(Surname=event['out'])
+                if len(pl_in) == 0 or len(pl_out) == 0:
+                    continue
+                pl_in = pl_in[0]
+                pl_out = pl_out[0]
+
+                vote_in = votes[pl_in.id]
+                vote_out = votes[pl_out.id]
+                vote_in.Sub = int(event['minute'])
+                vote_out.Sub = int(event['minute']) * (-1)
+
+def fill_live_votes(score, grades, live_votes):
+    hlineup = score['home_lineups']
+    hbench = score['home_bench']
+    alineup = score['away_lineups']
+    abench = score['away_bench']
+
+    for p in hlineup:
+        pl = player.Player.objects.filter(Surname=p)
+        if len(pl) == 0:
+            continue
+        pl = pl[0]
+        if p not in grades:
+            continue
+        _vote = vote.Vote.Vote_Obj()
+        _vote.Player = pl
+        _vote.Vote = float(grades[p])
+        live_votes[pl.id] = _vote
+
+    for p in hbench:
+        pl = player.Player.objects.filter(Surname=p)
+        if len(pl) == 0:
+            continue
+        pl = pl[0]
+        if p not in grades:
+            continue
+        _vote = vote.Vote.Vote_Obj()
+        _vote.Player = pl
+        _vote.Vote = float(grades[p])
+        live_votes[pl.id] = _vote
+
+    for p in alineup:
+        pl = player.Player.objects.filter(Surname=p)
+        if len(pl) == 0:
+            continue
+        pl = pl[0]
+        if p not in grades:
+            continue
+        _vote = vote.Vote.Vote_Obj()
+        _vote.Player = pl
+        _vote.Vote = float(grades[p])
+        live_votes[pl.id] = _vote
+
+    for p in abench:
+        pl = player.Player.objects.filter(Surname=p)
+        if len(pl) == 0:
+            continue
+        pl = pl[0]
+        if p not in grades:
+            continue
+        _vote = vote.Vote.Vote_Obj()
+        _vote.Player = pl
+        _vote.Vote = float(grades[p])
+        live_votes[pl.id] = _vote
+
+    # for name, grade in grades.items():
+    #         name = name.replace(' ','_')
+    #         #FOOL name exceptions
+    #         name = U.manage_fool_name_exceptions(name)
+    #         pl = player.Player.objects.filter(Surname=name)
+    #         if len(pl) == 0:
+    #             continue
+    #         pl=pl[0]
+
+            # _vote = vote.Vote.Vote_Obj()
+            # _vote.Player = pl
+            # _vote.Vote = float(grade)
+            # _vote.GoalSc = 0
+            # _vote.GoalTa = 0
+            # _vote.PenSc = 0
+            # _vote.PenMi = 0
+            # _vote.PenSa = 0
+            # _vote.Own = 0
+            # _vote.Yel = 0
+            # _vote.Red = 0
+            # _vote.AssS = 0
+            # _vote.Live = False
+            # _vote.Sub = 0
+
+            # live_votes[pl.id] = _vote
+
+
+def get_live_votes(day):
+    TEST = True
+    if(not TEST):
+        url = "https://publicapi.fantamaster.it/livescores/?tcache=1756165942189"
+        resp = req.get(url)
+        resp_content = resp.content
+
+        resp_json = json.loads(resp_content)
+    else:
+        f = open('l4m_app/scripts/live_parser/fake.json','r')
+        resp_json = json.loads(f.read())
+        f.close()
+
+    live_votes = {}
+    current_day = resp_json['day']
+    grades = resp_json['marks']
+
+    if (day != current_day):
+        return live_votes #empty
+
+    for score in resp_json['scores']:
+        isLive = score['time'] != C.Events.END_MATCH
+        if (not isLive):
+            continue 
+        match_events = score['events']
+        fill_live_votes(score, grades, live_votes)
+        fill_with_events(match_events, live_votes)
+
+    for _, _vote in live_votes.items():
+        _vote.Day = int(current_day)
+        _vote.Competition = int(1) #TODO magic number: campionato
+
+    return live_votes
 
 def get_couples_from_calendar(seriesid, day):
     matches_ = matches_calendar.MatchesCalendar.objects.filter(Q(CompetitionCalendar__Day=day) & Q(Series_id=seriesid))
@@ -36,12 +221,20 @@ def make_empty_vote_obj(pl_id, cap_id, already_played, current_day):
     v_obj.Status = C.PlayerStatus.YET_TO_PLAY if not already_played else C.PlayerStatus.NOT_PLAYED
     real_match = real_calendar.Real_calendar.objects.filter(Q(Day=current_day) & \
                                                             (Q(RealTeamHome_id=pl.RealTeam) | Q(RealTeamAway_id=pl.RealTeam)))
-    # locale.setlocale(locale.LC_ALL, 'it_IT')
     v_obj.Msg = real_match[0].Date.astimezone(ZoneInfo(key='Europe/Rome')).strftime('%d-%m-%Y alle %H:%M') if real_match else ""
 
     return v_obj
 
-def make_vote_obj(_vote:vote.Vote, cap_id, already_played):
+def adjust_vote_obj(_vote_obj, cap_id):
+    if(_vote_obj.Player.id == cap_id):
+        _vote_obj.Cap = True
+    _vote_obj.Status = C.PlayerStatus.PLAYING
+    _vote_obj.Live = True
+    _vote_obj.TotVote = calculate_total(_vote_obj)
+    
+    return _vote_obj
+
+def make_vote_obj(_vote:vote.Vote, cap_id):
     v_obj = vote.Vote.Vote_Obj()
     v_obj.AssH = _vote.AssH
     v_obj.AssL = _vote.AssL
@@ -66,7 +259,8 @@ def make_vote_obj(_vote:vote.Vote, cap_id, already_played):
     v_obj.TotVote = calculate_total(_vote)
     if(_vote.Player_id == cap_id):
         v_obj.Cap = True
-    v_obj.Status = C.PlayerStatus.PLAYING if not already_played else C.PlayerStatus.PLAYED
+    v_obj.Status = C.PlayerStatus.PLAYED
+    # v_obj.Status = C.PlayerStatus.PLAYING if not already_played else C.PlayerStatus.PLAYED
 
     return v_obj
 
@@ -184,7 +378,7 @@ def check_valid_module_change_for_modifier(orig, current):
 def isValid(vote):
     return (len(vote) > 0 and vote[0].Vote > -1)
 
-def get_votes(lineup, current_day, my_teamid = None, home=True):
+def get_votes(lineup, current_day, live_votes, my_teamid = None, home=True):
     votes_tit = []
     votes_ris = []
     module = C.Modules._442 #default
@@ -210,6 +404,7 @@ def get_votes(lineup, current_day, my_teamid = None, home=True):
     cap_id = line['captain'] if 'captain' in line.keys() else 0
     orig_module = line['mod'].replace('-','')
     cap_vote = 6
+
     for l in line.items(): #loop players in lineup
         if l[0] == 'captain':
             continue
@@ -218,19 +413,34 @@ def get_votes(lineup, current_day, my_teamid = None, home=True):
             continue
         
         pl = player.Player.objects.get(pk=l[1])
-        already_played = check_already_played(current_day, pl.RealTeam)
 
-        _vote = vote.Vote.objects.filter(Q(Player_id=l[1]) & Q(Day=current_day))
-        if(l[0].endswith('tit')):
-            votes_tit.append(make_vote_obj(_vote[0], cap_id, already_played) if isValid(_vote) else \
-                             make_empty_vote_obj(l[1], cap_id, already_played, current_day))
-        else:
-            votes_ris.append(make_vote_obj(_vote[0], cap_id, already_played) if isValid(_vote) else \
+        #check if player is LIVE
+        if pl.id in live_votes:
+            _live_vote = live_votes[pl.id]
+            if(l[0].endswith('tit')):
+                votes_tit.append(adjust_vote_obj(_live_vote, cap_id) if _live_vote.Vote > 0 else \
+                                make_empty_vote_obj(l[1], cap_id, already_played, current_day))
+            else:
+                votes_ris.append(adjust_vote_obj(_live_vote, cap_id) if _live_vote.Vote > 0 else \
                              make_empty_vote_obj(l[1], cap_id, already_played, current_day))
 
-        if len(_vote) > 0:
             if(l[1] == cap_id):
-                cap_vote = _vote[0].Vote
+                cap_vote = _live_vote.Vote
+        else:
+        #player NOT LIVE
+            already_played = check_already_played(current_day, pl.RealTeam)
+
+            _vote = vote.Vote.objects.filter(Q(Player_id=l[1]) & Q(Day=current_day))
+            if(l[0].endswith('tit')):
+                votes_tit.append(make_vote_obj(_vote[0], cap_id) if isValid(_vote) else \
+                                make_empty_vote_obj(l[1], cap_id, already_played, current_day))
+            else:
+                votes_ris.append(make_vote_obj(_vote[0], cap_id) if isValid(_vote) else \
+                                make_empty_vote_obj(l[1], cap_id, already_played, current_day))
+
+            if len(_vote) > 0:
+                if(l[1] == cap_id):
+                    cap_vote = _vote[0].Vote
 
     # votes_tot = votes_tit + votes_ris
     # is_completed = C.PlayerStatus.YET_TO_PLAY not in [v.Status for v in votes_tot] and \

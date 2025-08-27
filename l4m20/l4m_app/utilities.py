@@ -308,3 +308,43 @@ def check_day_already_started():
     today_matches = real_calendar.Real_calendar.objects.filter(Day=get_current_day()).values('Date').order_by('Date')
     day_time_limit = today_matches.first()['Date'].astimezone(ZoneInfo(key='Europe/Rome')) if len(today_matches) > 0 else None
     return datetime.datetime.now(ZoneInfo('Europe/Rome')) >= day_time_limit, day_time_limit
+
+def manage_fool_name_exceptions(name):
+    if name=='Ederson_J':
+        return 'Ederson_DS'
+    if name=='Anguissa':
+        return 'Zambo_Anguissa'
+    if name=='Ndicka':
+        return 'NDicka'
+    if name=='Pellegrino_Ma':
+        return 'Pellegrino_M'
+    if name=='Iker_Bravo':
+        return 'Bravo'
+    if name=='Pedro R':
+        return 'Pedro'
+    if name=='Bernabe\'':
+        return 'Bernabè'
+    if name=='Giovane_S':
+        return 'Giovane'
+    if name=='N\'Dri':
+        return 'NDri'
+    if name=='Davis':
+        return 'Davis_K'
+    if name=='Dele_Bashiru':
+        return 'Dele-Bashiru'
+    if name=='Bradaric_D':
+        return 'Bradaric'
+    if name=='Vitinha':
+        return 'Vitinha_O'
+    if name=='Locatelli_M':
+        return 'Locatelli'
+    if name=='Lazzari_M':
+        return 'Lazzari'
+    if name=='Danilo_Veiga':
+        return 'Veiga_D'
+    if name=='Wesley_F':
+        return 'Wesley'
+    if name=='Ranieri':
+        return 'Ranieri_L'
+    
+    return name

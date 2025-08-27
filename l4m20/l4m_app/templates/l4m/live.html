@@ -69,7 +69,7 @@
                     </tr>
                     {% else %}
                     {% for vote in team_votes.0 %}
-                    <tr>
+                    <tr {% if vote.Status == 0 %} class="live-row" {% endif %}>
                         <td>{{vote.Player.Role}}</td>
                         <td>{{vote.Player.RealTeam|upper|slice:":3"}}</td>
                         <td>{% if vote.Cap %} <img class="cap-img" src="{% static 'l4m/images/cap.png' %}">{% endif %}
@@ -141,8 +141,12 @@
                                 <span>({{vote.Sub|floatformat|slice:"1:"}}')</span>
                                 {% endif %}
 
+                                {% if vote.Status == 0 %}
+                                    <img src="{% static 'l4m/images/live.png' %}">
+                                {% endif %}
+
                                 {% if vote.Status == 1 %}
-                                <img src="{% static 'l4m/images/out.png' %}">
+                                    <img src="{% static 'l4m/images/out.png' %}">
                                 {% endif %}
 
                                 {% if vote.Status == 3 %}
