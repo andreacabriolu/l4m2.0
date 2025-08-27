@@ -26,7 +26,7 @@ class Vote(models.Model):
     AssP = models.IntegerField(default=0)    # penalty procured
     SubJ = models.IntegerField(default=0)    # sub-judice: all bonuses are to be confirmed
     Sub = models.FloatField(default=0.0)     # substitution: +30 in at minute 30, -87 out at minute 87
-    
+    Live = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.Player} - Giornata {self.Day} ({self.Vote})"

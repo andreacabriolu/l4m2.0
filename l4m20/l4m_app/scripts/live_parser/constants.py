@@ -8,7 +8,20 @@ from requests_html import HTMLSession
 
 
 class Events:
-    GOAL_TAKEN: 4
-    GOAL: 3
-    
+    GOAL_TAKEN = 'GG'
+    GOAL = 'G'
+    END_MATCH = 'FT'
+    ASS_LOW = ''
+    ASS_HIGH = ''
+    ASS_STD = ''
+    CAP = ''
+    GOAL_DECIDER = ''
+    PENALTY_SCORED = ''
+    PENALTY_MISSED = ''
+    PENALTY_SAVED = ''
+    OWN_GOAL = 'OG'
+    YELLOW_CARD = 'YC'
+    RED_CARD = 'RC'
+    PENALTY_PROCURED = ''
+    SUB = 'S'
     
