@@ -43,8 +43,6 @@ class LiveB11View(LoginRequiredMixin, View):
             reverse=True
         )
         
-        print(sorted_best)
-        
         params = {
             'sorted_best': sorted_best
         }

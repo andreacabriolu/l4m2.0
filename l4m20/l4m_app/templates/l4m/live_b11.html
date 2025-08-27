@@ -52,13 +52,21 @@
 
             <!-- Collapsible content starts here -->
             <tbody id="collapse-{{best.team_id}}" class="collapse table-group-divider">
-                {% for player in best.players %}
+                {% for player in best.players|slice:":11" %}
                 <tr>
                     <td style="width:1%;">{{player.player_role}}</td>
                     <td style="width:1%;">{{player.player_rt|upper|slice:":3"}}</td>
                     <td>{{player.player_surname}}</td>
-                    <td>{{player.player_vote}}</td>
-                    <td>{{player.player_totvote}}</td>
+                    <td>
+                        {% if player.player_vote %}
+                          {{ player.player_vote }}
+                        {% endif %}
+	                </td>
+                    <td>
+                        {% if player.player_totvote %}
+                          {{ player.player_totvote }}
+                        {% endif %}
+	                </td>
                 </tr>
                 {% endfor %}
                 <tr class="top-table-line">
@@ -110,6 +118,23 @@
                     <td />
                     <td />
                 </tr>
+                {% for player in best.players|slice:"11:" %}
+                <tr class="top-table-line">
+                    <td style="width:1%;">{{player.player_role}}</td>
+                    <td style="width:1%;">{{player.player_rt|upper|slice:":3"}}</td>
+                    <td>{{player.player_surname}}</td>
+                    <td>
+                        {% if player.player_vote %}
+                          {{ player.player_vote }}
+                        {% endif %}
+	                </td>
+                    <td>
+                        {% if player.player_totvote %}
+                          {{ player.player_totvote }}
+                        {% endif %}
+	                </td>
+                </tr>
+                {% endfor %}
             </tbody>
         </table>
         </div>
