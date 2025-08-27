@@ -1,7 +1,5 @@
 import psycopg2
-import decouple
 from decouple import config
-import psycopg2.extras
 
 class DB_Connector:
     def __init__(self):

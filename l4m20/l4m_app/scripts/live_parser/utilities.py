@@ -1,12 +1,4 @@
-import urllib
-import requests as req
-from urllib.request import urlopen
-import html.parser as hp
-from html_parser import LiveHTMLParser
-from bs4 import BeautifulSoup
-from requests_html import HTMLSession
 import constants as C
-from live_parser import vote_live
 from live_parser.db_connector import DB_Connector
 
 def manage_fool_name_exceptions(name):
