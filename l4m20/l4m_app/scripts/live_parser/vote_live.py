@@ -25,3 +25,4 @@ class Vote_Live_Obj():
     ChangedOut = str
     Msg = str
     Live = bool
+    RealTeam = str

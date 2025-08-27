@@ -53,7 +53,7 @@ for name, grade in grades.items():
         continue
     vote = Vote_Live_Obj()
     vote.Player = players[name]
-    vote.Vote = grade
+    vote.Vote = float(grade)
     vote.GoalSc = 0
     vote.GoalTa = 0
     vote.PenSc = 0
@@ -64,25 +64,26 @@ for name, grade in grades.items():
     vote.Red = 0
     vote.AssS = 0
     vote.Live = False
-    # vote.Sub = 0
+    vote.Sub = 0
 
     votes[players[name]] = vote
 
-#player based info
 for score in resp_json['scores']:
     isLive = score['time'] != C.Events.END_MATCH
-    if (isLive):
+    if (isLive): 
         U.set_live(score, votes, players)
     match_events = score['events']
     U.fill_with_events(match_events, players, votes)
 
 #complete votes
 for _,vote in votes.items():
-    vote.Day = current_day
-    vote.Competition = 1 #TODO magic number: campionato
+    vote.Day = int(current_day)
+    vote.Competition = int(1) #TODO magic number: campionato
 
 
-
+#write only final votes
+U.insert_votes(conn, votes)
+conn.commit()
 
 
 
