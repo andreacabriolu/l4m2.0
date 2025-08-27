@@ -1,6 +1,6 @@
 import requests as req
 import json
-from live_parser.db_connector import DB_Connector
+from db_connector import *
 from vote_live import *
 import constants as C
 import utilities as U

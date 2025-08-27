@@ -1,5 +1,5 @@
 import constants as C
-from live_parser.db_connector import DB_Connector
+from db_connector import *
 
 def manage_fool_name_exceptions(name):
     if name=='Ederson_J':
