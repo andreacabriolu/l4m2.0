@@ -510,7 +510,7 @@ def enrich_and_sort_players(role, teamid, current_day, cap_id=-1):
         already_played = check_already_played(current_day, pl.RealTeam)
 
         _vote = vote.Vote.objects.filter(Q(Player_id=idpl) & Q(Day=current_day))
-        votes_pl = make_vote_obj(_vote[0], cap_id, already_played) if len(_vote) > 0 else \
+        votes_pl = make_vote_obj(_vote[0], cap_id) if len(_vote) > 0 else \
                    make_empty_vote_obj(pl.id, cap_id, already_played, current_day)
 
         pl.votes = votes_pl
