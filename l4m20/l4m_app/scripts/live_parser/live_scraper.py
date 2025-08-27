@@ -11,7 +11,7 @@ from vote_live import *
 import constants as C
 import utilities as U
 
-TEST = True
+TEST = False
 
 #google-chrome --headless --dump-dom 'http://lega4mori.com/l4m/live/' > file.html
 url_fg = "https://www.fantacalcio.it/serie-a/calendario/1/2025-26/atalanta-pisa/16670/voti"

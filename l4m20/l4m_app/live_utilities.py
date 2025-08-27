@@ -132,33 +132,6 @@ def fill_live_votes(score, grades, live_votes):
         _vote.Vote = float(grades[p])
         live_votes[pl.id] = _vote
 
-    # for name, grade in grades.items():
-    #         name = name.replace(' ','_')
-    #         #FOOL name exceptions
-    #         name = U.manage_fool_name_exceptions(name)
-    #         pl = player.Player.objects.filter(Surname=name)
-    #         if len(pl) == 0:
-    #             continue
-    #         pl=pl[0]
-
-            # _vote = vote.Vote.Vote_Obj()
-            # _vote.Player = pl
-            # _vote.Vote = float(grade)
-            # _vote.GoalSc = 0
-            # _vote.GoalTa = 0
-            # _vote.PenSc = 0
-            # _vote.PenMi = 0
-            # _vote.PenSa = 0
-            # _vote.Own = 0
-            # _vote.Yel = 0
-            # _vote.Red = 0
-            # _vote.AssS = 0
-            # _vote.Live = False
-            # _vote.Sub = 0
-
-            # live_votes[pl.id] = _vote
-
-
 def get_live_votes(day):
     TEST = False
     if(not TEST):
@@ -180,10 +153,13 @@ def get_live_votes(day):
         return live_votes #empty
 
     for score in resp_json['scores']:
-        isLive = score['time'] != C.Events.END_MATCH
+        isLive = score['time'] != C.Events.END_MATCH #TODO: or 30 mins after match
+
         if (not isLive):
             continue 
+        
         match_events = score['events']
+        
         fill_live_votes(score, grades, live_votes)
         fill_with_events(match_events, live_votes)
 
