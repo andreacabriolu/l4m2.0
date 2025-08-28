@@ -38,7 +38,7 @@ votes = {}
 for name, grade in grades.items():
     name = name.replace(' ','_')
     #FOOL name exceptions
-    name = U.manage_fool_name_exceptions(name)
+    # name = U.manage_fool_name_exceptions(name)
     if name not in players:
         continue
     vote = Vote_Live_Obj()
