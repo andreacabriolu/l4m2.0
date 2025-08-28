@@ -390,6 +390,8 @@ def get_votes(lineup, current_day, live_votes, my_teamid = None, home=True):
         
         pl = player.Player.objects.get(pk=l[1])
 
+        already_played = check_already_played(current_day, pl.RealTeam)
+
         #check if player is LIVE
         if pl.id in live_votes:
             _live_vote = live_votes[pl.id]
@@ -404,8 +406,6 @@ def get_votes(lineup, current_day, live_votes, my_teamid = None, home=True):
                 cap_vote = _live_vote.Vote
         else:
         #player NOT LIVE
-            already_played = check_already_played(current_day, pl.RealTeam)
-
             _vote = vote.Vote.objects.filter(Q(Player_id=l[1]) & Q(Day=current_day))
             if(l[0].endswith('tit')):
                 votes_tit.append(make_vote_obj(_vote[0], cap_id) if isValid(_vote) else \

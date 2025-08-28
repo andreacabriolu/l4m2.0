@@ -152,7 +152,7 @@ def fill_with_events(events, players, votes):
 
 def insert_votes(conn:DB_Connector, votes):
     _cols = ('Day',"Vote","GoalSc","GoalTa","PenSc","PenMi","PenSa","Own","Yel","Red",\
-             "AssS","Sub","Competition_id","Player_id","Live")
+             "AssS","Sub","Competition_id","Player_id","RealTeam_id","Live")
     try:
         for _,vote in votes.items():
             if vote.Live:
@@ -176,11 +176,18 @@ def insert_votes(conn:DB_Connector, votes):
                          vote.Sub, 
                          vote.Competition,
                          vote.Player,
-                         1, #vote.RealTeam_id, #TODO: delete column!
+                         vote.RealTeam,
                          vote.Live)
             conn.insert(table="l4m_app_vote", cols=_cols, data=data_vote)
     except Exception as e:
         raise e
+    
+def get_players_realteam(conn:DB_Connector):
+    try:
+        return conn.select(table="l4m_app_player", cols='\"id\",\"RealTeam_id\"', conditions='"Status"=\'A\'')
+    except Exception as e:
+        raise e
+    
 
 def get_players(conn:DB_Connector):
     try:

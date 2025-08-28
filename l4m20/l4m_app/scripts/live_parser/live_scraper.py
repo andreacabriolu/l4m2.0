@@ -34,6 +34,7 @@ current_day = resp_json['day']
 grades = resp_json['marks']
 
 players = dict(U.get_players(conn))
+players_realteam = dict(U.get_players_realteam(conn))
 
 votes = {}
 
@@ -58,6 +59,7 @@ for name, grade in grades.items():
     vote.AssS = 0
     vote.Live = False
     vote.Sub = 0
+    vote.RealTeam = players_realteam[players[name]]
 
     votes[players[name]] = vote
 
