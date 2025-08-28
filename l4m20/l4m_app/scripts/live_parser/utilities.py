@@ -89,26 +89,26 @@ def fill_with_events(events, players, votes):
     for event in events:
         
         #TODO: absolutely improve
-        if 'player' in event and event['player'].replace(' ','_') not in players:
+        if 'player' in event and event['player'].replace(' ','_').replace('\'','') not in players:
             continue
-        if 'in' in event and event['in'].replace(' ','_') not in players:
+        if 'in' in event and event['in'].replace(' ','_').replace('\'','') not in players:
             continue
-        if 'out' in event and event['out'].replace(' ','_') not in players:
+        if 'out' in event and event['out'].replace(' ','_').replace('\'','') not in players:
             continue
-        if 'details' in event and event['details'] != '' and event['details'].replace(' ','_') not in players:
+        if 'details' in event and event['details'] != '' and event['details'].replace(' ','_').replace('\'','') not in players:
             continue
         
         _type = event['type']
         match _type:
             case C.Events.YELLOW_CARD:
-                pl_id = players[event['player'].replace(' ','_')]
+                pl_id = players[event['player'].replace(' ','_').replace('\'','')]
                 if pl_id is None:
                     continue
 
                 vote = votes[pl_id]
                 vote.Yel = 1
             case C.Events.RED_CARD:
-                pl_id = players[event['player'].replace(' ','_')]
+                pl_id = players[event['player'].replace(' ','_').replace('\'','')]
                 if pl_id is None:
                     continue
 
@@ -116,11 +116,11 @@ def fill_with_events(events, players, votes):
                 vote.Red = 1
 
             case C.Events.GOAL:
-                pl_id = players[event['player'].replace(' ','_')]
+                pl_id = players[event['player'].replace(' ','_').replace('\'','')]
                 if pl_id is None:
                     continue
                 if event['details'] != '':
-                    pl_assist_id = players[event['details'].replace(' ','_')]
+                    pl_assist_id = players[event['details'].replace(' ','_').replace('\'','')]
                     vote = votes[pl_assist_id]
                     vote.AssS = vote.AssS + 1
 
@@ -128,7 +128,7 @@ def fill_with_events(events, players, votes):
                 vote.GoalSc = vote.GoalSc + 1
 
             case C.Events.GOAL_TAKEN:
-                pl_id = players[event['player'].replace(' ','_')]
+                pl_id = players[event['player'].replace(' ','_').replace('\'','')]
                 if pl_id is None:
                     continue
 
@@ -136,7 +136,7 @@ def fill_with_events(events, players, votes):
                 vote.GoalTa = vote.GoalTa + 1
 
             case C.Events.OWN_GOAL:
-                pl_id = players[event['player'].replace(' ','_')]
+                pl_id = players[event['player'].replace(' ','_').replace('\'','')]
                 if pl_id is None:
                     continue
 

@@ -37,6 +37,7 @@ votes = {}
 #creating votes ONLY for playing players, warning!
 for name, grade in grades.items():
     name = name.replace(' ','_')
+    name = name.replace('\'','')
     #FOOL name exceptions
     # name = U.manage_fool_name_exceptions(name)
     if name not in players:
