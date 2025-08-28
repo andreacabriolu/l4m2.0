@@ -89,26 +89,26 @@ def fill_with_events(events, players, votes):
     for event in events:
         
         #TODO: absolutely improve
-        if 'player' in event and event['player'] not in players:
+        if 'player' in event and event['player'].replace(' ','_') not in players:
             continue
-        if 'in' in event and event['in'] not in players:
+        if 'in' in event and event['in'].replace(' ','_') not in players:
             continue
-        if 'out' in event and event['out'] not in players:
+        if 'out' in event and event['out'].replace(' ','_') not in players:
             continue
-        if 'details' in event and event['details'] != '' and event['details'] not in players:
+        if 'details' in event and event['details'] != '' and event['details'].replace(' ','_') not in players:
             continue
         
         _type = event['type']
         match _type:
             case C.Events.YELLOW_CARD:
-                pl_id = players[event['player']]
+                pl_id = players[event['player'].replace(' ','_')]
                 if pl_id is None:
                     continue
 
                 vote = votes[pl_id]
                 vote.Yel = 1
             case C.Events.RED_CARD:
-                pl_id = players[event['player']]
+                pl_id = players[event['player'].replace(' ','_')]
                 if pl_id is None:
                     continue
 
@@ -116,11 +116,11 @@ def fill_with_events(events, players, votes):
                 vote.Red = 1
 
             case C.Events.GOAL:
-                pl_id = players[event['player']]
+                pl_id = players[event['player'].replace(' ','_')]
                 if pl_id is None:
                     continue
                 if event['details'] != '':
-                    pl_assist_id = players[event['details']]
+                    pl_assist_id = players[event['details'].replace(' ','_')]
                     vote = votes[pl_assist_id]
                     vote.AssS = vote.AssS + 1
 
@@ -128,7 +128,7 @@ def fill_with_events(events, players, votes):
                 vote.GoalSc = vote.GoalSc + 1
 
             case C.Events.GOAL_TAKEN:
-                pl_id = players[event['player']]
+                pl_id = players[event['player'].replace(' ','_')]
                 if pl_id is None:
                     continue
 
@@ -136,7 +136,7 @@ def fill_with_events(events, players, votes):
                 vote.GoalTa = vote.GoalTa + 1
 
             case C.Events.OWN_GOAL:
-                pl_id = players[event['player']]
+                pl_id = players[event['player'].replace(' ','_')]
                 if pl_id is None:
                     continue
 
@@ -144,8 +144,8 @@ def fill_with_events(events, players, votes):
                 vote.Own = vote.Own + 1
 
             case C.Events.SUB:
-                pl_in_id = players[event['in']]
-                pl_out_id = players[event['out']]
+                pl_in_id = players[event['in'].replace(' ','_')]
+                pl_out_id = players[event['out'].replace(' ','_')]
                 vote_in = votes[pl_in_id]
                 vote_out = votes[pl_out_id]
                 vote_in.Sub = int(event['minute'])
@@ -194,14 +194,14 @@ def insert_votes(conn:DB_Connector, votes):
     
 def get_players_realteam(conn:DB_Connector):
     try:
-        return conn.select(table="l4m_app_player", cols='\"id\",\"RealTeam_id\"', conditions='"Status"=\'A\'')
+        return conn.select(table="l4m_app_player", cols='\"id\",\"RealTeam_id\"', conditions='"Status"=%s', data='A')
     except Exception as e:
         raise e
     
 
 def get_players(conn:DB_Connector):
     try:
-        return conn.select(table="l4m_app_player", cols='\"Surname\",\"id\"', conditions='"Status"=\'A\'')
+        return conn.select(table="l4m_app_player", cols='\"Surname\",\"id\"', conditions='"Status"=%s', data='A')
     except Exception as e:
         raise e
     
