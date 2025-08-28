@@ -306,7 +306,7 @@
 
                             {% if vote.Sub > 0 %}
                             <img src="{% static 'l4m/images/changein.png' %}">
-                            <span>({{vote.Sub|floatformat}}'')</span>
+                            <span>({{vote.Sub|floatformat}}')</span>
                             {% elif vote.Sub < 0 %} <img src="{% static 'l4m/images/changeout.png' %}">
                                 <span>({{vote.Sub|floatformat|slice:"1:"}}')</span>
                                 {% endif %}

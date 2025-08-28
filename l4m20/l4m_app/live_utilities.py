@@ -352,7 +352,7 @@ def check_valid_module_change_for_modifier(orig, current):
     #TODO: manage modifier change from 5 to 4
 
 def isValid(vote):
-    return (len(vote) > 0 and vote[0].Vote > -1)
+    return (len(vote) > 0 and vote[0].Vote > 0)
 
 def get_votes(lineup, current_day, live_votes, my_teamid = None, home=True):
     votes_tit = []

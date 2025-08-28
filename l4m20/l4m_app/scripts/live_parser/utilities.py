@@ -178,7 +178,7 @@ def insert_votes(conn:DB_Connector, votes):
                          vote.Player,
                          vote.RealTeam,
                          vote.Live)
-            conn.insert(table="l4m_app_vote", cols=_cols, data=data_vote)
+            conn.insert(table="l4m_app_vote", data=data_vote)
     except Exception as e:
         raise e
     
