@@ -7,10 +7,6 @@ import utilities as U
 
 TEST = False
 
-#google-chrome --headless --dump-dom 'http://lega4mori.com/l4m/live/' > file.html
-url_fg = "https://www.fantacalcio.it/serie-a/calendario/1/2025-26/atalanta-pisa/16670/voti"
-
-
 if(not TEST):
     url = "https://publicapi.fantamaster.it/livescores/?tcache=1756165942189"
     resp = req.get(url)
@@ -42,7 +38,7 @@ votes = {}
 for name, grade in grades.items():
     name = name.replace(' ','_')
     #FOOL name exceptions
-    # name = U.manage_fool_name_exceptions(name)
+    name = U.manage_fool_name_exceptions(name)
     if name not in players:
         continue
     vote = Vote_Live_Obj()
@@ -75,6 +71,9 @@ for _,vote in votes.items():
     vote.Day = int(current_day)
     vote.Competition = int(1) #TODO magic number: campionato
 
+
+#clean up the table
+U.delete_votes_of_day(conn, current_day)
 
 #write ONLY final votes
 U.insert_votes(conn, votes)

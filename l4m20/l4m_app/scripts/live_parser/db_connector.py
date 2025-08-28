@@ -14,6 +14,10 @@ class DB_Connector:
 
         self.cur = self.conn.cursor()
 
+    def delete(self, table, conditions):
+        delete_q = f"delete from {table} where {conditions}"
+        self.cur.execute(delete_q)
+
     def select(self, table, cols, conditions):
         select_q = f"select {cols} from {table} where {conditions}"
         self.cur.execute(select_q)

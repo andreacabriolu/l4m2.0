@@ -38,7 +38,8 @@ def manage_fool_name_exceptions(name):
         return 'Wesley'
     if name=='Ranieri':
         return 'Ranieri_L'
-
+    if name=='Nico_Paz':
+        return 'Paz_N'
 
     return name
 
@@ -149,6 +150,15 @@ def fill_with_events(events, players, votes):
                 vote_out = votes[pl_out_id]
                 vote_in.Sub = int(event['minute'])
                 vote_out.Sub = int(event['minute']) * (-1)
+
+def delete_votes_of_day(conn:DB_Connector, day):
+    if day == "":
+        return
+    
+    try:
+        conn.delete("l4m_app_vote", conditions=f"\"Day\"={day}")
+    except Exception as e:
+        raise e
 
 def insert_votes(conn:DB_Connector, votes):
     _cols = ('Day',"Vote","GoalSc","GoalTa","PenSc","PenMi","PenSa","Own","Yel","Red",\
