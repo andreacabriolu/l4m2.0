@@ -144,6 +144,7 @@ def fill_with_events(events, players, votes):
                 vote.Own = vote.Own + 1
 
             case C.Events.SUB:
+                continue
                 pl_in_id = players[event['in'].replace(' ','_')]
                 pl_out_id = players[event['out'].replace(' ','_')]
                 vote_in = votes[pl_in_id]
