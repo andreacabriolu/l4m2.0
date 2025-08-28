@@ -153,7 +153,12 @@ def get_live_votes(day):
         return live_votes #empty
 
     for score in resp_json['scores']:
-        isLive = score['time'] != C.Events.END_MATCH #TODO: or 30 mins after match
+        
+        d = datetime.datetime.strptime(score['rawdate'], '%Y-%m-%d %H:%M').astimezone(ZoneInfo(key='Europe/Rome'))
+        delta = datetime.timedelta(minutes=135)
+
+        isLive = score['time'] != C.Events.END_MATCH or \
+            datetime.datetime.now(ZoneInfo('Europe/Rome')) < d + delta #135 minutes after the match start
 
         if (not isLive):
             continue 
