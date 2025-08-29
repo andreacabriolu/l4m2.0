@@ -10,7 +10,7 @@ from l4m20 import constants as C
 def get_my_competitions(teamid, my_series):
     return competition.Competition.objects.filter(series__id__in=my_series)
 
-def get_my_series(teamid, competitionid):
+def get_my_series(teamid, competitionid=1):
     return series.Series.objects.filter(Q(team__id=teamid) & Q(Competition_id=competitionid))
 
 def get_all_series(competitionid):
