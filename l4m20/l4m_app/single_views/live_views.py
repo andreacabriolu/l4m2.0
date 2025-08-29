@@ -87,6 +87,7 @@ def LiveView(request):
             #TODO: save lst valid lineup
 
         lineup_to_show = t.Name #base
+        last_valid_l = t.Name
 
         if not overtime:
             if len(l) > 0:
