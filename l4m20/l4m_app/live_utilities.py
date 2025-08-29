@@ -58,6 +58,15 @@ def fill_with_events(events, votes):
                 vote = votes[pl.id]
                 vote.GoalTa = vote.GoalTa + 1
 
+            case C.Events.PENALTY_SCORED:
+                pl = player.Player.objects.filter(Surname=event['player'])
+                if len(pl) == 0:
+                    continue
+                pl = pl[0]
+
+                vote = votes[pl.id]
+                vote.PenSc = vote.PenSc + 1
+
             case C.Events.OWN_GOAL:
                 pl = player.Player.objects.filter(Surname=event['player'])
                 if len(pl) == 0:
