@@ -143,6 +143,14 @@ def fill_with_events(events, players, votes):
                 vote = votes[pl_id]
                 vote.Own = vote.Own + 1
 
+            case C.Events.PENALTY_SCORED:
+                pl_id = players[event['player'].replace(' ','_').replace('\'','')]
+                if pl_id is None:
+                    continue
+
+                vote = votes[pl_id]
+                vote.PenSc = vote.PenSc + 1
+
             case C.Events.SUB:
                 continue
                 pl_in_id = players[event['in'].replace(' ','_')]

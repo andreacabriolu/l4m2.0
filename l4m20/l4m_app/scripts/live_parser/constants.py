@@ -7,7 +7,7 @@ class Events:
     ASS_STD = ''
     CAP = ''
     GOAL_DECIDER = ''
-    PENALTY_SCORED = ''
+    PENALTY_SCORED = 'PEN'
     PENALTY_MISSED = ''
     PENALTY_SAVED = ''
     OWN_GOAL = 'OG'
