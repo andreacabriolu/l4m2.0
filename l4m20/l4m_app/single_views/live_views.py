@@ -104,11 +104,6 @@ def LiveView(request):
 
 
         last_lineups_d[t.id] = lineup_to_show
-        
-        # l[0] if (len(l) > 0 and not overtime)\
-        #         else (t.Name if not overtime\
-        #         else last_valid_l[0] if len(last_valid_l) > 0\
-        #         else t.Name)
 
     couples = LU.get_couples_from_calendar(seriesid, day)
     couples = [couples.pop(couples.index(i)) for i in couples if (i[0]==teamid or i[1]==teamid)]+couples #get user match as first
