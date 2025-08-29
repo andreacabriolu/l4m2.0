@@ -16,7 +16,7 @@ def fill_with_events(events, votes):
         _type = event['type']
         match _type:
             case C.Events.YELLOW_CARD:
-                pl = player.Player.objects.filter(Surname=event['player'].replace(' ','_').replace('\'',''))
+                pl = player.Player.objects.filter(Surname=event['player'])
                 if len(pl) == 0:
                     continue
                 pl = pl[0]
@@ -24,7 +24,7 @@ def fill_with_events(events, votes):
                 vote = votes[pl.id]
                 vote.Yel = 1
             case C.Events.RED_CARD:
-                pl = player.Player.objects.filter(Surname=event['player'].replace(' ','_').replace('\'',''))
+                pl = player.Player.objects.filter(Surname=event['player'])
                 if len(pl) == 0:
                     continue
                 pl = pl[0]
@@ -33,13 +33,15 @@ def fill_with_events(events, votes):
                 vote.Red = 1
 
             case C.Events.GOAL:
-                pl = player.Player.objects.filter(Surname=event['player'].replace(' ','_').replace('\'',''))
+                pl = player.Player.objects.filter(Surname=event['player'])
                 if len(pl) == 0:
                     continue
                 pl = pl[0]
                 
                 if event['details'] != '':
-                    pl_assist = player.Player.objects.filter(Surname=event['details'].replace(' ','_').replace('\'',''))
+                    pl_assist = player.Player.objects.filter(Surname=event['details'])
+                    if len(pl_assist) == 0:
+                        continue
                     pl_assist = pl_assist[0]
                     vote = votes[pl_assist.id]
                     vote.AssS = vote.AssS + 1
@@ -48,7 +50,7 @@ def fill_with_events(events, votes):
                 vote.GoalSc = vote.GoalSc + 1
 
             case C.Events.GOAL_TAKEN:
-                pl = player.Player.objects.filter(Surname=event['player'].replace(' ','_').replace('\'',''))
+                pl = player.Player.objects.filter(Surname=event['player'])
                 if len(pl) == 0:
                     continue
                 pl = pl[0]
@@ -57,7 +59,7 @@ def fill_with_events(events, votes):
                 vote.GoalTa = vote.GoalTa + 1
 
             case C.Events.OWN_GOAL:
-                pl = player.Player.objects.filter(Surname=event['player'].replace(' ','_').replace('\'',''))
+                pl = player.Player.objects.filter(Surname=event['player'])
                 if len(pl) == 0:
                     continue
                 pl = pl[0]
@@ -66,8 +68,8 @@ def fill_with_events(events, votes):
                 vote.Own = vote.Own + 1
 
             case C.Events.SUB:
-                pl_in = player.Player.objects.filter(Surname=event['in'].replace(' ','_').replace('\'',''))
-                pl_out = player.Player.objects.filter(Surname=event['out'].replace(' ','_').replace('\'',''))
+                pl_in = player.Player.objects.filter(Surname=event['in'])
+                pl_out = player.Player.objects.filter(Surname=event['out'])
                 if len(pl_in) == 0 or len(pl_out) == 0:
                     continue
                 pl_in = pl_in[0]
