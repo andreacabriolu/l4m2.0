@@ -31,7 +31,7 @@ window.addEventListener('DOMContentLoaded', event => {
     $('#select_series').val(series_to_sel[0].value);
 
     var cur_day = $('#current_day').val();
-    var day_to_sel = $('#select_day').children(`option=${cur_day}`);
+    var day_to_sel = $('#select_day').children(`option[value=${cur_day}]`);
     if(day_to_sel.length <= 0) { return; }
     $('#select_day').val(day_to_sel[0].value);
 

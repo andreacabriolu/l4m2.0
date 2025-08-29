@@ -53,12 +53,17 @@ class LiveB11View(LoginRequiredMixin, View):
 def LiveView(request):
     template_name = 'l4m/live.html'
 
+    teamid = U.get_user_team(request.user.id)['id']
+
     current_day = U.get_current_day()
     all_days = range(1, int(current_day) + 1)
-    all_series = U.get_all_series(competitionid=1) #TODO: magic number
-    teamid = U.get_user_team(request.user.id)['id']
-    
-    my_seriesid = U.get_my_series(teamid)[0].id
+
+    competition_id = 1 #DEFAULT campionato
+    my_series = U.get_my_series(teamid, competitionid=competition_id)
+    my_seriesid = my_series[0].id
+
+    my_competitions = U.get_my_competitions(teamid, my_series)
+
     if(len(request.POST) > 0 and 'jsonData' in request.POST):
         data = json.loads(request.POST['jsonData'])
         seriesid = data['series']
@@ -67,6 +72,8 @@ def LiveView(request):
         current_day = int(data['day'])
     else:
         seriesid = my_seriesid
+
+    all_series = U.get_all_series(competitionid=competition_id) #TODO: magic number
 
     series_teams = team.Team.objects.filter(Series__id=seriesid)
     last_lineups_d = {}
@@ -95,7 +102,8 @@ def LiveView(request):
         'all_series' : all_series,
         'current_series' : seriesid,
         'all_days' : all_days,
-        'current_day': current_day
+        'current_day': current_day,
+        'my_competitions' : my_competitions
         }
     
     return render(request, template_name, params)

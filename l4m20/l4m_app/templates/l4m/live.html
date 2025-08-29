@@ -32,9 +32,19 @@
         <span id="span-info-alert"></span>
     </div>
     <input type="hidden" value="{{current_series}}" id="current_series">
+    <input type="hidden" value="{{current_day}}" id="current_day">
+    <input type="hidden" value="{{my_competitions}}" id="my_competitions">
+
     <div class="bg-body-tertiary main-div p-5 live-tables bg-success bg-opacity-50" id="liveMainDiv">
         <div class="selectors-div">
-        <label for="select_series" class="series-label">GIORNATA</label>
+        <label for="select_comp" class="series-label">COMPETIZIONE</label>
+        <select class="form-select form-select-lg mb-3 form-select-selectors" id="select_comp">
+            {% for comp in my_competitions %}
+                <option value="{{comp}}">{{comp.Name}}</option>
+            {% endfor %}
+        </select>
+
+        <label for="select_day" class="series-label">GIORNATA</label>
         <select class="form-select form-select-lg mb-3 form-select-selectors" id="select_day">
             {% for day in all_days %}
                 <option value="{{day}}">{{day}}</option>

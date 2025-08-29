@@ -7,11 +7,13 @@ from django.db.models.functions import Coalesce
 from zoneinfo import ZoneInfo
 from l4m20 import constants as C
 
-def get_my_series(teamid):
-    return series.Series.objects.filter(team__id=teamid)
+def get_my_competitions(teamid, my_series):
+    return competition.Competition.objects.filter(series__id__in=my_series)
+
+def get_my_series(teamid, competitionid):
+    return series.Series.objects.filter(Q(team__id=teamid) & Q(Competition_id=competitionid))
 
 def get_all_series(competitionid):
-    competitionid = 1 #TODO: get competition
     return series.Series.objects.filter(Competition_id=competitionid)
 
 def get_my_markets(seriesid):
