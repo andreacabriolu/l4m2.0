@@ -156,7 +156,7 @@ def get_live_votes(day):
 
     for score in resp_json['scores']:
         
-        d = datetime.datetime.strptime(score['rawdate'], '%Y-%m-%d %H:%M').astimezone(ZoneInfo(key='Europe/Rome'))
+        d = datetime.datetime.strptime(score['rawdate'], '%Y-%m-%d %H:%M').replace(tzinfo=ZoneInfo('Europe/Rome'))
         delta = datetime.timedelta(minutes=135)
 
         isLive = score['time'] != C.Events.END_MATCH or \
