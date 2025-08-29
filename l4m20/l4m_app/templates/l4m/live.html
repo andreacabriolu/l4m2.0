@@ -87,14 +87,14 @@
                     </tr>
                     {% else %}
                     {% for vote in team_votes.0 %}
-                    <tr {% if vote.Status==0 %} class="live-row" {% endif %}>
+                    <tr {% if vote.Status == 0 %} class="live-row" {% endif %}>
                         <td>{{vote.Player.Role}}</td>
                         <td>{{vote.Player.RealTeam|upper|slice:":3"}}</td>
                         <td>{% if vote.Cap %} <img class="cap-img" src="{% static 'l4m/images/cap.png' %}">{% endif %}
                             {{vote.Player.Surname}}
                             {% if vote.ChangedIn != '' %}<img src="{% static 'l4m/images/in.png' %}">{% endif %}</td>
                         <td>{{vote.Vote|floatformat}}</td>
-                        <td {% if vote.Status==3 %} class="yettoplay" {% endif %}>{{vote.TotVote|floatformat}}</td>
+                        <td {% if vote.Status == 3 %} class="yettoplay" {% endif %}>{{vote.TotVote|floatformat}}</td>
                         <td>
                             <div class="bonus-div">
                                 <!--BONUS ICONS -->
@@ -259,7 +259,7 @@
                 <tfoot class="table-group-divider">
 
                     {% for vote in team_votes.2 %}
-                    <tr {% if vote.Status==0 %} class="live-row" {% endif %}>
+                    <tr {% if vote.Status == 0 %} class="live-row" {% endif %}>
                         <td>{{vote.Player.Role}}</td>
                         <td>{{vote.Player.RealTeam|upper|slice:":3"}}</td>
                         <td>{{vote.Player.Surname}}
