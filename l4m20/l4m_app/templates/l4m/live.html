@@ -33,14 +33,22 @@
     </div>
     <input type="hidden" value="{{current_series}}" id="current_series">
     <div class="bg-body-tertiary main-div p-5 live-tables bg-success bg-opacity-50" id="liveMainDiv">
+        <div class="selectors-div">
+        <label for="select_series" class="series-label">GIORNATA</label>
+        <select class="form-select form-select-lg mb-3 form-select-selectors" id="select_day">
+            {% for day in all_days %}
+                <option value="{{day}}">{{day}}</option>
+            {% endfor %}
+        </select>
 
         <label for="select_series" class="series-label">SERIE</label>
-        <select class="form-select form-select-lg mb-3 form-select-custom form-select-series" id="select_series">
+        <select class="form-select form-select-lg mb-3 form-select-series" id="select_series">
             {% for series in all_series %}
                 <option value="{{series}}" data-id="{{series.id}}">{{series.Name}}</option>
             {% endfor %}
         </select>
-
+        </div>
+        
         {% for match_votes in all_votes %}
         <div class="match-div">
             {% for team_votes in match_votes %}

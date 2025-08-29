@@ -96,6 +96,7 @@ table .w-30 {
     font-size: larger;
     color: #7a3e3e;
     font-weight: bolder;
+    margin-right: .5em;
 }
 
 .form-select-series {
@@ -141,4 +142,16 @@ table .w-30 {
   .live-row {
     color: green;
     --bs-table-striped-color: green;
+  }
+
+  .selectors-div {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: baseline;
+  }
+
+  .form-select-selectors {
+    margin-right: 1em;
+    width: fit-content !important;
+    min-width: 5em;
   }

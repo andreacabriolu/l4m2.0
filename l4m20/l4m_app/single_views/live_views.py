@@ -54,14 +54,17 @@ def LiveView(request):
     template_name = 'l4m/live.html'
 
     current_day = U.get_current_day()
+    all_days = range(1, int(current_day) + 1)
     all_series = U.get_all_series(competitionid=1) #TODO: magic number
     teamid = U.get_user_team(request.user.id)['id']
     
     my_seriesid = U.get_my_series(teamid)[0].id
     if(len(request.POST) > 0 and 'jsonData' in request.POST):
-        seriesid = int(request.POST['jsonData'])
+        data = json.loads(request.POST['jsonData'])
+        seriesid = data['series']
         if(seriesid != my_seriesid):
             teamid = None
+        current_day = int(data['day'])
     else:
         seriesid = my_seriesid
 
@@ -90,7 +93,9 @@ def LiveView(request):
     params = { 
         'all_votes' : all_votes,
         'all_series' : all_series,
-        'current_series' : seriesid
+        'current_series' : seriesid,
+        'all_days' : all_days,
+        'current_day': current_day
         }
     
     return render(request, template_name, params)

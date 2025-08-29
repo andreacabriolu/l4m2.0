@@ -307,6 +307,8 @@ def cleanJSON(jsonData):
 def check_day_already_started():
     today_matches = real_calendar.Real_calendar.objects.filter(Day=get_current_day()).values('Date').order_by('Date')
     day_time_limit = today_matches.first()['Date'].astimezone(ZoneInfo(key='Europe/Rome')) if len(today_matches) > 0 else None
+    if day_time_limit is None:
+        return False, datetime.datetime.now(ZoneInfo('Europe/Rome'))
     return datetime.datetime.now(ZoneInfo('Europe/Rome')) >= day_time_limit, day_time_limit
 
 def manage_fool_name_exceptions(name):
