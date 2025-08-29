@@ -69,8 +69,9 @@ def LiveView(request):
         seriesid = data['series']
         if(seriesid != my_seriesid):
             teamid = None
-        current_day = int(data['day'])
+        day = int(data['day'])
     else:
+        day = current_day
         seriesid = my_seriesid
 
     all_series = U.get_all_series(competitionid=competition_id) #TODO: magic number
@@ -80,27 +81,47 @@ def LiveView(request):
     overtime, _ = U.check_day_already_started()
 
     for t in series_teams:
-        l = U.get_last_lineup(t, current_day)
+        l = U.get_last_lineup(t, day)
         if(len(l) <= 0 and overtime): #overtime
             last_valid_l = U.get_last_valid_lineup(t)
+            #TODO: save lst valid lineup
 
-        last_lineups_d[t.id] = l[0] if (len(l) > 0 and not overtime)\
-                else (t.Name if not overtime\
-                else last_valid_l[0] if len(last_valid_l) > 0\
-                else t.Name)
+        lineup_to_show = t.Name #base
 
-    couples = LU.get_couples_from_calendar(seriesid, current_day)
+        if not overtime:
+            if len(l) > 0:
+                lineup_to_show = l[0]
+            else:
+                lineup_to_show = t.Name
+
+        if overtime and day == current_day:
+            if len(last_valid_l) > 0:
+                lineup_to_show = last_valid_l[0]
+            else:
+                lineup_to_show = t.Name
+        else:  #filter for historical data
+            lineup_to_show = l[0] if len(l)> 0 else t.Name #always valued because we SHOULD save the lineup
+
+
+        last_lineups_d[t.id] = lineup_to_show
+        
+        # l[0] if (len(l) > 0 and not overtime)\
+        #         else (t.Name if not overtime\
+        #         else last_valid_l[0] if len(last_valid_l) > 0\
+        #         else t.Name)
+
+    couples = LU.get_couples_from_calendar(seriesid, day)
     couples = [couples.pop(couples.index(i)) for i in couples if (i[0]==teamid or i[1]==teamid)]+couples #get user match as first
     lineup_couples = [ (last_lineups_d[c[0]], last_lineups_d[c[1]]) for c in couples ]
 
     all_votes = []
 
     #get all live players
-    live_votes = LU.get_live_votes(current_day)
+    live_votes = LU.get_live_votes(day)
 
     for lineup_couple in lineup_couples:
-        votes_home = LU.get_votes(lineup_couple[0], current_day, live_votes, teamid)
-        votes_away = LU.get_votes(lineup_couple[1], current_day, live_votes, teamid, home=False)
+        votes_home = LU.get_votes(lineup_couple[0], day, live_votes, teamid)
+        votes_away = LU.get_votes(lineup_couple[1], day, live_votes, teamid, home=False)
         all_votes.append( \
             [votes_home, votes_away]
         )
@@ -110,7 +131,7 @@ def LiveView(request):
         'all_series' : all_series,
         'current_series' : seriesid,
         'all_days' : all_days,
-        'current_day': current_day,
+        'current_day': day,
         'my_competitions' : my_competitions
         }
     
