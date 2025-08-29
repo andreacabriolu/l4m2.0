@@ -21,7 +21,7 @@ class LineupView(LoginRequiredMixin, View):
         mods = C.Constant_Lists.Modules
         current_day = U.get_current_day()
 
-        day_already_started, day_time_limit = U.check_day_already_started()
+        day_already_started, day_time_limit = U.check_day_already_started(current_day)
         
         players_gk = U.get_my_players_filtered("P", teamid)
         players_def = U.get_my_players_filtered("D", teamid)

@@ -373,7 +373,7 @@ def get_votes(lineup, current_day, live_votes, my_teamid = None, home=True):
     _items.append(home)
     _items.append(lineup.Team.Name)
 
-    day_already_started, _ = U.check_day_already_started()
+    day_already_started, _ = U.check_day_already_started(current_day)
 
     if(lineup.HideLineup and lineup.Team.id != my_teamid and not day_already_started): #HIDDEN LINEUP
         _items.append("hidden")

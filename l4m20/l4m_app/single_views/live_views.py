@@ -78,7 +78,7 @@ def LiveView(request):
 
     series_teams = team.Team.objects.filter(Series__id=seriesid)
     last_lineups_d = {}
-    overtime, _ = U.check_day_already_started()
+    overtime, _ = U.check_day_already_started(day)
 
     for t in series_teams:
         l = U.get_last_lineup(t, day)
