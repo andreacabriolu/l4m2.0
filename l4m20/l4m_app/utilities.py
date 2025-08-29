@@ -282,6 +282,9 @@ def get_current_day():
     day = config.Config.objects.filter(Name="CurrentDay").first()
     return day.Value
 
+def get_last_valid_lineup(teamid):
+    return lineup.Lineup.objects.filter(Team=teamid).order_by('-Day').order_by('-Version')
+
 def get_last_lineup(teamid, day):
     return lineup.Lineup.objects.filter(Team=teamid, Day=day).order_by('-Version')[:1]
     
