@@ -71,7 +71,7 @@ def LiveView(request):
             teamid = None
         day = int(data['day'])
     else:
-        day = current_day
+        day = int(current_day)
         seriesid = my_seriesid
 
     all_series = U.get_all_series(competitionid=competition_id) #TODO: magic number
