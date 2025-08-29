@@ -96,10 +96,10 @@ def LiveView(request):
                 lineup_to_show = t.Name
 
         if overtime and day == current_day:
-            if len(last_valid_l) > 0:
-                lineup_to_show = last_valid_l[0]
+            if len(l) > 0:
+                lineup_to_show = l[0]
             else:
-                lineup_to_show = t.Name
+                lineup_to_show = last_valid_l[0]
         else:  #filter for historical data
             lineup_to_show = l[0] if len(l)> 0 else t.Name #always valued because we SHOULD save the lineup
 
