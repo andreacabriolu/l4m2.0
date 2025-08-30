@@ -1,9 +1,12 @@
+import datetime
 import requests as req
 import json
 from db_connector import *
 from vote_live import *
 import constants as C
 import utilities as U
+import logging
+logger = logging.getLogger("live_scraper")
 
 TEST = False
 
@@ -78,6 +81,7 @@ U.delete_votes_of_day(conn, current_day)
 #write ONLY final votes
 U.insert_votes(conn, votes)
 conn.commit()
+logger.log(f'executed at {datetime.datetime.now()}')
 
 
 
