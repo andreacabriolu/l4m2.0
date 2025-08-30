@@ -149,7 +149,7 @@ def fill_live_votes(score, grades, live_votes):
         live_votes[pl.id] = _vote
 
 def get_live_votes(day):
-    TEST = True
+    TEST = False
     if(not TEST):
         url = "https://publicapi.fantamaster.it/livescores/?tcache=1756165942189"
         resp = req.get(url)
