@@ -14,9 +14,11 @@ def fill_with_events(events, votes):
     for event in events:
         
         _type = event['type']
+        if 'player' in event: 
+            _player = U.clean_name(event['player'])
         match _type:
             case C.Events.YELLOW_CARD:
-                pl = player.Player.objects.filter(Surname=event['player'])
+                pl = player.Player.objects.filter(Surname=_player)
                 if len(pl) == 0:
                     continue
                 pl = pl[0]
@@ -24,7 +26,7 @@ def fill_with_events(events, votes):
                 vote = votes[pl.id]
                 vote.Yel = 1
             case C.Events.RED_CARD:
-                pl = player.Player.objects.filter(Surname=event['player'])
+                pl = player.Player.objects.filter(Surname=_player)
                 if len(pl) == 0:
                     continue
                 pl = pl[0]
@@ -33,13 +35,14 @@ def fill_with_events(events, votes):
                 vote.Red = 1
 
             case C.Events.GOAL:
-                pl = player.Player.objects.filter(Surname=event['player'])
+                pl = player.Player.objects.filter(Surname=_player)
                 if len(pl) == 0:
                     continue
                 pl = pl[0]
                 
                 if event['details'] != '':
-                    pl_assist = player.Player.objects.filter(Surname=event['details'])
+                    _player_ass = U.clean_name(event['details'])
+                    pl_assist = player.Player.objects.filter(Surname=_player_ass)
                     if len(pl_assist) == 0:
                         continue
                     pl_assist = pl_assist[0]
@@ -50,7 +53,7 @@ def fill_with_events(events, votes):
                 vote.GoalSc = vote.GoalSc + 1
 
             case C.Events.GOAL_TAKEN:
-                pl = player.Player.objects.filter(Surname=event['player'])
+                pl = player.Player.objects.filter(Surname=_player)
                 if len(pl) == 0:
                     continue
                 pl = pl[0]
@@ -59,7 +62,7 @@ def fill_with_events(events, votes):
                 vote.GoalTa = vote.GoalTa + 1
 
             case C.Events.PENALTY_SCORED:
-                pl = player.Player.objects.filter(Surname=event['player'])
+                pl = player.Player.objects.filter(Surname=_player)
                 if len(pl) == 0:
                     continue
                 pl = pl[0]
@@ -68,7 +71,7 @@ def fill_with_events(events, votes):
                 vote.PenSc = vote.PenSc + 1
 
             case C.Events.OWN_GOAL:
-                pl = player.Player.objects.filter(Surname=event['player'])
+                pl = player.Player.objects.filter(Surname=_player)
                 if len(pl) == 0:
                     continue
                 pl = pl[0]
@@ -77,8 +80,10 @@ def fill_with_events(events, votes):
                 vote.Own = vote.Own + 1
 
             case C.Events.SUB:
-                pl_in = player.Player.objects.filter(Surname=event['in'])
-                pl_out = player.Player.objects.filter(Surname=event['out'])
+                _player_in = U.clean_name(event['in'])
+                _player_out = U.clean_name(event['out'])
+                pl_in = player.Player.objects.filter(Surname=_player_in)
+                pl_out = player.Player.objects.filter(Surname=_player_out)
                 if len(pl_in) == 0 or len(pl_out) == 0:
                     continue
                 pl_in = pl_in[0]
@@ -96,7 +101,7 @@ def fill_live_votes(score, grades, live_votes):
     abench = score['away_bench']
 
     for p in hlineup:
-        pl = player.Player.objects.filter(Surname=p)
+        pl = player.Player.objects.filter(Surname=U.clean_name(p))
         if len(pl) == 0:
             continue
         pl = pl[0]
@@ -108,7 +113,7 @@ def fill_live_votes(score, grades, live_votes):
         live_votes[pl.id] = _vote
 
     for p in hbench:
-        pl = player.Player.objects.filter(Surname=p)
+        pl = player.Player.objects.filter(Surname=U.clean_name(p))
         if len(pl) == 0:
             continue
         pl = pl[0]
@@ -120,7 +125,7 @@ def fill_live_votes(score, grades, live_votes):
         live_votes[pl.id] = _vote
 
     for p in alineup:
-        pl = player.Player.objects.filter(Surname=p)
+        pl = player.Player.objects.filter(Surname=U.clean_name(p))
         if len(pl) == 0:
             continue
         pl = pl[0]
@@ -132,7 +137,7 @@ def fill_live_votes(score, grades, live_votes):
         live_votes[pl.id] = _vote
 
     for p in abench:
-        pl = player.Player.objects.filter(Surname=p)
+        pl = player.Player.objects.filter(Surname=U.clean_name(p))
         if len(pl) == 0:
             continue
         pl = pl[0]
@@ -144,7 +149,7 @@ def fill_live_votes(score, grades, live_votes):
         live_votes[pl.id] = _vote
 
 def get_live_votes(day):
-    TEST = False
+    TEST = True
     if(not TEST):
         url = "https://publicapi.fantamaster.it/livescores/?tcache=1756165942189"
         resp = req.get(url)

@@ -7,6 +7,9 @@ from django.db.models.functions import Coalesce
 from zoneinfo import ZoneInfo
 from l4m20 import constants as C
 
+def clean_name(name):
+    return name.replace(' ','_').replace('\'','')
+
 def get_my_competitions(teamid, my_series):
     return competition.Competition.objects.filter(series__id__in=my_series)
 

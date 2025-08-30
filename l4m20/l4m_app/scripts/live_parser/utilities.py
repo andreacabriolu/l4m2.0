@@ -1,6 +1,9 @@
 import constants as C
 from db_connector import *
 
+def clean_name(name):
+    return name.replace(' ','_').replace('\'','')
+
 def manage_fool_name_exceptions(name):
     if name=='Ederson_J':
         return 'Ederson_DS'
@@ -50,6 +53,7 @@ def set_live(score, votes, players):
     abench = score['away_bench']
 
     for hl in hlineup:
+        hl = clean_name(hl)
         if hl not in players:
             continue
         pl_id = players[hl]
@@ -59,6 +63,7 @@ def set_live(score, votes, players):
         vote.Live = True
 
     for hp in hbench:
+        hp = clean_name(hp)
         if hp not in players:
             continue
         pl_id = players[hp]
@@ -68,6 +73,7 @@ def set_live(score, votes, players):
         vote.Live = True
 
     for al in alineup:
+        al = clean_name(al)
         if al not in players:
             continue
         pl_id = players[al]
@@ -77,6 +83,7 @@ def set_live(score, votes, players):
         vote.Live = True
 
     for ap in abench:
+        ap = clean_name(ap)
         if ap not in players:
             continue
         pl_id = players[ap]
@@ -89,26 +96,26 @@ def fill_with_events(events, players, votes):
     for event in events:
         
         #TODO: absolutely improve
-        if 'player' in event and event['player'].replace(' ','_').replace('\'','') not in players:
+        if 'player' in event and clean_name(event['player']) not in players:
             continue
-        if 'in' in event and event['in'].replace(' ','_').replace('\'','') not in players:
+        if 'in' in event and clean_name(event['in']) not in players:
             continue
-        if 'out' in event and event['out'].replace(' ','_').replace('\'','') not in players:
+        if 'out' in event and clean_name(event['out']) not in players:
             continue
-        if 'details' in event and event['details'] != '' and event['details'].replace(' ','_').replace('\'','') not in players:
+        if 'details' in event and event['details'] != '' and clean_name(event['details']) not in players:
             continue
         
         _type = event['type']
         match _type:
             case C.Events.YELLOW_CARD:
-                pl_id = players[event['player'].replace(' ','_').replace('\'','')]
+                pl_id = players[clean_name(event['player'])]
                 if pl_id is None:
                     continue
 
                 vote = votes[pl_id]
                 vote.Yel = 1
             case C.Events.RED_CARD:
-                pl_id = players[event['player'].replace(' ','_').replace('\'','')]
+                pl_id = players[clean_name(event['player'])]
                 if pl_id is None:
                     continue
 
@@ -116,11 +123,11 @@ def fill_with_events(events, players, votes):
                 vote.Red = 1
 
             case C.Events.GOAL:
-                pl_id = players[event['player'].replace(' ','_').replace('\'','')]
+                pl_id = players[clean_name(event['player'])]
                 if pl_id is None:
                     continue
                 if event['details'] != '':
-                    pl_assist_id = players[event['details'].replace(' ','_').replace('\'','')]
+                    pl_assist_id = players[clean_name(event['details'])]
                     vote = votes[pl_assist_id]
                     vote.AssS = vote.AssS + 1
 
@@ -128,7 +135,7 @@ def fill_with_events(events, players, votes):
                 vote.GoalSc = vote.GoalSc + 1
 
             case C.Events.GOAL_TAKEN:
-                pl_id = players[event['player'].replace(' ','_').replace('\'','')]
+                pl_id = players[clean_name(event['player'])]
                 if pl_id is None:
                     continue
 
@@ -136,7 +143,7 @@ def fill_with_events(events, players, votes):
                 vote.GoalTa = vote.GoalTa + 1
 
             case C.Events.OWN_GOAL:
-                pl_id = players[event['player'].replace(' ','_').replace('\'','')]
+                pl_id = players[clean_name(event['player'])]
                 if pl_id is None:
                     continue
 
@@ -144,7 +151,7 @@ def fill_with_events(events, players, votes):
                 vote.Own = vote.Own + 1
 
             case C.Events.PENALTY_SCORED:
-                pl_id = players[event['player'].replace(' ','_').replace('\'','')]
+                pl_id = players[clean_name(event['player'])]
                 if pl_id is None:
                     continue
 
@@ -153,12 +160,6 @@ def fill_with_events(events, players, votes):
 
             case C.Events.SUB:
                 continue
-                pl_in_id = players[event['in'].replace(' ','_')]
-                pl_out_id = players[event['out'].replace(' ','_')]
-                vote_in = votes[pl_in_id]
-                vote_out = votes[pl_out_id]
-                vote_in.Sub = int(event['minute'])
-                vote_out.Sub = int(event['minute']) * (-1)
 
 def delete_votes_of_day(conn:DB_Connector, day):
     if day == "":
