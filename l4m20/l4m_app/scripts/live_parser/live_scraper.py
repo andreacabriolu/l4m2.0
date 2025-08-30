@@ -28,64 +28,66 @@ else:
 #json day: current day
 #json ranking: team results and ranking
 #json scores: matches -> foreach json score general info, lineups and events
+try:
 
-conn = DB_Connector()
+    conn = DB_Connector()
 
-current_day = resp_json['day']
-grades = resp_json['marks']
+    current_day = resp_json['day']
+    grades = resp_json['marks']
 
-players = dict(U.get_players(conn))
-players_realteam = dict(U.get_players_realteam(conn))
+    players = dict(U.get_players(conn))
+    players_realteam = dict(U.get_players_realteam(conn))
 
-votes = {}
+    votes = {}
 
-#creating votes ONLY for playing players, warning!
-for name, grade in grades.items():
-    name = U.clean_name(name)
-    #FOOL name exceptions
-    # name = U.manage_fool_name_exceptions(name)
-    if name not in players:
-        continue
-    vote = Vote_Live_Obj()
-    vote.Player = players[name]
-    vote.Vote = float(grade)
-    vote.GoalSc = 0
-    vote.GoalTa = 0
-    vote.PenSc = 0
-    vote.PenMi = 0
-    vote.PenSa = 0
-    vote.Own = 0
-    vote.Yel = 0
-    vote.Red = 0
-    vote.AssS = 0
-    vote.Live = False
-    vote.Sub = 0
-    vote.RealTeam = players_realteam[players[name]]
+    #creating votes ONLY for playing players, warning!
+    for name, grade in grades.items():
+        name = U.clean_name(name)
+        #FOOL name exceptions
+        # name = U.manage_fool_name_exceptions(name)
+        if name not in players:
+            continue
+        vote = Vote_Live_Obj()
+        vote.Player = players[name]
+        vote.Vote = float(grade)
+        vote.GoalSc = 0
+        vote.GoalTa = 0
+        vote.PenSc = 0
+        vote.PenMi = 0
+        vote.PenSa = 0
+        vote.Own = 0
+        vote.Yel = 0
+        vote.Red = 0
+        vote.AssS = 0
+        vote.Live = False
+        vote.Sub = 0
+        vote.RealTeam = players_realteam[players[name]]
 
-    votes[players[name]] = vote
+        votes[players[name]] = vote
 
-for score in resp_json['scores']:
-    isLive = score['time'] != C.Events.END_MATCH
-    if (isLive): 
-        U.set_live(score, votes, players)
-    match_events = score['events']
-    U.fill_with_events(match_events, players, votes)
+    for score in resp_json['scores']:
+        isLive = score['time'] != C.Events.END_MATCH
+        if (isLive): 
+            U.set_live(score, votes, players)
+        match_events = score['events']
+        U.fill_with_events(match_events, players, votes)
 
-#complete votes
-for _,vote in votes.items():
-    vote.Day = int(current_day)
-    vote.Competition = int(1) #TODO magic number: campionato
-
-
-#clean up the table
-U.delete_votes_of_day(conn, current_day)
-
-#write ONLY final votes
-U.insert_votes(conn, votes)
-conn.commit()
-logger.log(logging.INFO, f'executed at {datetime.datetime.now()}')
+    #complete votes
+    for _,vote in votes.items():
+        vote.Day = int(current_day)
+        vote.Competition = int(1) #TODO magic number: campionato
 
 
+    #clean up the table
+    U.delete_votes_of_day(conn, current_day)
+
+    #write ONLY final votes
+    U.insert_votes(conn, votes)
+    conn.commit()
+    logger.log(logging.INFO, f'executed at {datetime.datetime.now()}')
+
+except Exception as e:
+    logger.log(logging.CRITICAL, f'ERROR {e}')
 
 
 
