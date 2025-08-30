@@ -8,6 +8,8 @@ import utilities as U
 import logging
 logger = logging.getLogger("live_scraper")
 
+logging.basicConfig(filename='live_parser/log/scarper.log', level=logging.INFO)
+
 TEST = False
 
 if(not TEST):
@@ -81,7 +83,7 @@ U.delete_votes_of_day(conn, current_day)
 #write ONLY final votes
 U.insert_votes(conn, votes)
 conn.commit()
-logger.log(f'executed at {datetime.datetime.now()}')
+logger.log(logging.INFO, f'executed at {datetime.datetime.now()}')
 
 
 
