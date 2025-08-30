@@ -41,6 +41,16 @@
   color: crimson !important;
 }
 
+.nav-link-rules {
+  color: rgb(112, 197, 97) !important;
+}
+
 .rule-icon {
   align-content: center;
+}
+
+@media (max-width:800px) {
+      .nav-mobile {
+        height: 100% !important;
+  }
 }
