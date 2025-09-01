@@ -165,7 +165,7 @@ def fill_live_votes(score, grades, live_votes):
         live_votes[pl.id] = _vote
 
 def get_live_votes(day):
-    TEST = True
+    TEST = False
     if(not TEST):
         url = "https://publicapi.fantamaster.it/livescores/?tcache=1756165942189"
         resp = req.get(url)
@@ -472,16 +472,16 @@ def get_votes(lineup, current_day, live_votes, live_teams, my_teamid = None, hom
                 cap_vote = _live_vote.Vote
         else:
         #player NOT LIVE
-            _vote = vote.Vote.objects.filter(Q(Player_id=l[1]) & Q(Day=current_day))
+            _vote = vote.Vote.objects.filter(Q(Player_id=pl.id) & Q(Day=current_day))
             if(l[0].endswith('tit')):
                 votes_tit.append(make_vote_obj(_vote[0], cap_id) if isValid(_vote) else \
-                                make_empty_vote_obj(l[1], cap_id, already_played, current_day))
+                                make_empty_vote_obj(pl.id, cap_id, already_played, current_day))
             else:
                 votes_ris.append(make_vote_obj(_vote[0], cap_id) if isValid(_vote) else \
-                                make_empty_vote_obj(l[1], cap_id, already_played, current_day))
+                                make_empty_vote_obj(pl.id, cap_id, already_played, current_day))
 
             if len(_vote) > 0:
-                if(l[1] == cap_id):
+                if(pl.id == cap_id):
                     cap_vote = _vote[0].Vote
 
     # votes_tot = votes_tit + votes_ris
