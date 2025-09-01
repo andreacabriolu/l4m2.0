@@ -54,6 +54,7 @@ class Vote(models.Model):
         Cap : bool=False
         TotVote = float
         Status = int
+        LiveStatus = int
         ChangedIn = str
         ChangedOut = str
         Msg = str
