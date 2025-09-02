@@ -42,7 +42,7 @@ function openPreOfficialModal(divid, playerid, betamount) {
     
 }
 
-function openPlayerModal(playerName, bet=1, official=false, isFreeable=false) {
+function openPlayerModal(playerName, bet=1, official=false, isFreeable=false, bet_id=null) {
     $('#dlg_player_info').modal('show');
     $('#playerInfoLabel').text(playerName.toUpperCase());
     $('#modal-pl-info-betamount').val(bet);
@@ -52,6 +52,25 @@ function openPlayerModal(playerName, bet=1, official=false, isFreeable=false) {
         $('#modal-currentbet').prop('hidden', true);
 
         $('#freeBtn').prop('hidden', isFreeable ? false : true);
+
+        if(isFreeable) {
+            //TODO ASK CONFIRM!
+            $('#freeBtn').on('click', function(){
+                const token = Cookies.get('csrftoken');
+                
+                var data = { 'bet_id': bet_id, 'csrfmiddlewaretoken': token };
+
+                $.post("/l4m/auction/freePlayer/", data, function (response) {
+                    if(response.startsWith ('error')) {
+                       showPopupErrorAlert(response);
+                    }
+                    else {
+                        // plr_dlg.close();
+                    }
+                });
+            });
+        }
+    
     }
     else {
         $('#plr_info_modal_body').removeClass('plr-info-official');
@@ -113,7 +132,7 @@ function fill_slots(mbb) {
                         openPreOfficialModal(div_id, bet.Player_id, json_res.BetA);
                     }
                     else if(bet.IsOfficial) {
-                        openPlayerModal(json_res.Sur, json_res.BetA, official=true, freeable=isFreeable);
+                        openPlayerModal(json_res.Sur, json_res.BetA, official=true, freeable=isFreeable, json_res.BetId);
                     }
                     
                 });

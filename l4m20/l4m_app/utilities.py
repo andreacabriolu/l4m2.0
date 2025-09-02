@@ -358,3 +358,23 @@ def manage_fool_name_exceptions(name):
         return 'Ranieri_L'
     
     return name
+
+def free_player(bet_id):
+    _bet = bet.Bet.objects.get(pk=int(bet_id))
+
+    _squad = squads.Squads.objects.filter(Q(Team=_bet.Team_id) & Q(Player=_bet.Player))
+    if(_squad is None):
+        return
+    _squad.delete()
+
+    bet_history_new = bet_history.Bet_History(
+            Amount=_bet.Amount,
+            Player=_bet.Player,
+            Team=_bet.Team,
+            Market=_bet.Market,
+            Carognata = True if _bet.Carognata==True else False
+            )
+    
+    bet_history_new.save()
+
+    _bet.delete()

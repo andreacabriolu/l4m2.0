@@ -118,7 +118,7 @@ class GetPlayerInfoView(View):
         pl = player.Player.objects.\
             filter(bet__Market_id=my_market).\
             values('id','Surname','Name','Role','RealTeam__Name','bet__Amount','bet__Expiration_Date',
-               'bet__Team_id__Name','Status').\
+               'bet__Team_id__Name','bet__id','Status').\
             get(pk=id)
 
         pl_obj = json.dumps({'Sur':pl['Surname'], 
@@ -129,7 +129,8 @@ class GetPlayerInfoView(View):
                              'BetE': datetime.datetime.strptime(pl['bet__Expiration_Date'], '%Y-%m-%d %H:%M:%S%z').\
                                 replace(tzinfo=datetime.timezone.utc).__str__() if pl['bet__Expiration_Date'] != None else pl['bet__Expiration_Date'], #remove final timestamp
                              'BetT': pl['bet__Team_id__Name'],
-                             'IsActive': pl['Status'] == 'A' 
+                             'IsActive': pl['Status'] == 'A',
+                             'BetId': pl['bet__id']
                              })
 
         return HttpResponse(pl_obj)
@@ -147,3 +148,15 @@ class GetBalanceForBetsView(View):
         return HttpResponse(
                 U.get_balance_for_bets(user_team['id'], 
                 U.get_balance(user_team['id'])[0]['Purchases_max']))
+
+class FreePlayerView(View):
+    def post(self, request):
+        try:
+            bet_id = request.POST.get("bet_id")
+            if (bet_id is None): return
+            
+            msg = U.free_player(bet_id)
+            
+            return HttpResponse(msg)
+        except Exception as e:
+            return HttpResponse(f'error freeing player: {e}')
