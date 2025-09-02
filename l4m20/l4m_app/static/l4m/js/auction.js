@@ -42,7 +42,7 @@ function openPreOfficialModal(divid, playerid, betamount) {
     
 }
 
-function openPlayerModal(playerName, bet=1, official=false) {
+function openPlayerModal(playerName, bet=1, official=false, isFreeable=false) {
     $('#dlg_player_info').modal('show');
     $('#playerInfoLabel').text(playerName.toUpperCase());
     $('#modal-pl-info-betamount').val(bet);
@@ -50,6 +50,8 @@ function openPlayerModal(playerName, bet=1, official=false) {
     if(official) {
         $('#plr_info_modal_body').addClass('plr-info-official');
         $('#modal-currentbet').prop('hidden', true);
+
+        $('#freeBtn').prop('hidden', isFreeable ? false : true);
     }
     else {
         $('#plr_info_modal_body').removeClass('plr-info-official');
@@ -101,6 +103,8 @@ function fill_slots(mbb) {
                     $('#modal-pl-info-betexpdate').val(new Date(json_res.BetE).toLocaleString("it-IT", {timeZone: "UTC"}));
                     $('#modal-pl-info-bestbetteam').val(json_res.BetT); 
                     $('#modal-pl-info-bestbet').val(json_res.BetA);
+                    //TODO: player can NOT be free if it is bought in this market session!
+                    isFreeable = !(json_res.IsActive); 
 
                     if(!bet.IsExpired) {
                         openPlayerModal(json_res.Sur, json_res.BetA);
@@ -109,7 +113,7 @@ function fill_slots(mbb) {
                         openPreOfficialModal(div_id, bet.Player_id, json_res.BetA);
                     }
                     else if(bet.IsOfficial) {
-                        openPlayerModal(json_res.Sur, json_res.BetA, official=true);
+                        openPlayerModal(json_res.Sur, json_res.BetA, official=true, freeable=isFreeable);
                     }
                     
                 });

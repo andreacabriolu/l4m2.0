@@ -340,6 +340,8 @@
     width: fit-content;
     text-align: end;
     margin-left: 1em;
+    border-radius: 2em;
+    justify-items: center;
   }
 
   .modal-form-input-bettime {
@@ -350,6 +352,7 @@
   }
 
   .modal-form-input-anag {
+    border-radius: 2em;
     text-align: center;
     font-weight: bold;
   }

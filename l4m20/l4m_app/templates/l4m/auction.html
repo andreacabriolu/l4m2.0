@@ -36,7 +36,11 @@
                             data-bs-title="{{session.Name}}<br>INIZIO {{session.Begin}}<br>FINE {{session.End}}">
                     {% else %} 
                         <img src="{% static 'l4m/images/red.png' %}">
-                        <!-- <button></button> -->
+                        <img src="{% static 'l4m/images/info_mark.png' %}"
+                            data-bs-toggle="tooltip" 
+                            data-bs-placement="right" 
+                            data-bs-html="true"
+                            data-bs-title="{{session.Name}}<br>INIZIO {{session.Begin}}<br>FINE {{session.End}}">
                      {% endif %}
             </div>
             <div>
@@ -245,6 +249,7 @@
                                 puntata</button>
                         </div>
                         <div class="modal-footer">
+                            <button type="button" class="btn btn-warning" id="freeBtn" hidden>SVINCOLA</button>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CHIUDI</button>
                         </div>
                     </div>
