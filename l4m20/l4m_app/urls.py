@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .single_views import login_views, auction_views, lineup_views, squad_views, allauction_views, live_views, rules_views
+from .single_views import login_views, auction_views, lineup_views, squad_views, allauction_views, live_views, rules_views, dashboard_views
 
 app_name = "l4m"
 
@@ -9,7 +9,7 @@ urlpatterns = [
     path("login/", login_views.LoginView.as_view(), name="login"),
     path("logout/", login_views.LogoutView.as_view(), name="logout"),
     path("register/", login_views.RegisterView.as_view(), name="register"),
-    path("l4m/", auction_views.AuctionView.as_view(), name="auction"),
+    path("l4m/auction/", auction_views.AuctionView.as_view(), name="auction"),
     path("l4m/auction/sendBet/", auction_views.SendBetView.as_view(), name="send_bet"),
     path("l4m/auction/finalizeBet/", auction_views.FinBetView.as_view(), name="finalize_bet"),
     path("l4m/auction/freePlayer/", auction_views.FreePlayerView.as_view(), name="free_player"),
@@ -25,5 +25,6 @@ urlpatterns = [
     path("l4m/lineup/getLast/", lineup_views.GetLastLineupView.as_view(), name="get_last_lineup"),
     path("l4m/live/", live_views.LiveView, name="live"),
     path("l4m/live_b11/", live_views.LiveB11View.as_view(), name="live_b11"),
+    path("l4m/", dashboard_views.DashboardView.as_view(), name="dashboard"),
 
 ]

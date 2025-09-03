@@ -25,10 +25,12 @@
 .team-name {
   font-size: x-large;
   margin-left: 2em;
+  font-weight: bolder;
 }
 
 .topbar-items {
   display: flex;
+  align-items: center;
 }
 
 .live-toplink {
@@ -53,4 +55,8 @@
       .nav-mobile {
         height: 100% !important;
   }
+}
+
+.dash-icon {
+  align-content: center;
 }
