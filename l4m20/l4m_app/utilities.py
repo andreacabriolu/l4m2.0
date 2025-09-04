@@ -381,3 +381,25 @@ def free_player(bet_id):
     bet_history_new.save()
 
     _bet.delete()
+
+def save_results(votes_per_series):
+
+    for _votes in votes_per_series:
+        home_results = _votes[0]
+        away_results = _votes[1]
+        mc = matches_calendar.MatchesCalendar.objects.get(pk=_votes[2])
+        if mc is None:
+            continue
+        t1 = team.Team.objects.get(pk=home_results[0])
+        t2 = team.Team.objects.get(pk=away_results[0])
+
+        mr_home = matches_results.MatchesResults(Team = t1, 
+                                              Fp = home_results[1], 
+                                              MatchesCalendar = mc)
+
+        mr_away = matches_results.MatchesResults(Team = t2, 
+                                              Fp = away_results[1], 
+                                              MatchesCalendar = mc)
+        
+        mr_home.save()
+        mr_away.save()

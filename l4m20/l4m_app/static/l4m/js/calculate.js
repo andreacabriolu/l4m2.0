@@ -1,4 +1,6 @@
-
+function showPopupErrorAlert(response) {
+    alert(response);
+}
 function showErrorAlert(response) {
     $("#error-alert").prop('hidden', false);
     $('#span-error-alert').text(response);
@@ -44,10 +46,10 @@ function calculate(c_id, d_id) {
 
     $.post("/l4m/calculate/calculateDay/", data, function (response) {
         if (response.startsWith('error')) {
-            showErrorAlert(response);
+            showPopupErrorAlert(response);
         }
         else {
-            
+            showPopupErrorAlert(response);
         }
     });
 

@@ -8,6 +8,7 @@ import json
 from django.db.models import Q
 
 from .. import utilities as U
+from .. import live_utilities as LU
 from ..models import *
 from l4m20 import constants as C
 
@@ -42,4 +43,45 @@ class GetCurrentDayByCompetition(View):
 class CalculateDayView(View):
     def post(self, request):
 
-        pass
+        #TODO: write in:
+        # calendar (NEW)
+        # rankings (NEW)
+
+        try:
+
+            competitionid = request.POST['competitionid']
+            day = request.POST['day']
+            comp_series = U.get_all_series(competitionid)
+
+            all_votes_per_series = {}
+            
+            for series in comp_series:
+                series_teams = team.Team.objects.filter(Series__id=series.id)
+
+                last_lineups_d = {}
+                all_votes = []
+
+                for t in series_teams:
+                    l = U.get_last_lineup(t, day)
+                    last_valid_l = U.get_last_valid_lineup(t) #TODO: manage last valid lineup for a day
+
+                    lineup_to_show = l[0]
+                    last_lineups_d[t.id] = lineup_to_show
+
+                couples = LU.get_couples_and_matches_from_calendar(series.id, day)
+                lineup_couples = [ (last_lineups_d[c[0]], last_lineups_d[c[1]], c[2]) for c in couples ]
+
+                for lineup_couple in lineup_couples:
+                    votes_home = LU.get_votes(lineup_couple[0], day, live_votes=[], get_for_calculation=True)
+                    votes_away = LU.get_votes(lineup_couple[1], day, live_votes=[], get_for_calculation=True)
+                    all_votes.append( [[lineup_couple[0].Team.id, votes_home], [lineup_couple[1].Team.id, votes_away], lineup_couple[2]] )
+
+                all_votes_per_series[series.id] = all_votes
+            
+            for _, vote_per_series in all_votes_per_series.items():
+                U.save_results(vote_per_series) 
+
+            return HttpResponse('GIORNATA CALCOLATA')
+
+        except Exception as e:
+            return HttpResponse(f'error {e}')

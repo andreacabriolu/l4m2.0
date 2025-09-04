@@ -8,8 +8,8 @@ class MatchesResults(models.Model):
     MatchesCalendar = models.ForeignKey(on_delete=models.CASCADE,to='l4m_app.MatchesCalendar', null=True)
     Team = models.ForeignKey(on_delete=models.CASCADE,to=C.Constant_Strings.team, null=True)    
     Fp = models.FloatField()    # Fp
-    FpO = models.FloatField()    # Fp Overtime
-    Pen = models.IntegerField()    # Penalties
+    FpO = models.FloatField(null=True)    # Fp Overtime
+    Pen = models.IntegerField(null=True)    # Penalties
 
     def __str__(self):
         return f"{self.MatchesCalendar} | {self.Team} {self.Fp}"

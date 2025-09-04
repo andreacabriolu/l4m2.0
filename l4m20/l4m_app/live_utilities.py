@@ -190,8 +190,19 @@ def get_live_votes(day):
 
     return live_votes
 
-def get_couples_from_calendar(seriesid, day):
-    matches_ = matches_calendar.MatchesCalendar.objects.filter(Q(CompetitionCalendar__Day=day) & Q(Series_id=seriesid))
+def get_couples_and_matches_from_calendar(seriesid, day, competition_id=1):
+    matches_ = matches_calendar.MatchesCalendar.objects.filter(
+        Q(CompetitionCalendar__Competition_id=competition_id) & 
+        Q(CompetitionCalendar__Day=day) & 
+        Q(Series_id=seriesid))
+    couples = [(match.HomeTeam.id, match.AwayTeam.id, match.id) for match in matches_]
+    return couples
+
+def get_couples_from_calendar(seriesid, day, competition_id=1):
+    matches_ = matches_calendar.MatchesCalendar.objects.filter(
+        Q(CompetitionCalendar__Competition_id=competition_id) & 
+        Q(CompetitionCalendar__Day=day) & 
+        Q(Series_id=seriesid))
     couples = [(match.HomeTeam.id, match.AwayTeam.id) for match in matches_]
     return couples
 
@@ -375,7 +386,7 @@ def check_valid_module_change_for_modifier(orig, current):
 def isValid(vote):
     return (len(vote) > 0 and vote[0].Vote > 0)
 
-def get_votes(lineup, current_day, live_votes, my_teamid = None, home=True):
+def get_votes(lineup, current_day, live_votes, my_teamid = None, home=True, get_for_calculation=False):
     votes_tit = []
     votes_ris = []
     module = C.Modules._442 #default
@@ -504,6 +515,9 @@ def get_votes(lineup, current_day, live_votes, my_teamid = None, home=True):
 
     grand_total = total + modifier + bonus_cap + bonus_disc + bonus_prest
     _items.append(grand_total)
+
+    if get_for_calculation: #direct return for day calculation
+        return grand_total
 
     n_goals = calculate_n_goals(grand_total)
     _items.append(n_goals)
