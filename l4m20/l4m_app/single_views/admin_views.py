@@ -16,9 +16,30 @@ class CalculateView(LoginRequiredMixin, View):
     template_name = 'l4m/calculate.html'
 
     def get(self,request):
+
+        all_competitions = U.get_all_competitions()
+        
+
         
         params = {
-
+            'all_competitions': all_competitions
         }
         
         return render(request, self.template_name, params)
+    
+class GetCurrentDayByCompetition(View):
+    def post(self, request):
+        #TODO: filter by competition!
+        competition_id = request.POST['competitionid']
+        c = competition.Competition.objects.get(pk=int(competition_id))
+        if c is None:
+            return HttpResponse('error: no competition found')
+
+        current_day = U.get_current_day(c.Name)
+
+        return HttpResponse(current_day)
+    
+class CalculateDayView(View):
+    def post(self, request):
+
+        pass

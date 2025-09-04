@@ -10,6 +10,9 @@ from l4m20 import constants as C
 def clean_name(name):
     return name.replace(' ','_').replace('\'','')
 
+def get_all_competitions():
+    return competition.Competition.objects.all()
+
 def get_my_competitions(teamid, my_series):
     return competition.Competition.objects.filter(series__id__in=my_series)
 
@@ -273,7 +276,7 @@ def complete_list(l, num_max, role):
     
     return l
 
-def get_current_day():
+def get_current_day(competition_name=""):
     #approach 1: take the first future match's day, starting from now + 24hh
     #      # tomorrow = datetime.datetime.now() + datetime.timedelta(1)
     # r = real_calendar.Real_calendar.objects.filter(Date__gte=tomorrow).values('Day').first()

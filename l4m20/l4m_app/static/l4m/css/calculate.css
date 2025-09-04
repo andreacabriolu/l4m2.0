@@ -1,0 +1,34 @@
+.custom-layout {
+    background-color: #322e2e;
+}
+
+.main-div {
+    display: flex;
+    justify-items: center;
+    flex-direction: column;
+}
+
+.selectors-div {
+    width: 70%;
+}
+
+
+.form-select-selectors {
+    margin-right: 1em;
+    width: fit-content !important;
+    min-width: 5em;
+}
+
+
+.series-label {
+    font-family: 'Mozilla Headline';
+    font-size: larger;
+    color: #eff1f1;
+    font-weight: bolder;
+    margin-bottom: .5em;
+}
+
+.calculate-btn {
+    margin-top: 1em;
+    width: fit-content;
+}

@@ -27,5 +27,7 @@ urlpatterns = [
     path("l4m/live_b11/", live_views.LiveB11View.as_view(), name="live_b11"),
     path("l4m/", dashboard_views.DashboardView.as_view(), name="dashboard"),
     path("l4m/calculate/", admin_views.CalculateView.as_view(), name="calculate"),
+    path("l4m/calculate/getCurrentDayByCompetition/", admin_views.GetCurrentDayByCompetition.as_view(), name="get_current_day"),
+    path("l4m/calculate/calculateDay/", admin_views.CalculateDayView.as_view(), name="calculate_day"),
 
 ]
