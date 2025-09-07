@@ -6,7 +6,9 @@
 {% block links %}
 <link href="{% static 'l4m/css/dashboard.css' %}" rel="stylesheet">
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Mozilla+Headline:wght@200..700&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
+</style>
 {% endblock %}
 
 {% block scripts %}
@@ -18,24 +20,69 @@
 <div id="layoutSidenav_content" class="custom-layout">
 
     <div class="alert alert-danger" role="alert" id="error-alert" hidden>
-            <span id="span-error-alert"></span>
+        <span id="span-error-alert"></span>
     </div>
 
     <div class="alert alert-success" role="alert" id="info-alert" hidden>
-            <span id="span-info-alert"></span>
+        <span id="span-info-alert"></span>
     </div>
 
-    <div class="bg-body-tertiary main-div p-5" id="dashboardDiv">
+    <div class="bg-body-tertiary main-div" id="dashboardDiv">
         <div class="form-floating top-line">
-            
-            
-        </div>
-        <div class="rankings" id="l_ups">
-            
 
         </div>
 
-        
+        <section id="rankings" class="content-section bg-dark rankings">
+            <span class="rankings-title">CLASSIFICA</span>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <!-- <h1 class="mt-4 h3 mb-2 text-gray-800">OPEN PROPOSALS</h1> -->
+                    <select class="form-select form-select-lg mb-3 form-select-selectors" id="select_comp">
+                        {% for comp in my_competitions %}
+                        <option value="{{comp}}" data-id="{{comp.id}}">{{comp.Name}}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="card shadow mb-4">
+                        <!-- <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Proposals to evaluate</h6>
+                        </div> -->
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="rankingDataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Squadra</th>
+                                            <th>PG</th>
+                                            <th>V</th>
+                                            <th>N</th>
+                                            <th>P</th>
+                                            <th>GF</th>
+                                            <th>GS</th>
+                                            <th>Punti</th>
+                                            <th>FantaPunti</th>
+                                            <th>DR</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- {% for proposal in proposals %}
+                                        <tr>
+                                            <td>{{proposal.Title}}</td>
+                                            <td>{{proposal.Abstract}}</td>
+                                            <td>{{proposal.PI}}</td>
+                                            <td>{{proposal.Proj_Type_id}}</td>
+                                            <td>{{proposal.Sc_Tech_Just}}</td>
+                                        </tr>
+                                        {% endfor %} -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
     </div>
 </div>
 {% endblock %}

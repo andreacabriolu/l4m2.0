@@ -10,10 +10,14 @@ from l4m20 import constants as C
 def clean_name(name):
     return name.replace(' ','_').replace('\'','')
 
+def get_ranking(competitionid, seriesid):
+
+    pass
+
 def get_all_competitions():
     return competition.Competition.objects.all()
 
-def get_my_competitions(teamid, my_series):
+def get_my_competitions(my_series):
     return competition.Competition.objects.filter(series__id__in=my_series)
 
 def get_my_series(teamid, competitionid=1):
@@ -322,46 +326,6 @@ def check_day_already_started(day):
         return False, datetime.datetime.now(ZoneInfo('Europe/Rome'))
     return datetime.datetime.now(ZoneInfo('Europe/Rome')) >= day_time_limit, day_time_limit
 
-def manage_fool_name_exceptions(name):
-    if name=='Ederson_J':
-        return 'Ederson_DS'
-    if name=='Anguissa':
-        return 'Zambo_Anguissa'
-    if name=='Ndicka':
-        return 'NDicka'
-    if name=='Pellegrino_Ma':
-        return 'Pellegrino_M'
-    if name=='Iker_Bravo':
-        return 'Bravo'
-    if name=='Pedro R':
-        return 'Pedro'
-    if name=='Bernabe\'':
-        return 'Bernabè'
-    if name=='Giovane_S':
-        return 'Giovane'
-    if name=='N\'Dri':
-        return 'NDri'
-    if name=='Davis':
-        return 'Davis_K'
-    if name=='Dele_Bashiru':
-        return 'Dele-Bashiru'
-    if name=='Bradaric_D':
-        return 'Bradaric'
-    if name=='Vitinha':
-        return 'Vitinha_O'
-    if name=='Locatelli_M':
-        return 'Locatelli'
-    if name=='Lazzari_M':
-        return 'Lazzari'
-    if name=='Danilo_Veiga':
-        return 'Veiga_D'
-    if name=='Wesley_F':
-        return 'Wesley'
-    if name=='Ranieri':
-        return 'Ranieri_L'
-    
-    return name
-
 def free_player(bet_id):
     _bet = bet.Bet.objects.get(pk=int(bet_id))
 
@@ -382,6 +346,86 @@ def free_player(bet_id):
 
     _bet.delete()
 
+def get_last_ranking(c_id, s_id, day):
+    last_r = ranking.Ranking.objects.filter(Competition=c_id, Series=s_id, Day=int(day)-1)
+    if len(last_r) <= 0:
+        return None
+    
+    return last_r.RankingLine
+
+def calculate_n_goals(fp_total): #replicate of live utilities method to avoid circular ref
+    diff = fp_total - C.Various.BASE_SCORE
+    if (diff < 0):
+        return 0
+    
+    return int(diff / C.Various.THRESHOLD_GOL) + 1
+
+def write_rankings(vote_per_series, competition_id, day, seriesid):
+    last_ranking = get_last_ranking(competition_id, seriesid, day)
+    
+    if(last_ranking is not None):
+        last_ranking = json.loads(last_ranking)
+    
+    new_ranking_line = []
+
+    for _vote in vote_per_series:
+        team_home = _vote[0][0]
+        team_away = _vote[1][0]
+        fp_home = _vote[0][1]
+        fp_away = _vote[1][1]
+        goal_home = calculate_n_goals(fp_home)
+        goal_away = calculate_n_goals(fp_away)
+        result = 'h' if goal_home > goal_away else 'a' if goal_away > goal_home else 'n'
+
+        if(last_ranking is None): #match 1
+            n_win_home = 1 if result == 'h' else 0
+            n_null_home = 1 if result == 'n' else 0
+            n_lose_home = 1 if result == 'a' else 0
+            n_win_away = 1 if result == 'a' else 0
+            n_null_away = 1 if result == 'n' else 0
+            n_lose_away = 1 if result == 'h' else 0
+            gf_home = goal_home
+            gs_home = goal_away
+            gf_away = goal_away
+            gs_away = goal_home
+            pt_home = 3 if result == 'h' else 1 if result == 'n' else 0
+            pt_away = 3 if result == 'a' else 1 if result == 'n' else 0
+            dr_home = gf_home - gs_home
+            dr_away = gf_away - gs_away
+        else:
+            last_ranking_home = last_ranking[team_home]
+            last_ranking_away = last_ranking[team_away] 
+            n_win_home = last_ranking_home['v'] + 1 if result == 'h' else last_ranking_home['v']
+            n_null_home = last_ranking_home['n'] + 1 if result == 'n' else last_ranking_home['n']
+            n_lose_home = last_ranking_home['p'] + 1 if result == 'a' else last_ranking_home['p']
+            n_win_away = last_ranking_away['v'] + 1 if result == 'a' else last_ranking_away['v']
+            n_null_away = last_ranking_away['n'] + 1 if result == 'n' else last_ranking_away['n']
+            n_lose_away = last_ranking_away['p'] + 1 if result == 'h' else last_ranking_away['p']
+            gf_home = last_ranking_home['v'] + 1 if result == 'h' else last_ranking_home['v']['gf'] + goal_home
+            gs_home = last_ranking_home['gs'] + goal_away
+            gf_away = last_ranking_away['gf'] + goal_away
+            gs_away = last_ranking_away['gs'] + goal_home
+            pt_home = last_ranking_home['pt'] + 3 if result == 'h' else last_ranking_home['pt'] + 1 if result == 'n' else last_ranking_home['pt']
+            pt_away = last_ranking_away['pt'] + 3 if result == 'a' else last_ranking_away['pt'] + 1 if result == 'n' else last_ranking_away['pt']
+            dr_home = gf_home - gs_home
+            dr_away = gf_away - gs_away
+
+        stats_home = {'pg': day, 'v': n_win_home, 'n': n_null_home, 'p': n_lose_home, 'gf': gf_home, 'gs': gs_home, 'pt': pt_home, 'fpt': fp_home, 'dr': dr_home}
+        stats_away = {'pg': day, 'v': n_win_away, 'n': n_null_away, 'p': n_lose_away, 'gf': gf_away, 'gs': gs_away, 'pt': pt_away, 'fpt': fp_away, 'dr': dr_away}
+
+        new_ranking_line_home = {team_home: stats_home}
+        new_ranking_line_away = {team_away: stats_away}
+        new_ranking_line.append(new_ranking_line_home)
+        new_ranking_line.append(new_ranking_line_away)
+
+    new_rank = ranking.Ranking(
+        
+    )
+        
+
+
+    pass
+
 def save_results(votes_per_series):
 
     for _votes in votes_per_series:
@@ -392,6 +436,14 @@ def save_results(votes_per_series):
             continue
         t1 = team.Team.objects.get(pk=home_results[0])
         t2 = team.Team.objects.get(pk=away_results[0])
+
+        #RECALCULATE?
+        existing_mr_home = matches_results.MatchesResults.objects.filter(Q(Team=t1) & Q(MatchesCalendar=mc))
+        existing_mr_away = matches_results.MatchesResults.objects.filter(Q(Team=t2) & Q(MatchesCalendar=mc))
+        if len(existing_mr_home) > 0:
+            existing_mr_home[0].delete()
+        if len(existing_mr_away) > 0:
+            existing_mr_away[0].delete()
 
         mr_home = matches_results.MatchesResults(Team = t1, 
                                               Fp = home_results[1], 

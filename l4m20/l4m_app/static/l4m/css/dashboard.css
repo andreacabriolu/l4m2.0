@@ -1,0 +1,29 @@
+.rankings-title {
+    font-family: "Mozilla Headline", sans-serif;
+    font-size: xx-large;
+}
+
+.rankings {
+    text-align: center;
+}
+
+@media (max-width:800px) {
+    .rankings {
+        margin: 0.5em;
+    }
+}
+
+
+.main-div {
+    padding: 3rem !important;
+}
+
+@media (max-width:800px) {
+    .main-div {
+        padding: unset !important;
+    }
+}
+
+.form-select-selectors {
+    width: fit-content !important;
+}

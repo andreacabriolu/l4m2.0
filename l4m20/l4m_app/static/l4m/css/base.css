@@ -33,6 +33,12 @@
   align-items: center;
 }
 
+@media (max-width:800px) {
+  .topbar-items {
+    /* display: block; */
+  }
+}
+
 .live-toplink {
   display: flex;
   align-items: baseline;

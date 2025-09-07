@@ -16,9 +16,14 @@ class DashboardView(LoginRequiredMixin, View):
     template_name = 'l4m/dashboard.html'
 
     def get(self,request):
+        my_team = U.get_user_team(request.user.id)
+        my_series = U.get_my_series(teamid=my_team['id'])
+        my_competitions = U.get_my_competitions(my_series)
+
+        # default_league_ranking = U.get_ranking(competition_id, series_id)
         
         params = {
-
+            'my_competitions' : my_competitions,
         }
         
         return render(request, self.template_name, params)

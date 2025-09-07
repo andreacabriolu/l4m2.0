@@ -62,7 +62,7 @@ def LiveView(request):
     my_series = U.get_my_series(teamid, competitionid=competition_id)
     my_seriesid = my_series[0].id
 
-    my_competitions = U.get_my_competitions(teamid, my_series)
+    my_competitions = U.get_my_competitions(my_series)
 
     if(len(request.POST) > 0 and 'jsonData' in request.POST):
         data = json.loads(request.POST['jsonData'])

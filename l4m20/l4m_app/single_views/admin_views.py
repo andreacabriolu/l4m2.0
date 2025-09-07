@@ -78,8 +78,11 @@ class CalculateDayView(View):
 
                 all_votes_per_series[series.id] = all_votes
             
-            for _, vote_per_series in all_votes_per_series.items():
+            for k, vote_per_series in all_votes_per_series.items():
                 U.save_results(vote_per_series) 
+                #rankings
+                U.write_rankings(vote_per_series, competitionid, day, seriesid=k)
+
 
             return HttpResponse('GIORNATA CALCOLATA')
 
