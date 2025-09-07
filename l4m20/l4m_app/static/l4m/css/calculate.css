@@ -32,3 +32,12 @@
     margin-top: 1em;
     width: fit-content;
 }
+
+.day-div {
+    width: auto;
+}
+
+.calculated {
+    color: green;
+    font-weight: bolder !important;
+}

@@ -10,9 +10,12 @@ from l4m20 import constants as C
 def clean_name(name):
     return name.replace(' ','_').replace('\'','')
 
-def get_ranking(competitionid, seriesid):
+def get_ranking(c_id, s_id, day):
+    r = ranking.Ranking.objects.filter(Q(Competition=c_id) & Q(Series=s_id) & Q(Day=day))
+    if len(r) <= 0:
+        return None
 
-    pass
+    return r
 
 def get_all_competitions():
     return competition.Competition.objects.all()
@@ -280,7 +283,7 @@ def complete_list(l, num_max, role):
     
     return l
 
-def get_current_day(competition_name=""):
+def get_current_day(competition_id=""):
     #approach 1: take the first future match's day, starting from now + 24hh
     #      # tomorrow = datetime.datetime.now() + datetime.timedelta(1)
     # r = real_calendar.Real_calendar.objects.filter(Date__gte=tomorrow).values('Day').first()
@@ -346,13 +349,6 @@ def free_player(bet_id):
 
     _bet.delete()
 
-def get_last_ranking(c_id, s_id, day):
-    last_r = ranking.Ranking.objects.filter(Competition=c_id, Series=s_id, Day=int(day)-1)
-    if len(last_r) <= 0:
-        return None
-    
-    return last_r.RankingLine
-
 def calculate_n_goals(fp_total): #replicate of live utilities method to avoid circular ref
     diff = fp_total - C.Various.BASE_SCORE
     if (diff < 0):
@@ -361,7 +357,7 @@ def calculate_n_goals(fp_total): #replicate of live utilities method to avoid ci
     return int(diff / C.Various.THRESHOLD_GOL) + 1
 
 def write_rankings(vote_per_series, competition_id, day, seriesid):
-    last_ranking = get_last_ranking(competition_id, seriesid, day)
+    last_ranking = get_ranking(competition_id, seriesid, int(day)-1)
     
     if(last_ranking is not None):
         last_ranking = json.loads(last_ranking)
@@ -419,12 +415,14 @@ def write_rankings(vote_per_series, competition_id, day, seriesid):
         new_ranking_line.append(new_ranking_line_away)
 
     new_rank = ranking.Ranking(
-        
+        RankingLine = json.dumps(new_ranking_line),
+        Competition = competition.Competition.objects.get(pk=competition_id),
+        Series = series.Series.objects.get(pk=seriesid),
+        Season = "SEASON 1", #TODO: season mechanism to do
+        Day= day
     )
         
-
-
-    pass
+    new_rank.save()
 
 def save_results(votes_per_series):
 

@@ -34,10 +34,11 @@
                 {% endfor %}
             </select>
 
-            <label for="select_day" class="series-label">GIORNATA</label>
-            <select class="form-select form-select-lg mb-3 form-select-selectors" id="select_day">
-
-            </select>
+            <div class="day-div">
+                <label for="select_day" class="series-label">GIORNATA</label>
+                <select class="form-select form-select-lg mb-3 form-select-selectors" id="select_day"> </select>
+                <span class="calculated" hidden>CALCOLATA</span>
+            </div>
         </div>
 
         <button type="button" class="btn btn-primary calculate-btn" id="btnCalculate">

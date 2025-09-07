@@ -46,7 +46,10 @@ window.addEventListener('DOMContentLoaded', event => {
                 //     // selector: 'td:first-child',
                 //     // headerCheckbox: 'select-page'
                 // },
-                order: [[7, 'desc']],
+                order: [
+                    [1, 'desc'], //Punti
+                    [2, 'desc'] //Fantapunti
+                ],
                 // // createdRow: function (row, data, dataIndex) {
                 // //     if (data[1] == 'Activated') {
                 // //         activatedHoursTot += data[4];

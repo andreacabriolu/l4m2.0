@@ -52,27 +52,32 @@
                                     <thead>
                                         <tr>
                                             <th>Squadra</th>
+                                            <th>Punti</th>
+                                            <th>FantaPunti</th>
                                             <th>PG</th>
                                             <th>V</th>
                                             <th>N</th>
                                             <th>P</th>
                                             <th>GF</th>
                                             <th>GS</th>
-                                            <th>Punti</th>
-                                            <th>FantaPunti</th>
                                             <th>DR</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <!-- {% for proposal in proposals %}
+                                    <tbody class="rank-body">
+                                        {% for line in main_league_ranking %}
                                         <tr>
-                                            <td>{{proposal.Title}}</td>
-                                            <td>{{proposal.Abstract}}</td>
-                                            <td>{{proposal.PI}}</td>
-                                            <td>{{proposal.Proj_Type_id}}</td>
-                                            <td>{{proposal.Sc_Tech_Just}}</td>
+                                            <td class="rank-teamname">{{line.0}}</td>
+                                            <td class="rank-pt">{{line.7}}</td>
+                                            <td>{{line.8}}</td>
+                                            <td>{{line.1}}</td>
+                                            <td>{{line.2}}</td>
+                                            <td>{{line.3}}</td>
+                                            <td>{{line.4}}</td>
+                                            <td>{{line.5}}</td>
+                                            <td>{{line.6}}</td>
+                                            <td>{{line.9}}</td>
                                         </tr>
-                                        {% endfor %} -->
+                                        {% endfor %}
                                     </tbody>
                                 </table>
                             </div>

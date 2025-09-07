@@ -16,6 +16,7 @@
 
 .main-div {
     padding: 3rem !important;
+    background: black;
 }
 
 @media (max-width:800px) {
@@ -26,4 +27,18 @@
 
 .form-select-selectors {
     width: fit-content !important;
+}
+
+.rank-teamname {
+    font-weight: bolder;
+    color: blue;
+}
+
+.rank-pt {
+    font-weight: bold;
+    background: aliceblue !important;
+}
+
+.rank-body {
+    text-align-last: center;
 }
