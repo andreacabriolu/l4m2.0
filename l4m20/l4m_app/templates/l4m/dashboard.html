@@ -28,27 +28,39 @@
     </div>
 
     <div class="bg-body-tertiary main-div" id="dashboardDiv">
-        <div class="form-floating top-line">
+        <section id="team-info" class="bg-dark">
+            <div class="form-floating top-line">
 
-        </div>
+            </div>
+        </section>
 
         <section id="rankings" class="content-section bg-dark rankings">
+            <input type="hidden" id="day" value="{{day}}">
+            <input type="hidden" id="main_league" value="{{main_league.id}}">
+            <input type="hidden" id="my_main_league_series" value="{{my_main_league_series.id}}">
             <span class="rankings-title">CLASSIFICA</span>
             <div class="card mb-4">
                 <div class="card-header">
-                    <!-- <h1 class="mt-4 h3 mb-2 text-gray-800">OPEN PROPOSALS</h1> -->
-                    <select class="form-select form-select-lg mb-3 form-select-selectors" id="select_comp">
-                        {% for comp in my_competitions %}
-                        <option value="{{comp}}" data-id="{{comp.id}}">{{comp.Name}}</option>
-                        {% endfor %}
-                    </select>
+                    <div class="top-table">
+                        <!-- <h1 class="mt-4 h3 mb-2 text-gray-800">OPEN PROPOSALS</h1> -->
+                        <select class="form-select form-select-lg mb-3 form-select-selectors" id="select_comp">
+                            {% for comp in my_competitions %}
+                            <option value="{{comp}}" data-id="{{comp.id}}">{{comp.Name}}</option>
+                            {% endfor %}
+                        </select>
+                        <select class="form-select form-select-lg mb-3 form-select-series" id="select_series">
+                            {% for s in all_campionato_series %}
+                            <option value="{{s}}" data-id="{{s.id}}" {% if s.id == my_main_league_series.id %} selected {% endif %}>{{s.Name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
                     <div class="card shadow mb-4">
                         <!-- <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">Proposals to evaluate</h6>
                         </div> -->
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-bordered" id="rankingDataTable" width="100%" cellspacing="0">
+                                <table class="table table-bordered stripe" id="rankingDataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
                                             <th>Squadra</th>
@@ -64,20 +76,6 @@
                                         </tr>
                                     </thead>
                                     <tbody class="rank-body">
-                                        {% for line in main_league_ranking %}
-                                        <tr>
-                                            <td class="rank-teamname">{{line.0}}</td>
-                                            <td class="rank-pt">{{line.7}}</td>
-                                            <td>{{line.8}}</td>
-                                            <td>{{line.1}}</td>
-                                            <td>{{line.2}}</td>
-                                            <td>{{line.3}}</td>
-                                            <td>{{line.4}}</td>
-                                            <td>{{line.5}}</td>
-                                            <td>{{line.6}}</td>
-                                            <td>{{line.9}}</td>
-                                        </tr>
-                                        {% endfor %}
                                     </tbody>
                                 </table>
                             </div>

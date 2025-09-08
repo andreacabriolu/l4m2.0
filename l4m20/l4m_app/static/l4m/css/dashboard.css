@@ -27,6 +27,11 @@
 
 .form-select-selectors {
     width: fit-content !important;
+    margin-right: 1em;
+}
+
+.form-select-series {
+    width: fit-content !important;
 }
 
 .rank-teamname {
@@ -41,4 +46,12 @@
 
 .rank-body {
     text-align-last: center;
+}
+
+.top-table {
+    display: flex;
+}
+
+.dt-head-center {   
+    text-align: center !important;
 }
