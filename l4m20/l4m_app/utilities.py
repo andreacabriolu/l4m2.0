@@ -360,7 +360,7 @@ def write_rankings(vote_per_series, competition_id, day, seriesid):
     last_ranking = get_ranking(competition_id, seriesid, int(day)-1)
     
     if(last_ranking is not None):
-        last_ranking = json.loads(last_ranking)
+        last_ranking = json.loads(last_ranking[0].RankingLine)
     
     new_ranking_line = []
 
@@ -389,15 +389,20 @@ def write_rankings(vote_per_series, competition_id, day, seriesid):
             dr_home = gf_home - gs_home
             dr_away = gf_away - gs_away
         else:
-            last_ranking_home = last_ranking[team_home]
-            last_ranking_away = last_ranking[team_away] 
+            last_ranking_home = [item[team_home.__str__()] for item in last_ranking if team_home.__str__() in item] #QUITE BAD
+            last_ranking_away = [item[team_away.__str__()] for item in last_ranking if team_away.__str__() in item] #QUITE BAD
+            if len(last_ranking_home) == 0 or len(last_ranking_away) == 0:
+                continue
+            else:
+                last_ranking_home = last_ranking_home[0]
+                last_ranking_away = last_ranking_away[0]
             n_win_home = last_ranking_home['v'] + 1 if result == 'h' else last_ranking_home['v']
             n_null_home = last_ranking_home['n'] + 1 if result == 'n' else last_ranking_home['n']
             n_lose_home = last_ranking_home['p'] + 1 if result == 'a' else last_ranking_home['p']
             n_win_away = last_ranking_away['v'] + 1 if result == 'a' else last_ranking_away['v']
             n_null_away = last_ranking_away['n'] + 1 if result == 'n' else last_ranking_away['n']
             n_lose_away = last_ranking_away['p'] + 1 if result == 'h' else last_ranking_away['p']
-            gf_home = last_ranking_home['v'] + 1 if result == 'h' else last_ranking_home['v']['gf'] + goal_home
+            gf_home = last_ranking_home['gf'] + goal_home
             gs_home = last_ranking_home['gs'] + goal_away
             gf_away = last_ranking_away['gf'] + goal_away
             gs_away = last_ranking_away['gs'] + goal_home
@@ -406,13 +411,17 @@ def write_rankings(vote_per_series, competition_id, day, seriesid):
             dr_home = gf_home - gs_home
             dr_away = gf_away - gs_away
 
-        stats_home = {'pg': day, 'v': n_win_home, 'n': n_null_home, 'p': n_lose_home, 'gf': gf_home, 'gs': gs_home, 'pt': pt_home, 'fpt': fp_home, 'dr': dr_home}
-        stats_away = {'pg': day, 'v': n_win_away, 'n': n_null_away, 'p': n_lose_away, 'gf': gf_away, 'gs': gs_away, 'pt': pt_away, 'fpt': fp_away, 'dr': dr_away}
+        stats_home = {'pt': pt_home, 'fpt': fp_home, 'pg': day, 'v': n_win_home, 'n': n_null_home, 'p': n_lose_home, 'gf': gf_home, 'gs': gs_home, 'dr': dr_home}
+        stats_away = {'pt': pt_away, 'fpt': fp_away, 'pg': day, 'v': n_win_away, 'n': n_null_away, 'p': n_lose_away, 'gf': gf_away, 'gs': gs_away, 'dr': dr_away}
 
         new_ranking_line_home = {team_home: stats_home}
         new_ranking_line_away = {team_away: stats_away}
         new_ranking_line.append(new_ranking_line_home)
         new_ranking_line.append(new_ranking_line_away)
+
+    existing_rank = ranking.Ranking.objects.filter(Q(Day=day) & Q(Competition=competition_id) & Q(Series=seriesid))
+    if len(existing_rank) > 0:
+        existing_rank[0].delete()
 
     new_rank = ranking.Ranking(
         RankingLine = json.dumps(new_ranking_line),

@@ -53,8 +53,19 @@
     flex-wrap: wrap;
 }
 
-.dt-head-center {   
-    text-align: center !important;
+.dt-header {
+  text-align: center !important;
+  color: black !important;
+}
+
+.dt-teamname {
+  color: blue;
+  font-weight: bolder;
+}
+
+.dt-teampt {
+  font-weight: bolder;
+  background: aliceblue;
 }
 
 .team-name-dash {

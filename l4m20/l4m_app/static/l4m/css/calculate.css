@@ -41,3 +41,22 @@
     color: green;
     font-weight: bolder !important;
 }
+
+.curr-day-div {
+    margin-top: 2em;
+    display: flex;
+    flex-direction: column;
+}
+
+.cur-day-text {
+    width: fit-content;
+    border-radius: 5%;
+}
+
+.div-advance {
+    display: flex;
+}
+
+.advance-day-btn {
+    margin-left: 0.5em;
+}

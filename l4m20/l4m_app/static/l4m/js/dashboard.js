@@ -84,9 +84,10 @@ window.addEventListener('DOMContentLoaded', event => {
                     dataSrc: "lines",
                 },
                 columnDefs: [
-                    // {
-                    //    className: "dt-head-center",
-                    // }
+                    {
+                       className: "dt-teamname", targets: [0],
+                       className: "dt-teampt", targets: [1],
+                    }
                 ],
                 
             }
