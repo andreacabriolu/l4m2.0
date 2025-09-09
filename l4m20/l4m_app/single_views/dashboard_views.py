@@ -23,6 +23,8 @@ class DashboardView(LoginRequiredMixin, View):
         my_series = U.get_my_series(teamid=my_team['id'])
         my_competitions = U.get_my_competitions(my_series)
 
+        logo_path = my_team['LogoPath']
+
         if len(my_series) <= 0 or len (my_competitions) <= 0:
             return HttpResponse('error: no series for the team')
 
@@ -37,7 +39,7 @@ class DashboardView(LoginRequiredMixin, View):
             'my_main_league_series' : my_series[0],
             'day': U.get_current_day(),
             'all_campionato_series': all_campionato_series,
-            # 'main_league_ranking' : lines,
+            'logo_path': logo_path,
         }
         
         return render(request, self.template_name, params)

@@ -6,9 +6,10 @@
 {% block links %}
 <link href="{% static 'l4m/css/dashboard.css' %}" rel="stylesheet">
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Mozilla+Headline:wght@200..700&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
-</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+
 {% endblock %}
 
 {% block scripts %}
@@ -28,11 +29,31 @@
     </div>
 
     <div class="bg-body-tertiary main-div" id="dashboardDiv">
-        <section id="team-info" class="bg-dark">
+        <!-- <section id="team-info" class="bg-dark">
             <div class="form-floating top-line">
 
             </div>
-        </section>
+        </section> -->
+
+        <div class="row featurette">
+          <div class="col-md-7 team-name-dash">
+            <h1 class="featurette-heading fw-normal lh-1 display-1">
+              {{teamname}}
+            </h1>
+          </div>
+          <div class="col-md-5 team-logo">
+            {% if logo_path %}
+            {% static 'l4m/images/logos/' as logos_path %} 
+            <img src="{{logos_path}}{{logo_path}}" loading="lazy" 
+                class="featurette-image" >
+            {% else %}
+            <img src="{% static 'l4m/images/logo.jpeg' %}" loading="lazy" 
+                class="featurette-image" >
+            {% endif %}
+          </div>
+        </div>
+
+        <hr class="featurette-divider" />
 
         <section id="rankings" class="content-section bg-dark rankings">
             <input type="hidden" id="day" value="{{day}}">

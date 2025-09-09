@@ -8,8 +8,8 @@ class Team(models.Model):
     
     Name = models.CharField(max_length=100)
     Series = models.ManyToManyField(C.Constant_Strings.series)
-    # Session = models.ForeignKey(on_delete=models.CASCADE, to=C.Constant_Strings.session, null=True)
     Users = models.ManyToManyField(User, related_name='user')
+    LogoPath = models.CharField(null=True)
     
     def __str__(self):
         return " ".join([self.Name])
