@@ -164,4 +164,4 @@ vite-project-l4m/
 *.save
 .log
 log/
-
+fake.json

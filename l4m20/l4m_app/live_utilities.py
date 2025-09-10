@@ -105,11 +105,15 @@ def fill_live_votes(score, grades, live_votes):
         if len(pl) == 0:
             continue
         pl = pl[0]
-        if p not in grades:
-            continue
         _vote = vote.Vote.Vote_Obj()
         _vote.Player = pl
-        _vote.Vote = float(grades[p])
+
+        if p in grades:
+            _vote.Vote = float(grades[p])
+            _vote.LiveStatus = C.LiveStatus.STARTING
+        else:
+            _vote.Vote = 6
+            _vote.LiveStatus = C.LiveStatus.NOTHING
         live_votes[pl.id] = _vote
 
     for p in hbench:
@@ -117,11 +121,15 @@ def fill_live_votes(score, grades, live_votes):
         if len(pl) == 0:
             continue
         pl = pl[0]
-        if p not in grades:
-            continue
         _vote = vote.Vote.Vote_Obj()
-        _vote.Player = pl
-        _vote.Vote = float(grades[p])
+        _vote.Player = pl        
+
+        if p in grades:
+            _vote.Vote = float(grades[p])
+            _vote.LiveStatus = C.LiveStatus.NOTHING
+        else:
+            _vote.Vote = 6
+            _vote.LiveStatus = C.LiveStatus.BENCH
         live_votes[pl.id] = _vote
 
     for p in alineup:
@@ -129,11 +137,15 @@ def fill_live_votes(score, grades, live_votes):
         if len(pl) == 0:
             continue
         pl = pl[0]
-        if p not in grades:
-            continue
         _vote = vote.Vote.Vote_Obj()
         _vote.Player = pl
-        _vote.Vote = float(grades[p])
+
+        if p in grades:
+            _vote.Vote = float(grades[p])
+            _vote.LiveStatus = C.LiveStatus.STARTING
+        else:
+            _vote.Vote = 6
+            _vote.LiveStatus = C.LiveStatus.NOTHING
         live_votes[pl.id] = _vote
 
     for p in abench:
@@ -141,11 +153,15 @@ def fill_live_votes(score, grades, live_votes):
         if len(pl) == 0:
             continue
         pl = pl[0]
-        if p not in grades:
-            continue
         _vote = vote.Vote.Vote_Obj()
         _vote.Player = pl
-        _vote.Vote = float(grades[p])
+
+        if p in grades:
+            _vote.Vote = float(grades[p])
+            _vote.LiveStatus = C.LiveStatus.NOTHING
+        else:
+            _vote.Vote = 6
+            _vote.LiveStatus = C.LiveStatus.BENCH
         live_votes[pl.id] = _vote
 
 def get_live_votes(day):
@@ -162,6 +178,7 @@ def get_live_votes(day):
         f.close()
 
     live_votes = {}
+    live_teams = []
     current_day = resp_json['day']
     grades = resp_json['marks']
 
@@ -170,16 +187,20 @@ def get_live_votes(day):
 
     for score in resp_json['scores']:
         
-        d = datetime.datetime.strptime(score['rawdate'], '%Y-%m-%d %H:%M').replace(tzinfo=ZoneInfo('Europe/Rome'))
-        delta = datetime.timedelta(minutes=135)
+        d_start = datetime.datetime.strptime(score['rawdate'], '%Y-%m-%d %H:%M').replace(tzinfo=ZoneInfo('Europe/Rome'))
+        delta_start = datetime.timedelta(minutes=5) #start live 5 minutes before the match
+        delta_end = datetime.timedelta(minutes=135) #stop live 135 minutes after the match
 
-        isLive = score['time'] != C.Events.END_MATCH or \
-            datetime.datetime.now(ZoneInfo('Europe/Rome')) < d + delta #135 minutes after the match start
+        isLive = score['time'] != C.Events.END_MATCH and \
+            d_start - delta_start < datetime.datetime.now(ZoneInfo('Europe/Rome')) < d_start + delta_end
 
         if (not isLive):
             continue 
         
         match_events = score['events']
+
+        live_teams.append(score['home_name'])
+        live_teams.append(score['away_name'])
         
         fill_live_votes(score, grades, live_votes)
         fill_with_events(match_events, live_votes)
@@ -188,7 +209,7 @@ def get_live_votes(day):
         _vote.Day = int(current_day)
         _vote.Competition = int(1) #TODO magic number: campionato
 
-    return live_votes
+    return live_votes, live_teams
 
 def get_couples_and_matches_from_calendar(seriesid, day, competition_id=1):
     matches_ = matches_calendar.MatchesCalendar.objects.filter(
@@ -233,12 +254,27 @@ def make_empty_vote_obj(pl_id, cap_id, already_played, current_day):
 
     return v_obj
 
-def adjust_vote_obj(_vote_obj, cap_id):
+def make_not_called_vote_obj(pl_id, cap_id):
+    v_obj = vote.Vote.Vote_Obj()
+    pl = player.Player.objects.get(pk=pl_id)
+    v_obj.Player = pl if pl is not None else None
+    if(pl_id == cap_id):
+        v_obj.Cap = True
+    v_obj.Vote = 6
+    v_obj.TotVote = 6
+    v_obj.Status = C.PlayerStatus.PLAYING
+    v_obj.LiveStatus = C.LiveStatus.NO_CALLED
+
+    return v_obj
+
+def adjust_vote_obj(_vote_obj, cap_id, empty=False):
     if(_vote_obj.Player.id == cap_id):
         _vote_obj.Cap = True
     _vote_obj.Status = C.PlayerStatus.PLAYING
     _vote_obj.Live = True
-    _vote_obj.TotVote = calculate_total(_vote_obj)
+    if empty:
+        _vote_obj.Vote = 6 
+    _vote_obj.TotVote = calculate_total(_vote_obj) if not empty else 6
     
     return _vote_obj
 
@@ -386,7 +422,7 @@ def check_valid_module_change_for_modifier(orig, current):
 def isValid(vote):
     return (len(vote) > 0 and vote[0].Vote > 0)
 
-def get_votes(lineup, current_day, live_votes, my_teamid = None, home=True, get_for_calculation=False):
+def get_votes(lineup, current_day, live_votes, live_teams, my_teamid = None, home=True, get_for_calculation=False):
     votes_tit = []
     votes_ris = []
     module = C.Modules._442 #default
@@ -429,25 +465,34 @@ def get_votes(lineup, current_day, live_votes, my_teamid = None, home=True, get_
             _live_vote = live_votes[pl.id]
             if(l[0].endswith('tit')):
                 votes_tit.append(adjust_vote_obj(_live_vote, cap_id) if _live_vote.Vote > 0 else \
-                                make_empty_vote_obj(l[1], cap_id, already_played, current_day))
+                                adjust_vote_obj(_live_vote, cap_id, empty=True))
             else:
                 votes_ris.append(adjust_vote_obj(_live_vote, cap_id) if _live_vote.Vote > 0 else \
-                             make_empty_vote_obj(l[1], cap_id, already_played, current_day))
+                                adjust_vote_obj(_live_vote, cap_id, empty=True))
 
-            if(l[1] == cap_id):
+            if(pl.id == cap_id):
+                cap_vote = _live_vote.Vote
+        #CASE player not called
+        elif(pl.id not in live_votes and pl.RealTeam.Name in live_teams):
+            if(l[0].endswith('tit')):
+                votes_tit.append(make_not_called_vote_obj(pl.id, cap_id))
+            else:
+                votes_ris.append(make_not_called_vote_obj(pl.id, cap_id))
+
+            if(pl.id == cap_id):
                 cap_vote = _live_vote.Vote
         else:
         #player NOT LIVE
-            _vote = vote.Vote.objects.filter(Q(Player_id=l[1]) & Q(Day=current_day))
+            _vote = vote.Vote.objects.filter(Q(Player_id=pl.id) & Q(Day=current_day))
             if(l[0].endswith('tit')):
                 votes_tit.append(make_vote_obj(_vote[0], cap_id) if isValid(_vote) else \
-                                make_empty_vote_obj(l[1], cap_id, already_played, current_day))
+                                make_empty_vote_obj(pl.id, cap_id, already_played, current_day))
             else:
                 votes_ris.append(make_vote_obj(_vote[0], cap_id) if isValid(_vote) else \
-                                make_empty_vote_obj(l[1], cap_id, already_played, current_day))
+                                make_empty_vote_obj(pl.id, cap_id, already_played, current_day))
 
             if len(_vote) > 0:
-                if(l[1] == cap_id):
+                if(pl.id == cap_id):
                     cap_vote = _vote[0].Vote
 
     # votes_tot = votes_tit + votes_ris

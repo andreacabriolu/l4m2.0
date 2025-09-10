@@ -103,6 +103,12 @@ class PlayerStatus:
     YET_TO_PLAY = 3
     NO_PLAY_AT_ALL = 4
 
+class LiveStatus:
+    NOTHING = -1
+    STARTING = 0
+    BENCH = 1
+    NO_CALLED = 2
+
 class Modules:
     _352 = '352'
     _343 = '343'

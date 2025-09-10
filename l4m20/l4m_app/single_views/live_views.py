@@ -113,11 +113,11 @@ def LiveView(request):
     all_votes = []
 
     #get all live players
-    live_votes = LU.get_live_votes(day)
+    live_votes, live_teams = LU.get_live_votes(day)
 
     for lineup_couple in lineup_couples:
-        votes_home = LU.get_votes(lineup_couple[0], day, live_votes, teamid)
-        votes_away = LU.get_votes(lineup_couple[1], day, live_votes, teamid, home=False)
+        votes_home = LU.get_votes(lineup_couple[0], day, live_votes, live_teams, teamid)
+        votes_away = LU.get_votes(lineup_couple[1], day, live_votes, live_teams, teamid, home=False)
         all_votes.append( \
             [votes_home, votes_away]
         )
