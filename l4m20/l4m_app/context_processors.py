@@ -15,8 +15,9 @@ def user_enabled_context(request):
     is_user_enabled = \
         uid == 1 or \
         uid == 22 or \
-        uid == 23
-        # uid == 24
+        uid == 23 or \
+        uid == 24 or \
+        uid == 30
     
     return {'is_user_enabled': is_user_enabled}
 
