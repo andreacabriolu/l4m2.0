@@ -183,7 +183,7 @@ def get_live_votes(day):
     grades = resp_json['marks']
 
     if (day != int(current_day)):
-        return live_votes #empty
+        return live_votes, live_teams #empty
 
     for score in resp_json['scores']:
         
