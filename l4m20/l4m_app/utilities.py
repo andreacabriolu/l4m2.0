@@ -408,6 +408,8 @@ def write_rankings(vote_per_series, competition_id, day, seriesid):
             gs_away = last_ranking_away['gs'] + goal_home
             pt_home = last_ranking_home['pt'] + 3 if result == 'h' else last_ranking_home['pt'] + 1 if result == 'n' else last_ranking_home['pt']
             pt_away = last_ranking_away['pt'] + 3 if result == 'a' else last_ranking_away['pt'] + 1 if result == 'n' else last_ranking_away['pt']
+            fp_home = last_ranking_home['fpt'] + fp_home
+            fp_away = last_ranking_away['fpt'] + fp_away
             dr_home = gf_home - gs_home
             dr_away = gf_away - gs_away
 
