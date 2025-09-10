@@ -11,7 +11,7 @@ def clean_name(name):
     return name.replace(' ','_').replace('\'','')
 
 def get_ranking(c_id, s_id, day):
-    r = ranking.Ranking.objects.filter(Q(Competition=c_id) & Q(Series=s_id) & Q(Day=day))
+    r = ranking.Ranking.objects.filter(Q(Competition=c_id) & Q(Series=s_id) & Q(Day=int(day)))
     if len(r) <= 0:
         return None
 

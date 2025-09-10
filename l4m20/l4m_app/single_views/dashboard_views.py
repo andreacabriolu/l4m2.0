@@ -28,11 +28,6 @@ class DashboardView(LoginRequiredMixin, View):
         if len(my_series) <= 0 or len (my_competitions) <= 0:
             return HttpResponse('error: no series for the team')
 
-        # main_league_day = U.get_current_day() #TODO: filter day per competition
-        # main_league_ranking = U.get_ranking(main_league[0], my_series[0], main_league_day)
-        # if(len(main_league_ranking) <= 0):
-        #     return HttpResponse('error: no default ranking found')
-
         params = {
             'my_competitions' : my_competitions,
             'main_league' : main_league[0],
@@ -57,6 +52,9 @@ class RetrieveRankingInfoView(View):
         day = request.POST['day']
         
         _ranking = U.get_ranking(c_id, s_id, day)
+
+        if(_ranking is None):
+            return HttpResponse(json.dumps({ 'lines' : [None,None,None,None,None,None,None,None,None,None] }))
 
         json_l = json.loads(_ranking[0].RankingLine)
         lines = []
