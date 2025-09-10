@@ -109,7 +109,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'l4m_app.context_processors.team_context'
+                'l4m_app.context_processors.team_context',
+                'l4m_app.context_processors.user_enabled_context',
             ],
         },
     },

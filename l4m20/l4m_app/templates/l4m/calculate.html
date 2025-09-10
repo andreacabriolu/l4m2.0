@@ -25,6 +25,22 @@
         <span id="span-info-alert"></span>
     </div>
 
+    <div class="modal" tabindex="-1" role="dialog" id="confirmModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"></h5>
+                </div>
+                <div class="modal-body">
+                    <p id="modal-text"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="bg-body-tertiary main-div p-5" id="calculateDiv">
         <div class="selectors-div">
             <label for="select_comp" class="series-label">COMPETIZIONE</label>
@@ -48,8 +64,15 @@
         <div class="curr-day-div">
             <label for="select_day" class="series-label">GIORNATA CORRENTE</label>
             <div class="div-advance">
-                <input type="text" class="cur-day-text" id="cur-day-val">
+                <input type="text" class="cur-day-text" id="cur-day-val" value="{{current_day}}" readonly>
                 <button type="button" class="btn btn-primary advance-day-btn" id="btnAdvanceDay">AVANZA</button>
+                <button type="button" class="btn btn-primary advance-day-btn" id="btnSetDay" disabled>IMPOSTA</button>
+            </div>
+            <div class="div-custom-day">
+                <input class="form-check-input" type="checkbox" value="" id="customDayChk">
+                <label class="form-check-label" for="flexCheckDefault">
+                    Imposta giornata custom
+                </label>
             </div>
         </div>
 

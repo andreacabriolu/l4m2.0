@@ -9,3 +9,14 @@ def team_context(request):
     teamname = team['Name']
 
     return {'teamname': teamname}
+
+def user_enabled_context(request):
+    uid = request.user.id
+    is_user_enabled = \
+        uid == 1 or \
+        uid == 22 or \
+        uid == 23
+        # uid == 24
+    
+    return {'is_user_enabled': is_user_enabled}
+

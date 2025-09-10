@@ -19,11 +19,11 @@ class CalculateView(LoginRequiredMixin, View):
     def get(self,request):
 
         all_competitions = U.get_all_competitions()
-        
-
+        current_day = U.get_current_day() #TODO: per competition?
         
         params = {
-            'all_competitions': all_competitions
+            'all_competitions': all_competitions,
+            'current_day': current_day,
         }
         
         return render(request, self.template_name, params)
@@ -88,3 +88,12 @@ class CalculateDayView(View):
 
         except Exception as e:
             return HttpResponse(f'error {e}')
+        
+class SetDayView(View):
+    def post(self, request):
+        c_day = request.POST['day']
+        config_day = config.Config.objects.filter(Name="CurrentDay").first()
+        config_day.Value = c_day
+        config_day.save()
+
+        return HttpResponse(c_day)

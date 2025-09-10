@@ -51,12 +51,11 @@
 .cur-day-text {
     width: fit-content;
     border-radius: 5%;
+    font-weight: bold;
+    margin-bottom: .5em;
+    text-align: center;
 }
 
-.div-advance {
-    display: flex;
-}
-
-.advance-day-btn {
-    margin-left: 0.5em;
+.div-custom-day {
+    margin-top: .5em;
 }

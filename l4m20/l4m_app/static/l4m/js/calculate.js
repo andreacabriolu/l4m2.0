@@ -29,11 +29,11 @@ function fill_days(c_id) {
             showErrorAlert(response);
         }
         else {
-            var days = [...Array(parseInt(response)+1).keys()].slice(1);
-            $.each(days, function(idx, day) {
+            var days = [...Array(parseInt(response) + 1).keys()].slice(1);
+            $.each(days, function (idx, day) {
                 $('#select_day').append($('<option>')
-                .text(day)
-                .attr('value', day));
+                    .text(day)
+                    .attr('value', day));
             });
         }
     });
@@ -55,6 +55,23 @@ function calculate(c_id, d_id) {
 
 }
 
+function set_day(day) {
+    const token = Cookies.get('csrftoken');
+
+    var data = { 'day': parseInt(day), 'csrfmiddlewaretoken': token };
+
+    $.post("/l4m/calculate/setDay/", data, function (response) {
+        if (response.startsWith('error')) {
+            showPopupErrorAlert(response);
+        }
+        else {
+            $('#cur-day-val').val(response);
+            $('#modal-text').text('GIORNATA AVANZATA O IMPOSTATA');
+            $('#confirmModal').modal('show');
+        }
+    });
+}
+
 
 window.addEventListener('DOMContentLoaded', event => {
     c_id = $(select_comp).children('option:selected').data().id;
@@ -66,9 +83,32 @@ window.addEventListener('DOMContentLoaded', event => {
 
     });
 
-    $('#btnCalculate').on('click', function() {
+    $('#btnCalculate').on('click', function () {
         d_id = $('#select_day').children('option:selected').val();
         calculate(c_id, d_id);
+    });
+
+    $('#btnAdvanceDay').on('click', function () {
+        var cur_day_val = $('#cur-day-val').val();
+        set_day(parseInt(cur_day_val) + 1);
+    });
+
+     $('#btnSetDay').on('click', function () {
+        var cur_day_val = $('#cur-day-val').val();
+        set_day(cur_day_val);
+    });
+
+    $('#customDayChk').on('click', function () {
+        if ($(this).prop('checked')) {
+            $('#btnAdvanceDay').prop('disabled', true);
+            $('#cur-day-val').prop('readonly', false);
+            $('#btnSetDay').prop('disabled', false);
+        }
+        else {
+            $('#btnAdvanceDay').prop('disabled', false);
+            $('#cur-day-val').prop('readonly', true);
+            $('#btnSetDay').prop('disabled', true);
+        }
     });
 
 })
