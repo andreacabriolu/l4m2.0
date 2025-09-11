@@ -5,7 +5,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.views import View
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
-from ..single_models import team, balance
+from ..single_models import team, balance, config
 from datetime import datetime
 
 class LoginView(View):
@@ -42,6 +42,11 @@ class RegisterView(View):
         return render(request, self.template_name)
 
     def post(self, request):
+
+        isRegOpen = config.Config.objects.filter(Name="RegistrationsOpen").first()
+        if isRegOpen.Value == 'False':
+            return HttpResponseRedirect('/login/')
+
         new_user = {}
         form = AuthenticationForm()
 
