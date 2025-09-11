@@ -13,6 +13,12 @@
     }
 }
 
+/* @media (max-width:800px) {
+    .custom-layout{
+        width: fit-content;
+    }
+  } */
+
 
 .main-div {
     padding: 3rem !important;

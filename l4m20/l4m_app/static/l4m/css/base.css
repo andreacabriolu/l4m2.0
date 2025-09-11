@@ -22,6 +22,14 @@
   align-content: flex-end;
 }
 
+@media (max-width:800px) {
+  .live-link {
+    font-size: medium;
+    margin-right: 1em;
+    margin-left: .5em;
+  }
+}
+
 .team-name {
   font-size: x-large;
   margin-left: 2em;
@@ -35,7 +43,7 @@
 
 @media (max-width:800px) {
   .topbar-items {
-    /* display: block; */
+    display: block;
   }
 }
 
@@ -65,4 +73,9 @@
 
 .dash-icon {
   align-content: center;
+}
+
+.team-name-span {
+  color: steelblue;
+  font-weight: bold;
 }
