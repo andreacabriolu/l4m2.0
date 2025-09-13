@@ -339,6 +339,14 @@
                             <span>({{vote.Sub|floatformat|slice:"1:"}}')</span>
                             {% endif %}
 
+                            {% if vote.LiveStatus == 1 %}
+                                <img src="{% static 'l4m/images/bench.png' %}">
+                            {% endif %}
+
+                            {% if vote.LiveStatus == 2 %}
+                                <img src="{% static 'l4m/images/nocall.png' %}">
+                            {% endif %}
+
                             {% if vote.Status == 0 %}
                             <img src="{% static 'l4m/images/live.png' %}">
                             {% endif %}
