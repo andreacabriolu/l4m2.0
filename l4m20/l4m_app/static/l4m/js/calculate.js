@@ -35,6 +35,7 @@ function fill_days(c_id) {
                     .text(day)
                     .attr('value', day));
             });
+            $('#select_day').children(`option[value=${days[parseInt(response)-1]}]`).prop('selected',true);
         }
     });
 }

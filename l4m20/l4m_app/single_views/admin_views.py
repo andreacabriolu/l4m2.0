@@ -45,7 +45,6 @@ class CalculateDayView(View):
 
         #TODO: write in:
         # calendar (NEW)
-        # rankings (NEW)
 
         try:
 
