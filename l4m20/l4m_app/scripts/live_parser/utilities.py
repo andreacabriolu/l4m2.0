@@ -191,7 +191,7 @@ def insert_votes(conn:DB_Connector, votes):
                          vote.AssS,
                          0, #vote.AssH,
                          0, #vote.AssL,
-                         0, #vote.AssP,
+                         vote.AssP,
                          0, #vote.SubJ,
                          vote.Sub, 
                          vote.Competition,
@@ -215,3 +215,12 @@ def get_players(conn:DB_Connector):
     except Exception as e:
         raise e
     
+def get_current_assp(conn:DB_Connector, vote):
+    try:
+        rows = conn.select(table="l4m_app_vote", cols='\"AssP\"', conditions='"Day"=%s and "Player_id"=%s', data=(vote.Day, vote.Player))
+        if len(rows) <= 0:
+            return 0
+        return rows[0][0]
+
+    except Exception as e:
+        raise e

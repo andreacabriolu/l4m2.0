@@ -59,6 +59,7 @@ try:
         vote.Yel = 0
         vote.Red = 0
         vote.AssS = 0
+        vote.AssP = 0
         vote.Live = False
         vote.Sub = 0
         vote.RealTeam = players_realteam[players[name]]
@@ -76,6 +77,7 @@ try:
     for _,vote in votes.items():
         vote.Day = int(current_day)
         vote.Competition = int(1) #TODO magic number: campionato
+        vote.AssP = U.get_current_assp(conn, vote)
 
 
     #clean up the table

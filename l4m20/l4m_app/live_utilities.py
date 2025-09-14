@@ -191,8 +191,7 @@ def get_live_votes(day):
         delta_start = datetime.timedelta(minutes=5) #start live 5 minutes before the match
         delta_end = datetime.timedelta(minutes=135) #stop live 135 minutes after the match
 
-        isLive = score['time'] != C.Events.END_MATCH and \
-            d_start - delta_start < datetime.datetime.now(ZoneInfo('Europe/Rome')) < d_start + delta_end
+        isLive = d_start - delta_start < datetime.datetime.now(ZoneInfo('Europe/Rome')) < d_start + delta_end
 
         if (not isLive):
             continue 
