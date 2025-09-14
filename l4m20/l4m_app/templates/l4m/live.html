@@ -122,6 +122,12 @@
                                 {% endfor %}
                                 {% endwith %}
 
+                                {% with ''|center:vote.AssP as range %}
+                                {% for _ in range %}
+                                <img src="{% static 'l4m/images/pen_pro.png' %}">
+                                {% endfor %}
+                                {% endwith %}
+
                                 {% with ''|center:vote.GoalTa as range %}
                                 {% for _ in range %}
                                 <img src="{% static 'l4m/images/goal_taken.png' %}">
@@ -300,6 +306,12 @@
                             {% for _ in range %}
                             <img src="{% static 'l4m/images/assist.png' %}">
                             {% endfor %}
+                            {% endwith %}
+
+                            {% with ''|center:vote.AssP as range %}
+                                {% for _ in range %}
+                                <img src="{% static 'l4m/images/pen_pro.png' %}">
+                                {% endfor %}
                             {% endwith %}
 
                             {% with ''|center:vote.GoalTa as range %}
