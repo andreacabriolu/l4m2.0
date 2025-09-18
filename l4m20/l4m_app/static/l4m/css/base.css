@@ -24,6 +24,7 @@
 
 @media (max-width:800px) {
   .live-link {
+    text-align: center;
     font-size: medium;
     margin-right: 1em;
     margin-left: .5em;

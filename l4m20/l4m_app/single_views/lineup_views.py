@@ -29,32 +29,40 @@ class LineupView(LoginRequiredMixin, View):
         players_fw = U.get_my_players_filtered("A", teamid)
 
         for gk in players_gk:
+            pl_realteamid = gk['Player__RealTeam__id']
             real_match = real_calendar.Real_calendar.objects.filter(Q(Day=current_day) & \
-                                                            (Q(RealTeamHome_id=gk['Player__RealTeam__id']) | Q(RealTeamAway_id=gk['Player__RealTeam__id'])))
+                                                            (Q(RealTeamHome_id=pl_realteamid) | Q(RealTeamAway_id=pl_realteamid)))
             if(len(real_match) <= 0):
                 continue
             gk['played'] = datetime.now(ZoneInfo('Europe/Rome')) >= real_match[0].Date.astimezone(ZoneInfo(key='Europe/Rome'))
+            gk['vs'] = real_match[0].RealTeamHome if pl_realteamid==real_match[0].RealTeamAway.id else real_match[0].RealTeamAway
 
         for df in players_def:
+            pl_realteamid = df['Player__RealTeam__id']
             real_match = real_calendar.Real_calendar.objects.filter(Q(Day=current_day) & \
-                                                            (Q(RealTeamHome_id=df['Player__RealTeam__id']) | Q(RealTeamAway_id=df['Player__RealTeam__id'])))
+                                                            (Q(RealTeamHome_id=pl_realteamid) | Q(RealTeamAway_id=pl_realteamid)))
             if(len(real_match) <= 0):
                 continue
             df['played'] = datetime.now(ZoneInfo('Europe/Rome')) >= real_match[0].Date.astimezone(ZoneInfo(key='Europe/Rome'))
+            df['vs'] = real_match[0].RealTeamHome.id if pl_realteamid==real_match[0].RealTeamAway.id else real_match[0].RealTeamHome.id
 
         for cc in players_cc:
+            pl_realteamid = cc['Player__RealTeam__id']
             real_match = real_calendar.Real_calendar.objects.filter(Q(Day=current_day) & \
-                                                            (Q(RealTeamHome_id=cc['Player__RealTeam__id']) | Q(RealTeamAway_id=cc['Player__RealTeam__id'])))
+                                                            (Q(RealTeamHome_id=pl_realteamid) | Q(RealTeamAway_id=pl_realteamid)))
             if(len(real_match) <= 0):
                 continue
             cc['played'] = datetime.now(ZoneInfo('Europe/Rome')) >= real_match[0].Date.astimezone(ZoneInfo(key='Europe/Rome'))
+            cc['vs'] = real_match[0].RealTeamHome.id if pl_realteamid==real_match[0].RealTeamAway.id else real_match[0].RealTeamHome.id
 
         for fw in players_fw:
+            pl_realteamid = fw['Player__RealTeam__id']
             real_match = real_calendar.Real_calendar.objects.filter(Q(Day=current_day) & \
-                                                            (Q(RealTeamHome_id=fw['Player__RealTeam__id']) | Q(RealTeamAway_id=fw['Player__RealTeam__id'])))
+                                                            (Q(RealTeamHome_id=pl_realteamid) | Q(RealTeamAway_id=pl_realteamid)))
             if(len(real_match) <= 0):
                 continue
             fw['played'] = datetime.now(ZoneInfo('Europe/Rome')) >= real_match[0].Date.astimezone(ZoneInfo(key='Europe/Rome'))
+            fw['vs'] = real_match[0].RealTeamHome.id if pl_realteamid==real_match[0].RealTeamAway.id else real_match[0].RealTeamHome.id
 
         players_my = list(players_def) + list(players_cc)+ list(players_fw)
         players_all = players_my + list(players_gk)

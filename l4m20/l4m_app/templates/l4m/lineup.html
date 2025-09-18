@@ -78,12 +78,16 @@
             
         </div>
         <div class="lineups" id="l_ups">
+            <div class="form-check form-switch form-floating form-switch-md">
+                    <input class="form-check-input" type="checkbox" id="showVs">
+                    <span class="form-check-label hide-lineup-label">MOSTRA AVVERSARI</span>
+            </div>
             <div class="main-lineup" id="main_lineup">
                 <div class="form-floating">
                     <select class="form-select form-select-lg mb-3 form-select-player" id="gk_tit">
                         {% for gk in players_gk %}
                         <option value="{{gk}}" data-limit="{{gk.played}}" data-id="{{gk.Player__id}}" {% if gk.played %} class="played" {% endif %}>
-                            [{{gk.Player__Role}}] {{gk.Player__Surname}} ({{gk.Player__RealTeam__Name}})
+                            [{{gk.Player__Role}}] {{gk.Player__Surname}} ({{gk.Player__RealTeam__Name}}) vs {{gk.vs}}
                         </option>
                         {% endfor %}
                         <option value="" selected></option>

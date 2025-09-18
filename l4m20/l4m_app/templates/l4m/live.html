@@ -100,81 +100,96 @@
                                 <!--BONUS ICONS -->
                                 {% with ''|center:vote.GoalSc as range %}
                                 {% for _ in range %}
-                                <img src="{% static 'l4m/images/goal.png' %}">
+                                <img src="{% static 'l4m/images/goal.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="GOAL (+3)">
                                 {% endfor %}
                                 {% endwith %}
 
                                 {% with ''|center:vote.Yel as range %}
                                 {% for _ in range %}
-                                <img src="{% static 'l4m/images/yel.png' %}">
+                                <img src="{% static 'l4m/images/yel.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="AMMONIZIONE (-0.5)">
                                 {% endfor %}
                                 {% endwith %}
 
                                 {% with ''|center:vote.Red as range %}
                                 {% for _ in range %}
-                                <img src="{% static 'l4m/images/redcard.png' %}">
+                                <img src="{% static 'l4m/images/redcard.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="ESPULSIONE (-1)">
                                 {% endfor %}
                                 {% endwith %}
 
                                 {% with ''|center:vote.AssS as range %}
                                 {% for _ in range %}
-                                <img src="{% static 'l4m/images/assist.png' %}">
+                                <img src="{% static 'l4m/images/assist.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="ASSIST (+1)">
                                 {% endfor %}
                                 {% endwith %}
 
                                 {% with ''|center:vote.AssP as range %}
                                 {% for _ in range %}
-                                <img src="{% static 'l4m/images/pen_pro.png' %}">
+                                <img src="{% static 'l4m/images/pen_pro.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="RIGORE PROCURATO (+1)">
                                 {% endfor %}
                                 {% endwith %}
 
                                 {% with ''|center:vote.GoalTa as range %}
                                 {% for _ in range %}
-                                <img src="{% static 'l4m/images/goal_taken.png' %}">
+                                <img src="{% static 'l4m/images/goal_taken.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="GOAL PRESO (-1)">
                                 {% endfor %}
                                 {% endwith %}
 
                                 {% with ''|center:vote.Own as range %}
                                 {% for _ in range %}
-                                <img src="{% static 'l4m/images/own.png' %}">
+                                <img src="{% static 'l4m/images/own.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="AUTOGOAL (-2)">
                                 {% endfor %}
                                 {% endwith %}
 
                                 {% with ''|center:vote.PenMi as range %}
                                 {% for _ in range %}
-                                <img src="{% static 'l4m/images/pen_mis.png' %}">
+                                <img src="{% static 'l4m/images/pen_mis.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="RIGORE SBAGLIATO (-2)">
                                 {% endfor %}
                                 {% endwith %}
 
                                 {% with ''|center:vote.PenSc as range %}
                                 {% for _ in range %}
-                                <img src="{% static 'l4m/images/pen_sco.png' %}">
+                                <img src="{% static 'l4m/images/pen_sco.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="RIGORE SEGNATO (+2)">
                                 {% endfor %}
                                 {% endwith %}
 
                                 {% with ''|center:vote.PenSa as range %}
                                 {% for _ in range %}
-                                <img src="{% static 'l4m/images/pen_sav.png' %}">
+                                <img src="{% static 'l4m/images/pen_sav.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="RIGORE PARATO (+3)">
                                 {% endfor %}
                                 {% endwith %}
 
                                 {% if vote.Sub > 0 %}
-                                <img src="{% static 'l4m/images/changein.png' %}">
+                                <img src="{% static 'l4m/images/changein.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="SUBENTRATO">
                                 <span>({{vote.Sub|floatformat}}')</span>
-                                {% elif vote.Sub < 0 %} <img src="{% static 'l4m/images/changeout.png' %}">
+                                {% elif vote.Sub < 0 %} <img src="{% static 'l4m/images/changeout.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="USCITO">
                                 <span>({{vote.Sub|floatformat|slice:"1:"}}')</span>
                                 {% endif %}
 
                                 {% if vote.Status == 0 %}
-                                <img src="{% static 'l4m/images/live.png' %}">
+                                <img src="{% static 'l4m/images/live.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="IN CAMPO">
                                 {% endif %}
 
                                 {% if vote.LiveStatus == 1 %}
-                                <img src="{% static 'l4m/images/bench.png' %}">
+                                <img src="{% static 'l4m/images/bench.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="IN PANCHINA">
                                 {% endif %}
 
                                 {% if vote.LiveStatus == 2 %}
-                                <img src="{% static 'l4m/images/nocall.png' %}">
+                                <img src="{% static 'l4m/images/nocall.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="NON CONVOCATO">
                                 {% endif %}
 
                                 {% if vote.Status == 1 %}
@@ -182,18 +197,17 @@
                                 {% endif %}
 
                                 {% if vote.Status == 3 %}
-                                <!-- <span class="desktop">DEVE GIOCARE IL {{vote.Msg}}</span> -->
                                 <img src="{% static 'l4m/images/calendar.png' %}" data-bs-toggle="tooltip"
                                     data-bs-placement="right" data-bs-title="GIOCA IL {{vote.Msg}}">
                                 {% endif %}
 
                                 {% if vote.Status == 4 %}
-                                <img src="{% static 'l4m/images/block.png' %}">
+                                <img src="{% static 'l4m/images/block.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="NON HA GIOCATO">
                                 {% endif %}
 
                                 {% if vote.ChangedIn != '' %}
                                 <img src="{% static 'l4m/images/out.png' %}">
-                                <!-- <span>{{vote.ChangedIn}}</span> -->
                                 {% endif %}
                             </div>
                         </td>
@@ -230,7 +244,6 @@
                         <td />
                         <td />
                         <td>
-                            <!-- <span class="desktop">BONUS CAPITANO</span> -->
                             <img src="{% static 'l4m/images/bonus_cap.png' %}">
                         </td>
                         <td />
@@ -241,7 +254,6 @@
                         <td />
                         <td />
                         <td>
-                            <!-- <span class="desktop">BONUS DISCIPLINA</span> -->
                             <img src="{% static 'l4m/images/bonus_disc.png' %}">
                         </td>
                         <td />
@@ -252,7 +264,6 @@
                         <td />
                         <td />
                         <td>
-                            <!-- <span class="desktop">BONUS PRESTAZIONI</span> -->
                             <img src="{% static 'l4m/images/bonus_prest.png' %}">
                         </td>
                         <td />
@@ -286,85 +297,99 @@
                         <td>
                             {% with ''|center:vote.GoalSc as range %}
                             {% for _ in range %}
-                            <img src="{% static 'l4m/images/goal.png' %}">
+                            <img src="{% static 'l4m/images/goal.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="GOAL (+3)">
                             {% endfor %}
                             {% endwith %}
 
                             {% with ''|center:vote.Yel as range %}
                             {% for _ in range %}
-                            <img src="{% static 'l4m/images/yel.png' %}">
+                            <img src="{% static 'l4m/images/yel.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="AMMONIZIONE (-0.5)">
                             {% endfor %}
                             {% endwith %}
 
                             {% with ''|center:vote.Red as range %}
                             {% for _ in range %}
-                            <img src="{% static 'l4m/images/redcard.png' %}">
+                            <img src="{% static 'l4m/images/redcard.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="ESPULSIONE (-1)">
                             {% endfor %}
                             {% endwith %}
 
                             {% with ''|center:vote.AssS as range %}
                             {% for _ in range %}
-                            <img src="{% static 'l4m/images/assist.png' %}">
+                            <img src="{% static 'l4m/images/assist.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="ASSIST (+1)">
                             {% endfor %}
                             {% endwith %}
 
                             {% with ''|center:vote.AssP as range %}
                                 {% for _ in range %}
-                                <img src="{% static 'l4m/images/pen_pro.png' %}">
+                                <img src="{% static 'l4m/images/pen_pro.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="RIGORE PROCURATO (+1)">
                                 {% endfor %}
                             {% endwith %}
 
                             {% with ''|center:vote.GoalTa as range %}
                             {% for _ in range %}
-                            <img src="{% static 'l4m/images/goal_taken.png' %}">
+                            <img src="{% static 'l4m/images/goal_taken.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="GOAL PRESO (-1)">
                             {% endfor %}
                             {% endwith %}
 
                             {% with ''|center:vote.Own as range %}
                             {% for _ in range %}
-                            <img src="{% static 'l4m/images/own.png' %}">
+                            <img src="{% static 'l4m/images/own.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="AUTOGOAL (-2)">
                             {% endfor %}
                             {% endwith %}
 
                             {% with ''|center:vote.PenMi as range %}
                             {% for _ in range %}
-                            <img src="{% static 'l4m/images/pen_mis.png' %}">
+                            <img src="{% static 'l4m/images/pen_mis.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="RIGORE SBAGLIATO (-2)">
                             {% endfor %}
                             {% endwith %}
 
                             {% with ''|center:vote.PenSc as range %}
                             {% for _ in range %}
-                            <img src="{% static 'l4m/images/pen_sco.png' %}">
+                            <img src="{% static 'l4m/images/pen_sco.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="RIGORE SEGNATO (+2)">
                             {% endfor %}
                             {% endwith %}
 
                             {% with ''|center:vote.PenSa as range %}
                             {% for _ in range %}
-                            <img src="{% static 'l4m/images/pen_sav.png' %}">
+                            <img src="{% static 'l4m/images/pen_sav.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="RIGORE PARATO (+3)">
                             {% endfor %}
                             {% endwith %}
 
                             {% if vote.Sub > 0 %}
-                            <img src="{% static 'l4m/images/changein.png' %}">
+                            <img src="{% static 'l4m/images/changein.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="SUBENTRATO">
                             <span>({{vote.Sub|floatformat}}')</span>
-                            {% elif vote.Sub < 0 %} <img src="{% static 'l4m/images/changeout.png' %}">
+                            {% elif vote.Sub < 0 %} <img src="{% static 'l4m/images/changeout.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="USCITO">
                             <span>({{vote.Sub|floatformat|slice:"1:"}}')</span>
                             {% endif %}
 
                             {% if vote.LiveStatus == 1 %}
-                                <img src="{% static 'l4m/images/bench.png' %}">
+                                <img src="{% static 'l4m/images/bench.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="IN PANCHINA">
                             {% endif %}
 
                             {% if vote.LiveStatus == 2 %}
-                                <img src="{% static 'l4m/images/nocall.png' %}">
+                                <img src="{% static 'l4m/images/nocall.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="NON CONVOCATO">
                             {% endif %}
 
                             {% if vote.Status == 0 %}
-                            <img src="{% static 'l4m/images/live.png' %}">
+                            <img src="{% static 'l4m/images/live.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="IN CAMPO">
                             {% endif %}
                             
                             {% if vote.Status == 3 %}
-                            <!-- <span class="desktop">DEVE GIOCARE IL {{vote.Msg}}</span> -->
                             <img src="{% static 'l4m/images/calendar.png' %}" data-bs-toggle="tooltip"
                                 data-bs-placement="right" data-bs-title="GIOCA IL {{vote.Msg}}">
                             {% endif %}
