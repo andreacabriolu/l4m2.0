@@ -35,7 +35,7 @@ class LineupView(LoginRequiredMixin, View):
             if(len(real_match) <= 0):
                 continue
             gk['played'] = datetime.now(ZoneInfo('Europe/Rome')) >= real_match[0].Date.astimezone(ZoneInfo(key='Europe/Rome'))
-            gk['vs'] = real_match[0].RealTeamHome if pl_realteamid==real_match[0].RealTeamAway.id else real_match[0].RealTeamAway
+            gk['vs'] = f'{real_match[0].RealTeamHome.Name[:3]}-{real_match[0].RealTeamAway.Name[:3]}'
 
         for df in players_def:
             pl_realteamid = df['Player__RealTeam__id']
@@ -44,7 +44,7 @@ class LineupView(LoginRequiredMixin, View):
             if(len(real_match) <= 0):
                 continue
             df['played'] = datetime.now(ZoneInfo('Europe/Rome')) >= real_match[0].Date.astimezone(ZoneInfo(key='Europe/Rome'))
-            df['vs'] = real_match[0].RealTeamHome.id if pl_realteamid==real_match[0].RealTeamAway.id else real_match[0].RealTeamHome.id
+            df['vs'] = f'{real_match[0].RealTeamHome.Name[:3]}-{real_match[0].RealTeamAway.Name[:3]}'
 
         for cc in players_cc:
             pl_realteamid = cc['Player__RealTeam__id']
@@ -53,7 +53,7 @@ class LineupView(LoginRequiredMixin, View):
             if(len(real_match) <= 0):
                 continue
             cc['played'] = datetime.now(ZoneInfo('Europe/Rome')) >= real_match[0].Date.astimezone(ZoneInfo(key='Europe/Rome'))
-            cc['vs'] = real_match[0].RealTeamHome.id if pl_realteamid==real_match[0].RealTeamAway.id else real_match[0].RealTeamHome.id
+            cc['vs'] = f'{real_match[0].RealTeamHome.Name[:3]}-{real_match[0].RealTeamAway.Name[:3]}'
 
         for fw in players_fw:
             pl_realteamid = fw['Player__RealTeam__id']
@@ -62,7 +62,7 @@ class LineupView(LoginRequiredMixin, View):
             if(len(real_match) <= 0):
                 continue
             fw['played'] = datetime.now(ZoneInfo('Europe/Rome')) >= real_match[0].Date.astimezone(ZoneInfo(key='Europe/Rome'))
-            fw['vs'] = real_match[0].RealTeamHome.id if pl_realteamid==real_match[0].RealTeamAway.id else real_match[0].RealTeamHome.id
+            fw['vs'] = f'{real_match[0].RealTeamHome.Name[:3]}-{real_match[0].RealTeamAway.Name[:3]}'
 
         players_my = list(players_def) + list(players_cc)+ list(players_fw)
         players_all = players_my + list(players_gk)
