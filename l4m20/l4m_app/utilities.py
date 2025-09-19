@@ -17,11 +17,17 @@ def get_ranking(c_id, s_id, day):
 
     return r
 
+def get_competition(name):
+    return competition.Competition.objects.filter(Name=name)
+
 def get_all_competitions():
     return competition.Competition.objects.all()
 
 def get_my_competitions(my_series):
     return competition.Competition.objects.filter(series__id__in=my_series)
+
+def get_unica_series(competitionid):
+    return series.Series.objects.filter(Q(Name='Unica') & Q(Competition_id=competitionid))
 
 def get_my_series(teamid, competitionid=1):
     return series.Series.objects.filter(Q(team__id=teamid) & Q(Competition_id=competitionid))
@@ -356,7 +362,15 @@ def calculate_n_goals(fp_total): #replicate of live utilities method to avoid ci
     
     return int(diff / C.Various.THRESHOLD_GOL) + 1
 
-def write_rankings(vote_per_series, competition_id, day, seriesid):
+def write_b11_ranking(competition_id, seriesid, day):
+    last_ranking = get_ranking(competition_id, seriesid, int(day)-1)
+
+    if(last_ranking is not None):
+        last_ranking = json.loads(last_ranking[0].RankingLine)
+
+
+
+def write_main_league_rankings(vote_per_series, competition_id, day, seriesid):
     last_ranking = get_ranking(competition_id, seriesid, int(day)-1)
     
     if(last_ranking is not None):

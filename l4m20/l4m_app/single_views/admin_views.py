@@ -80,7 +80,13 @@ class CalculateDayView(View):
             for k, vote_per_series in all_votes_per_series.items():
                 U.save_results(vote_per_series) 
                 #rankings
-                U.write_rankings(vote_per_series, competitionid, day, seriesid=k)
+                U.write_main_league_rankings(vote_per_series, competitionid, day, seriesid=k)
+            
+            #b11 ranking calculation
+            b11_comp = U.get_competition(name='b11')
+            b11_series = U.get_unica_series(b11_comp)
+            if len(b11_comp) > 0 and len(b11_series) > 0: 
+                U.write_b11_ranking(competitionid=b11_comp[0].id, seriesid=b11_series[0].id, day=day)
 
 
             return HttpResponse('GIORNATA CALCOLATA')

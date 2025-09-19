@@ -17,26 +17,10 @@ class LiveB11View(LoginRequiredMixin, View):
 
     def get(self, request):
         current_day = U.get_current_day()
-        teamid = U.get_user_team(request.user.id)['id']
 
         team_ids_names = team.Team.objects.values_list("id", "Name")
-        last_lineups_d = {}
         
-        all_best = []
-
-        # crea best 11 per ogni squadra
-        for tid,name in team_ids_names:
-            keepers = LU.enrich_and_sort_players('P', tid, current_day)
-            defenders = LU.enrich_and_sort_players('D', tid, current_day)
-            midfielders = LU.enrich_and_sort_players('C', tid, current_day)
-            attackers = LU.enrich_and_sort_players('A', tid, current_day)
-            best = LU.pick_best_11(keepers, defenders, midfielders, attackers)
-            if(best):
-                best["team_id"]=tid
-                best["team_name"]=name
-                                
-            last_lineups_d[tid] = best
-            all_best.append(best)
+        all_best = LU.get_best_11(team_ids_names, current_day)
 
         sorted_best = sorted(
             (b for b in all_best if b is not None),

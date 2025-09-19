@@ -9,6 +9,24 @@ from . import utilities as U
 from django.db.models import Q
 import requests as req
 
+def get_best_11(team_ids_names, day):
+    all_best = []
+
+    # crea best 11 per ogni squadra
+    for tid,name in team_ids_names:
+        keepers = enrich_and_sort_players('P', tid, day)
+        defenders = enrich_and_sort_players('D', tid, day)
+        midfielders = enrich_and_sort_players('C', tid, day)
+        attackers = enrich_and_sort_players('A', tid, day)
+        best = pick_best_11(keepers, defenders, midfielders, attackers)
+        if(best):
+            best["team_id"]=tid
+            best["team_name"]=name
+                            
+        all_best.append(best)
+
+    return all_best
+
 def fill_with_events(events, votes): 
     
     for event in events:
