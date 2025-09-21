@@ -158,6 +158,22 @@ def fill_with_events(events, players, votes):
                 vote = votes[pl_id]
                 vote.PenSc = vote.PenSc + 1
 
+            case C.Events.PENALTY_MISSED:
+                pl_id = players[clean_name(event['player'])]
+                if pl_id is None:
+                    continue
+
+                vote = votes[pl_id]
+                vote.PenMi = vote.PenMi + 1
+
+            case C.Events.PENALTY_SAVED:
+                pl_id = players[clean_name(event['player'])]
+                if pl_id is None:
+                    continue
+
+                vote = votes[pl_id]
+                vote.PenSa = vote.PenSa + 1
+
             case C.Events.SUB:
                 continue
 
