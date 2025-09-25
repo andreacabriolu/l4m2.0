@@ -43,13 +43,16 @@ function fill_days(c_id) {
 function calculate(c_id, d_id) {
     const token = Cookies.get('csrftoken');
 
-    var data = { 'competitionid': c_id, 'day': parseInt(d_id), 'csrfmiddlewaretoken': token };
+    var data = { 'competitionid': c_id, 'all_comp': $('#allCompChk').prop('checked'), 'day': parseInt(d_id), 'csrfmiddlewaretoken': token };
 
+    $('#spinner').attr('hidden', false);
     $.post("/l4m/calculate/calculateDay/", data, function (response) {
         if (response.startsWith('error')) {
+            $('#spinner').attr('hidden', true);
             showPopupErrorAlert(response);
         }
         else {
+            $('#spinner').attr('hidden', true);
             showPopupErrorAlert(response);
         }
     });
@@ -75,17 +78,16 @@ function set_day(day) {
 
 
 window.addEventListener('DOMContentLoaded', event => {
-    c_id = $(select_comp).children('option:selected').data().id;
+    c_id = $('#select_comp').children('option:selected').data().id;
     fill_days(c_id);
 
-    $('#select_comp').on('change', function () {
-        c_id = $(this).children('option:selected').data().id;
-        fill_days(c_id);
-
+    $('#allCompChk').on('change', function() {
+        $('#select_comp').prop('disabled', $(this).prop('checked'));
     });
 
     $('#btnCalculate').on('click', function () {
         d_id = $('#select_day').children('option:selected').val();
+        c_id = $('#select_comp').children('option:selected').data().id;
         calculate(c_id, d_id);
     });
 

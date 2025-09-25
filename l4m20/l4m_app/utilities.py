@@ -360,15 +360,7 @@ def calculate_n_goals(fp_total): #replicate of live utilities method to avoid ci
     if (diff < 0):
         return 0
     
-    return int(diff / C.Various.THRESHOLD_GOL) + 1
-
-def write_b11_ranking(competition_id, seriesid, day):
-    last_ranking = get_ranking(competition_id, seriesid, int(day)-1)
-
-    if(last_ranking is not None):
-        last_ranking = json.loads(last_ranking[0].RankingLine)
-
-
+    return int(diff / C.Various.THRESHOLD_GOL) + 1    
 
 def write_main_league_rankings(vote_per_series, competition_id, day, seriesid):
     last_ranking = get_ranking(competition_id, seriesid, int(day)-1)

@@ -59,3 +59,11 @@
 .div-custom-day {
     margin-top: .5em;
 }
+
+.comp-div {
+    display: inline-block;
+}
+
+.spinner-div {
+    margin-left: 1em;
+}
