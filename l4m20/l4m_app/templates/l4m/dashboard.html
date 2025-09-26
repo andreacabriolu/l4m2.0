@@ -53,11 +53,10 @@
             <input type="hidden" id="day" value="{{day}}">
             <input type="hidden" id="main_league" value="{{main_league.id}}">
             <input type="hidden" id="my_main_league_series" value="{{my_main_league_series.id}}">
-            <span class="rankings-title">CLASSIFICA</span>
+            <span class="rankings-title">CLASSIFICA LEGHE</span>
             <div class="card mb-4">
                 <div class="card-header">
                     <div class="top-table">
-                        <!-- <h1 class="mt-4 h3 mb-2 text-gray-800">OPEN PROPOSALS</h1> -->
                         <select class="form-select form-select-lg mb-3 form-select-selectors" id="select_comp">
                             {% for comp in my_competitions %}
                             <option value="{{comp}}" data-id="{{comp.id}}">{{comp.Name}}</option>
@@ -70,16 +69,13 @@
                         </select>
                     </div>
                     <div class="card shadow mb-4">
-                        <!-- <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Proposals to evaluate</h6>
-                        </div> -->
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-bordered stripe" id="rankingDataTable" width="100%" cellspacing="0">
                                     <thead>
-                                        <tr>
-                                            <th>Squadra</th>
-                                            <th>Punti</th>
+                                        <tr class="h">
+                                            <th id="team_h_camp">Squadra</th>
+                                            <th id="team_p_h_camp">Punti</th>
                                             <th>FantaPunti</th>
                                             <th>PG</th>
                                             <th>V</th>
@@ -88,6 +84,31 @@
                                             <th>GF</th>
                                             <th>GS</th>
                                             <th>DR</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="rank-body">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4 b11-rank">
+            <span class="rankings-title-dark">CLASSIFICA BEST 11</span>
+                <div class="card-header">
+                    <div class="top-table">
+                        <h1 class="mt-4 h3 mb-2 text-gray-800">GIORNATA {{day}}</h1>
+                    </div>
+                    <div class="card shadow mb-4">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered stripe" id="b11RankingDataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr class="h">
+                                            <th id="team_h_b11">Squadra</th>
+                                            <th id="team_fp_h_b11">FantaPunti</th>
                                         </tr>
                                     </thead>
                                     <tbody class="rank-body">

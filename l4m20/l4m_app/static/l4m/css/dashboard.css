@@ -3,6 +3,12 @@
     font-size: xx-large;
 }
 
+.rankings-title-dark {
+    font-family: "Mozilla Headline", sans-serif;
+    font-size: xx-large;
+    background-color: #212529;
+}
+
 .rankings {
     text-align: center;
 }
@@ -67,11 +73,13 @@
 .dt-teamname {
   color: blue;
   font-weight: bolder;
+  text-align: center !important;
 }
 
 .dt-teampt {
   font-weight: bolder;
   background: aliceblue;
+  text-align: center !important;
 }
 
 .team-name-dash {
@@ -79,6 +87,10 @@
     font-family: "Alegreya", serif;
   font-optical-sizing: auto;
   font-style: normal;
+}
+
+.h {
+  text-align-last: center;
 }
 
 @media (max-width:800px) {
@@ -173,5 +185,15 @@
 @media (min-width: 62em) {
   .featurette-heading {
     margin-top: 7rem;
+  }
+}
+
+.b11-rank {
+  width: 50% !important;
+}
+
+@media (min-width: 800px) {
+  .b11-rank {
+    width: auto;
   }
 }

@@ -45,6 +45,27 @@ class GetSeriesByCompetitionView(View):
         series = U.get_all_series(c_id)
         return HttpResponse(json.dumps([(s.id,s.Name) for s in series]))
 
+class RetrieveB11RankingInfoView(View):
+    def post(self, request):
+        day = request.POST['day']
+        
+        b11_comp = U.get_competition(name='Best 11')
+        b11_series = U.get_unica_series(b11_comp[0].id)
+        _ranking = U.get_ranking(b11_comp[0].id, b11_series[0].id, int(day) - 1)
+
+        if(_ranking is None):
+            return HttpResponse(json.dumps({ 'lines' : [None,None] }))
+
+        json_l = json.loads(_ranking[0].RankingLine)
+        lines = []
+        for k,_v in json_l.items():
+            line = []
+            line.append(team.Team.objects.get(pk=k).Name.upper())
+            line.append(int(_v))             
+            lines.append(line)
+
+        return HttpResponse(json.dumps({ 'lines': lines }))
+
 class RetrieveRankingInfoView(View):
     def post(self, request):
         c_id = request.POST['c_id']
