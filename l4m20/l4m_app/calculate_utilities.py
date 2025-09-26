@@ -2,7 +2,7 @@ from .models import *
 import json
 from . import utilities as U
 from . import live_utilities as LU
-
+from django.db.models import Q
 
 def write_b11_ranking(all_best, competition_id, seriesid, day):
     last_ranking = U.get_ranking(competition_id, seriesid, int(day)-1)
@@ -10,15 +10,20 @@ def write_b11_ranking(all_best, competition_id, seriesid, day):
     if(last_ranking is not None):
         last_ranking = json.loads(last_ranking[0].RankingLine)
 
-    new_ranking_line = []
+    new_ranking_line = {}
 
     if(last_ranking is None): #match 1
         for best in all_best:
             if best is not None:
-                new_ranking_line.append({best['team_id']:best['score']})
+                new_ranking_line[best['team_id']] = best['score']
     else:
-        pass
+        for best in all_best:
+            if best is not None:
+                new_ranking_line[best['team_id']] = last_ranking[best['team_id'].__str__()] + best['score']
 
+    existing_rank = ranking.Ranking.objects.filter(Q(Day=day) & Q(Competition=competition_id) & Q(Series=seriesid))
+    if len(existing_rank) > 0:
+        existing_rank[0].delete()
 
     new_rank = ranking.Ranking(
         RankingLine = json.dumps(new_ranking_line),
