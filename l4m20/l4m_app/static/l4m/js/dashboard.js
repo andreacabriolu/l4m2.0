@@ -116,11 +116,11 @@ window.addEventListener('DOMContentLoaded', event => {
                     dataSrc: "lines",
                 },
                 columnDefs: [
-                    { className: "dt-teamname", targets: [0] },
+                    { className: "dt-teamname-b11", targets: [0] },
                     { className: "dt-teampt", targets: [1] },
                 ],
                 initComplete: function (settings, json) {
-                    $('#team_h_b11').removeClass('dt-teamname');
+                    $('#team_h_b11').removeClass('dt-teamname-b11');
                     $('#team_fp_h_b11').removeClass('dt-teampt');
                 },
 

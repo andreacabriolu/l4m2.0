@@ -76,6 +76,12 @@
   text-align: center !important;
 }
 
+.dt-teamname-b11 {
+  color: crimson;
+  font-weight: bolder;
+  text-align: center !important;
+}
+
 .dt-teampt {
   font-weight: bolder;
   background: aliceblue;
@@ -192,8 +198,8 @@
   width: 50% !important;
 }
 
-@media (min-width: 800px) {
-  .b11-rank {
-    width: auto;
+@media (max-width: 800px) {
+.b11-rank {
+    width: 100% !important;
   }
 }
