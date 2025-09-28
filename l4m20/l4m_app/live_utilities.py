@@ -340,6 +340,7 @@ def make_vote_obj(_vote:vote.Vote, cap_id):
     v_obj.PenSa = _vote.PenSa
     v_obj.PenSc = _vote.PenSc
     v_obj.Red = _vote.Red
+    v_obj.YelRed = _vote.YelRed
     v_obj.Sub = _vote.Sub 
     v_obj.Status = C.PlayerStatus.PLAYED #TODO
     v_obj.SubJ = _vote.SubJ
@@ -349,7 +350,6 @@ def make_vote_obj(_vote:vote.Vote, cap_id):
     if(_vote.Player_id == cap_id):
         v_obj.Cap = True
     v_obj.Status = C.PlayerStatus.PLAYED
-    # v_obj.Status = C.PlayerStatus.PLAYING if not already_played else C.PlayerStatus.PLAYED
 
     return v_obj
 
@@ -369,6 +369,7 @@ def calculate_total(v):
     (v.PenSa * C.Scores.PENALTY_SAVED) + \
     (v.PenSc * C.Scores.PENALTY_SCORED) + \
     (v.Red * C.Scores.RED) + \
+    (v.YelRed * C.Scores.RED) + \
     (v.Yel * C.Scores.YELLOW)         
 
     return sum

@@ -129,6 +129,7 @@ def fill_with_events(events, players, votes):
 
                 vote = votes[pl_id]
                 vote.YelRed = 1
+                vote.Yel = 0
 
             case C.Events.GOAL:
                 pl_id = players[clean_name(event['player'])]
