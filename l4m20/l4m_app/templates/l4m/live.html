@@ -107,7 +107,7 @@
 
                                 {% with ''|center:vote.Yel as range %}
                                 {% for _ in range %}
-                                <img src="{% static 'l4m/images/yel.png' %}" data-bs-toggle="tooltip"
+                                <img src="{% static 'l4m/images/yel_card.png' %}" data-bs-toggle="tooltip"
                                     data-bs-placement="right" data-bs-title="AMMONIZIONE (-0.5)">
                                 {% endfor %}
                                 {% endwith %}
@@ -116,6 +116,13 @@
                                 {% for _ in range %}
                                 <img src="{% static 'l4m/images/redcard.png' %}" data-bs-toggle="tooltip"
                                     data-bs-placement="right" data-bs-title="ESPULSIONE (-1)">
+                                {% endfor %}
+                                {% endwith %}
+
+                                {% with ''|center:vote.YelRed as range %}
+                                {% for _ in range %}
+                                <img src="{% static 'l4m/images/yel_red.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="DOPPIA AMMONIZIONE (-1)">
                                 {% endfor %}
                                 {% endwith %}
 
@@ -315,6 +322,13 @@
                                     data-bs-placement="right" data-bs-title="ESPULSIONE (-1)">
                             {% endfor %}
                             {% endwith %}
+
+                            {% with ''|center:vote.YelRed as range %}
+                                {% for _ in range %}
+                                <img src="{% static 'l4m/images/yel_red.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="DOPPIA AMMONIZIONE (-1)">
+                                {% endfor %}
+                                {% endwith %}
 
                             {% with ''|center:vote.AssS as range %}
                             {% for _ in range %}

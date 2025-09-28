@@ -34,6 +34,15 @@ def fill_with_events(events, votes):
         if 'player' in event: 
             _player = U.clean_name(event['player'])
         match _type:
+            case C.Events.YELLOW_RED_CARD:
+                pl = player.Player.objects.filter(Surname=_player)
+                if len(pl) == 0:
+                    continue
+                pl = pl[0]
+                
+                vote = votes[pl.id]
+                vote.Yel = 0
+                vote.YelRed = 1
             case C.Events.YELLOW_CARD:
                 pl = player.Player.objects.filter(Surname=_player)
                 if len(pl) == 0:
@@ -200,7 +209,7 @@ def fill_live_votes(score, grades, live_votes):
         live_votes[pl.id] = _vote
 
 def get_live_votes(day):
-    TEST = False
+    TEST = True
     if(not TEST):
         url = "https://publicapi.fantamaster.it/livescores/?tcache=1756165942189"
         resp = req.get(url)

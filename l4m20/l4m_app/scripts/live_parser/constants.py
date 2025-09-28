@@ -13,6 +13,7 @@ class Events:
     OWN_GOAL = 'OG'
     YELLOW_CARD = 'YC'
     RED_CARD = 'RC'
+    YELLOW_RED_CARD = 'YRC'
     PENALTY_PROCURED = ''
     SUB = 'S'
     

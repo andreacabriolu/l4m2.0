@@ -12,6 +12,7 @@ class Vote_Live_Obj():
     Own = int  
     Yel = int  
     Red = int     
+    YelRed = int     
     AssS = int  
     AssH = int   
     AssL = int    

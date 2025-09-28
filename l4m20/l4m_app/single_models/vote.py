@@ -45,6 +45,7 @@ class Vote(models.Model):
         Own : int=0 
         Yel : int=0 
         Red : int=0   
+        YelRed : int=0   
         AssS : int=0
         AssH : int=0  
         AssL : int=0  

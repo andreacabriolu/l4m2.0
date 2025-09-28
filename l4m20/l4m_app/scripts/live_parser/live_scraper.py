@@ -58,6 +58,7 @@ try:
         vote.Own = 0
         vote.Yel = 0
         vote.Red = 0
+        vote.YelRed = 0
         vote.AssS = 0
         vote.AssP = 0
         vote.Live = False
