@@ -20,6 +20,7 @@ class Vote(models.Model):
     Own = models.IntegerField(default=0)     # own goal
     Yel = models.IntegerField(default=0)     # yellow card
     Red = models.IntegerField(default=0)     # red card
+    YelRed = models.IntegerField(default=0)     # double yellow card
     AssS = models.IntegerField(default=0)    # assist standard
     AssH = models.IntegerField(default=0)    # assist high # not necessarily to be used
     AssL = models.IntegerField(default=0)    # assist low # not necessarily to be used

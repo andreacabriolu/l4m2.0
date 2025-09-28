@@ -8,9 +8,9 @@ import utilities as U
 import logging
 logger = logging.getLogger("live_scraper")
 
-logging.basicConfig(filename='log/scarper.log', level=logging.INFO)
+# logging.basicConfig(filename='log/scarper.log', level=logging.INFO)
 
-TEST = False
+TEST = True
 
 if(not TEST):
     url = "https://publicapi.fantamaster.it/livescores/?tcache=1756165942189"

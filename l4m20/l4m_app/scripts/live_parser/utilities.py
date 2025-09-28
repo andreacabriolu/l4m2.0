@@ -195,8 +195,6 @@ def delete_votes_of_day(conn:DB_Connector, day):
         raise e
 
 def insert_votes(conn:DB_Connector, votes):
-    _cols = ('Day',"Vote","GoalSc","GoalTa","PenSc","PenMi","PenSa","Own","Yel","Red",\
-             "AssS","Sub","Competition_id","Player_id","RealTeam_id","Live")
     try:
         for _,vote in votes.items():
             if vote.Live:
@@ -212,6 +210,7 @@ def insert_votes(conn:DB_Connector, votes):
                          vote.Own, 
                          vote.Yel, 
                          vote.Red, 
+                         vote.YelRed, 
                          vote.AssS,
                          0, #vote.AssH,
                          0, #vote.AssL,

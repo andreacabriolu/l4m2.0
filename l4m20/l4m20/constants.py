@@ -55,7 +55,7 @@ class Events:
     OWN_GOAL = 'OG'
     YELLOW_CARD = 'YC'
     RED_CARD = 'RC'
-    YELLOW_RED_CARD = 'YRC'
+    YELLOW_RED_CARD = 'RYC'
     PENALTY_PROCURED = ''
     SUB = 'S'
 

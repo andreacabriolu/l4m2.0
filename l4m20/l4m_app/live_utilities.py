@@ -43,6 +43,7 @@ def fill_with_events(events, votes):
                 vote = votes[pl.id]
                 vote.Yel = 0
                 vote.YelRed = 1
+
             case C.Events.YELLOW_CARD:
                 pl = player.Player.objects.filter(Surname=_player)
                 if len(pl) == 0:
@@ -51,6 +52,7 @@ def fill_with_events(events, votes):
                 
                 vote = votes[pl.id]
                 vote.Yel = 1
+
             case C.Events.RED_CARD:
                 pl = player.Player.objects.filter(Surname=_player)
                 if len(pl) == 0:
@@ -209,7 +211,7 @@ def fill_live_votes(score, grades, live_votes):
         live_votes[pl.id] = _vote
 
 def get_live_votes(day):
-    TEST = True
+    TEST = False
     if(not TEST):
         url = "https://publicapi.fantamaster.it/livescores/?tcache=1756165942189"
         resp = req.get(url)
@@ -589,7 +591,7 @@ def get_votes(lineup, current_day, live_votes, live_teams, my_teamid = None, hom
     else:
         bonus_cap = 0
 
-    _noCards = len([v for v in valid_votes if (v.Red==1 or v.Yel==1)]) == 0
+    _noCards = len([v for v in valid_votes if (v.Red==1 or v.Yel==1 or v.YelRed==1)]) == 0
     _noBadVotes = len([v for v in valid_votes if v.Vote < 6]) == 0
 
     #bonus disciplina
