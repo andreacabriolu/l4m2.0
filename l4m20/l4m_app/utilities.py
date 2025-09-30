@@ -361,3 +361,11 @@ def calculate_n_goals(fp_total): #replicate of live utilities method to avoid ci
         return 0
     
     return int(diff / C.Various.THRESHOLD_GOL) + 1    
+
+def get_scores(t_id):
+    results_fp = matches_results.MatchesResults.objects.filter(Team=t_id).order_by('id').values('Fp')
+    fps = []
+    for res in list(results_fp):
+        fps.append(res['Fp'])
+    
+    return fps

@@ -619,6 +619,7 @@ def get_votes(lineup, current_day, live_votes, live_teams, my_teamid = None, hom
         _items.append('same_module')
     _items.append(lineup.ModNoGk)
     _items.append(14 - len(votes_ris)) #missing slots
+    _items.append(lineup.Version) #lineup version
 
     votes_tit.sort(key=lambda vote:C.Constant_Dicts.RoleInts[vote.Player.Role])
 
