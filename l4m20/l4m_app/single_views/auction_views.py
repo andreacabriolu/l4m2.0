@@ -39,6 +39,7 @@ class AuctionView(LoginRequiredMixin, View):
             if(balance_for_bets is None): 
                 balance_for_bets = 0
             n_carognate = balance['N_carognate']
+            n_svincoli = balance['N_svincoli']
 
             params = { 
                 'user_team': user_team,
@@ -53,7 +54,10 @@ class AuctionView(LoginRequiredMixin, View):
                 'my_market': my_market,
                 'session': current_session,
                 'max_carognate' : C.MAX_CAROGNATE,
-                'n_carognate' : n_carognate
+                'n_carognate' : n_carognate,
+                'max_svincoli' : C.MAX_SVINCOLI,
+                'n_svincoli' : n_svincoli
+
             }
         except Exception as e:
             raise Exception(f'{e}')
@@ -118,7 +122,7 @@ class GetPlayerInfoView(View):
         pl = player.Player.objects.\
             filter(bet__Market_id=my_market).\
             values('id','Surname','Name','Role','RealTeam__Name','bet__Amount','bet__Expiration_Date',
-               'bet__Team_id__Name','bet__id','Status').\
+               'bet__Team_id__Name','bet__id','bet__Session_id','Status').\
             get(pk=id)
 
         pl_obj = json.dumps({'Sur':pl['Surname'], 
@@ -130,7 +134,8 @@ class GetPlayerInfoView(View):
                                 replace(tzinfo=datetime.timezone.utc).__str__() if pl['bet__Expiration_Date'] != None else pl['bet__Expiration_Date'], #remove final timestamp
                              'BetT': pl['bet__Team_id__Name'],
                              'IsActive': pl['Status'] == 'A',
-                             'BetId': pl['bet__id']
+                             'BetId': pl['bet__id'],
+                             'BetSessionId': pl['bet__Session_id'],
                              })
 
         return HttpResponse(pl_obj)

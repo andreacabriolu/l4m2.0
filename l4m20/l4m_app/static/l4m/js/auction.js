@@ -51,7 +51,12 @@ function openPlayerModal(playerName, bet=1, official=false, isFreeable=false, be
         $('#plr_info_modal_body').addClass('plr-info-official');
         $('#modal-currentbet').prop('hidden', true);
 
-        $('#freeBtn').prop('hidden', isFreeable ? false : true);
+        $('#preFreeBtn').prop('hidden', isFreeable ? false : true);
+
+        $('#preFreeBtn').on('click', function(){
+            $('#freeModalTitle').text(`SVINCOLARE ${playerName}?`);
+            $('#freeModal').modal('show');
+        });
 
         if(isFreeable) {
             //TODO ASK CONFIRM!
@@ -102,6 +107,13 @@ function fillSlotContent(div_id, bet, expDate) {
     
 }
 
+function checkPlayerFreeable(json_res) {
+    return (
+     !(json_res.IsActive) ||
+     json_res.BetSessionId != $('#current_session').val()
+    );
+}
+
 function fill_slots(mbb) {
     mbb.forEach(bet => {
         div_id = bet.Slot
@@ -123,7 +135,7 @@ function fill_slots(mbb) {
                     $('#modal-pl-info-bestbetteam').val(json_res.BetT); 
                     $('#modal-pl-info-bestbet').val(json_res.BetA);
                     //TODO: player can NOT be free if it is bought in this market session!
-                    isFreeable = !(json_res.IsActive); 
+                    isFreeable = checkPlayerFreeable(json_res); 
 
                     if(!bet.IsExpired) {
                         openPlayerModal(json_res.Sur, json_res.BetA);

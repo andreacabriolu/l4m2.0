@@ -415,6 +415,13 @@
     align-items: center;
   }
 
+  @media (max-width:800px) {
+    .balance-div {
+      border-radius: .5em;
+      text-align: center;
+    }
+  }
+
  .balance-label {
   font-weight: bold;
   color: #5e5f6f;
@@ -442,6 +449,16 @@
  .main-div {
     display: flex;
     flex-direction: column;
+  }
+
+  .p-5-custom {
+    padding: 3rem;
+  } 
+
+  @media (max-width:800px) {
+    .p-5-custom {
+      padding: 0% !important;
+    }
   }
 
   .side-buttons {
@@ -562,4 +579,8 @@ input:invalid {
 .mkt-span {
   font-weight: bold;
   color: maroon;
+}
+
+.free-modal-title {
+  text-align: center;
 }

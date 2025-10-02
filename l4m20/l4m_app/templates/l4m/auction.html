@@ -22,7 +22,7 @@
     <div class="alert alert-danger" role="alert" id="error-alert" hidden>
             <span id="span-error-alert"></span>
     </div>
-    <div class="bg-body p-5 main-div">
+    <div class="bg-body p-5-custom main-div">
         <div class="balance-div" id="balance_div">
             
             <div id="mkt_div" class="mkt-div" >
@@ -44,8 +44,14 @@
                      {% endif %}
             </div>
             <div>
-                <span class="carognate-label">Carognate </span>
-                <span class="carognate-info" id="main-carognate">{{n_carognate}} / {{max_carognate}}</span>
+                <div>
+                    <span class="carognate-label">Carognate </span>
+                    <span class="carognate-info" id="main-carognate">{{n_carognate}} / {{max_carognate}}</span>
+                </div>
+                <div>
+                    <span class="carognate-label">Svincoli </span>
+                    <span class="carognate-info" id="main-svincoli">{{n_svincoli}} / {{max_svincoli}}</span>
+                </div>
             </div>
             <div class="balances">
                 <div class="balance">
@@ -65,6 +71,7 @@
         <input id="my_balance" type="hidden" value="{{balance}}">
         <input id="my_market" type="hidden" value="{{my_market}}">
         <input id="my_balance_max" type="hidden" value="{{balance.Purchases_max}}">
+        <input id="current_session" type="hidden" value="{{session.id}}">
         
         <div class="modal fade" id="preOfficialModal" tabindex="-1" role="dialog"
             aria-labelledby="preOfficialModalLabel">
@@ -80,6 +87,24 @@
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">DOPO</button>
                         <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
                             onclick="finalizeBet()">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="freeModal" tabindex="-1" role="dialog"
+            aria-labelledby="freeModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="freeModalLabel"></h4>
+                    </div>
+                    <div class="modal-body">
+                        <h4 class="free-modal-title" id="freeModalTitle">SVINCOLARE ?</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">NO</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="freeBtn">OK</button>
                     </div>
                 </div>
             </div>
@@ -249,7 +274,7 @@
                                 puntata</button>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-warning" id="freeBtn" data-bs-dismiss="modal" hidden>SVINCOLA</button>
+                            <button type="button" class="btn btn-warning" id="preFreeBtn" data-bs-dismiss="modal" hidden>SVINCOLA</button>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CHIUDI</button>
                         </div>
                     </div>

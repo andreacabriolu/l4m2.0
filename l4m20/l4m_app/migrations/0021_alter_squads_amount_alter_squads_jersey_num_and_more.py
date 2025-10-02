@@ -46,4 +46,19 @@ class Migration(migrations.Migration):
             name='Years',
             field=models.IntegerField(null=True),
         ),
+        migrations.AddField(
+            model_name='balance',
+            name='Purchases_max',
+            field=models.IntegerField(null=True),
+        ),
+        migrations.AddField(
+            model_name='balance',
+            name='Wages_max',
+            field=models.IntegerField(null=True),
+        ),
+        migrations.AddField(
+            model_name='market',
+            name='Players',
+            field=models.ManyToManyField(to='l4m_app.player'),
+        ),
     ]

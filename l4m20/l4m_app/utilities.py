@@ -159,7 +159,7 @@ def get_balance_obj(teamid):
 def get_balance(teamid):
     return balance.Balance.objects.\
         filter(Team_id=teamid).\
-        values('Purchases_amount','Purchases_max','N_carognate')
+        values('Purchases_amount','Purchases_max','N_carognate','N_svincoli')
 
 def get_all_team_players():
     return player.Player.objects.\
@@ -352,6 +352,19 @@ def free_player(bet_id):
             )
     
     bet_history_new.save()
+
+
+    my_bal = get_balance_obj(_bet.Team_id)
+    if len(my_bal) <= 0:
+        return
+    
+    my_bal = my_bal[0]
+    my_bal.N_svincoli = my_bal.N_svincoli + 1
+
+    if(my_bal.N_svincoli > C.MAX_SVINCOLI): #penalty
+        my_bal.Purchases_max = my_bal.Purchases_max - 1
+
+    my_bal.save()
 
     _bet.delete()
 
