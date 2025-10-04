@@ -526,7 +526,7 @@ def get_votes(lineup, current_day, live_votes, live_teams, my_teamid = None, hom
                 votes_ris.append(make_not_called_vote_obj(pl.id, cap_id))
 
             if(pl.id == cap_id):
-                cap_vote = _live_vote.Vote
+                cap_vote = 6
         else:
         #player NOT LIVE
             _vote = vote.Vote.objects.filter(Q(Player_id=pl.id) & Q(Day=current_day))
