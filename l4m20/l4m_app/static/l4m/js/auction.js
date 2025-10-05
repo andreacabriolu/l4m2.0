@@ -70,6 +70,7 @@ function openPlayerModal(playerName, bet=1, official=false, isFreeable=false, be
                        showPopupErrorAlert(response);
                     }
                     else {
+                        window.location.reload();
                         // plr_dlg.close();
                     }
                 });
