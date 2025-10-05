@@ -64,7 +64,14 @@ def get_my_market(teamid=None, userid=None):
         return
     return mymarkets[0]
 
-def get_players_my_series(filter_role, teamid, filtered_teams_ids):
+def get_my_svincolati(session=None):
+    svincoli_list = \
+        bet_history.Bet_History.objects.filter(Q(Svincolo=True) & Q(Session_svincolo=session)) if session is not None else \
+        bet_history.Bet_History.objects.filter(Svincolo=True)
+    
+    return [s.Player_id for s in svincoli_list]
+
+def get_players_my_series(filter_role, teamid, filtered_teams_ids, my_svincoli_current_session):
               #~
     bet_qs =  bet.Bet.objects.filter(
         Player_id=OuterRef('pk'),
@@ -77,6 +84,8 @@ def get_players_my_series(filter_role, teamid, filtered_teams_ids):
         Status='A',
     ).exclude(
         bet__Team_id=teamid
+    ).exclude(
+        Q(id__in=my_svincoli_current_session)
     ).annotate(
       bet__Amount=Coalesce(Subquery(bet_qs.values('Amount')[:1]), Value(None)),
       bet__Team_id__Name=Coalesce(Subquery(bet_qs.values('Team_id__Name')[:1]), Value(None)),
@@ -85,7 +94,7 @@ def get_players_my_series(filter_role, teamid, filtered_teams_ids):
       bet__Expiration_Date=Coalesce(Subquery(bet_qs.values('Expiration_Date')[:1]), Value(None)),
     ).exclude(
         Q(bet__IsExpired=True) &
-        Q(bet__Team_id__in=filtered_teams_ids)    
+        Q(bet__Team_id__in=filtered_teams_ids)
     ).values(
         'id', 'Surname', 'Name', 'Role', 'RealTeam__Name',
         'bet__Amount','bet__Team_id__Name', 'bet__IsExpired','bet__Carognata','bet__Expiration_Date'

@@ -21,18 +21,18 @@ class AuctionView(LoginRequiredMixin, View):
             user_team = U.get_user_team(request.user.id)
             teamid = user_team['id']
             seriesid=U.get_my_series(teamid)[0].id
-            
-            filtered_teams = team.Team.objects.filter(Series__id=seriesid)
-            filtered_teams_ids = [team.id for team in filtered_teams]
-            
-            players_gk = U.get_players_my_series("P", teamid, filtered_teams_ids)
-            players_def = U.get_players_my_series("D", teamid, filtered_teams_ids)
-            players_cc = U.get_players_my_series("C", teamid, filtered_teams_ids)
-            players_fw = U.get_players_my_series("A", teamid, filtered_teams_ids)
-
             my_market = U.get_my_markets(seriesid)[0].id #TODO: improve check
             my_best_bets = U.list_my_best_bets(U.get_my_best_bets(teamid, my_market))
             current_session = U.get_current_session(my_market)
+            
+            filtered_teams = team.Team.objects.filter(Series__id=seriesid)
+            filtered_teams_ids = [team.id for team in filtered_teams]
+            my_svincoli_current_session = U.get_my_svincolati(session=current_session)
+            
+            players_gk = U.get_players_my_series("P", teamid, filtered_teams_ids, my_svincoli_current_session)
+            players_def = U.get_players_my_series("D", teamid, filtered_teams_ids, my_svincoli_current_session)
+            players_cc = U.get_players_my_series("C", teamid, filtered_teams_ids, my_svincoli_current_session)
+            players_fw = U.get_players_my_series("A", teamid, filtered_teams_ids, my_svincoli_current_session)
 
             balance = U.get_balance(teamid)[0] #TODO: improve check
             balance_for_bets = U.get_balance_for_bets(teamid, balance['Purchases_max'])
