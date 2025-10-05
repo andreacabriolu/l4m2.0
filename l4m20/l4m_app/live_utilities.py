@@ -71,11 +71,10 @@ def fill_with_events(events, votes):
                 if event['details'] != '':
                     _player_ass = U.clean_name(event['details'])
                     pl_assist = player.Player.objects.filter(Surname=_player_ass)
-                    if len(pl_assist) == 0:
-                        continue
-                    pl_assist = pl_assist[0]
-                    vote = votes[pl_assist.id]
-                    vote.AssS = vote.AssS + 1
+                    if len(pl_assist) > 0:
+                        pl_assist = pl_assist[0]
+                        vote = votes[pl_assist.id]
+                        vote.AssS = vote.AssS + 1
 
                 vote = votes[pl.id]
                 vote.GoalSc = vote.GoalSc + 1
