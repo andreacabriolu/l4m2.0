@@ -13,6 +13,8 @@ class Bet_History(models.Model):
     Team = models.ForeignKey(on_delete=models.CASCADE, to=C.Constant_Strings.team, null=True)
     Session = models.ForeignKey(on_delete=models.CASCADE, to=C.Constant_Strings.session, null=True)
     Expiration_Date = models.TextField(max_length=100)
+    Svincolo = models.BooleanField(default=False)
+    Session_svincolo = models.ForeignKey(on_delete=models.CASCADE, to=C.Constant_Strings.session, null=True, related_name="session_svincolo")
 
 class Bet_History_Obj():
     Name=str
@@ -25,3 +27,4 @@ class Bet_History_Obj():
     Team=str
     Session=str
     Expiration_Date=str
+    Svincolo=bool

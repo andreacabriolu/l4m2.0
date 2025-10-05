@@ -175,6 +175,7 @@ def send_bet(data):
     bet_obj.Team = data['userteamid']
     bet_obj.Slot = data['slot']
     bet_obj.Market = data['market']
+    bet_obj.Session = data['session']
     
     carognata = data['carognata']
     balance_max = data['balancemax']
@@ -184,6 +185,7 @@ def send_bet(data):
     player_ = get_object_or_404(player.Player, id=bet_obj.Player)
     user_team = get_object_or_404(team.Team, id=bet_obj.Team) #TODO: how to avoid this double fetch?
     market_ = get_object_or_404(market.Market, id=int(bet_obj.Market))
+    session_ = session.Session.objects.get(pk=bet_obj.Session)
 
     my_bal = get_balance_obj(bet_obj.Team)[0]
     ncarognate = my_bal.N_carognate
@@ -211,6 +213,7 @@ def send_bet(data):
                 Player=_bet_old.Player,
                 Team=_bet_old.Team,
                 Market=market_,
+                Session=session_,
                 Carognata = True if carognata=="True" else False
             )
             bet_history_new.save()
@@ -222,7 +225,8 @@ def send_bet(data):
                         Team = user_team,
                         Expiration_Date=exp_date_obj,
                         Slot=bet_obj.Slot,
-                        Market=market_)
+                        Market=market_,
+                        Session=session_)
 
         bet_new.save()
 
@@ -335,7 +339,7 @@ def check_day_already_started(day):
         return False, datetime.datetime.now(ZoneInfo('Europe/Rome'))
     return datetime.datetime.now(ZoneInfo('Europe/Rome')) >= day_time_limit, day_time_limit
 
-def free_player(bet_id):
+def free_player(bet_id, session_svincolo):
     _bet = bet.Bet.objects.get(pk=int(bet_id))
 
     _squad = squads.Squads.objects.filter(Q(Team=_bet.Team_id) & Q(Player=_bet.Player))
@@ -348,11 +352,13 @@ def free_player(bet_id):
             Player=_bet.Player,
             Team=_bet.Team,
             Market=_bet.Market,
-            Carognata = True if _bet.Carognata==True else False
+            Session=_bet.Session,
+            Carognata = True if _bet.Carognata==True else False,
+            Svincolo = True,
+            Session_svincolo = session.Session.objects.get(pk=session_svincolo)
             )
     
     bet_history_new.save()
-
 
     my_bal = get_balance_obj(_bet.Team_id)
     if len(my_bal) <= 0:
@@ -361,7 +367,9 @@ def free_player(bet_id):
     my_bal = my_bal[0]
     my_bal.N_svincoli = my_bal.N_svincoli + 1
 
-    if(my_bal.N_svincoli > C.MAX_SVINCOLI): #penalty
+    max_svincoli = _bet.Session.Nsvincoli
+
+    if(my_bal.N_svincoli > max_svincoli): #penalty
         my_bal.Purchases_max = my_bal.Purchases_max - 1
 
     my_bal.save()

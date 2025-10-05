@@ -63,7 +63,7 @@ function openPlayerModal(playerName, bet=1, official=false, isFreeable=false, be
             $('#freeBtn').on('click', function(){
                 const token = Cookies.get('csrftoken');
                 
-                var data = { 'bet_id': bet_id, 'csrfmiddlewaretoken': token };
+                var data = { 'bet_id': bet_id, 'session_svincolo': $('#current_session').val(), 'csrfmiddlewaretoken': token };
 
                 $.post("/l4m/auction/freePlayer/", data, function (response) {
                     if(response.startsWith ('error')) {
@@ -403,6 +403,7 @@ function sendBet() {
     row.market = $('#my_market').val();
     row.carognata = $('#modal-pl-carognata').val();
     row.slot = current_div[0].id;
+    row.session = $('#current_session').val();
     jsonData = JSON.stringify(row);
 
     var data = { 'jsonData': jsonData, 'csrfmiddlewaretoken': token };

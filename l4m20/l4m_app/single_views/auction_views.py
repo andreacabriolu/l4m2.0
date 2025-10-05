@@ -158,9 +158,10 @@ class FreePlayerView(View):
     def post(self, request):
         try:
             bet_id = request.POST.get("bet_id")
+            session_svincolo = request.POST.get("session_svincolo")
             if (bet_id is None): return
             
-            msg = U.free_player(bet_id)
+            msg = U.free_player(bet_id, session_svincolo)
             
             return HttpResponse(msg)
         except Exception as e:
