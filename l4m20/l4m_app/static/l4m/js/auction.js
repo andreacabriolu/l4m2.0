@@ -59,7 +59,6 @@ function openPlayerModal(playerName, bet=1, official=false, isFreeable=false, be
         });
 
         if(isFreeable) {
-            //TODO ASK CONFIRM!
             $('#freeBtn').on('click', function(){
                 const token = Cookies.get('csrftoken');
                 
@@ -70,8 +69,7 @@ function openPlayerModal(playerName, bet=1, official=false, isFreeable=false, be
                        showPopupErrorAlert(response);
                     }
                     else {
-                        window.location.reload();
-                        // plr_dlg.close();
+                        setTimeout(function() { window.location.reload() }, 1000);
                     }
                 });
             });
