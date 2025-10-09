@@ -3,6 +3,7 @@ let search;
 let player;
 let current_div;
 let officialInfo = {};
+let bet_to_free_id;
 
 var RoleNames = {
     'P': 'PORTIERE',
@@ -19,13 +20,13 @@ function showPopupErrorAlert(response) {
 function showErrorAlert(response) {
     $("#error-alert").prop('hidden', false);
     $('#span-error-alert').text(response);
-    $("#error-alert").fadeTo(5000, 0.33, function(){
+    $("#error-alert").fadeTo(5000, 0.33, function () {
         $("#error-alert").prop('hidden', true);
     });
 }
 
 function openCarognataModal() {
-    
+
     $('#carognataModal').modal('show');
 
 }
@@ -33,48 +34,50 @@ function openCarognataModal() {
 function openPreOfficialModal(divid, playerid, betamount) {
 
     officialInfo = {
-        'divid' : divid,
-        'playerid' : playerid,
-        'betAmount' : betamount
+        'divid': divid,
+        'playerid': playerid,
+        'betAmount': betamount
     };
 
     $('#preOfficialModal').modal('show');
-    
+
 }
 
-function openPlayerModal(playerName, bet=1, official=false, isFreeable=false, bet_id=null) {
+function openPlayerModal(playerName, bet = 1, official = false, isFreeable = false, bet_id = null) {
     $('#dlg_player_info').modal('show');
     $('#playerInfoLabel').text(playerName.toUpperCase());
     $('#modal-pl-info-betamount').val(bet);
+    bet_to_free_id = bet_id;
 
-    if(official) {
+    if (official) {
         $('#plr_info_modal_body').addClass('plr-info-official');
         $('#modal-currentbet').prop('hidden', true);
 
         $('#preFreeBtn').prop('hidden', isFreeable ? false : true);
 
-        $('#preFreeBtn').on('click', function(){
+        $('#preFreeBtn').on('click', function () {
             $('#freeModalTitle').text(`SVINCOLARE ${playerName}?`);
             $('#freeModal').modal('show');
         });
 
-        if(isFreeable) {
-            $('#freeBtn').on('click', function(){
+        if (isFreeable) {
+            $('#freeBtn').off();
+            $('#freeBtn').on('click', function () {
                 const token = Cookies.get('csrftoken');
-                
-                var data = { 'bet_id': bet_id, 'session_svincolo': $('#current_session').val(), 'csrfmiddlewaretoken': token };
+
+                var data = { 'bet_id': bet_to_free_id, 'session_svincolo': $('#current_session').val(), 'csrfmiddlewaretoken': token };
 
                 $.post("/l4m/auction/freePlayer/", data, function (response) {
-                    if(response.startsWith ('error')) {
-                       showPopupErrorAlert(response);
+                    if (response.startsWith('error')) {
+                        showPopupErrorAlert(response);
                     }
                     else {
-                        setTimeout(function() { window.location.reload() }, 1000);
+                        setTimeout(function () { window.location.reload() }, 300);
                     }
                 });
             });
         }
-    
+
     }
     else {
         $('#plr_info_modal_body').removeClass('plr-info-official');
@@ -95,57 +98,57 @@ function fillSlotContent(div_id, bet, expDate) {
                 </div>\
                 <div class="plr-full-r2">\
                 ${bet.IsExpired ?
-                    htmlIsExpired :
-                    htmlIsNotExpired}
+            htmlIsExpired :
+            htmlIsNotExpired}
                 </div>\
            `);
 
     $('#' + div_id).addClass(`${bet.Carognata ? 'carognata' : ''}`);
     $('#' + div_id).addClass(`${bet.IsExpired && !bet.IsOfficial ? 'end-expired' : ''}`);
     $('#' + div_id).addClass(`${bet.IsOfficial ? 'end-official' : ''}`);
-    
+
 }
 
 function checkPlayerFreeable(json_res) {
     return (
-     !(json_res.IsActive) ||
-     json_res.BetSessionId != $('#current_session').val()
+        !(json_res.IsActive) ||
+        json_res.BetSessionId != $('#current_session').val()
     );
 }
 
 function fill_slots(mbb) {
     mbb.forEach(bet => {
         div_id = bet.Slot
-        expDate = new Date(bet.Expiration_Date).toLocaleString("it-IT", {timeZone: "UTC"})
+        expDate = new Date(bet.Expiration_Date).toLocaleString("it-IT", { timeZone: "UTC" })
         if (div_id != '') {
             $("#" + div_id).addClass('plr-full');
             $("#" + div_id).prop('onclick', null).off("click");
-            $("#" + div_id).click(function(){
+            $("#" + div_id).click(function () {
                 const token = Cookies.get('csrftoken');
                 var data = { 'id': bet.Player_id, 'csrfmiddlewaretoken': token };
 
                 $.post("/l4m/auction/getPlayerInfo/", data, function (response) {
                     json_res = JSON.parse(response)
-                    
+
                     $('#modal-pl-info-name').val(json_res.Sur);
                     $('#modal-pl-info-realteam').val(json_res.RealT);
                     $('#modal-pl-info-role').val(RoleNames[json_res.Rol]);
-                    $('#modal-pl-info-betexpdate').val(new Date(json_res.BetE).toLocaleString("it-IT", {timeZone: "UTC"}));
-                    $('#modal-pl-info-bestbetteam').val(json_res.BetT); 
+                    $('#modal-pl-info-betexpdate').val(new Date(json_res.BetE).toLocaleString("it-IT", { timeZone: "UTC" }));
+                    $('#modal-pl-info-bestbetteam').val(json_res.BetT);
                     $('#modal-pl-info-bestbet').val(json_res.BetA);
                     //TODO: player can NOT be free if it is bought in this market session!
-                    isFreeable = checkPlayerFreeable(json_res); 
+                    isFreeable = checkPlayerFreeable(json_res);
 
-                    if(!bet.IsExpired) {
+                    if (!bet.IsExpired) {
                         openPlayerModal(json_res.Sur, json_res.BetA);
                     }
-                    else if(bet.IsExpired && !bet.IsOfficial) {
+                    else if (bet.IsExpired && !bet.IsOfficial) {
                         openPreOfficialModal(div_id, bet.Player_id, json_res.BetA);
                     }
-                    else if(bet.IsOfficial) {
-                        openPlayerModal(json_res.Sur, json_res.BetA, official=true, freeable=isFreeable, json_res.BetId);
+                    else if (bet.IsOfficial) {
+                        openPlayerModal(json_res.Sur, json_res.BetA, official = true, freeable = isFreeable, json_res.BetId);
                     }
-                    
+
                 });
             });
 
@@ -157,7 +160,7 @@ function fill_slots(mbb) {
 window.addEventListener('DOMContentLoaded', event => {
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
-    
+
     $('#official-alert').hide();
     fill_slots(JSON.parse($('#my_best_bets').val()));
 
@@ -176,8 +179,8 @@ window.addEventListener('DOMContentLoaded', event => {
         openPlayerDialog(player);
     });
 
-    $('#btnplus1').on('click', function(){
-        currentVal = parseInt($('#modal-pl-betamount').val());        
+    $('#btnplus1').on('click', function () {
+        currentVal = parseInt($('#modal-pl-betamount').val());
         currentVal = isNaN(currentVal) ? 0 : currentVal;
 
         $('#modal-pl-betamount').val(
@@ -185,8 +188,8 @@ window.addEventListener('DOMContentLoaded', event => {
         );
     });
 
-    $('#btnplus5').on('click', function(){
-        currentVal = parseInt($('#modal-pl-betamount').val());        
+    $('#btnplus5').on('click', function () {
+        currentVal = parseInt($('#modal-pl-betamount').val());
         currentVal = isNaN(currentVal) ? 0 : currentVal;
 
         $('#modal-pl-betamount').val(
@@ -197,18 +200,18 @@ window.addEventListener('DOMContentLoaded', event => {
 
 function closeDlg(el) {
     parent = el.offsetParent;
-    if(parent != null) {
+    if (parent != null) {
         parent.close();
     }
 
 }
 
-function setPlayerDialog(player, mode='std') {
-    if(mode == 'high') {
+function setPlayerDialog(player, mode = 'std') {
+    if (mode == 'high') {
         $('#dlg_player_open').removeClass('dlg-player');
         $('#dlg_player_open').addClass('dlg-player-high');
         $('#notafford').attr('hidden', false);
-        $('#modal-pl-betamount').val(parseInt(player.betamount) +1 );   
+        $('#modal-pl-betamount').val(parseInt(player.betamount) + 1);
         $('#modal-pl-betamount').attr({ "min": parseInt(player.betamount) });
         $('#modal-pl-betamount').prop('disabled', true);
         $('#btnSendBet').addClass('no-pointer-events');
@@ -221,7 +224,7 @@ function setPlayerDialog(player, mode='std') {
         $('#modal-pl-betamount').prop('disabled', false);
     }
 
-    if(mode == "carognata") {
+    if (mode == "carognata") {
         $('#dlg_player_open').removeClass('dlg-player');
         $('#dlg_player_open').addClass('dlg-player-carognata');
         // $('#carognata_span').attr('hidden', false);
@@ -240,9 +243,9 @@ function set_bet_min_max(betamount, maxbet) {
     let baseStr = 'PUNTATA (MIN: _minbet_ MAX: _maxbet_)';
 
     $('#modal-label-bet').html(baseStr
-        .replace('_minbet_', betamount != 'None' ? `<strong>${parseInt(betamount)+1}</strong>` : '<strong>1</strong>')
+        .replace('_minbet_', betamount != 'None' ? `<strong>${parseInt(betamount) + 1}</strong>` : '<strong>1</strong>')
         .replace('_maxbet_', `<strong>${maxbet}</strong>`)
-    ); 
+    );
 }
 
 function openPlayerDialog(player) {
@@ -260,10 +263,10 @@ function openPlayerDialog(player) {
 
     let balance_for_bets;
     const token = Cookies.get('csrftoken');
-    var data = {'csrfmiddlewaretoken': token };
+    var data = { 'csrfmiddlewaretoken': token };
 
     $.post("/l4m/auction/getBalanceForBets/", data, function (response) {
-        balance_for_bets = response;    
+        balance_for_bets = response;
 
         if (player.betamount != 'None') {
             if (parseInt(player.betamount) >= parseInt(balance_for_bets)) { //UNAFFORDABLE
@@ -286,7 +289,7 @@ function openPlayerDialog(player) {
             }
         }
 
-        if(player.carognata == "True") {
+        if (player.carognata == "True") {
             setPlayerDialog(player, "carognata");
             // $('#span-betexpire').html(span-betexpire.text() + " (CAROGNATA) ");
         }
@@ -295,16 +298,16 @@ function openPlayerDialog(player) {
         }
 
         set_bet_min_max(player.betamount, balance_for_bets);
-           
+
     });
 
-    
+
 
     $('#modal-currentbet').hide();
     if (player.betexpdate != 'None') {
         $('#modal-currentbet').show();
         $('#modal-pl-bestbetteam').val(player.betteam);
-        $('#modal-pl-betexpdate').val(new Date(player.betexpdate).toLocaleString("it-IT", {timeZone: "UTC"}));
+        $('#modal-pl-betexpdate').val(new Date(player.betexpdate).toLocaleString("it-IT", { timeZone: "UTC" }));
         $('#modal-pl-bestbet').val(player.betamount);
         $('#modal-pl-carognata').val(player.carognata);
     }
@@ -316,22 +319,22 @@ function openPlayerDialog(player) {
     }
 
     plr_dlg = $('#dlg_player_open')[0];
-    if(plr_dlg != null) 
-        plr_dlg.showModal(); 
+    if (plr_dlg != null)
+        plr_dlg.showModal();
 }
 
 function openDialog(id) {
     current_div = $('#' + id + '_div');
-    dlg = $('#dlg_'+id.substr(0,2)+'_open')[0];
-    if (dlg!=null) 
+    dlg = $('#dlg_' + id.substr(0, 2) + '_open')[0];
+    if (dlg != null)
         dlg.showModal();
 }
 
 function searchPlayer(role) {
     var filter, i, txtValue;
-    search = document.getElementById('modal-ob-search_'+role);
+    search = document.getElementById('modal-ob-search_' + role);
     filter = search.value.toUpperCase();
-    dl = document.getElementById("dataList_"+role);
+    dl = document.getElementById("dataList_" + role);
     dt = dl.getElementsByTagName('dt');
 
     for (i = 0; i < dt.length; i++) {
@@ -357,13 +360,13 @@ function set_div(row) {
                         </div>\
     `);
 
-    current_div.click(function(){
+    current_div.click(function () {
         const token = Cookies.get('csrftoken');
         var data = { 'id': row.playerid, 'csrfmiddlewaretoken': token };
 
         $.post("/l4m/auction/getPlayerInfo/", data, function (response) {
             json_res = JSON.parse(response)
-            
+
             $('#modal-pl-info-name').val(json_res.Sur);
             $('#modal-pl-info-realteam').val(json_res.RealT);
             $('#modal-pl-info-role').val(RoleNames[json_res.Rol]);
@@ -410,28 +413,28 @@ function sendBet() {
     var min = parseInt($('#modal-pl-betamount').attr("min"));
     var max = parseInt($('#modal-pl-betamount').attr("max"));
 
-    if($('#modal-pl-betamount').attr('min') != null) {
-        if(row.betamount < min) {
+    if ($('#modal-pl-betamount').attr('min') != null) {
+        if (row.betamount < min) {
             showPopupErrorAlert("PUNTATA TROPPO BASSA!");
             $('#modal-pl-betamount').val(min);
             return;
         }
     }
 
-    if($('#modal-pl-betamount').attr('max') != null) {
-        if(row.betamount > max) {
+    if ($('#modal-pl-betamount').attr('max') != null) {
+        if (row.betamount > max) {
             showPopupErrorAlert("PUNTATA TROPPO ALTA!");
             $('#modal-pl-betamount').val(max);
             return;
         }
     }
 
-    if($('#modal-pl-carognata').val() == "True") {
-         showPopupErrorAlert("RILANCIO CAROGNA!");
+    if ($('#modal-pl-carognata').val() == "True") {
+        showPopupErrorAlert("RILANCIO CAROGNA!");
     }
 
     $.post("/l4m/auction/sendBet/", data, function (response) {
-        if(response.startsWith ('error')) {
+        if (response.startsWith('error')) {
             showPopupErrorAlert(response);
         }
         else {
@@ -440,9 +443,9 @@ function sendBet() {
             new_residual = parseInt(JSON.parse(response)['amount']);
             $('#main-residual').text(`${new_residual} FML`);
             set_bet_min_max(null, JSON.parse(response)['amount'])
-            entry = document.querySelector("dl.dl-class dt[data-id='"+row.playerid+"']");
-            if(entry!=null) { 
-                entry.parentNode.removeChild(entry); 
+            entry = document.querySelector("dl.dl-class dt[data-id='" + row.playerid + "']");
+            if (entry != null) {
+                entry.parentNode.removeChild(entry);
             }
 
             set_div(row);
@@ -459,29 +462,29 @@ function finalizeBet() {
     div_id = officialInfo['divid'];
     pl_id = officialInfo['playerid'];
     pl_amount = officialInfo['betAmount'];
-    
+
     const token = Cookies.get('csrftoken');
     const row = new Object();
-    
+
     row.playerid = pl_id;
     row.amount = parseInt(pl_amount);
     row.userteamid = $('#user_team_id').val();
-    
+
     jsonData = JSON.stringify(row);
-	
-	var data = { 'jsonData': jsonData, 'csrfmiddlewaretoken': token };
+
+    var data = { 'jsonData': jsonData, 'csrfmiddlewaretoken': token };
     $.post("/l4m/auction/finalizeBet/", data, function (response) {
-        if(response.startsWith ('error')) {
+        if (response.startsWith('error')) {
             showPopupErrorAlert(response);
         }
         else {
-            $('#'+div_id).addClass('end-official');
-            $('#'+div_id+'_img').prop('hidden', true);
-            $('#'+div_id).children().prop('disabled', true);
+            $('#' + div_id).addClass('end-official');
+            $('#' + div_id + '_img').prop('hidden', true);
+            $('#' + div_id).children().prop('disabled', true);
             $("#official-alert").fadeTo(2000, 500);
-            $("#official-alert").slideUp(500, function(){ $("#official-alert").slideUp(500); });
+            $("#official-alert").slideUp(500, function () { $("#official-alert").slideUp(500); });
 
         }
     });
-     
+
 }
