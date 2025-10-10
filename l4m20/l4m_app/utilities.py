@@ -64,10 +64,10 @@ def get_my_market(teamid=None, userid=None):
         return
     return mymarkets[0]
 
-def get_my_svincolati(session=None):
+def get_my_svincolati(team, session=None):
     svincoli_list = \
-        bet_history.Bet_History.objects.filter(Q(Svincolo=True) & Q(Session_svincolo=session)) if session is not None else \
-        bet_history.Bet_History.objects.filter(Svincolo=True)
+        bet_history.Bet_History.objects.filter(Q(Team=team) & Q(Svincolo=True) & Q(Session_svincolo=session)) if session is not None else \
+        bet_history.Bet_History.objects.filter(Q(Team=team) & Q(Svincolo=True))
     
     return [s.Player_id for s in svincoli_list]
 

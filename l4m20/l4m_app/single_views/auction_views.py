@@ -27,7 +27,7 @@ class AuctionView(LoginRequiredMixin, View):
             
             filtered_teams = team.Team.objects.filter(Series__id=seriesid)
             filtered_teams_ids = [team.id for team in filtered_teams]
-            my_svincoli_current_session = U.get_my_svincolati(session=current_session)
+            my_svincoli_current_session = U.get_my_svincolati(team=teamid, session=current_session)
             
             players_gk = U.get_players_my_series("P", teamid, filtered_teams_ids, my_svincoli_current_session)
             players_def = U.get_players_my_series("D", teamid, filtered_teams_ids, my_svincoli_current_session)
