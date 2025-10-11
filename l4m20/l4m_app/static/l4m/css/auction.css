@@ -584,3 +584,22 @@ input:invalid {
 .free-modal-title {
   text-align: center;
 }
+
+.free-checks {
+  align-self: center;
+  margin-bottom: .5em;
+}
+
+.dt-free-content {
+  text-align: center;
+  color: azure;
+  background-color: #212529;
+}
+
+.free-check-label {
+  font-weight: bold;
+}
+
+#dataList_free dt:hover {
+  background-color: grey;
+}

@@ -53,6 +53,7 @@
                     <span class="carognate-info" id="main-svincoli">{{n_svincoli}} / {{max_svincoli}}</span>
                 </div>
             </div>
+            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#showFreeModal" id="showFreeBtn">MOSTRA SVINCOLATI</button>
             <div class="balances">
                 <div class="balance">
                     <span class="balance-label">Monte acquisti</span>
@@ -72,6 +73,55 @@
         <input id="my_market" type="hidden" value="{{my_market}}">
         <input id="my_balance_max" type="hidden" value="{{balance.Purchases_max}}">
         <input id="current_session" type="hidden" value="{{session.id}}">
+
+        <div class="modal fade" id="showFreeModal" tabindex="-1" role="dialog"
+            aria-labelledby="showFreeModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="showFreeModalLabel">LISTA SVINCOLATI</h4>
+                        <span class="close" id="closeGk" data-bs-dismiss="modal" ><img
+                            src="{% static 'l4m/images/close-blue.png' %}"></span>
+                    </div>
+                    <div class="modal-body free-checks">
+                        <div class="form-switch form-floating form-switch-md form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="freeGks" value="fgk" role="switch">
+                            <label class="form-check-label free-check-label" for="freeGks">P</label>
+                        </div>
+                        <div class="form-switch form-floating form-switch-md form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="freeDfs" value="fdf" role="switch">
+                            <label class="form-check-label free-check-label" for="freeDefs">D</label>
+                        </div>
+                        <div class="form-switch form-floating form-switch-md form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="freeCcs" value="fcc" role="switch">
+                            <label class="form-check-label free-check-label" for="freeCcs">C</label>
+                        </div>
+                        <div class="form-switch form-floating form-switch-md form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="freeFws" value="ffw" role="switch">
+                            <label class="form-check-label free-check-label" for="freeFws">A</label>
+                        </div>
+                    </div>
+
+                    <div id="freePlayersList">
+                        <!-- <input id="modal-ob-search_gk" type="text" onkeyup="searchPlayer('gk')" placeholder="Cerca giocatore" class="modal-form-input"> -->
+                        <dl id="dataList_free" class="dl-class">
+                            {% for fp in free_players %}
+                            <dt class="dt-free-content" data-role="{{fp.Role}}">
+                                [{{fp.Role}}]
+                                {{fp.Surname}}
+                                ({{fp.RealTeam__Name}})
+                    
+                                {% if fp.bet__Amount != None and not fp.bet__IsExpired %}
+                                <span class="temp_amount">[puntato a {{fp.bet__Amount}} da
+                                    {{fp.bet__Team_id__Name}}]</span>
+                                {% endif %}
+                    
+                                {% endfor %}
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
         
         <div class="modal fade" id="preOfficialModal" tabindex="-1" role="dialog"
             aria-labelledby="preOfficialModalLabel">

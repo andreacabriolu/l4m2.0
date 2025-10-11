@@ -34,6 +34,8 @@ class AuctionView(LoginRequiredMixin, View):
             players_cc = U.get_players_my_series("C", teamid, filtered_teams_ids, my_svincoli_current_session)
             players_fw = U.get_players_my_series("A", teamid, filtered_teams_ids, my_svincoli_current_session)
 
+            free_players = list(players_gk) + list(players_def) + list(players_cc) + list(players_fw)
+
             balance = U.get_balance(teamid)[0] #TODO: improve check
             balance_for_bets = U.get_balance_for_bets(teamid, balance['Purchases_max'])
             if(balance_for_bets is None): 
@@ -56,7 +58,8 @@ class AuctionView(LoginRequiredMixin, View):
                 'max_carognate' : C.MAX_CAROGNATE,
                 'n_carognate' : n_carognate,
                 'max_svincoli' : C.MAX_SVINCOLI,
-                'n_svincoli' : n_svincoli
+                'n_svincoli' : n_svincoli,
+                'free_players' : free_players,
 
             }
         except Exception as e:

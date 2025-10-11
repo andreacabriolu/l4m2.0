@@ -25,6 +25,29 @@ function showErrorAlert(response) {
     });
 }
 
+function manageFreeModal() {
+    var filters = [ $('#freeGks').prop('checked') ? 'P' : 'X', 
+                    $('#freeDfs').prop('checked') ? 'D' : 'X', 
+                    $('#freeCcs').prop('checked') ? 'C' : 'X', 
+                    $('#freeFws').prop('checked') ? 'A' : 'X' ];
+
+    if(filters.toString() == 'X,X,X,X') { //all unchecked is all checked
+        filters = ['P','D','C','A']
+    }
+
+    fdl = $('#dataList_free');
+    fdt = fdl.children('dt');
+
+    for (i = 0; i < fdt.length; i++) {
+        if (filters.includes(fdt[i].dataset['role'])) {
+            fdt[i].style.display = "";
+        } else {
+            fdt[i].style.display = "none";
+        }
+    }
+    
+}
+
 function openCarognataModal() {
 
     $('#carognataModal').modal('show');
@@ -195,6 +218,14 @@ window.addEventListener('DOMContentLoaded', event => {
         $('#modal-pl-betamount').val(
             currentVal + 5
         );
+    });
+
+    // $('#showFreeBtn').on('click', function () {
+    //     openFreeModal();
+    // });
+
+    $('#freeGks,#freeDfs,#freeCcs,#freeFws').on('change', function() {
+        manageFreeModal();
     });
 })
 
