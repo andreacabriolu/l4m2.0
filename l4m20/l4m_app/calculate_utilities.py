@@ -120,7 +120,7 @@ def calculate_b11_league(competition, day):
         team_ids_names = team.Team.objects.values_list("id", "Name")
 
         curr_day = U.get_current_day() 
-        days_to_calculate = range(int(day), int(curr_day)) if (int(day) < int(curr_day)) else int(curr_day)
+        days_to_calculate = range(int(day), int(curr_day)) if (int(day) < int(curr_day)) else [int(curr_day)]
         
         for _day in days_to_calculate:
             all_best = LU.get_best_11(team_ids_names, _day)
@@ -131,7 +131,7 @@ def calculate_main_league(competition, day):
     comp_series = U.get_all_series(competition.id)
 
     curr_day = U.get_current_day() 
-    days_to_calculate = range(int(day), int(curr_day)) if (int(day) < int(curr_day)) else int(curr_day)
+    days_to_calculate = range(int(day), int(curr_day)) if (int(day) < int(curr_day)) else [int(curr_day)]
 
     for _day in days_to_calculate:
         for series in comp_series:

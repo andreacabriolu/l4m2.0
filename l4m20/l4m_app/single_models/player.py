@@ -15,7 +15,7 @@ class Player(models.Model):
     
     Name = models.CharField(max_length=100, null=True)
     Surname = models.CharField(max_length=100)
-    Role = models.CharField(max_length=2, choices=ROLES)
+    Role = models.CharField(max_length=10, choices=ROLES)
     Status = models.CharField(max_length=1, choices=STATUSES)
     RealTeam = models.ForeignKey(on_delete=models.CASCADE,to=C.Constant_Strings.real_team, null=True)
     

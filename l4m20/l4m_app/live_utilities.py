@@ -10,13 +10,24 @@ import requests as req
 
 def get_best_11(team_ids_names, day):
     all_best = []
+    already_played_teams = []
+    url = "https://publicapi.fantamaster.it/livescores/?tcache=1756165942189"
+    resp = req.get(url)
+    resp_content = resp.content
+    resp_json = json.loads(resp_content)
+
+    for score in resp_json['scores']:
+        d_start = datetime.datetime.strptime(score['rawdate'], '%Y-%m-%d %H:%M').replace(tzinfo=ZoneInfo('Europe/Rome'))
+        if(d_start < datetime.datetime.now(ZoneInfo('Europe/Rome'))):
+            already_played_teams.append(score['home_name'])
+            already_played_teams.append(score['away_name'])
 
     # crea best 11 per ogni squadra
     for tid,name in team_ids_names:
-        keepers = enrich_and_sort_players('P', tid, day)
-        defenders = enrich_and_sort_players('D', tid, day)
-        midfielders = enrich_and_sort_players('C', tid, day)
-        attackers = enrich_and_sort_players('A', tid, day)
+        keepers = enrich_and_sort_players('P', tid, day, already_played_teams=already_played_teams)
+        defenders = enrich_and_sort_players('D', tid, day, already_played_teams=already_played_teams)
+        midfielders = enrich_and_sort_players('C', tid, day, already_played_teams=already_played_teams)
+        attackers = enrich_and_sort_players('A', tid, day, already_played_teams=already_played_teams)
         best = pick_best_11(keepers, defenders, midfielders, attackers)
         if(best):
             best["team_id"]=tid
@@ -224,6 +235,7 @@ def get_live_votes(day):
 
     live_votes = {}
     live_teams = []
+    already_played_teams = []
     current_day = resp_json['day']
     grades = resp_json['marks']
 
@@ -237,6 +249,10 @@ def get_live_votes(day):
         delta_end = datetime.timedelta(minutes=135) #stop live 135 minutes after the match
 
         isLive = d_start - delta_start < datetime.datetime.now(ZoneInfo('Europe/Rome')) < d_start + delta_end
+
+        if(not isLive and d_start < datetime.datetime.now(ZoneInfo('Europe/Rome'))):
+            already_played_teams.append(score['home_name'])
+            already_played_teams.append(score['away_name'])
 
         if (not isLive):
             continue 
@@ -253,7 +269,7 @@ def get_live_votes(day):
         _vote.Day = int(current_day)
         _vote.Competition = int(1) #TODO magic number: campionato
 
-    return live_votes, live_teams
+    return live_votes, live_teams, already_played_teams
 
 def get_couples_and_matches_from_calendar(seriesid, day, competition_id=1):
     matches_ = matches_calendar.MatchesCalendar.objects.filter(
@@ -402,9 +418,10 @@ def calculate_n_goals(grand_total):
     
     return int(diff / C.Various.THRESHOLD_GOL) + 1
 
-def check_already_played(current_day, real_team):
-    day_votes = vote.Vote.objects.filter(Q(Day=current_day) & Q(RealTeam_id=real_team.id))
-    return len(day_votes) > 0 
+def check_already_played(real_team, already_played_teams):
+    return real_team.Name in already_played_teams
+    # day_votes = vote.Vote.objects.filter(Q(Day=current_day) & Q(RealTeam_id=real_team.id))
+    # return len(day_votes) > 0 
 
 def check_role_with_module(role_tit, role_ris, current_module):
     if(
@@ -467,7 +484,8 @@ def check_valid_module_change_for_modifier(orig, current):
 def isValid(vote):
     return (len(vote) > 0 and vote[0].Vote > 0)
 
-def get_votes(lineup, current_day, live_votes, live_teams, my_teamid = None, home=True, get_for_calculation=False):
+def get_votes(lineup, current_day, live_votes, live_teams, already_played_teams=[],\
+               my_teamid = None, home=True, get_for_calculation=False):
     votes_tit = []
     votes_ris = []
     module = C.Modules._442 #default
@@ -503,7 +521,7 @@ def get_votes(lineup, current_day, live_votes, live_teams, my_teamid = None, hom
         
         pl = player.Player.objects.get(pk=l[1])
 
-        already_played = check_already_played(current_day, pl.RealTeam)
+        already_played = check_already_played(pl.RealTeam, already_played_teams)
 
         #check if player is LIVE
         if pl.id in live_votes:
@@ -625,7 +643,7 @@ def get_votes(lineup, current_day, live_votes, live_teams, my_teamid = None, hom
     return [votes_tit, _items, votes_ris]
     
     
-def enrich_and_sort_players(role, teamid, current_day, cap_id=-1):
+def enrich_and_sort_players(role, teamid, current_day, cap_id=-1, already_played_teams=[]):
     # needed by b11 (associates votes to pl, sorts by totvote and then vote)
     players = U.get_my_players_filtered(role, teamid)
     enriched_players = []
@@ -633,7 +651,7 @@ def enrich_and_sort_players(role, teamid, current_day, cap_id=-1):
     for keep in players:
         idpl = keep["Player__id"]
         pl = player.Player.objects.get(pk=idpl)
-        already_played = check_already_played(current_day, pl.RealTeam)
+        already_played = check_already_played(pl.RealTeam, already_played_teams)
 
         _vote = vote.Vote.objects.filter(Q(Player_id=idpl) & Q(Day=current_day))
         votes_pl = make_vote_obj(_vote[0], cap_id) if len(_vote) > 0 else \
