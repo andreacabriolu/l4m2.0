@@ -25,6 +25,7 @@ urlpatterns = [
     path("l4m/lineup/getLast/", lineup_views.GetLastLineupView.as_view(), name="get_last_lineup"),
     path("l4m/live/", live_views.LiveView, name="live"),
     path("l4m/live_b11/", live_views.LiveB11View.as_view(), name="live_b11"),
+    path("l4m/getLineupsByTeam/", live_views.GetLineupsByTeamView.as_view(), name="get_lineups_by_team"),
     path("l4m/", dashboard_views.DashboardView.as_view(), name="dashboard"),
     path("l4m/calculate/", admin_views.CalculateView.as_view(), name="calculate"),
     path("l4m/calculate/getCurrentDayByCompetition/", admin_views.GetCurrentDayByCompetition.as_view(), name="get_current_day"),
@@ -33,6 +34,5 @@ urlpatterns = [
     path("l4m/retrieveRankingInfo/", dashboard_views.RetrieveRankingInfoView.as_view(), name="retrieve_ranking_info"),
     path("l4m/retrieveb11RankingInfo/", dashboard_views.RetrieveB11RankingInfoView.as_view(), name="retrieve_b11_ranking_info"),
     path("l4m/getSeriesByCompetition/", dashboard_views.GetSeriesByCompetitionView.as_view(), name="get_series_by_competition"),
-
 
 ]

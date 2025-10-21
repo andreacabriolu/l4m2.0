@@ -20,6 +20,17 @@ function buildForm(url, token, jsonData) {
         return $(`<form action='${url}' method='post'><input type='text' name='jsonData' value='${jsonData}' /><input type='hidden' name='csrfmiddlewaretoken' value='${token}' /></form>`);
     }
 
+function add_lineups(l_ups) {
+    des_l_ups = JSON.parse(l_ups);
+
+    for (l_up in l_ups) {
+        var line = l_up.fields.Line;
+    }
+
+    $('#lineups').append(generatedTables);
+}
+
+
 window.addEventListener('DOMContentLoaded', event => {
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
@@ -49,5 +60,22 @@ window.addEventListener('DOMContentLoaded', event => {
 
         form.trigger('submit');
     });
+
+    $('#showLineupHistoryModal').on('show.bs.modal', function(e){
+        const token = Cookies.get('csrftoken');
+
+        var data = { 'teamname': e.relatedTarget.dataset.team, 'day': $('#current_day').val(), 'csrfmiddlewaretoken': token };
+
+        $.post("/l4m/getLineupsByTeam/", data, function (response) {
+        if (response.startsWith('error')) {
+            showErrorAlert(response);
+        }
+        else {
+            var l_ups = response;
+            add_lineups(l_ups);
+        }
+    });
+    });
+
 
 })

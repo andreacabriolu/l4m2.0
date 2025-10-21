@@ -1,16 +1,14 @@
-from datetime import datetime
+from django.core import serializers
 from django.shortcuts import render
 from django.views import View
 from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 import json
-from django.db.models import Q
 
 
 from .. import utilities as U
 from .. import live_utilities as LU
 from ..models import *
-from l4m20 import constants as C
 
 class LiveB11View(LoginRequiredMixin, View):
     template_name = 'l4m/live_b11.html'
@@ -117,3 +115,16 @@ def LiveView(request):
     
     return render(request, template_name, params)
     
+class GetLineupsByTeamView(View):
+    
+    def post(self, request):
+        tname = request.POST['teamname']
+        day = request.POST['day']
+        t = U.get_team_by_name(tname)
+        l_ups = U.get_all_lineups(t.id, day)
+
+        if len(l_ups) <= 0:
+            return HttpResponse()
+
+        json_l_ups = serializers.serialize('json', l_ups)
+        return HttpResponse(json_l_ups)

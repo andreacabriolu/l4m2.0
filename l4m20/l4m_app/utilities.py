@@ -303,16 +303,14 @@ def complete_list(l, num_max, role):
     return l
 
 def get_current_day(competition_id=""):
-    #approach 1: take the first future match's day, starting from now + 24hh
-    #      # tomorrow = datetime.datetime.now() + datetime.timedelta(1)
-    # r = real_calendar.Real_calendar.objects.filter(Date__gte=tomorrow).values('Day').first()
-    # if(r is None):
-    #     return 0
-    # return r['Day']
-
-    #approach 2: get from db (static)
     day = config.Config.objects.filter(Name="CurrentDay").first()
     return day.Value
+
+def get_team_by_name(tname):
+    return team.Team.objects.get(Name=tname)
+
+def get_all_lineups(teamid, day):
+    return lineup.Lineup.objects.filter(Team=teamid, Day=day).order_by('Version')
 
 def get_last_valid_lineup(teamid):
     return lineup.Lineup.objects.filter(Team=teamid).order_by('-Day').order_by('-Version')
