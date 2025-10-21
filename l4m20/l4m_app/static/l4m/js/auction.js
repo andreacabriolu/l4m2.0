@@ -220,13 +220,16 @@ window.addEventListener('DOMContentLoaded', event => {
         );
     });
 
-    // $('#showFreeBtn').on('click', function () {
-    //     openFreeModal();
-    // });
-
     $('#freeGks,#freeDfs,#freeCcs,#freeFws').on('change', function() {
         manageFreeModal();
     });
+
+    if($('#current_session').val() == "") {
+        $('#main-div-container').addClass('no-pointer-events-opaque');
+    }
+    else {
+        $('#main-div-container').removeClass('no-pointer-events-opaque');
+    }
 })
 
 function closeDlg(el) {

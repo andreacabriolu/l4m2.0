@@ -28,6 +28,8 @@ def get_best_11(team_ids_names, day):
         defenders = enrich_and_sort_players('D', tid, day, already_played_teams=already_played_teams)
         midfielders = enrich_and_sort_players('C', tid, day, already_played_teams=already_played_teams)
         attackers = enrich_and_sort_players('A', tid, day, already_played_teams=already_played_teams)
+        if (keepers == [] and defenders == [] and midfielders == [] and attackers == []):
+            continue
         best = pick_best_11(keepers, defenders, midfielders, attackers)
         if(best):
             best["team_id"]=tid
