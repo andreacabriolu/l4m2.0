@@ -420,11 +420,12 @@ def calculate_n_goals(grand_total):
     
     return int(diff / C.Various.THRESHOLD_GOL) + 1
 
-def check_already_played(real_team, already_played_teams):
+def check_already_played(real_team, already_played_teams, day):
+    if U.get_current_day() != day :
+        return True
+    
     return real_team.Name in already_played_teams
-    # day_votes = vote.Vote.objects.filter(Q(Day=current_day) & Q(RealTeam_id=real_team.id))
-    # return len(day_votes) > 0 
-
+    
 def check_role_with_module(role_tit, role_ris, current_module):
     if(
         ((role_tit == 'D') and current_module in [C.Modules._343, C.Modules._352]) or \
@@ -523,7 +524,7 @@ def get_votes(lineup, current_day, live_votes, live_teams, already_played_teams=
         
         pl = player.Player.objects.get(pk=l[1])
 
-        already_played = check_already_played(pl.RealTeam, already_played_teams)
+        already_played = check_already_played(pl.RealTeam, already_played_teams, current_day)
 
         #check if player is LIVE
         if pl.id in live_votes:
@@ -653,7 +654,7 @@ def enrich_and_sort_players(role, teamid, current_day, cap_id=-1, already_played
     for keep in players:
         idpl = keep["Player__id"]
         pl = player.Player.objects.get(pk=idpl)
-        already_played = check_already_played(pl.RealTeam, already_played_teams)
+        already_played = check_already_played(pl.RealTeam, already_played_teams, current_day)
 
         _vote = vote.Vote.objects.filter(Q(Player_id=idpl) & Q(Day=current_day))
         votes_pl = make_vote_obj(_vote[0], cap_id) if len(_vote) > 0 else \

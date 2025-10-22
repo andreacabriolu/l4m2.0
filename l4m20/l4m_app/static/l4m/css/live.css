@@ -166,4 +166,24 @@ table .w-30 {
     font-weight: bolder;
     font-size: larger;
     text-align: center;
+    color: lightgreen;
+  }
+
+  .lup-btn {
+    width: -webkit-fill-available;
+  }
+
+  .lup-row {
+    text-align: center;
+  }
+
+  .sep {
+    background-color: whitesmoke;
+    color: rgb(88, 88, 245);
+    text-align: center;
+    font-weight: bolder;
+  }
+
+  .lup-hist-title {
+    text-align: center;
   }

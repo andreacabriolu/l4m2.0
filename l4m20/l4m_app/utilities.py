@@ -43,7 +43,7 @@ def get_squads(teamid):
 
 def get_players_by_squad(_squads):
     pl_ids = [pl.Player_id for pl in _squads]
-    return player.Player.objects.filter(id__in=pl_ids).values('id','Surname')
+    return player.Player.objects.filter(id__in=pl_ids).values('id','Surname','Role')
 
 def get_current_session(marketid):
     nowtime = datetime.datetime.now(ZoneInfo('Europe/Rome'))

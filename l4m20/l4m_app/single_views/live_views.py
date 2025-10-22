@@ -129,6 +129,6 @@ class GetLineupsByTeamView(View):
         pls_map = U.get_players_by_squad(_squads)
         pls_dict = {}
         for pl in pls_map:
-            pls_dict[pl['id']] = pl['Surname']
+            pls_dict[pl['id']] = [pl['Surname'],pl['Role']]
         json_l_ups = U.cleanJSON(serializers.serialize('json', l_ups))
         return HttpResponse(json.dumps({'map':pls_dict,'l_ups':json_l_ups}))

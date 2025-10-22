@@ -27,41 +27,63 @@ function get_role(el) {
 
 function add_lineups(l_ups, map) {
     var generatedTables = [];
+    $('#lineups').empty();
 
     var _tbase = `
-        <table class="l-up-table">
-        <thead>
-            <tr>
-                <th colspan="1"></th>
-                <th colspan="1"></th>
-            </tr>
-        </thead>
-        <tbody class="table-group-divider">`;
+        <table class="l-up-table">`;
 
-    var _tend = `
-        </tbody>
-        </table>`;
+    var _tend = `</table>`;
 
     l_ups.forEach((l_up)=>{
         var line = l_up.fields.Line;
         
         var _tdata = "";
         
-        _tdata += `<tr><td class="mod" colspan="2">${line.mod}</td></tr>`;
+        _tdata += `<thead><tr class="collapse-row"><td colspan="2">
+        <button class="lup-btn btn btn-secondary" data-bs-toggle="collapse" data-bs-target="#b_${l_up.pk}">VERSIONE ${l_up.fields.Version} (${new Date(l_up.fields.Timestamp).toLocaleString("it-IT", { timeZone: "UTC" })})</button>
+        </td></tr></thead>`;
 
-        for (el in line) {
-            if (el == 'mod' || el == 'captain') { continue; }
+        _tdata += `<tbody id="b_${l_up.pk}" class="table-group-divider collapse">`;
+        
+        _tdata += `<tr><td/><td class="mod">${line.mod}</td></tr>`;
 
+        var tits = [];
+        var riss = [];
+
+        $.each(line, function(k,v){
+            if (k.endsWith('tit')) { tits.push(v); }
+            if (k.endsWith('ris')) { riss.push(v); }
+        });
+
+
+        $.each(tits, function(i,v) {
+            cap_suffix = line.captain == v ? "[CAP]" : "";
             _tdata += 
-            `<tr class="">
+            `<tr class="lup-row">
                 <td>
-                    ${get_role(el)}
+                    ${map[v][1]}
                 </td>
                 <td>
-                    ${map[line[el]]}
+                    ${cap_suffix} ${map[v][0]}
                 </td>
             </tr>`;
-        }
+        });
+            
+        _tdata += `<tr><td/><td class="sep">PANCHINA</td></tr>`;
+
+        $.each(riss, function(i,v) {
+            _tdata += 
+            `<tr class="lup-row">
+                <td>
+                    ${map[v][1]}
+                </td>
+                <td>
+                    ${cap_suffix} ${map[v][0]}
+                </td>
+            </tr>`;
+        });
+
+        _tdata += `</tbody>`;
         
         generatedTables.push(_tbase + _tdata + _tend);
         
