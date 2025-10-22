@@ -16,6 +16,10 @@ class LiveB11View(LoginRequiredMixin, View):
     def get(self, request):
         current_day = U.get_current_day()
 
+        day_already_started, _ = U.check_day_already_started(current_day)
+        if not day_already_started:
+            return render(request, self.template_name, {})
+        
         team_ids_names = team.Team.objects.values_list("id", "Name")
         
         all_best = LU.get_best_11(team_ids_names, current_day)
