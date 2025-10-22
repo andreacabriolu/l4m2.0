@@ -20,12 +20,52 @@ function buildForm(url, token, jsonData) {
         return $(`<form action='${url}' method='post'><input type='text' name='jsonData' value='${jsonData}' /><input type='hidden' name='csrfmiddlewaretoken' value='${token}' /></form>`);
     }
 
-function add_lineups(l_ups) {
-    des_l_ups = JSON.parse(l_ups);
+function get_role(el) {
+    return (el.startsWith('gk') ? 'P' : (el.startsWith('d') ? 'D' : (el.startsWith('c') ? 'C' : (el.startsWith('a') ? 'A' : ''))));
 
-    for (l_up in l_ups) {
+}
+
+function add_lineups(l_ups, map) {
+    var generatedTables = [];
+
+    var _tbase = `
+        <table class="l-up-table">
+        <thead>
+            <tr>
+                <th colspan="1"></th>
+                <th colspan="1"></th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">`;
+
+    var _tend = `
+        </tbody>
+        </table>`;
+
+    l_ups.forEach((l_up)=>{
         var line = l_up.fields.Line;
-    }
+        
+        var _tdata = "";
+        
+        _tdata += `<tr><td class="mod" colspan="2">${line.mod}</td></tr>`;
+
+        for (el in line) {
+            if (el == 'mod' || el == 'captain') { continue; }
+
+            _tdata += 
+            `<tr class="">
+                <td>
+                    ${get_role(el)}
+                </td>
+                <td>
+                    ${map[line[el]]}
+                </td>
+            </tr>`;
+        }
+        
+        generatedTables.push(_tbase + _tdata + _tend);
+        
+    });
 
     $('#lineups').append(generatedTables);
 }
@@ -71,8 +111,10 @@ window.addEventListener('DOMContentLoaded', event => {
             showErrorAlert(response);
         }
         else {
-            var l_ups = response;
-            add_lineups(l_ups);
+            var j_res = JSON.parse(response);
+            var l_ups = JSON.parse(j_res.l_ups);
+            var map = j_res.map;
+            add_lineups(l_ups, map);
         }
     });
     });

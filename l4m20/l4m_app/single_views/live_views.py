@@ -125,6 +125,10 @@ class GetLineupsByTeamView(View):
 
         if len(l_ups) <= 0:
             return HttpResponse()
-
-        json_l_ups = serializers.serialize('json', l_ups)
-        return HttpResponse(json_l_ups)
+        _squads = U.get_squads(t.id)
+        pls_map = U.get_players_by_squad(_squads)
+        pls_dict = {}
+        for pl in pls_map:
+            pls_dict[pl['id']] = pl['Surname']
+        json_l_ups = U.cleanJSON(serializers.serialize('json', l_ups))
+        return HttpResponse(json.dumps({'map':pls_dict,'l_ups':json_l_ups}))

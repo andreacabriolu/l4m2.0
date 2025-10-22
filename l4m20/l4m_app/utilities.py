@@ -38,6 +38,13 @@ def get_all_series(competitionid):
 def get_my_markets(seriesid):
     return market.Market.objects.filter(Series_id=seriesid)
 
+def get_squads(teamid):
+    return squads.Squads.objects.filter(Team_id=teamid)
+
+def get_players_by_squad(_squads):
+    pl_ids = [pl.Player_id for pl in _squads]
+    return player.Player.objects.filter(id__in=pl_ids).values('id','Surname')
+
 def get_current_session(marketid):
     nowtime = datetime.datetime.now(ZoneInfo('Europe/Rome'))
 

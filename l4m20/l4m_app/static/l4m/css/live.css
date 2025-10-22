@@ -155,3 +155,15 @@ table .w-30 {
     width: fit-content !important;
     min-width: 5em;
   }
+
+  .l-up-table {
+    background-color: #212529;
+    color: whitesmoke;
+    width: -webkit-fill-available;
+  }
+
+  .mod {
+    font-weight: bolder;
+    font-size: larger;
+    text-align: center;
+  }
