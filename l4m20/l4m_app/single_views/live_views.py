@@ -129,8 +129,9 @@ class GetLineupsByTeamView(View):
 
         if len(l_ups) <= 0:
             return HttpResponse()
-        _squads = U.get_squads(t.id)
-        pls_map = U.get_players_by_squad(_squads)
+
+        #TODO: get by squad, keeping the free players in squad
+        pls_map = U.get_players_by_lups(l_ups)
         pls_dict = {}
         for pl in pls_map:
             pls_dict[pl['id']] = [pl['Surname'],pl['Role']]

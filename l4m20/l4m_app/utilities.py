@@ -45,6 +45,19 @@ def get_players_by_squad(_squads):
     pl_ids = [pl.Player_id for pl in _squads]
     return player.Player.objects.filter(id__in=pl_ids).values('id','Surname','Role')
 
+def get_players_by_lups(l_ups):
+    _lups = []
+    for l_up in l_ups:
+        j = json.loads(cleanJSON(l_up.Line))
+        _lups.append([v for _,v in j.items()][1:])
+
+    if len(_lups) == 1:
+        return _lups[0]
+
+    pl_ids = list(set().union(*_lups))
+
+    return player.Player.objects.filter(id__in=pl_ids).values('id','Surname','Role')
+
 def get_current_session(marketid):
     nowtime = datetime.datetime.now(ZoneInfo('Europe/Rome'))
 

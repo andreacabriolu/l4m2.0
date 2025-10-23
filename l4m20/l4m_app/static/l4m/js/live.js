@@ -20,9 +20,17 @@ function buildForm(url, token, jsonData) {
         return $(`<form action='${url}' method='post'><input type='text' name='jsonData' value='${jsonData}' /><input type='hidden' name='csrfmiddlewaretoken' value='${token}' /></form>`);
     }
 
-function get_role(el) {
-    return (el.startsWith('gk') ? 'P' : (el.startsWith('d') ? 'D' : (el.startsWith('c') ? 'C' : (el.startsWith('a') ? 'A' : ''))));
+function get_pl_info(v, map) {
+    
+    ret_dict = {};
+    
+    if(map[v] != undefined) {
+        ret_dict['role'] = map[v][1];
+        ret_dict['surname'] = map[v][0];
+        return ret_dict;
+    } 
 
+    return null;
 }
 
 function add_lineups(l_ups, map) {
@@ -55,16 +63,17 @@ function add_lineups(l_ups, map) {
             if (k.endsWith('ris')) { riss.push(v); }
         });
 
-
         $.each(tits, function(i,v) {
             cap_suffix = line.captain == v ? "[CAP]" : "";
+            pl_info = get_pl_info(v, map);
+            if(pl_info == null) { pl_info = {'role':'','surname':'sconosciuto'}; }
             _tdata += 
             `<tr class="lup-row">
                 <td>
-                    ${map[v][1]}
+                    ${pl_info.role}
                 </td>
                 <td>
-                    ${cap_suffix} ${map[v][0]}
+                    ${cap_suffix} ${pl_info.surname}
                 </td>
             </tr>`;
         });
@@ -72,13 +81,15 @@ function add_lineups(l_ups, map) {
         _tdata += `<tr><td/><td class="sep">PANCHINA</td></tr>`;
 
         $.each(riss, function(i,v) {
+            pl_info = get_pl_info(v, map);
+            if(pl_info == null) { pl_info = {'role':'','surname':'sconosciuto'}; }
             _tdata += 
             `<tr class="lup-row">
                 <td>
-                    ${map[v][1]}
+                    ${pl_info.role}
                 </td>
                 <td>
-                    ${cap_suffix} ${map[v][0]}
+                    ${pl_info.surname}
                 </td>
             </tr>`;
         });
