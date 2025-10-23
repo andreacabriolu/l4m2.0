@@ -53,7 +53,8 @@ function add_lineups(l_ups, map) {
 
         _tdata += `<tbody id="b_${l_up.pk}" class="table-group-divider collapse">`;
         
-        _tdata += `<tr><td/><td class="mod">${line.mod}</td></tr>`;
+        _modnogk = l_up.fields.ModNoGk == true ? " (Mod No Portiere)" : "";
+        _tdata += `<tr><td/><td class="mod">${line.mod}${_modnogk}</td></tr>`;
 
         var tits = [];
         var riss = [];
