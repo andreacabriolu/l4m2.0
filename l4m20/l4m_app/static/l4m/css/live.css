@@ -187,3 +187,23 @@ table .w-30 {
   .lup-hist-title {
     text-align: center;
   }
+
+
+@media (max-width:800px) {
+  .modal {
+    align-content: center;
+    padding: 40vh !important;
+  }
+}
+
+@media (max-width:800px) {
+  .modal-backdrop{
+      width: 100% !important;
+      height: 100% !important;
+  }
+}
+
+.modal-dialog {
+  top: 10vh;
+  right: 5vw;
+}
