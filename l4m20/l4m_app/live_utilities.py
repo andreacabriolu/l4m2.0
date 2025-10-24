@@ -421,7 +421,7 @@ def calculate_n_goals(grand_total):
     return int(diff / C.Various.THRESHOLD_GOL) + 1
 
 def check_already_played(real_team, already_played_teams, day):
-    if U.get_current_day() != day :
+    if int(U.get_current_day()) != day : #day yet to start, old json
         return True
     
     return real_team.Name in already_played_teams
