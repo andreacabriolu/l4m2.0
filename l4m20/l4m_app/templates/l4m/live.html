@@ -88,9 +88,16 @@
                         <th colspan="6" class="team-score mozilla-headline-teamname display-6">{{team_votes.1.9}}</th>
                     </tr> 
                     <tr>
-                        <th colspan="6"><button type="button" class="btn btn-secondary" 
+                        <th colspan="6">
+                            <button type="button" 
+                            {% if team_votes.1.14 != -1 %} class="btn btn-secondary" {% else %} class="btn btn-danger" {% endif %} 
                             data-bs-toggle="modal" data-bs-target="#showLineupHistoryModal" 
-                            id="showLUHist" data-team="{{team_votes.1.1}}">VERSIONE {{team_votes.1.14}}</button></th>
+                            id="showLUHist" data-team="{{team_votes.1.1}}">
+                                {% if team_votes.1.14 != -1 %}VERSIONE {{team_votes.1.14}} 
+                                {% else %} ULTIMA FORMAZIONE VALIDA
+                                {% endif %}
+                            </button>
+                        </th>
                     </tr>
                 </thead>
                 <tbody class="table-group-divider">

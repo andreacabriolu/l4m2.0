@@ -330,11 +330,26 @@ def get_all_lineups(teamid, day):
     return lineup.Lineup.objects.filter(Team=teamid, Day=day).order_by('Version')
 
 def get_last_valid_lineup(teamid):
-    return lineup.Lineup.objects.filter(Team=teamid).order_by('-Day').order_by('-Version')
+    all_lups = lineup.Lineup.objects.filter(Team=teamid).order_by('-Version').order_by('-Day')
+    return list(all_lups)[0]
 
 def get_last_lineup(teamid, day):
     return lineup.Lineup.objects.filter(Team=teamid, Day=day).order_by('-Version')[:1]
-    
+
+def save_last_valid_lineup(_lineup, day):
+    last_lineup_late = lineup.Lineup(
+        Line = _lineup.Line,
+        Day = day,
+        Version = -1, #LATE LINEUP
+        Team = _lineup.Team,
+        Timestamp = datetime.datetime.now(),
+        Series = _lineup.Series,
+        HideLineup = _lineup.HideLineup,
+        ModNoGk = _lineup.ModNoGk,
+    )
+
+    last_lineup_late.save()
+
 def save_lineup(lineup_info):
     lineup_new = lineup.Lineup(
         Line = lineup_info['line'],
