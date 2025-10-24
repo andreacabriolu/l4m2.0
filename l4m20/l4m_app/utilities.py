@@ -147,6 +147,13 @@ def get_current_bets_amount(teamid):
     sum = bet.Bet.objects.filter(Q(Team_id=teamid) & Q(Market_id=get_my_market(teamid).id)).aggregate(Sum('Amount'))['Amount__sum']
     return sum if sum is not None else 0
 
+def update_balance(teamid):
+    bal = get_balance_obj(teamid)[0]
+    n_non_schierate = bal.N_formazioni_non_schierate
+    bal.N_formazioni_non_schierate = n_non_schierate + 1
+
+    bal.save()
+
 def get_balance_for_bets(teamid, balance_max):
     sum = bet.Bet.objects.filter(Q(Team_id=teamid) & Q(Market_id=get_my_market(teamid).id)).aggregate(Sum('Amount'))
     #missing slot count
@@ -429,3 +436,16 @@ def get_scores(t_id):
         fps.append(res['Fp'])
     
     return fps
+
+def check_penalties(t_id, day, result):
+    l = get_last_lineup(t_id, day)[0]
+
+    if l.Version > 0:
+        return None
+
+    bal = get_balance_obj(t_id)[0]
+    n_non_schierate = bal.N_formazioni_non_schierate
+    if n_non_schierate <= C.MAX_NON_SCHIERATE:
+        return 0 #0 pt
+    else:
+        return -1 #-1 pt 

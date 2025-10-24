@@ -73,7 +73,6 @@ def LiveView(request):
             #TODO: save lst valid lineup
 
         lineup_to_show = t.Name #base
-        # last_valid_l = t.Name
 
         if not overtime:
             if len(l) > 0:
@@ -87,6 +86,8 @@ def LiveView(request):
             else:
                 lineup_to_show = last_valid_l
                 U.save_last_valid_lineup(last_valid_l, day)
+                U.update_balance(t.id)
+                
         else:  #filter for historical data
             lineup_to_show = l[0] if len(l)> 0 else t.Name #always valued because we SHOULD save the lineup
 

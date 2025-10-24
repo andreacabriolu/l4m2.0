@@ -61,6 +61,11 @@ def write_main_league_rankings(vote_per_series, competition_id, day, seriesid):
             dr_home = gf_home - gs_home
             dr_away = gf_away - gs_away
 
+        pen_home = U.check_penalties(team_home, day, result)
+        pen_away = U.check_penalties(team_away, day, result)
+        # pt_home = pt_home if pen_home is None else (pt_home - pen_home)
+        # pt_away = pt_away if pen_away is None else pen_away
+
         stats_home = {'pt': pt_home, 'fpt': fp_home, 'pg': day, 'v': n_win_home, 'n': n_null_home, 'p': n_lose_home, 'gf': gf_home, 'gs': gs_home, 'dr': dr_home}
         stats_away = {'pt': pt_away, 'fpt': fp_away, 'pg': day, 'v': n_win_away, 'n': n_null_away, 'p': n_lose_away, 'gf': gf_away, 'gs': gs_away, 'dr': dr_away}
 
@@ -142,7 +147,6 @@ def calculate_main_league(competition, day):
 
             for t in series_teams:
                 l = U.get_last_lineup(t, _day)
-                # last_valid_l = U.get_last_valid_lineup(t) #TODO: manage last valid lineup for a day
 
                 lineup_to_show = l[0]
                 last_lineups_d[t.id] = lineup_to_show
