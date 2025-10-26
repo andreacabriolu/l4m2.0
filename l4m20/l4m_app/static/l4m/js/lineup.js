@@ -254,6 +254,7 @@ window.addEventListener('DOMContentLoaded', event => {
     }));
 
     $('#btnSaveLineup').on('click', function () {
+        $(this).prop('disabled', true);
         var allFilled = true;
         var playerSlots = {};
         var options = {};
@@ -312,7 +313,8 @@ window.addEventListener('DOMContentLoaded', event => {
                     showErrorAlert(response);
                 }
                 else {
-                    showInfoAlert("FORMAZIONE SCHIERATA CORRETTAMENTE!");
+                    showPopupErrorAlert("FORMAZIONE SCHIERATA CORRETTAMENTE!");
+                    $('#btnSaveLineup').prop('disabled', false);
                 }
             });
         }
