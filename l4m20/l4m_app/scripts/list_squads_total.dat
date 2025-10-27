@@ -1,0 +1,74 @@
+Leonalby	                                        
+Manzo Team	                                        
+Newteam		                                        
+A.S Temi		                                     
+                                                    
+Real Arrogutottu	                                
+RagNarok F.c.			                             
+SAETTA77			                                
+SEXLARGIUS			                                
+                                                    
+Porty team		                                    
+FC FLUMINI		                                    
+Jesportivo		                                    
+aston birra 	                                    
+                                                    
+Fluminadus_FC	                                    
+Malagalello 	                                    
+King Giŏ		                                    
+Aston Bidda		                                    
+                                                    
+Lucio Hunting	                                    
+Bentu Estiu FC 	                                    
+Danimanager		                                    
+FC_SRT			                                    
+                                                    
+Spartak Bomber	                                    
+PSY Calcio
+LU Cagotti
+Monte agruxau
+
+  7  Girone A       6
+  8  Girone B       6
+  9  Girone C       6
+ 10  Girone D       6
+ 11  Girone E       6
+ 12  Girone F       6
+
+ 36 | Jesportivo        
+ 34 | Monte agruxau     
+ 33 | Real Arrogutottu  
+     29 | Porty_team       
+ 27 | SAETTA77          
+ 26 | SEXLARGIUS        
+     24 | aston birra      
+ 23 | Manzo Team        
+ 21 | FC_SRT            
+ 20 | Fluminadus_FC     
+ 35 | Bentu Estiu FC    
+ 39 | Spartak Bomber    
+ 31 | Leonalby          
+ 28 | FC FLUMINI        
+ 40 | King Giŏ          
+ 37 | LU Cagotti        
+ 45 | Bentu Estiu FC    
+ 32 | A.S Temi          
+ 46 | PSY Calcio        
+ 50 | AS Temi           
+ 48 | RagNarok F.c.     
+ 47 | Malagalello       
+ 44 | Lucio Hunting     
+ 43 | Newteam           
+ 42 | Danimanager       
+ 41 | Aston Bidda       
+
+
+insert into "l4m_app_team_Series" (team_id,series_id) values (31,7),(23,7),(43,7),(32,7);
+insert into "l4m_app_team_Series" (team_id,series_id) values (33,8),(48,8),(27,8),(26,8);
+insert into "l4m_app_team_Series" (team_id,series_id) values (29,9),(28,9),(36,9),(24,9);
+insert into "l4m_app_team_Series" (team_id,series_id) values (20,10),(47,10),(40,10),(41,10);
+insert into "l4m_app_team_Series" (team_id,series_id) values (44,11),(45,11),(42,11),(21,11);
+insert into "l4m_app_team_Series" (team_id,series_id) values (39,12),(46,12),(37,12),(34,12);
+
+
+

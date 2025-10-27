@@ -441,11 +441,11 @@ def check_penalties(t_id, day, result):
     l = get_last_lineup(t_id, day)[0]
 
     if l.Version > 0:
-        return None
+        return 3, 1, 0 #standard
 
     bal = get_balance_obj(t_id)[0]
     n_non_schierate = bal.N_formazioni_non_schierate
     if n_non_schierate <= C.MAX_NON_SCHIERATE:
-        return 0 #0 pt
+        return 0, 0, 0 #0 pt
     else:
-        return -1 #-1 pt 
+        return -1, -1, -1 #-1 pt 

@@ -3,6 +3,7 @@ import json
 from . import utilities as U
 from . import live_utilities as LU
 from django.db.models import Q
+from l4m20 import constants as C
 
 def write_main_league_rankings(vote_per_series, competition_id, day, seriesid):
     last_ranking = U.get_ranking(competition_id, seriesid, int(day)-1)
@@ -12,6 +13,13 @@ def write_main_league_rankings(vote_per_series, competition_id, day, seriesid):
     
     new_ranking_line = []
 
+    WIN_PT_H = C.WIN_PT 
+    WIN_PT_A = C.WIN_PT
+    DRAW_PT_H = C.DRAW_PT
+    DRAW_PT_A = C.DRAW_PT
+    LOSE_PT_H = C.LOSE_PT
+    LOSE_PT_A = C.LOSE_PT
+
     for _vote in vote_per_series:
         team_home = _vote[0][0]
         team_away = _vote[1][0]
@@ -20,6 +28,9 @@ def write_main_league_rankings(vote_per_series, competition_id, day, seriesid):
         goal_home = U.calculate_n_goals(fp_home)
         goal_away = U.calculate_n_goals(fp_away)
         result = 'h' if goal_home > goal_away else 'a' if goal_away > goal_home else 'n'
+
+        WIN_PT_H, DRAW_PT_H, LOSE_PT_H = U.check_penalties(team_home, day, result)
+        WIN_PT_A, DRAW_PT_A, LOSE_PT_A = U.check_penalties(team_away, day, result)
 
         if(last_ranking is None): #match 1
             n_win_home = 1 if result == 'h' else 0
@@ -32,8 +43,8 @@ def write_main_league_rankings(vote_per_series, competition_id, day, seriesid):
             gs_home = goal_away
             gf_away = goal_away
             gs_away = goal_home
-            pt_home = 3 if result == 'h' else 1 if result == 'n' else 0
-            pt_away = 3 if result == 'a' else 1 if result == 'n' else 0
+            pt_home = WIN_PT_H if result == 'h' else DRAW_PT_H if result == 'n' else LOSE_PT_H
+            pt_away = WIN_PT_A if result == 'a' else DRAW_PT_A if result == 'n' else LOSE_PT_A
             dr_home = gf_home - gs_home
             dr_away = gf_away - gs_away
         else:
@@ -54,17 +65,12 @@ def write_main_league_rankings(vote_per_series, competition_id, day, seriesid):
             gs_home = last_ranking_home['gs'] + goal_away
             gf_away = last_ranking_away['gf'] + goal_away
             gs_away = last_ranking_away['gs'] + goal_home
-            pt_home = last_ranking_home['pt'] + 3 if result == 'h' else last_ranking_home['pt'] + 1 if result == 'n' else last_ranking_home['pt']
-            pt_away = last_ranking_away['pt'] + 3 if result == 'a' else last_ranking_away['pt'] + 1 if result == 'n' else last_ranking_away['pt']
+            pt_home = last_ranking_home['pt'] + WIN_PT_H if result == 'h' else last_ranking_home['pt'] + DRAW_PT_H if result == 'n' else last_ranking_home['pt'] + LOSE_PT_H
+            pt_away = last_ranking_away['pt'] + WIN_PT_A if result == 'a' else last_ranking_away['pt'] + DRAW_PT_A if result == 'n' else last_ranking_away['pt'] + LOSE_PT_A
             fp_home = last_ranking_home['fpt'] + fp_home
             fp_away = last_ranking_away['fpt'] + fp_away
             dr_home = gf_home - gs_home
             dr_away = gf_away - gs_away
-
-        pen_home = U.check_penalties(team_home, day, result)
-        pen_away = U.check_penalties(team_away, day, result)
-        # pt_home = pt_home if pen_home is None else (pt_home - pen_home)
-        # pt_away = pt_away if pen_away is None else pen_away
 
         stats_home = {'pt': pt_home, 'fpt': fp_home, 'pg': day, 'v': n_win_home, 'n': n_null_home, 'p': n_lose_home, 'gf': gf_home, 'gs': gs_home, 'dr': dr_home}
         stats_away = {'pt': pt_away, 'fpt': fp_away, 'pg': day, 'v': n_win_away, 'n': n_null_away, 'p': n_lose_away, 'gf': gf_away, 'gs': gs_away, 'dr': dr_away}
