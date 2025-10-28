@@ -524,7 +524,7 @@ def get_votes(lineup, current_day, live_votes, live_teams, already_played_teams=
         
         pl = player.Player.objects.get(pk=l[1])
 
-        already_played = check_already_played(pl.RealTeam, already_played_teams, current_day)
+        already_played = check_already_played(pl.RealTeam, already_played_teams, current_day) if not get_for_calculation else True
 
         #check if player is LIVE
         if pl.id in live_votes:
