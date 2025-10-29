@@ -22,7 +22,7 @@ class LiveB11View(LoginRequiredMixin, View):
         
         team_ids_names = team.Team.objects.values_list("id", "Name")
         
-        all_best = LU.get_best_11(team_ids_names, current_day)
+        all_best = LU.get_best_11(team_ids_names, int(current_day))
 
         sorted_best = sorted(
             (b for b in all_best if b is not None),
