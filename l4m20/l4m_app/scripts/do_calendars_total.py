@@ -119,8 +119,8 @@ for series_id, teams in series_groups.items():
                 t2_name = team_names[t2]
                 stmt = (
                     f'INSERT INTO "l4m_app_matches_calendar" '
-                    f'("CompetitionCalendar_id", "HomeTeam_id", "AwayTeam_id") '
-                    f'VALUES ({day_num}, {t1}, {t2});'
+                    f'("CompetitionCalendar_id", "HomeTeam_id", "AwayTeam_id", "Series_id") '
+                    f'VALUES ({day_num}, {t1}, {t2}, {series_id});'
                     f'  -- {t1_name} vs {t2_name} day {day_num}'
                 )
                 insert_statements.append(stmt)

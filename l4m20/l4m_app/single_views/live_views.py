@@ -44,7 +44,7 @@ def LiveView(request):
     current_day = U.get_current_day()
     all_days = range(1, int(current_day) + 1)
 
-    competition_id = 1 #DEFAULT campionato
+    competition_id = data['competition']
     my_series = U.get_my_series(teamid, competitionid=competition_id)
     my_seriesid = my_series[0].id
 
@@ -70,7 +70,6 @@ def LiveView(request):
         l = U.get_last_lineup(t, day)
         if(len(l) <= 0 and overtime): #overtime
             last_valid_l = U.get_last_valid_lineup(t)
-            #TODO: save lst valid lineup
 
         lineup_to_show = t.Name #base
 

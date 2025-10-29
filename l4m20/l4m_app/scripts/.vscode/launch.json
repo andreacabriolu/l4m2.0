@@ -8,7 +8,8 @@
             "name": "Python Debugger: Current File",
             "type": "debugpy",
             "request": "launch",
-            "program": "live_parser/live_scraper.py",
+            // "program": "live_parser/live_scraper.py",
+            "program": "${file}",
             "console": "integratedTerminal"
         }
     ]

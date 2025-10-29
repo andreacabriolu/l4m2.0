@@ -120,8 +120,9 @@ window.addEventListener('DOMContentLoaded', event => {
     if(day_to_sel.length <= 0) { return; }
     $('#select_day').val(day_to_sel[0].value);
 
-    $('#select_series, #select_day').on('change', function () {
+    $('#view_live_btn').on('click', function() {
         var data = { 
+            'competition': $('#select_comp').children('option:selected').data().id,
             'series': $('#select_series').children('option:selected').data().id,
             'day': $('#select_day').children('option:selected').val(),
          };
@@ -134,6 +135,21 @@ window.addEventListener('DOMContentLoaded', event => {
 
         form.trigger('submit');
     });
+
+    // $('#select_series, #select_day').on('change', function () {
+    //     var data = { 
+    //         'series': $('#select_series').children('option:selected').data().id,
+    //         'day': $('#select_day').children('option:selected').val(),
+    //      };
+
+    //     jsonData = JSON.stringify(data);
+    //     var url = '/l4m/live/';
+    //     form = buildForm(url, token, jsonData);
+
+    //     $('body').append(form);
+
+    //     form.trigger('submit');
+    // });
 
     $('#showLineupHistoryModal').on('show.bs.modal', function(e){
         const token = Cookies.get('csrftoken');
