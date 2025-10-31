@@ -162,3 +162,11 @@ label {
   .blocked {
     background-color: rgb(159,159,159) !important;
   }
+
+  .form-select-comp {
+    width: fit-content !important;
+  }
+
+  .comp-label {
+    color: whitesmoke;
+  }

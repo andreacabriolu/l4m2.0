@@ -23,6 +23,9 @@ def get_competition(name):
 def get_all_competitions():
     return competition.Competition.objects.all()
 
+def get_all_active_competitions():
+    return competition.Competition.objects.filter(Q(Active=True))
+
 def get_all_live_active_competitions():
     return competition.Competition.objects.filter(Q(Active=True) & Q(Live=True))
 
@@ -343,8 +346,9 @@ def get_last_valid_lineup(teamid):
     all_lups = lineup.Lineup.objects.filter(Team=teamid).order_by('-Version').order_by('-Day')
     return list(all_lups)[0]
 
-def get_last_lineup(teamid, day):
-    return lineup.Lineup.objects.filter(Team=teamid, Day=day).order_by('-Version')[:1]
+def get_last_lineup(teamid, day, comp_id=1):
+    my_series = get_my_series(teamid, comp_id)[0]
+    return lineup.Lineup.objects.filter(Team=teamid, Day=day, Series=my_series.id).order_by('-Version')[:1]
 
 def save_last_valid_lineup(_lineup, day):
     last_lineup_late = lineup.Lineup(

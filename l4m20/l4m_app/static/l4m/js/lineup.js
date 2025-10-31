@@ -18,6 +18,10 @@ function showInfoAlert(response) {
     });
 }
 
+function buildForm(url, token, jsonData) {
+        return $(`<form action='${url}' method='post'><input type='text' name='jsonData' value='${jsonData}' /><input type='hidden' name='csrfmiddlewaretoken' value='${token}' /></form>`);
+    }
+
 function manage_mod(val) { //show and hide, TODO: real the best way?
 
     nums = val.split('-');
@@ -182,10 +186,11 @@ function load_lineup(lineup) {
     }
 }
 
-function load_last_lineup() {
+function load_last_lineup(comp_id=1) {
     var last_lineup = "";
+    var data = { 'comp': comp_id };
 
-    $.get("/l4m/lineup/getLast/", function (response) {
+    $.get("/l4m/lineup/getLast/", data, function (response) {
         if (response.startsWith('error')) {
             showErrorAlert(response);
         }
@@ -233,8 +238,28 @@ window.addEventListener('DOMContentLoaded', event => {
 
     const token = Cookies.get('csrftoken');
 
-    load_last_lineup();
+    var comp_id = $('#competition_id').val();
+    var comp_to_sel = $('#select_comp').children(`option[data-id=${comp_id}]`);
+    if(comp_to_sel.length <= 0) { return; }
+    $('#select_comp').val(comp_to_sel[0].value);
+
+    load_last_lineup(comp_id);
     reset_captain();
+
+    $('#select_comp').on('change', function(){
+        var data = { 
+            'competition': $('#select_comp').children('option:selected').data().id,
+         };
+
+        jsonData = JSON.stringify(data);
+        var url = '/l4m/lineup/';
+        form = buildForm(url, token, jsonData);
+
+        $('body').append(form);
+
+        form.trigger('submit');
+
+    });
 
     $('#mods').on('change', function () {
         var val = $(this).val();
@@ -306,7 +331,7 @@ window.addEventListener('DOMContentLoaded', event => {
             jsonPlayers = JSON.stringify(playerSlots);
             jsonOpts = JSON.stringify(options);
 
-            var data = { 'tits': jsonPlayers, 'options': jsonOpts, 'csrfmiddlewaretoken': token };
+            var data = { 'tits': jsonPlayers, 'comp_id': comp_id, 'options': jsonOpts, 'csrfmiddlewaretoken': token };
 
             $.post("/l4m/lineup/save/", data, function (response) {
                 if (response.startsWith('error')) {
