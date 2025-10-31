@@ -71,7 +71,7 @@ def LiveView(request):
     #here start the distinction main-league and total
     #for total the full lineup(squad) must be passed
 
-    total_league = all_competitions.get(Name='Total League')
+    # total_league = all_competitions.get(Name='Total League')
     # U.get_lineups(series_teams, day, current_day, overtime)
 
     for t in series_teams:
