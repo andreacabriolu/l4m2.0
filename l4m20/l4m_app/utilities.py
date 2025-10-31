@@ -23,6 +23,9 @@ def get_competition(name):
 def get_all_competitions():
     return competition.Competition.objects.all()
 
+def get_all_live_active_competitions():
+    return competition.Competition.objects.filter(Q(Active=True) & Q(Live=True))
+
 def get_my_competitions(my_series):
     return competition.Competition.objects.filter(series__id__in=my_series)
 

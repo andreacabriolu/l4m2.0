@@ -6,6 +6,8 @@ from django.utils.translation import gettext_lazy as _
 class Competition(models.Model):
     
     Name = models.CharField(max_length=100)
+    Active = models.BooleanField(default=False)
+    Live = models.BooleanField(default=False)
     
     def __str__(self):
         return " ".join([self.Name])

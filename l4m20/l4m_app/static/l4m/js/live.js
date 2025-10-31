@@ -104,6 +104,27 @@ function add_lineups(l_ups, map) {
     $('#lineups').append(generatedTables);
 }
 
+function fillSeries(c_id) {
+    const token = Cookies.get('csrftoken');
+    $('#select_series').empty();
+
+    var data = { 'c_id': c_id, 'csrfmiddlewaretoken': token };
+
+    $.post("/l4m/getSeriesByCompetition/", data, function (response) {
+        if (response.startsWith('error')) {
+            showErrorAlert(response);
+        }
+        else {
+            var _series = JSON.parse(response);
+            $.each(_series, function (idx, s) {
+                $('#select_series').append($('<option>')
+                    .text(s[1])
+                    .attr('value', s[1])
+                    .attr('data-id', s[0]));
+            });
+        }
+    });
+}
 
 window.addEventListener('DOMContentLoaded', event => {
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
@@ -136,20 +157,9 @@ window.addEventListener('DOMContentLoaded', event => {
         form.trigger('submit');
     });
 
-    // $('#select_series, #select_day').on('change', function () {
-    //     var data = { 
-    //         'series': $('#select_series').children('option:selected').data().id,
-    //         'day': $('#select_day').children('option:selected').val(),
-    //      };
-
-    //     jsonData = JSON.stringify(data);
-    //     var url = '/l4m/live/';
-    //     form = buildForm(url, token, jsonData);
-
-    //     $('body').append(form);
-
-    //     form.trigger('submit');
-    // });
+    $('#select_comp').on('change', function(){
+        fillSeries($(this).children('option:selected').data().id);
+    });
 
     $('#showLineupHistoryModal').on('show.bs.modal', function(e){
         const token = Cookies.get('csrftoken');

@@ -44,27 +44,35 @@ def LiveView(request):
     current_day = U.get_current_day()
     all_days = range(1, int(current_day) + 1)
 
-    competition_id = data['competition']
-    my_series = U.get_my_series(teamid, competitionid=competition_id)
-    my_seriesid = my_series[0].id
+    my_series_mainleague = U.get_my_series(teamid, competitionid=1) #default campionato
+    my_seriesid_mainleague = my_series_mainleague[0].id
 
-    my_competitions = U.get_my_competitions(my_series)
+    all_competitions = U.get_all_live_active_competitions()
 
     if(len(request.POST) > 0 and 'jsonData' in request.POST):
         data = json.loads(request.POST['jsonData'])
+        competition_id = data['competition']
         seriesid = data['series']
-        if(seriesid != my_seriesid):
+        my_series = U.get_my_series(teamid, competitionid=competition_id)
+        if(seriesid != my_series[0].id):
             teamid = None
         day = int(data['day'])
     else:
+        competition_id = 1 #default campionato
         day = int(current_day)
-        seriesid = my_seriesid
+        seriesid = my_seriesid_mainleague
 
-    all_series = U.get_all_series(competitionid=competition_id) #TODO: magic number
+    all_series = U.get_all_series(competitionid=competition_id)
 
     series_teams = team.Team.objects.filter(Series__id=seriesid)
     last_lineups_d = {}
     overtime, _ = U.check_day_already_started(day)
+
+    #here start the distinction main-league and total
+    #for total the full lineup(squad) must be passed
+
+    total_league = all_competitions.get(Name='Total League')
+    # U.get_lineups(series_teams, day, current_day, overtime)
 
     for t in series_teams:
         l = U.get_last_lineup(t, day)
@@ -115,7 +123,7 @@ def LiveView(request):
         'current_series' : seriesid,
         'all_days' : all_days,
         'current_day': day,
-        'my_competitions' : my_competitions
+        'all_competitions' : all_competitions
         }
     
     return render(request, template_name, params)

@@ -55,8 +55,8 @@
         <div class="selectors-div">
             <label for="select_comp" class="series-label">COMPETIZIONE</label>
             <select class="form-select form-select-lg mb-3 form-select-selectors" id="select_comp">
-                {% for comp in my_competitions %}
-                <option value="{{comp}}">{{comp.Name}}</option>
+                {% for comp in all_competitions %}
+                <option value="{{comp}}" data-id="{{comp.id}}">{{comp.Name}}</option>
                 {% endfor %}
             </select>
 
