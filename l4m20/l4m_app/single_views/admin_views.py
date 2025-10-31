@@ -13,7 +13,7 @@ class CalculateView(LoginRequiredMixin, View):
 
     def get(self,request):
 
-        all_competitions = U.get_all_competitions()
+        all_competitions = U.get_all_active_competitions()
         current_day = U.get_current_day() #TODO: per competition?
         
         params = {

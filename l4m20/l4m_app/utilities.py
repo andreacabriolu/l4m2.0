@@ -36,7 +36,7 @@ def get_unica_series(competitionid):
     return series.Series.objects.filter(Q(Name='Unica') & Q(Competition_id=competitionid))
 
 def get_my_series(teamid, competitionid=1):
-    return series.Series.objects.filter(Q(team__id=teamid) & Q(Competition_id=competitionid))
+    return series.Series.objects.filter(Q(team=teamid) & Q(Competition=competitionid))
 
 def get_all_series(competitionid):
     return series.Series.objects.filter(Competition_id=competitionid)
