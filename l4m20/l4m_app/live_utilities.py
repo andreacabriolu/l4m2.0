@@ -8,6 +8,89 @@ from . import utilities as U
 from django.db.models import Q
 import requests as req
 
+def enrich_and_sort_players_live(teamid, current_day):
+
+    mysquads = U.get_squads(teamid)
+    players = U.get_players_by_squad(mysquads)
+
+    enriched_players = []
+    cap_id = -1 #not used for b11
+
+    live_votes, live_teams, already_played_teams = get_live_votes(current_day)
+
+    for squad_pl in players:
+        votes = []
+
+        pl = player.Player.objects.get(pk=squad_pl['id'])
+        already_played = check_already_played(pl.RealTeam, already_played_teams, current_day)
+
+        #check if player is LIVE
+        if pl.id in live_votes:
+            _live_vote = live_votes[pl.id]
+            votes = (adjust_vote_obj(_live_vote, cap_id) if _live_vote.Vote > 0 else \
+                         adjust_vote_obj(_live_vote, cap_id, empty=True))
+        #CASE player not called
+        elif(pl.id not in live_votes and pl.RealTeam.Name in live_teams):
+            votes = (make_not_called_vote_obj(pl.id, cap_id))
+        else:
+        #player NOT LIVE
+            _vote = vote.Vote.objects.filter(Q(Player_id=pl.id) & Q(Day=current_day))
+            votes = (make_vote_obj(_vote[0], cap_id) if isValid(_vote) else \
+                         make_empty_vote_obj(pl.id, cap_id, already_played, current_day))
+
+        pl.votes = votes
+        enriched_players.append(pl)
+
+    #sort by role
+
+    keepers = [ep for ep in enriched_players if ep.Role=='P']
+    defs = [ep for ep in enriched_players if ep.Role=='D']
+    ccs = [ep for ep in enriched_players if ep.Role=='C']
+    fws = [ep for ep in enriched_players if ep.Role=='A']
+
+    sorted_players = {
+        'P': sorted(
+        keepers,
+        key=lambda p: (
+            p.votes.TotVote if p.votes.TotVote is not None else -1,
+            p.votes.Vote if p.votes.Vote is not None else -1
+        ),
+        reverse=True
+        ),
+        'D': sorted(
+        defs,
+        key=lambda p: (
+            p.votes.TotVote if p.votes.TotVote is not None else -1,
+            p.votes.Vote if p.votes.Vote is not None else -1
+        ),
+        reverse=True
+        ),
+        'C': sorted(
+        ccs,
+        key=lambda p: (
+            p.votes.TotVote if p.votes.TotVote is not None else -1,
+            p.votes.Vote if p.votes.Vote is not None else -1
+        ),
+        reverse=True
+        ),
+        'A': sorted(
+        fws,
+        key=lambda p: (
+            p.votes.TotVote if p.votes.TotVote is not None else -1,
+            p.votes.Vote if p.votes.Vote is not None else -1
+        ),
+        reverse=True
+        )
+    }
+
+    return sorted_players
+
+
+def get_b11_lineup(teamid, day):
+    players = enrich_and_sort_players_live(teamid, current_day=day)
+    b11 = pick_best_11(players['P'],players['D'],players['C'],players['A'])
+    pass
+
 def get_best_11(team_ids_names, day):
     all_best = []
     already_played_teams = []
@@ -222,7 +305,7 @@ def fill_live_votes(score, grades, live_votes):
             _vote.LiveStatus = C.LiveStatus.BENCH
         live_votes[pl.id] = _vote
 
-def get_live_votes(day):
+def get_live_votes(day, comp=1):
     TEST = False
     if(not TEST):
         url = "https://publicapi.fantamaster.it/livescores/?tcache=1756165942189"
@@ -269,7 +352,7 @@ def get_live_votes(day):
 
     for _, _vote in live_votes.items():
         _vote.Day = int(current_day)
-        _vote.Competition = int(1) #TODO magic number: campionato
+        _vote.Competition = comp #TODO magic number: campionato
 
     return live_votes, live_teams, already_played_teams
 
@@ -749,38 +832,36 @@ def pick_best_11(keepers, defenders, midfielders, attackers):
             bonus_six = 0.5 if all(p.votes.Vote is not None and p.votes.Vote >= 6 for p in lineup) else 0.
 
             # no-yellow bonus NOT COMPLETE 
-            no_yellow_bonus = 0.5 if not any(getattr(p.votes, "YellowCard", False) for p in lineup) else 0.
-            
-
-            # info players
-            players_list = []
-            for p in lineup:
-                vote = p.votes.Vote
-                Tvote = p.votes.TotVote
-                players_list.append({
-                    "player_id": p.id,
-                    "player_rt": p.RealTeam,
-                    "player_role": p.Role,
-                    "player_surname": getattr(p, "surname", getattr(p, "name", str(p))),
-                    "player_vote": vote,
-                    "player_totvote": Tvote  
-                })
-                
-            for p in lineup_bench:
-                vote = p.votes.Vote
-                Tvote = p.votes.TotVote
-                players_list.append({
-                    "player_id": p.id,
-                    "player_rt": p.RealTeam,
-                    "player_role": p.Role,
-                    "player_surname": getattr(p, "surname", getattr(p, "name", str(p))),
-                    "player_vote": vote,
-                    "player_totvote": Tvote  
-                })
-                
+            no_yellow_bonus = 0.5 if not any(getattr(p.votes, "YellowCard", False) for p in lineup) else 0.    
             
             total_score = score + bonus_cap + bonus_six + no_yellow_bonus
             if total_score > best_score:
+                # info players
+                players_list = []
+                for p in lineup:
+                    vote = p.votes.Vote
+                    Tvote = p.votes.TotVote
+                    players_list.append({
+                        "player_id": p.id,
+                        "player_rt": p.RealTeam,
+                        "player_role": p.Role,
+                        "player_surname": getattr(p, "surname", getattr(p, "name", str(p))),
+                        "player_vote": vote,
+                        "player_totvote": Tvote  
+                    })
+                    
+                for p in lineup_bench:
+                    vote = p.votes.Vote
+                    Tvote = p.votes.TotVote
+                    players_list.append({
+                        "player_id": p.id,
+                        "player_rt": p.RealTeam,
+                        "player_role": p.Role,
+                        "player_surname": getattr(p, "surname", getattr(p, "name", str(p))),
+                        "player_vote": vote,
+                        "player_totvote": Tvote  
+                    })
+
                 best_score = total_score
                 best_lineup = {
                     "module": f"{d}{m}{a}",

@@ -72,38 +72,44 @@ def LiveView(request):
     #here start the distinction main-league and total
     #for total the full lineup(squad) must be passed
 
-    # total_league = all_competitions.get(Name='Total League')
-    # U.get_lineups(series_teams, day, current_day, overtime)
-
     #VALIDO PER:
-    #CAMPIONATO
-    #COPPA DI LEGA
-    for t in series_teams:
-        l = U.get_last_lineup(t, day, comp_id=competition_id)
-        if(len(l) <= 0 and overtime): #overtime
-            last_valid_l = U.get_last_valid_lineup(t)
+    # TOTAL LEAGUE
+    total_league = all_competitions.get(Name='Total League')
+    if competition_id == total_league.id:
+        for t in series_teams:
+            lineup_to_show = LU.get_b11_lineup(t, day)
+            last_lineups_d[t.id] = lineup_to_show
 
-        lineup_to_show = t.Name #base
+    else:
+        #VALIDO PER:
+        #CAMPIONATO
+        #COPPA DI LEGA
+        for t in series_teams:
+            l = U.get_last_lineup(t, day, comp_id=competition_id)
+            if(len(l) <= 0 and overtime): #overtime
+                last_valid_l = U.get_last_valid_lineup(t)
 
-        if not overtime:
-            if len(l) > 0:
-                lineup_to_show = l[0]
-            else:
-                lineup_to_show = t.Name
+            lineup_to_show = t.Name #base
 
-        if overtime and day == int(current_day):
-            if len(l) > 0:
-                lineup_to_show = l[0]
-            else:
-                lineup_to_show = last_valid_l
-                U.save_last_valid_lineup(last_valid_l, day)
-                U.update_balance(t.id)
-                
-        else:  #filter for historical data
-            lineup_to_show = l[0] if len(l)> 0 else t.Name #always valued because we SHOULD save the lineup
+            if not overtime:
+                if len(l) > 0:
+                    lineup_to_show = l[0]
+                else:
+                    lineup_to_show = t.Name
+
+            if overtime and day == int(current_day):
+                if len(l) > 0:
+                    lineup_to_show = l[0]
+                else:
+                    lineup_to_show = last_valid_l
+                    U.save_last_valid_lineup(last_valid_l, day)
+                    U.update_balance(t.id)
+                    
+            else:  #filter for historical data
+                lineup_to_show = l[0] if len(l)> 0 else t.Name #always valued because we SHOULD save the lineup
 
 
-        last_lineups_d[t.id] = lineup_to_show
+            last_lineups_d[t.id] = lineup_to_show
 
     couples = LU.get_couples_from_calendar(seriesid, day, competition_id=competition_id)
     couples = [couples.pop(couples.index(i)) for i in couples if (i[0]==teamid or i[1]==teamid)]+couples #get user match as first
