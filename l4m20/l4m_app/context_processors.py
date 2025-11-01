@@ -3,6 +3,8 @@ from . import utilities as U
 
 
 def team_context(request):
+    return {'teamname': 'test'}
+
     if request.user.id == 1:
         return {'teamname': 'admin'}
 
