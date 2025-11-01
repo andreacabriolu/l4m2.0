@@ -38,6 +38,9 @@ def get_unica_series(competitionid):
 def get_my_series(teamid, competitionid=1):
     return series.Series.objects.filter(Q(team=teamid) & Q(Competition=competitionid))
 
+def get_all_my_series(teamid):
+    return series.Series.objects.filter(Q(team=teamid))
+
 def get_all_series(competitionid):
     return series.Series.objects.filter(Competition_id=competitionid)
 
@@ -342,8 +345,9 @@ def get_team_by_name(tname):
 def get_all_lineups(teamid, day):
     return lineup.Lineup.objects.filter(Team=teamid, Day=day).order_by('Version')
 
-def get_last_valid_lineup(teamid):
-    all_lups = lineup.Lineup.objects.filter(Team=teamid).order_by('-Version').order_by('-Day')
+def get_last_valid_lineup(teamid, comp_id=1):
+    my_series = get_my_series(teamid, comp_id)[0]
+    all_lups = lineup.Lineup.objects.filter(Team=teamid, Series=my_series.id).order_by('-Version').order_by('-Day')
     return list(all_lups)[0]
 
 def get_last_lineup(teamid, day, comp_id=1):

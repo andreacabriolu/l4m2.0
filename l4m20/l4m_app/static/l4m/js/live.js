@@ -107,6 +107,7 @@ function add_lineups(l_ups, map) {
 function fillSeries(c_id) {
     const token = Cookies.get('csrftoken');
     $('#select_series').empty();
+    var all_my_series_id = $('#all_my_series_ids').val();
 
     var data = { 'c_id': c_id, 'csrfmiddlewaretoken': token };
 
@@ -118,7 +119,7 @@ function fillSeries(c_id) {
             var _series = JSON.parse(response);
             $.each(_series, function (idx, s) {
                 $('#select_series').append($('<option>')
-                    .text(s[1])
+                    .text(s[1] + (all_my_series_id.includes(s[0]) ? ' *' : ''))
                     .attr('value', s[1])
                     .attr('data-id', s[0]));
             });
@@ -136,10 +137,10 @@ window.addEventListener('DOMContentLoaded', event => {
     if(comp_to_sel.length <= 0) { return; }
     $('#select_comp').val(comp_to_sel[0].value);
 
-    // var cur_ser = $('#current_series').val();
-    // var series_to_sel = $('#select_series').children(`option[data-id=${cur_ser}]`);
-    // if(series_to_sel.length <= 0) { return; }
-    // $('#select_series').val(series_to_sel[0].value);
+    var cur_ser = $('#current_series').val();
+    var series_to_sel = $('#select_series').children(`option[data-id=${cur_ser}]`);
+    if(series_to_sel.length <= 0) { return; }
+    $('#select_series').val(series_to_sel[0].value);
 
     var cur_day = $('#current_day').val();
     var day_to_sel = $('#select_day').children(`option[value=${cur_day}]`);

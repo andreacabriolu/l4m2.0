@@ -63,6 +63,7 @@ def LiveView(request):
         seriesid = my_seriesid_mainleague
 
     all_series = U.get_all_series(competitionid=competition_id)
+    all_my_series_ids = [s.id for s in U.get_all_my_series(teamid)]
 
     series_teams = team.Team.objects.filter(Series__id=seriesid)
     last_lineups_d = {}
@@ -78,7 +79,7 @@ def LiveView(request):
     #CAMPIONATO
     #COPPA DI LEGA
     for t in series_teams:
-        l = U.get_last_lineup(t, day)
+        l = U.get_last_lineup(t, day, comp_id=competition_id)
         if(len(l) <= 0 and overtime): #overtime
             last_valid_l = U.get_last_valid_lineup(t)
 
@@ -104,7 +105,7 @@ def LiveView(request):
 
         last_lineups_d[t.id] = lineup_to_show
 
-    couples = LU.get_couples_from_calendar(seriesid, day)
+    couples = LU.get_couples_from_calendar(seriesid, day, competition_id=competition_id)
     couples = [couples.pop(couples.index(i)) for i in couples if (i[0]==teamid or i[1]==teamid)]+couples #get user match as first
     lineup_couples = [ (last_lineups_d[c[0]], last_lineups_d[c[1]]) for c in couples ]
 
@@ -127,7 +128,8 @@ def LiveView(request):
         'current_series' : seriesid,
         'all_days' : all_days,
         'current_day': day,
-        'all_competitions' : all_competitions
+        'all_competitions' : all_competitions,''
+        'all_my_series_ids' : all_my_series_ids
         }
     
     return render(request, template_name, params)
