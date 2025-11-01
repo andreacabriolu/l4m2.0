@@ -3,14 +3,13 @@ from . import utilities as U
 
 
 def team_context(request):
-    return {'teamname': 'test'}
 
     if request.user.id == 1:
         return {'teamname': 'admin'}
 
     team = U.get_user_team(request.user.id)
     if len(team) <= 0:
-        return
+        return {'teamname': 'NESSUN TEAM'}
     teamname = team['Name']
 
     return {'teamname': teamname}
