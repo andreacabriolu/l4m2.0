@@ -11,7 +11,13 @@ from .. import utilities as U
 from ..models import *
 from l4m20 import constants as C
 
-def LineupView(request):
+class LineupView(View):
+    def get(self, request):
+        pass
+    def post(self, request):
+        pass
+
+def LineupView_(request):
     #TODO: implement control on user passes test (https://docs.djangoproject.com/en/4.2/topics/auth/default/#limiting-access-to-logged-in-users-that-pass-a-test)
     template_name = 'l4m/lineup.html'
 
