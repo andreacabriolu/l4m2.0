@@ -4,6 +4,9 @@ from . import utilities as U
 
 def team_context(request):
 
+    if request.user.is_anonymous:
+        return {'teamname': 'NESSUN TEAM'}
+
     if request.user.id == 1:
         return {'teamname': 'admin'}
 
