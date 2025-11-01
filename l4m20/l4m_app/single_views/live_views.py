@@ -74,6 +74,9 @@ def LiveView(request):
     # total_league = all_competitions.get(Name='Total League')
     # U.get_lineups(series_teams, day, current_day, overtime)
 
+    #VALIDO PER:
+    #CAMPIONATO
+    #COPPA DI LEGA
     for t in series_teams:
         l = U.get_last_lineup(t, day)
         if(len(l) <= 0 and overtime): #overtime
@@ -120,6 +123,7 @@ def LiveView(request):
     params = { 
         'all_votes' : all_votes,
         'all_series' : all_series,
+        'current_competition': competition_id,
         'current_series' : seriesid,
         'all_days' : all_days,
         'current_day': day,
