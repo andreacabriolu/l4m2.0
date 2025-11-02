@@ -143,6 +143,7 @@ def calculate_main_league(competition, day):
 
     curr_day = U.get_current_day() 
     days_to_calculate = range(int(day), int(curr_day)) if (int(day) < int(curr_day)) else [int(curr_day)]
+    homeAway=U.get_homeaway(competition.id, day)
 
     for _day in days_to_calculate:
         for series in comp_series:
@@ -161,8 +162,8 @@ def calculate_main_league(competition, day):
             lineup_couples = [ (last_lineups_d[c[0]], last_lineups_d[c[1]], c[2]) for c in couples ]
 
             for lineup_couple in lineup_couples:
-                votes_home = LU.get_votes(lineup_couple[0], _day, live_votes=[], live_teams=[], get_for_calculation=True)
-                votes_away = LU.get_votes(lineup_couple[1], _day, live_votes=[], live_teams=[], get_for_calculation=True)
+                votes_home = LU.get_votes(lineup_couple[0], _day, live_votes=[], live_teams=[], get_for_calculation=True, homeAway=homeAway)
+                votes_away = LU.get_votes(lineup_couple[1], _day, live_votes=[], live_teams=[], get_for_calculation=True, homeAway=homeAway)
                 all_votes.append( [[lineup_couple[0].Team.id, votes_home], [lineup_couple[1].Team.id, votes_away], lineup_couple[2]] )
 
             all_votes_per_series[series.id] = all_votes

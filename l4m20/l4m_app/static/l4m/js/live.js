@@ -170,7 +170,10 @@ window.addEventListener('DOMContentLoaded', event => {
     $('#showLineupHistoryModal').on('show.bs.modal', function(e){
         const token = Cookies.get('csrftoken');
 
-        var data = { 'teamname': e.relatedTarget.dataset.team, 'day': $('#current_day').val(), 'csrfmiddlewaretoken': token };
+        var data = { 'teamname': e.relatedTarget.dataset.team, 
+            'series': $('#current_series').val(), 
+            'day': $('#current_day').val(), 
+            'csrfmiddlewaretoken': token };
 
         $.post("/l4m/getLineupsByTeam/", data, function (response) {
         if (response.startsWith('error')) {

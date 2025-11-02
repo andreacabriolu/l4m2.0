@@ -141,8 +141,9 @@ class GetLineupsByTeamView(View):
     def post(self, request):
         tname = request.POST['teamname']
         day = request.POST['day']
+        seriesid = request.POST['series']
         t = U.get_team_by_name(tname)
-        l_ups = U.get_all_lineups(t.id, day)
+        l_ups = U.get_all_lineups(t.id, day, seriesid)
 
         if len(l_ups) <= 0:
             return HttpResponse()

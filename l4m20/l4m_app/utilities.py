@@ -349,8 +349,8 @@ def get_current_day(competition_id=""):
 def get_team_by_name(tname):
     return team.Team.objects.get(Name=tname)
 
-def get_all_lineups(teamid, day):
-    return lineup.Lineup.objects.filter(Team=teamid, Day=day).order_by('Version')
+def get_all_lineups(teamid, day, seriesid):
+    return lineup.Lineup.objects.filter(Team=teamid, Day=day, Series=seriesid).order_by('Version')
 
 def get_last_valid_lineup(teamid, comp_id=1):
     my_series = get_my_series(teamid, comp_id)[0]
