@@ -78,7 +78,21 @@ def LiveView(request):
     if competition_id == total_league.id:
         for t in series_teams:
             lineup_to_show = LU.get_b11_lineup(t, day)
+            lineup_to_show['t']=t
             last_lineups_d[t.id] = lineup_to_show
+
+        couples = LU.get_couples_from_calendar(seriesid, day, competition_id=competition_id)
+        couples = [couples.pop(couples.index(i)) for i in couples if (i[0]==teamid or i[1]==teamid)]+couples #get user match as first
+        lineup_couples = [ (last_lineups_d[c[0]], last_lineups_d[c[1]]) for c in couples ]
+
+        all_votes = []
+
+        for lineup_couple in lineup_couples:
+            votes_home = LU.get_votes_total(lineup_couple[0], home=True) #extract from last_lineups_d
+            votes_away = LU.get_votes_total(lineup_couple[1], home=False)
+            all_votes.append( \
+                [votes_home, votes_away]
+            )
 
     else:
         #VALIDO PER:
@@ -111,21 +125,21 @@ def LiveView(request):
 
             last_lineups_d[t.id] = lineup_to_show
 
-    couples = LU.get_couples_from_calendar(seriesid, day, competition_id=competition_id)
-    couples = [couples.pop(couples.index(i)) for i in couples if (i[0]==teamid or i[1]==teamid)]+couples #get user match as first
-    lineup_couples = [ (last_lineups_d[c[0]], last_lineups_d[c[1]]) for c in couples ]
+        couples = LU.get_couples_from_calendar(seriesid, day, competition_id=competition_id)
+        couples = [couples.pop(couples.index(i)) for i in couples if (i[0]==teamid or i[1]==teamid)]+couples #get user match as first
+        lineup_couples = [ (last_lineups_d[c[0]], last_lineups_d[c[1]]) for c in couples ]
 
-    all_votes = []
+        all_votes = []
 
-    #get all live players
-    live_votes, live_teams, already_played_teams = LU.get_live_votes(day)
+        #get all live players
+        live_votes, live_teams, already_played_teams = LU.get_live_votes(day)
 
-    for lineup_couple in lineup_couples:
-        votes_home = LU.get_votes(lineup_couple[0], day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=teamid)
-        votes_away = LU.get_votes(lineup_couple[1], day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=teamid, home=False)
-        all_votes.append( \
-            [votes_home, votes_away]
-        )
+        for lineup_couple in lineup_couples:
+            votes_home = LU.get_votes(lineup_couple[0], day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=teamid)
+            votes_away = LU.get_votes(lineup_couple[1], day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=teamid, home=False)
+            all_votes.append( \
+                [votes_home, votes_away]
+            )
         
     params = { 
         'all_votes' : all_votes,

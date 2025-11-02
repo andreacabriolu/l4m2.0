@@ -8,6 +8,41 @@ from . import utilities as U
 from django.db.models import Q
 import requests as req
 
+def get_votes_total(b11_lineup, home=True):
+    votes_tit = []
+    votes_ris = []
+    _items = []
+
+    module = b11_lineup['module']
+
+    _items.append(home)
+    _items.append(b11_lineup['t'].Name)
+
+    _items.append(b11_lineup['partial_score'])
+    _items.append(b11_lineup['modif_tot'])
+    _items.append(b11_lineup['modif'])
+    _items.append(b11_lineup['bcaptain'])
+    _items.append(b11_lineup['no_yellow_bonus'])
+    _items.append(b11_lineup['all_six_bonus'])
+
+    _items.append(b11_lineup['score'])
+
+    n_goals = calculate_n_goals(b11_lineup['score'])
+    _items.append(n_goals)
+    _items.append(module)    
+    _items.append('same_module')
+    _items.append(b11_lineup['modifier_from_no_gk'])
+    _items.append(0) #missing slots
+    _items.append(1) #version
+
+    tits = b11_lineup['players'][:11]
+    riss = b11_lineup['players'][12:]
+    
+    votes_tit = [vt['player_stats'] for vt in tits]
+    votes_ris = [vr['player_stats'] for vr in riss]
+
+    return votes_tit, _items, votes_ris
+
 def enrich_and_sort_players_live(teamid, current_day):
 
     mysquads = U.get_squads(teamid)
@@ -88,8 +123,9 @@ def enrich_and_sort_players_live(teamid, current_day):
 
 def get_b11_lineup(teamid, day):
     players = enrich_and_sort_players_live(teamid, current_day=day)
-    b11 = pick_best_11(players['P'],players['D'],players['C'],players['A'])
-    pass
+    b11_live = pick_best_11(players['P'],players['D'],players['C'],players['A'])
+    
+    return b11_live
 
 def get_best_11(team_ids_names, day):
     all_best = []
@@ -847,7 +883,8 @@ def pick_best_11(keepers, defenders, midfielders, attackers):
                         "player_role": p.Role,
                         "player_surname": getattr(p, "surname", getattr(p, "name", str(p))),
                         "player_vote": vote,
-                        "player_totvote": Tvote  
+                        "player_totvote": Tvote,
+                        "player_stats": p.votes
                     })
                     
                 for p in lineup_bench:
@@ -859,7 +896,8 @@ def pick_best_11(keepers, defenders, midfielders, attackers):
                         "player_role": p.Role,
                         "player_surname": getattr(p, "surname", getattr(p, "name", str(p))),
                         "player_vote": vote,
-                        "player_totvote": Tvote  
+                        "player_totvote": Tvote,
+                        "player_stats": p.votes
                     })
 
                 best_score = total_score
@@ -873,7 +911,8 @@ def pick_best_11(keepers, defenders, midfielders, attackers):
                     "bcaptain": bonus_cap,
                     "all_six_bonus": bonus_six,
                     "no_yellow_bonus": no_yellow_bonus,
-                    "score": total_score
+                    "score": total_score,
+                    "partial_score": score
                 }
 
         except IndexError:
