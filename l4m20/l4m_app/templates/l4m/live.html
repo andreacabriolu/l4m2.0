@@ -309,6 +309,18 @@
                         <td class="tot-score">{{team_votes.1.7}}</td>
                         <td />
                     </tr>
+                    {% if homeAway %}
+                    <tr>
+                        <td />
+                        <td />
+                        <td>
+                            <img src="{% static 'l4m/images/home.png' %}">
+                        </td>
+                        <td />
+                        <td class="tot-score">{{team_votes.1.15}}</td>
+                        <td />
+                    </tr>
+                    {% endif %}
                     <tr class="table-group-divider">
                         <td />
                         <td />

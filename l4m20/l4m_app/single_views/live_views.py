@@ -64,6 +64,7 @@ def LiveView(request):
 
     all_series = U.get_all_series(competitionid=competition_id)
     all_my_series_ids = [s.id for s in U.get_all_my_series(teamid)]
+    homeAway=U.get_homeaway(competition_id, day)
 
     series_teams = team.Team.objects.filter(Series__id=seriesid)
     last_lineups_d = {}
@@ -115,8 +116,8 @@ def LiveView(request):
     live_votes, live_teams, already_played_teams = LU.get_live_votes(day)
 
     for lineup_couple in lineup_couples:
-        votes_home = LU.get_votes(lineup_couple[0], day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=teamid)
-        votes_away = LU.get_votes(lineup_couple[1], day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=teamid, home=False)
+        votes_home = LU.get_votes(lineup_couple[0], day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=teamid, homeAway=homeAway)
+        votes_away = LU.get_votes(lineup_couple[1], day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=teamid, home=False, homeAway=homeAway)
         all_votes.append( \
             [votes_home, votes_away]
         )
@@ -128,8 +129,9 @@ def LiveView(request):
         'current_series' : seriesid,
         'all_days' : all_days,
         'current_day': day,
-        'all_competitions' : all_competitions,''
-        'all_my_series_ids' : all_my_series_ids
+        'all_competitions' : all_competitions,
+        'all_my_series_ids' : all_my_series_ids,
+        'homeAway': homeAway
         }
     
     return render(request, template_name, params)

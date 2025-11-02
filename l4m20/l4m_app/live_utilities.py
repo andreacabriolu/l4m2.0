@@ -487,8 +487,13 @@ def check_valid_module_change_for_modifier(orig, current):
 def isValid(vote):
     return (len(vote) > 0 and vote[0].Vote > 0)
 
+def get_bonus_home(homeaway, home):
+    if homeaway:
+        return 1 if home else (-1)
+    return 0
+
 def get_votes(lineup, current_day, live_votes, live_teams, already_played_teams=[],\
-               my_teamid = None, home=True, get_for_calculation=False):
+               my_teamid = None, home=True, get_for_calculation=False, homeAway=False):
     votes_tit = []
     votes_ris = []
     module = C.Modules._442 #default
@@ -619,12 +624,14 @@ def get_votes(lineup, current_day, live_votes, live_teams, already_played_teams=
     bonus_disc = 0.5 if _noCards else 0
     #bonus prestazioni
     bonus_prest = 0.5 if _noBadVotes else 0
+    #bonus home
+    bonus_home = get_bonus_home(homeAway, home)
 
     _items.append(bonus_cap)
     _items.append(bonus_disc)     
     _items.append(bonus_prest)     
 
-    grand_total = total + modifier + bonus_cap + bonus_disc + bonus_prest
+    grand_total = total + modifier + bonus_cap + bonus_disc + bonus_prest + bonus_home
     _items.append(grand_total)
 
     if get_for_calculation: #direct return for day calculation
@@ -640,6 +647,11 @@ def get_votes(lineup, current_day, live_votes, live_teams, already_played_teams=
     _items.append(lineup.ModNoGk)
     _items.append(14 - len(votes_ris)) #missing slots
     _items.append(lineup.Version) #lineup version
+
+    if homeAway:
+        _items.append(1 if home else (-1))
+    else:
+        _items.append(0)
 
     votes_tit.sort(key=lambda vote:C.Constant_Dicts.RoleInts[vote.Player.Role])
 

@@ -29,8 +29,15 @@ def get_all_active_competitions():
 def get_all_live_active_competitions():
     return competition.Competition.objects.filter(Q(Active=True) & Q(Live=True))
 
+def get_all_lineup_active_competitions():
+    return competition.Competition.objects.filter(Q(Active=True) & Q(Lineup=True))
+
 def get_my_competitions(my_series):
     return competition.Competition.objects.filter(series__id__in=my_series)
+
+def get_homeaway(competitionid, day):
+    cc= competition_calendar.CompetitionCalendar.objects.filter(Q(Competition=competitionid)&Q(Day=day)).values('HomeAway')
+    return cc.first()['HomeAway'] if len(cc)>0 else False
 
 def get_unica_series(competitionid):
     return series.Series.objects.filter(Q(Name='Unica') & Q(Competition_id=competitionid))
