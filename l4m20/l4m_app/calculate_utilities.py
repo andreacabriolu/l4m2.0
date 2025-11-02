@@ -137,7 +137,7 @@ def calculate_b11_league(competition, day):
             all_best = LU.get_best_11(team_ids_names, _day)
             write_b11_ranking(all_best, competition.id, b11_series[0].id, _day)
 
-def calculate_main_league(competition, day):
+def calculate_league(competition, day):
     all_votes_per_series = {}
     comp_series = U.get_all_series(competition.id)
 

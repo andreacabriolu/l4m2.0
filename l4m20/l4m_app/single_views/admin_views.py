@@ -49,16 +49,22 @@ class CalculateDayView(View):
 
             main_league = U.get_competition(name='Campionato')[0]
             b11_league = U.get_competition(name='Best 11')[0]
+            cdl_league = U.get_competition(name='Coppa di Lega')[0]
 
             if all_comp:
-                CU.calculate_main_league(main_league, day)
+                CU.calculate_league(main_league, day)
+                CU.calculate_league(cdl_league, day)
                 CU.calculate_b11_league(b11_league, day)
                 return HttpResponse('GIORNATA CALCOLATA PER TUTTE LE COMPETIZIONI')
 
             else: 
                 if int(competitionid) == main_league.id:
-                    CU.calculate_main_league(main_league, day)
+                    CU.calculate_league(main_league, day)
                     return HttpResponse(f'GIORNATA CALCOLATA PER {main_league.Name}')
+
+                if int(competitionid) == cdl_league.id:
+                    CU.calculate_league(cdl_league, day)
+                    return HttpResponse(f'GIORNATA CALCOLATA PER {cdl_league.Name}')
 
                 if int(competitionid) == b11_league.id:
                     CU.calculate_b11_league(b11_league, day)
