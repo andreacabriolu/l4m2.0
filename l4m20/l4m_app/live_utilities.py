@@ -457,6 +457,7 @@ def search_substitute(votes_ris, vote_tit, module):
     else: #try other role, first player yet to play or with vote   
         for vote_ris in votes_ris:
             if(vote_ris.Status in good_statuses and 
+               vote_tit.Player.Role != 'P' and
                vote_ris.Player.Role != 'P' and
                check_role_with_module(vote_tit.Player.Role, vote_ris.Player.Role, module)
                ):

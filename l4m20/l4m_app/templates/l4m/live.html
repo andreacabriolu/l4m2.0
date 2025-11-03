@@ -314,7 +314,11 @@
                         <td />
                         <td />
                         <td>
+                            {% if team_votes.1.0 %}
                             <img src="{% static 'l4m/images/home.png' %}">
+                            {% else %}
+                            <img src="{% static 'l4m/images/away.png' %}">
+                            {% endif %}
                         </td>
                         <td />
                         <td class="tot-score">{{team_votes.1.15}}</td>
