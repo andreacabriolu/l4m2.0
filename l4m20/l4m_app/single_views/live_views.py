@@ -69,9 +69,6 @@ def LiveView(request):
     last_lineups_d = {}
     overtime, _ = U.check_day_already_started(day)
 
-    #here start the distinction main-league and total
-    #for total the full lineup(squad) must be passed
-
     #VALIDO PER:
     # TOTAL LEAGUE
     total_league = all_competitions.get(Name='Total League')
@@ -88,7 +85,7 @@ def LiveView(request):
         all_votes = []
 
         for lineup_couple in lineup_couples:
-            votes_home = LU.get_votes_total(lineup_couple[0], home=True) #extract from last_lineups_d
+            votes_home = LU.get_votes_total(lineup_couple[0], home=True)
             votes_away = LU.get_votes_total(lineup_couple[1], home=False)
             all_votes.append( \
                 [votes_home, votes_away]
@@ -121,7 +118,6 @@ def LiveView(request):
                     
             else:  #filter for historical data
                 lineup_to_show = l[0] if len(l)> 0 else t.Name #always valued because we SHOULD save the lineup
-
 
             last_lineups_d[t.id] = lineup_to_show
 
