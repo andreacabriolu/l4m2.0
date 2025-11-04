@@ -17,6 +17,9 @@ def get_ranking(c_id, s_id, day):
 
     return r
 
+def get_days(c_id):
+    return competition_calendar.CompetitionCalendar.objects.filter(Competition=c_id).values('Day')
+
 def get_competition(name):
     return competition.Competition.objects.filter(Name=name)
 

@@ -42,7 +42,7 @@ def LiveView(request):
     teamid = U.get_user_team(request.user.id)['id']
 
     current_day = U.get_current_day()
-    all_days = range(1, int(current_day) + 1)
+    all_days = range(1, int(current_day) + 1) #default campionato
 
     my_series_mainleague = U.get_my_series(teamid, competitionid=1) #default campionato
     my_seriesid_mainleague = my_series_mainleague[0].id

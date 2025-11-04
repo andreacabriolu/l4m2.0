@@ -44,6 +44,13 @@ class GetSeriesByCompetitionView(View):
         c_id = request.POST['c_id']
         series = U.get_all_series(c_id)
         return HttpResponse(json.dumps([(s.id,s.Name) for s in series]))
+    
+class GetDaysByCompetitionView(View):
+    def get(self, request):
+        c_id = request.GET['c_id']
+        days = U.get_days(c_id)
+        cd = U.get_current_day()
+        return HttpResponse(json.dumps(sorted([d['Day'] for d in days if d['Day'] <= int(cd)], reverse=True)))
 
 class RetrieveB11RankingInfoView(View):
     def post(self, request):

@@ -35,5 +35,6 @@ urlpatterns = [
     path("l4m/retrieveRankingInfo/", dashboard_views.RetrieveRankingInfoView.as_view(), name="retrieve_ranking_info"),
     path("l4m/retrieveb11RankingInfo/", dashboard_views.RetrieveB11RankingInfoView.as_view(), name="retrieve_b11_ranking_info"),
     path("l4m/getSeriesByCompetition/", dashboard_views.GetSeriesByCompetitionView.as_view(), name="get_series_by_competition"),
+    path("l4m/getDaysByCompetition/", dashboard_views.GetDaysByCompetitionView.as_view(), name="get_days_by_competition"),
 
 ]
