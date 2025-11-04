@@ -59,7 +59,7 @@ def get_squads(teamid):
 
 def get_players_by_squad(_squads):
     pl_ids = [pl.Player_id for pl in _squads]
-    return player.Player.objects.filter(id__in=pl_ids).values('id','Surname','Role')
+    return player.Player.objects.filter(id__in=pl_ids).values('id','Surname','Role','RealTeam')
 
 def get_players_by_lups(l_ups):
     _lups = []

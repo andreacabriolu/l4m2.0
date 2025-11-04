@@ -1,12 +1,14 @@
 import psycopg2
 import datetime
 from collections import defaultdict
+from decouple import config
+
 
 # REMOTE
 conn = psycopg2.connect(
-     dbname="l4m20_db",
-     user="",
-     password="",
+     dbname=config('DB_NAME'),
+     user=config('DB_USER'),
+     password=config('DB_PASSWORD'),
      host="127.0.0.1",
      #host="209.38.103.87",
      port="5432"

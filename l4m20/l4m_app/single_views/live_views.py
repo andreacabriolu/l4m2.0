@@ -70,50 +70,66 @@ def LiveView(request):
     last_lineups_d = {}
     overtime, _ = U.check_day_already_started(day)
 
-    #here start the distinction main-league and total
-    #for total the full lineup(squad) must be passed
-
-    # total_league = all_competitions.get(Name='Total League')
-    # U.get_lineups(series_teams, day, current_day, overtime)
-
     #VALIDO PER:
-    #CAMPIONATO
-    #COPPA DI LEGA
-    for t in series_teams:
-        l = U.get_last_lineup(t, day, comp_id=competition_id)
-        if(len(l) <= 0 and overtime): #overtime
-            last_valid_l = U.get_last_valid_lineup(t)
+    # TOTAL LEAGUE
+    total_league = all_competitions.get(Name='Total League')
+    if competition_id == total_league.id:
+        for t in series_teams:
+            lineup_to_show = LU.get_b11_lineup(t, day)
+            lineup_to_show['t']=t
+            last_lineups_d[t.id] = lineup_to_show
 
-        lineup_to_show = t.Name #base
+        couples = LU.get_couples_from_calendar(seriesid, day, competition_id=competition_id)
+        couples = [couples.pop(couples.index(i)) for i in couples if (i[0]==teamid or i[1]==teamid)]+couples #get user match as first
+        lineup_couples = [ (last_lineups_d[c[0]], last_lineups_d[c[1]]) for c in couples ]
 
-        if not overtime:
-            if len(l) > 0:
-                lineup_to_show = l[0]
-            else:
-                lineup_to_show = t.Name
+        all_votes = []
 
-        if overtime and day == int(current_day):
-            if len(l) > 0:
-                lineup_to_show = l[0]
-            else:
-                lineup_to_show = last_valid_l
-                U.save_last_valid_lineup(last_valid_l, day)
-                U.update_balance(t.id)
-                
-        else:  #filter for historical data
-            lineup_to_show = l[0] if len(l)> 0 else t.Name #always valued because we SHOULD save the lineup
+        for lineup_couple in lineup_couples:
+            votes_home = LU.get_votes_total(lineup_couple[0], home=True)
+            votes_away = LU.get_votes_total(lineup_couple[1], home=False)
+            all_votes.append( \
+                [votes_home, votes_away]
+            )
 
+    else:
+        #VALIDO PER:
+        #CAMPIONATO
+        #COPPA DI LEGA
+        for t in series_teams:
+            l = U.get_last_lineup(t, day, comp_id=competition_id)
+            if(len(l) <= 0 and overtime): #overtime
+                last_valid_l = U.get_last_valid_lineup(t)
 
-        last_lineups_d[t.id] = lineup_to_show
+            lineup_to_show = t.Name #base
 
-    couples = LU.get_couples_from_calendar(seriesid, day, competition_id=competition_id)
-    couples = [couples.pop(couples.index(i)) for i in couples if (i[0]==teamid or i[1]==teamid)]+couples #get user match as first
-    lineup_couples = [ (last_lineups_d[c[0]], last_lineups_d[c[1]]) for c in couples ]
+            if not overtime:
+                if len(l) > 0:
+                    lineup_to_show = l[0]
+                else:
+                    lineup_to_show = t.Name
 
-    all_votes = []
+            if overtime and day == int(current_day):
+                if len(l) > 0:
+                    lineup_to_show = l[0]
+                else:
+                    lineup_to_show = last_valid_l
+                    U.save_last_valid_lineup(last_valid_l, day)
+                    U.update_balance(t.id)
+                    
+            else:  #filter for historical data
+                lineup_to_show = l[0] if len(l)> 0 else t.Name #always valued because we SHOULD save the lineup
 
-    #get all live players
-    live_votes, live_teams, already_played_teams = LU.get_live_votes(day)
+            last_lineups_d[t.id] = lineup_to_show
+
+        couples = LU.get_couples_from_calendar(seriesid, day, competition_id=competition_id)
+        couples = [couples.pop(couples.index(i)) for i in couples if (i[0]==teamid or i[1]==teamid)]+couples #get user match as first
+        lineup_couples = [ (last_lineups_d[c[0]], last_lineups_d[c[1]]) for c in couples ]
+
+        all_votes = []
+
+        #get all live players
+        live_votes, live_teams, already_played_teams = LU.get_live_votes(day)
 
     for lineup_couple in lineup_couples:
         votes_home = LU.get_votes(lineup_couple[0], day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=teamid, homeAway=homeAway)
