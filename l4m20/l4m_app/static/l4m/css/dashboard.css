@@ -203,3 +203,8 @@
     width: 100% !important;
   }
 }
+
+.view-live-btn {
+  margin-left: .5em;
+  margin-bottom: 1rem;
+}

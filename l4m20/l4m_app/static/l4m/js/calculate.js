@@ -35,7 +35,7 @@ function fill_days(c_id) {
                     .text(day)
                     .attr('value', day));
             });
-            $('#select_day').children(`option[value=${days[parseInt(response)-1]}]`).prop('selected',true);
+            $('#select_day').children(`option[value=${days[parseInt(response) - 1]}]`).prop('selected', true);
         }
     });
 }
@@ -54,12 +54,13 @@ function calculate(c_id, d_id) {
         else {
             $('#spinner').attr('hidden', true);
             showPopupErrorAlert(response);
+            advanceDay(nopopup=true); //calculate AND advance
         }
     });
 
 }
 
-function set_day(day) {
+function set_day(day, nopopup=false) {
     const token = Cookies.get('csrftoken');
 
     var data = { 'day': parseInt(day), 'csrfmiddlewaretoken': token };
@@ -70,18 +71,24 @@ function set_day(day) {
         }
         else {
             $('#cur-day-val').val(response);
-            $('#modal-text').text('GIORNATA AVANZATA O IMPOSTATA');
-            $('#confirmModal').modal('show');
+            if(!nopopup) { 
+                $('#modal-text').text('GIORNATA AVANZATA O IMPOSTATA');
+                $('#confirmModal').modal('show');
+            }
         }
     });
 }
 
+function advanceDay(nopopup=false) {
+    var cur_day_val = $('#cur-day-val').val();
+    set_day(parseInt(cur_day_val) + 1, nopopup);
+}
 
 window.addEventListener('DOMContentLoaded', event => {
     c_id = $('#select_comp').children('option:selected').data().id;
     fill_days(c_id);
 
-    $('#allCompChk').on('change', function() {
+    $('#allCompChk').on('change', function () {
         $('#select_comp').prop('disabled', $(this).prop('checked'));
     });
 
@@ -92,11 +99,10 @@ window.addEventListener('DOMContentLoaded', event => {
     });
 
     $('#btnAdvanceDay').on('click', function () {
-        var cur_day_val = $('#cur-day-val').val();
-        set_day(parseInt(cur_day_val) + 1);
+        advanceDay();
     });
 
-     $('#btnSetDay').on('click', function () {
+    $('#btnSetDay').on('click', function () {
         var cur_day_val = $('#cur-day-val').val();
         set_day(cur_day_val);
     });

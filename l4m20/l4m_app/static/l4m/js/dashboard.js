@@ -15,13 +15,9 @@ function showInfoAlert(response) {
     });
 }
 
-function fillSeries(c_id, series = null) {
+function fillSeries(c_id) {
     const token = Cookies.get('csrftoken');
     $('#select_series').empty();
-
-    // if(series != null) {
-    //     $('#select_series').val(series.Name);
-    // }
 
     var data = { 'c_id': c_id, 'csrfmiddlewaretoken': token };
 
@@ -49,10 +45,18 @@ window.addEventListener('DOMContentLoaded', event => {
     // const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
 
     var main_league = $('#main_league').val();
-    var my_main_league_series = $('#my_main_league_series').val();
-    fillSeries(main_league, series = my_main_league_series);
+    // var my_main_league_series = $('#my_main_league_series').val();
+    fillSeries(main_league);
 
-    $('#select_series').on('change', function () {
+    $('#select_comp').on('change', function() {
+        fillSeries($(this).children('option:selected').data().id);
+    });
+
+    // $('#select_series').on('change', function () {
+    //     rankingDataTable.ajax.reload();
+    // });
+
+     $('#view_live_btn').on('click', function() {
         rankingDataTable.ajax.reload();
     });
 
@@ -75,11 +79,11 @@ window.addEventListener('DOMContentLoaded', event => {
                         d.c_id = $('#select_comp').children().length > 0 ?
                             $('#select_comp').children('option:selected').data().id :
                             $('#main_league').val(),
-                            d.s_id = $('#select_series').children().length > 0 ?
-                                $('#select_series').children('option:selected').data().id :
-                                $('#my_main_league_series').val(),
-                            d.day = $('#day').val(),
-                            d.csrfmiddlewaretoken = token
+                        d.s_id = $('#select_series').children().length > 0 ?
+                            $('#select_series').children('option:selected').data().id :
+                            $('#my_main_league_series').val(),
+                        d.day = $('#day').val(),
+                        d.csrfmiddlewaretoken = token
                     },
                     dataSrc: "lines",
                 },

@@ -153,17 +153,17 @@ def calculate_league(competition, day):
             all_votes = []
 
             for t in series_teams:
-                l = U.get_last_lineup(t, _day)
+                l = U.get_last_lineup(t, _day, comp_id=competition.id)
 
                 lineup_to_show = l[0]
                 last_lineups_d[t.id] = lineup_to_show
 
-            couples = LU.get_couples_and_matches_from_calendar(series.id, _day)
+            couples = LU.get_couples_and_matches_from_calendar(series.id, _day, competition_id=competition.id)
             lineup_couples = [ (last_lineups_d[c[0]], last_lineups_d[c[1]], c[2]) for c in couples ]
 
             for lineup_couple in lineup_couples:
                 votes_home = LU.get_votes(lineup_couple[0], _day, live_votes=[], live_teams=[], get_for_calculation=True, homeAway=homeAway)
-                votes_away = LU.get_votes(lineup_couple[1], _day, live_votes=[], live_teams=[], get_for_calculation=True, homeAway=homeAway)
+                votes_away = LU.get_votes(lineup_couple[1], _day, live_votes=[], live_teams=[], get_for_calculation=True, homeAway=homeAway, home=False if homeAway else None)
                 all_votes.append( [[lineup_couple[0].Team.id, votes_home], [lineup_couple[1].Team.id, votes_away], lineup_couple[2]] )
 
             all_votes_per_series[series.id] = all_votes

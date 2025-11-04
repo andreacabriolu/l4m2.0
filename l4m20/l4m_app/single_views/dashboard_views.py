@@ -20,7 +20,7 @@ class DashboardView(LoginRequiredMixin, View):
         all_campionato_series = U.get_all_series(competitionid=main_league[0].id)
 
         my_team = U.get_user_team(request.user.id)
-        my_series = U.get_my_series(teamid=my_team['id'])
+        my_series = U.get_all_my_series(teamid=my_team['id'])
         my_competitions = U.get_my_competitions(my_series)
 
         logo_path = my_team['LogoPath']
