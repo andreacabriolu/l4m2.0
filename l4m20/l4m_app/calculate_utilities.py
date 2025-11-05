@@ -30,8 +30,8 @@ def write_league_rankings(vote_per_series, competition_id, day, seriesid, noLine
         result = 'h' if goal_home > goal_away else 'a' if goal_away > goal_home else 'n'
 
         if(not noLineup):
-            WIN_PT_H, DRAW_PT_H, LOSE_PT_H = U.check_penalties(team_home, day, result)
-            WIN_PT_A, DRAW_PT_A, LOSE_PT_A = U.check_penalties(team_away, day, result)
+            WIN_PT_H, DRAW_PT_H, LOSE_PT_H = U.check_penalties(team_home, day)
+            WIN_PT_A, DRAW_PT_A, LOSE_PT_A = U.check_penalties(team_away, day)
 
         if(last_ranking is None): #match 1
             n_win_home = 1 if result == 'h' else 0
