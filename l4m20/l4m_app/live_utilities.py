@@ -882,10 +882,10 @@ def pick_best_11(keepers, defenders, midfielders, attackers):
                     break
 
             # all-six bonus
-            bonus_six = 0.5 if all(p.votes.Vote is not None and p.votes.Vote >= 6 for p in lineup) else 0.
+            bonus_six = 0.5 if all(p.votes.Vote is not None and p.votes.Vote >= 6 for p in lineup) else 0
 
-            # no-yellow bonus NOT COMPLETE 
-            no_yellow_bonus = 0.5 if not any(getattr(p.votes, "YellowCard", False) for p in lineup) else 0.    
+            _noCards =  len([v for v in lineup if (v.votes.Red==1 or v.votes.Yel==1 or v.votes.YelRed==1)]) == 0
+            no_yellow_bonus = 0.5 if _noCards else 0
             
             total_score = score + mod_score + bonus_cap + bonus_six + no_yellow_bonus
             if total_score > best_score:
