@@ -458,7 +458,7 @@ def get_scores(t_id):
     
     return fps
 
-def check_penalties(t_id, day, result):
+def check_penalties(t_id, day):
     l = get_last_lineup(t_id, day)[0]
 
     if l.Version > 0:

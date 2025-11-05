@@ -8,7 +8,7 @@ from . import utilities as U
 from django.db.models import Q
 import requests as req
 
-def get_votes_total(b11_lineup, home=True):
+def get_votes_total(b11_lineup, home=True, homeAway=False):
     votes_tit = []
     votes_ris = []
     _items = []
@@ -34,6 +34,8 @@ def get_votes_total(b11_lineup, home=True):
     _items.append(b11_lineup['modifier_from_no_gk'])
     _items.append(0) #missing slots
     _items.append(1) #version
+    bonus_home = get_bonus_home(homeAway, home)
+    _items.append(bonus_home)
 
     tits = b11_lineup['players'][:11]
     riss = b11_lineup['players'][12:]
