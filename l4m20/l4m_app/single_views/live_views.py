@@ -86,8 +86,8 @@ def LiveView(request):
         all_votes = []
 
         for lineup_couple in lineup_couples:
-            votes_home = LU.get_votes_total(lineup_couple[0], home=True)
-            votes_away = LU.get_votes_total(lineup_couple[1], home=False)
+            votes_home = LU.get_votes_total(lineup_couple[0], home=True, homeAway=homeAway)
+            votes_away = LU.get_votes_total(lineup_couple[1], home=False, homeAway=homeAway)
             all_votes.append( \
                 [votes_home, votes_away]
             )

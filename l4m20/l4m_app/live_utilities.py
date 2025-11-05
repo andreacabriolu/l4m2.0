@@ -24,8 +24,8 @@ def get_votes_total(b11_lineup, home=True, homeAway=False):
     _items.append(b11_lineup['bcaptain'])
     _items.append(b11_lineup['no_yellow_bonus'])
     _items.append(b11_lineup['all_six_bonus'])
-
-    _items.append(b11_lineup['score'])
+    bonus_home = get_bonus_home(homeAway, home)
+    _items.append(b11_lineup['score'] + bonus_home)
 
     n_goals = calculate_n_goals(b11_lineup['score'])
     _items.append(n_goals)
@@ -34,8 +34,10 @@ def get_votes_total(b11_lineup, home=True, homeAway=False):
     _items.append(b11_lineup['modifier_from_no_gk'])
     _items.append(0) #missing slots
     _items.append(1) #version
-    bonus_home = get_bonus_home(homeAway, home)
-    _items.append(bonus_home)
+    if homeAway:
+        _items.append(1 if home else (-1))
+    else:
+        _items.append(0)
 
     tits = b11_lineup['players'][:11]
     riss = b11_lineup['players'][12:]
@@ -868,7 +870,7 @@ def pick_best_11(keepers, defenders, midfielders, attackers):
             else:
                 mod, mod_score, modNoGk_used = 0., 0., False
 
-            score += mod_score
+            # score += mod_score
 
             # captain bonus
             captain = None
@@ -885,7 +887,7 @@ def pick_best_11(keepers, defenders, midfielders, attackers):
             # no-yellow bonus NOT COMPLETE 
             no_yellow_bonus = 0.5 if not any(getattr(p.votes, "YellowCard", False) for p in lineup) else 0.    
             
-            total_score = score + bonus_cap + bonus_six + no_yellow_bonus
+            total_score = score + mod_score + bonus_cap + bonus_six + no_yellow_bonus
             if total_score > best_score:
                 # info players
                 players_list = []

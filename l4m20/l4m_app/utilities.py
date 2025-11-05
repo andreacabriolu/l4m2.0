@@ -6,9 +6,36 @@ from django.shortcuts import get_object_or_404
 from django.db.models.functions import Coalesce
 from zoneinfo import ZoneInfo
 from l4m20 import constants as C
+import requests as req
+
+def is_current_day_completed():
+    url = "https://publicapi.fantamaster.it/livescores/?tcache=1756165942189"
+    resp = req.get(url)
+    resp_content = resp.content
+    resp_json = json.loads(resp_content)
+
+    for score in resp_json['scores']:
+        if score['time'] != C.Events.END_MATCH:
+            return False
+
+    return True
 
 def clean_name(name):
     return name.replace(' ','_').replace('\'','')
+
+def get_last_available_ranking_by_day(c_id, s_id, day):
+    r = ranking.Ranking.objects.filter(Q(Competition=c_id) & Q(Series=s_id) & Q(Day__lt=day)).order_by('-Day')
+    if len(r) <= 0:
+        return None
+
+    return r
+
+def get_last_available_ranking(c_id, s_id):
+    r = ranking.Ranking.objects.filter(Q(Competition=c_id) & Q(Series=s_id)).order_by('-Day')
+    if len(r) <= 0:
+        return None
+
+    return r
 
 def get_ranking(c_id, s_id, day):
     r = ranking.Ranking.objects.filter(Q(Competition=c_id) & Q(Series=s_id) & Q(Day=int(day)))

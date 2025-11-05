@@ -40,7 +40,7 @@ function fill_days(c_id) {
     });
 }
 
-function calculate(c_id, d_id) {
+function calculate(c_id, d_id, allcomp=true) {
     const token = Cookies.get('csrftoken');
 
     var data = { 'competitionid': c_id, 'all_comp': $('#allCompChk').prop('checked'), 'day': parseInt(d_id), 'csrfmiddlewaretoken': token };
@@ -54,7 +54,9 @@ function calculate(c_id, d_id) {
         else {
             $('#spinner').attr('hidden', true);
             showPopupErrorAlert(response);
-            advanceDay(nopopup=true); //calculate AND advance
+            if(allcomp) {
+                advanceDay(nopopup=true); //calculate AND advance
+            }
         }
     });
 
@@ -95,7 +97,8 @@ window.addEventListener('DOMContentLoaded', event => {
     $('#btnCalculate').on('click', function () {
         d_id = $('#select_day').children('option:selected').val();
         c_id = $('#select_comp').children('option:selected').data().id;
-        calculate(c_id, d_id);
+        allcomp = $('#allCompChk').prop('checked');
+        calculate(c_id, d_id, allcomp);
     });
 
     $('#btnAdvanceDay').on('click', function () {

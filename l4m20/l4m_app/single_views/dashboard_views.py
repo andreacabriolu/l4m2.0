@@ -81,7 +81,8 @@ class RetrieveRankingInfoView(View):
         s_id = request.POST['s_id']
         day = request.POST['day']
         
-        _ranking = U.get_ranking(c_id, s_id, int(day) - 1)
+        # _ranking = U.get_ranking(c_id, s_id, int(day) - 1)
+        _ranking = U.get_last_available_ranking(c_id, s_id)
 
         if(_ranking is None):
             return HttpResponse(json.dumps({ 'lines' : [None,None,None,None,None,None,None,None,None,None] }))

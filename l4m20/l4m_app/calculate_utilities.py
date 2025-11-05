@@ -6,12 +6,14 @@ from django.db.models import Q
 from l4m20 import constants as C
 
 def write_league_rankings(vote_per_series, competition_id, day, seriesid, noLineup=False):
-    last_ranking = U.get_ranking(competition_id, seriesid, int(day)-1)
+    last_ranking = U.get_last_available_ranking_by_day(competition_id, seriesid, int(day))
     
     if(last_ranking is not None):
         last_ranking = json.loads(last_ranking[0].RankingLine)
     
     new_ranking_line = []
+
+    days = len([d for d in U.get_days(competition_id) if d['Day'] <= int(day)])
 
     WIN_PT_H = C.WIN_PT 
     WIN_PT_A = C.WIN_PT
@@ -73,8 +75,8 @@ def write_league_rankings(vote_per_series, competition_id, day, seriesid, noLine
             dr_home = gf_home - gs_home
             dr_away = gf_away - gs_away
 
-        stats_home = {'pt': pt_home, 'fpt': fp_home, 'pg': day, 'v': n_win_home, 'n': n_null_home, 'p': n_lose_home, 'gf': gf_home, 'gs': gs_home, 'dr': dr_home}
-        stats_away = {'pt': pt_away, 'fpt': fp_away, 'pg': day, 'v': n_win_away, 'n': n_null_away, 'p': n_lose_away, 'gf': gf_away, 'gs': gs_away, 'dr': dr_away}
+        stats_home = {'pt': pt_home, 'fpt': fp_home, 'pg': days, 'v': n_win_home, 'n': n_null_home, 'p': n_lose_home, 'gf': gf_home, 'gs': gs_home, 'dr': dr_home}
+        stats_away = {'pt': pt_away, 'fpt': fp_away, 'pg': days, 'v': n_win_away, 'n': n_null_away, 'p': n_lose_away, 'gf': gf_away, 'gs': gs_away, 'dr': dr_away}
 
         new_ranking_line_home = {team_home: stats_home}
         new_ranking_line_away = {team_away: stats_away}
@@ -130,10 +132,15 @@ def calculate_total_league(competition, day):
     all_votes_per_series = {}
     comp_series = U.get_all_series(competition.id)
     curr_day = U.get_current_day() 
-    days_to_calculate = range(int(day), int(curr_day)) if (int(day) < int(curr_day)) else [int(curr_day)]
+    days = U.get_days(competition.id)
+    days_to_calculate = sorted([d['Day'] for d in days if d['Day'] <= int(curr_day)]) if (int(day) < int(curr_day)) else [int(curr_day)]
     homeAway=U.get_homeaway(competition.id, day)
 
     for _day in days_to_calculate:
+        if _day == int(curr_day): #arrow anti pattern...
+            if not U.is_current_day_completed(): 
+                continue
+
         for series in comp_series:
             series_teams = team.Team.objects.filter(Series__id=series.id)
 
@@ -141,7 +148,7 @@ def calculate_total_league(competition, day):
             all_votes = []    
 
             for t in series_teams:
-                lineup_to_show = LU.get_b11_lineup(t, day)
+                lineup_to_show = LU.get_b11_lineup(t, _day)
                 lineup_to_show['t']=t
                 last_lineups_d[t.id] = lineup_to_show
 
@@ -152,8 +159,8 @@ def calculate_total_league(competition, day):
 
             for lineup_couple in lineup_couples:
 
-                fp_home = lineup_couple[0]['score']
-                fp_away = lineup_couple[1]['score']
+                fp_home = lineup_couple[0]['score'] + LU.get_bonus_home(homeaway=homeAway, home=True)
+                fp_away = lineup_couple[1]['score'] + LU.get_bonus_home(homeaway=homeAway, home=False)
 
                 all_votes.append( [[lineup_couple[0]['t'].id, fp_home], 
                                    [lineup_couple[1]['t'].id, fp_away], 
@@ -164,7 +171,6 @@ def calculate_total_league(competition, day):
         for k, vote_per_series in all_votes_per_series.items():
             save_results_for_total(vote_per_series) 
             write_league_rankings(vote_per_series, competition.id, _day, seriesid=k, noLineup=True)
-
 
 def calculate_b11_league(competition, day):
     b11_series = U.get_unica_series(competition)
