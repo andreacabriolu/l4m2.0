@@ -62,6 +62,9 @@ def get_all_live_active_competitions():
 def get_all_lineup_active_competitions():
     return competition.Competition.objects.filter(Q(Active=True) & Q(Lineup=True))
 
+def get_my_lineup_active_competitions(my_series):
+    return competition.Competition.objects.filter(Q(Active=True) & Q(Lineup=True) & Q(series__id__in=my_series))
+
 def get_my_competitions(my_series):
     return competition.Competition.objects.filter(series__id__in=my_series)
 

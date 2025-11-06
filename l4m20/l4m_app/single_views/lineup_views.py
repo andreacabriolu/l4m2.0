@@ -25,6 +25,7 @@ def LineupView_(request):
     teamid = user_team['id']
     mods = C.Constant_Lists.Modules
     current_day = U.get_current_day()
+    my_series = U.get_all_my_series(teamid)
 
     day_already_started, day_time_limit = U.check_day_already_started(current_day)
     
@@ -71,15 +72,13 @@ def LineupView_(request):
 
     players_my = list(players_def) + list(players_cc)+ list(players_fw)
     players_all = players_my + list(players_gk)
-    all_competitions = U.get_all_lineup_active_competitions()
+    all_competitions = U.get_my_lineup_active_competitions(my_series)
 
     if(len(request.POST) > 0 and 'jsonData' in request.POST):
         data = json.loads(request.POST['jsonData'])
         competition_id = data['competition']
-        # my_series = U.get_my_series(teamid, competitionid=competition_id)
     else:
         competition_id=1
-        # my_series = U.get_my_series(teamid, competitionid=1) #default campionato
     
     params = { 
         'mods': mods,
