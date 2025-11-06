@@ -96,6 +96,46 @@ def LineupView_(request):
         }
     
     return render(request, template_name, params)
+
+class SaveMultipleLineupView(View):
+    def post(self, request):
+        try:
+            tits = request.POST['tits']
+            options = request.POST['options']
+            all_comp_ids = request.POST['all_comp_ids']
+
+            if (tits is None or options is None): return
+
+            all_comp_ids = json.loads(all_comp_ids)
+            lineup = json.loads(tits)
+            options = json.loads(options)
+            day = U.get_current_day()
+            teamid = U.get_user_team(request.user.id)['id']
+
+            for single_comp_id in all_comp_ids:
+                last_version = 0
+                last_lineup = U.get_last_lineup(teamid, day, single_comp_id)
+
+                if(last_lineup):
+                    last_version = last_lineup[0].Version if last_lineup[0].Version != (-1) else 0
+
+                lineup_info = {
+                    "line": lineup,
+                    "day": day,
+                    "team": teamid,
+                    "version": last_version + 1,
+                    "timestamp": datetime.now(),
+                    "series": U.get_my_series(teamid, competitionid=single_comp_id)[0],
+                    "hideLineup": options['hideLineup'],
+                    "modNoGk": options['modNoGk'],
+                }
+
+                U.save_lineup(lineup_info)
+
+            return HttpResponse("success")
+
+        except Exception as e:
+                return HttpResponse(f'error saving lineup: {e}') 
     
 class SaveLineupView(View):
   def post(self, request):

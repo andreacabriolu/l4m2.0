@@ -23,6 +23,7 @@ urlpatterns = [
     path("l4m/rules/", rules_views.RulesView.as_view(), name="rules"),
     path("l4m/squad/", squad_views.SquadView.as_view(), name="squad"),
     path("l4m/lineup/save/", lineup_views.SaveLineupView.as_view(), name="save_lineup"),
+    path("l4m/lineup/saveMultiple/", lineup_views.SaveMultipleLineupView.as_view(), name="save_multiple_lineup"),
     path("l4m/lineup/getLast/", lineup_views.GetLastLineupView.as_view(), name="get_last_lineup"),
     path("l4m/live/", live_views.LiveView, name="live"),
     path("l4m/live_b11/", live_views.LiveB11View.as_view(), name="live_b11"),

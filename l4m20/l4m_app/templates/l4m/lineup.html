@@ -72,6 +72,10 @@
                 <button type="button" class="btn btn-primary top-panel-btn" id="btnResetLineup" {% if day_already_started %} disabled {% endif %}>
                     RESET TUTTI
                 </button>
+                <div class="form-check form-switch form-floating form-switch-md switch-all-comp">
+                    <input class="form-check-input" type="checkbox" id="allCompSwitch" {% if day_already_started %} disabled {% endif %}>
+                    <span class="form-check-label hide-lineup-label">SCHIERA PER TUTTE LE COMPETIZIONI</span>
+                </div>
             </div>
 
             <div class="alert-panel" id="alert_panel">

@@ -170,3 +170,7 @@ label {
   .comp-label {
     color: whitesmoke;
   }
+
+  .switch-all-comp {
+    margin-top: .7em;
+  }
