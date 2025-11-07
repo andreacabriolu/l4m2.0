@@ -54,7 +54,9 @@ def LiveView(request):
         competition_id = data['competition']
         seriesid = data['series']
         my_series = U.get_my_series(teamid, competitionid=competition_id)
-        if(seriesid != my_series[0].id):
+        if len(my_series) <= 0:
+            teamid = None
+        elif(seriesid != my_series[0].id):
             teamid = None
         day = int(data['day'])
     else:
@@ -96,6 +98,7 @@ def LiveView(request):
         #VALIDO PER:
         #CAMPIONATO
         #COPPA DI LEGA
+        #COPPA DI SERIE
         for t in series_teams:
             l = U.get_last_lineup(t, day, comp_id=competition_id)
             if(len(l) <= 0 and overtime): #overtime

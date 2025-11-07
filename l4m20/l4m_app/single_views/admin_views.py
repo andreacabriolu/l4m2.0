@@ -47,36 +47,43 @@ class CalculateDayView(View):
             day = request.POST['day']
             all_comp = eval(request.POST['all_comp'].capitalize())
 
+            if day == U.get_current_day() and not U.is_current_day_completed():
+                return HttpResponse(f'error GIORNATA {day} ANCORA IN CORSO!')
+
             main_league = U.get_competition(name='Campionato')[0]
             b11_league = U.get_competition(name='Best 11')[0]
             cdl_league = U.get_competition(name='Coppa di Lega')[0]
             total_league = U.get_competition(name='Total League')[0]
+            cds_seriea_league = U.get_competition(name='Coppa Serie A')[0]
+            cds_bundesliga_league = U.get_competition(name='Coppa Bundesliga')[0]
+            cds_liga_league = U.get_competition(name='Coppa Liga')[0]
 
             if all_comp:
                 CU.calculate_league(main_league, day)
                 CU.calculate_league(cdl_league, day)
                 CU.calculate_b11_league(b11_league, day)
                 CU.calculate_total_league(total_league, day)
+                CU.calculate_league(cds_seriea_league, day)
+                CU.calculate_league(cds_bundesliga_league, day)
+                CU.calculate_league(cds_liga_league, day)
                 return HttpResponse('GIORNATA CALCOLATA PER TUTTE LE COMPETIZIONI')
 
             else: 
-                if int(competitionid) == main_league.id:
-                    CU.calculate_league(main_league, day)
-                    return HttpResponse(f'GIORNATA CALCOLATA PER {main_league.Name}')
-
-                if int(competitionid) == cdl_league.id:
-                    CU.calculate_league(cdl_league, day)
-                    return HttpResponse(f'GIORNATA CALCOLATA PER {cdl_league.Name}')
-
-                if int(competitionid) == b11_league.id:
+                if int(competitionid) == b11_league.id:     
                     CU.calculate_b11_league(b11_league, day)
                     return HttpResponse(f'GIORNATA CALCOLATA PER {b11_league.Name}')
                 
                 if int(competitionid) == total_league.id:
                     CU.calculate_total_league(total_league, day)
                     return HttpResponse(f'GIORNATA CALCOLATA PER {total_league.Name}')
-            
-                return HttpResponse('GIORNATA NON CALCOLATA, COMPETIZIONE NON TROVATA')
+                
+                _competition = competition.Competition.objects.get(pk=competitionid)
+                if _competition is not None:
+                    CU.calculate_league(_competition, day)
+                    return HttpResponse(f'GIORNATA CALCOLATA PER {_competition.Name}')
+
+                else:        
+                    return HttpResponse('GIORNATA NON CALCOLATA, COMPETIZIONE NON TROVATA')
 
         except Exception as e:
             return HttpResponse(f'error {e}')
