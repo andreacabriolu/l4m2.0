@@ -34,6 +34,7 @@ def write_league_rankings(vote_per_series, competition_id, day, seriesid, noLine
         if(not noLineup):
             WIN_PT_H, DRAW_PT_H, LOSE_PT_H = U.check_penalties(team_home, day)
             WIN_PT_A, DRAW_PT_A, LOSE_PT_A = U.check_penalties(team_away, day)
+            #TODO track in matches_result HERE
 
         if(last_ranking is None): #match 1
             n_win_home = 1 if result == 'h' else 0
@@ -227,8 +228,10 @@ def save_results(votes_per_series):
         mc = matches_calendar.MatchesCalendar.objects.get(pk=_votes[2])
         if mc is None:
             continue
-        t1 = team.Team.objects.get(pk=home_results[0])
-        t2 = team.Team.objects.get(pk=away_results[0])
+        home_team_id = home_results[0]
+        away_team_id = away_results[0]
+        t1 = team.Team.objects.get(pk=home_team_id)
+        t2 = team.Team.objects.get(pk=away_team_id)
 
         #RECALCULATE?
         existing_mr_home = matches_results.MatchesResults.objects.filter(Q(Team=t1) & Q(MatchesCalendar=mc))
@@ -238,13 +241,90 @@ def save_results(votes_per_series):
         if len(existing_mr_away) > 0:
             existing_mr_away[0].delete()
 
+        #ALL DATA
+        home_team_data = home_results[1]
+        home_team_items = home_team_data[1]
+        home_data = {
+            'votes_tit': [vars(hd) for hd in home_team_data[0]],
+            'votes_ris': [vars(hd) for hd in home_team_data[2]],
+            'fp': home_team_items[8],
+            'home': home_team_items[0],
+            'partial_score': home_team_items[2],
+            'modifier_val': home_team_items[3],
+            'modifier_score': home_team_items[4],
+            'bonus_cap': home_team_items[5],
+            'bonus_disc': home_team_items[6],
+            'bonus_prest': home_team_items[7],
+            'ngoals': home_team_items[9],
+            'module': home_team_items[10],
+            'orig_module': home_team_items[11],
+            'modnogk': home_team_items[12],
+            'missing_slots': home_team_items[13],
+            'version': home_team_items[14],
+            'bonus_home': home_team_items[15],
+        }
+
+        away_team_data = away_results[1]
+        away_team_items = away_team_data[1]
+        away_data = {
+            'votes_tit': [vars(ad) for ad in away_team_data[0]],
+            'votes_ris': [vars(ad) for ad in away_team_data[2]],
+            'fp': away_team_items[8],
+            'home': away_team_items[0],
+            'partial_score': away_team_items[2],
+            'modifier_val': away_team_items[3],
+            'modifier_score': away_team_items[4],
+            'bonus_cap': away_team_items[5],
+            'bonus_disc': away_team_items[6],
+            'bonus_prest': away_team_items[7],
+            'ngoals': away_team_items[9],
+            'module': away_team_items[10],
+            'orig_module': away_team_items[11],
+            'modnogk': away_team_items[12],
+            'missing_slots': away_team_items[13],
+            'version': away_team_items[14],
+            'bonus_home': away_team_items[15],
+        }
+
         mr_home = matches_results.MatchesResults(Team = t1, 
-                                              Fp = home_results[1], 
+                                              Fp = home_data['fp'], 
+                                              Votes_Tit = home_data['votes_tit'], 
+                                              Votes_Ris = home_data['votes_ris'], 
+                                              Home = home_data['home'], 
+                                              PartialScore = home_data['partial_score'], 
+                                              ModifierVal = home_data['modifier_val'], 
+                                              ModifierScore = home_data['modifier_score'], 
+                                              BonusCap = home_data['bonus_cap'], 
+                                              BonusDisc = home_data['bonus_disc'], 
+                                              BonusPrest = home_data['bonus_prest'], 
+                                              NGoals = home_data['ngoals'], 
+                                              Module = home_data['module'], 
+                                              OrigModule = home_data['orig_module'], 
+                                              ModNoGk = home_data['modnogk'], 
+                                              MissingSlots = home_data['missing_slots'], 
+                                              Version = home_data['version'], 
+                                              BonusHome = home_data['bonus_home'], 
                                               MatchesCalendar = mc)
 
         mr_away = matches_results.MatchesResults(Team = t2, 
-                                              Fp = away_results[1], 
-                                              MatchesCalendar = mc)
+                                                Fp = away_data['fp'], 
+                                                Votes_Tit = away_data['votes_tit'], 
+                                                Votes_Ris = away_data['votes_ris'], 
+                                                Home = away_data['home'], 
+                                                PartialScore = away_data['partial_score'], 
+                                                ModifierVal = away_data['modifier_val'], 
+                                                ModifierScore = away_data['modifier_score'], 
+                                                BonusCap = away_data['bonus_cap'], 
+                                                BonusDisc = away_data['bonus_disc'], 
+                                                BonusPrest = away_data['bonus_prest'], 
+                                                NGoals = away_data['ngoals'], 
+                                                Module = away_data['module'], 
+                                                OrigModule = away_data['orig_module'], 
+                                                ModNoGk = away_data['modnogk'], 
+                                                MissingSlots = away_data['missing_slots'], 
+                                                Version = away_data['version'], 
+                                                BonusHome = away_data['bonus_home'], 
+                                                MatchesCalendar = mc)
         
         mr_home.save()
         mr_away.save()

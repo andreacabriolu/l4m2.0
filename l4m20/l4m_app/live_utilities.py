@@ -689,10 +689,6 @@ def get_votes(lineup, current_day, live_votes, live_teams, already_played_teams=
             if len(_vote) > 0:
                 if(pl.id == cap_id):
                     cap_vote = _vote[0].Vote
-
-    # votes_tot = votes_tit + votes_ris
-    # is_completed = C.PlayerStatus.YET_TO_PLAY not in [v.Status for v in votes_tot] and \
-    #                C.PlayerStatus.PLAYING not in [v.Status for v in votes_tot]
     
     valid_votes = []
     n_subs = 0
@@ -758,8 +754,8 @@ def get_votes(lineup, current_day, live_votes, live_teams, already_played_teams=
     grand_total = total + modifier + bonus_cap + bonus_disc + bonus_prest + bonus_home
     _items.append(grand_total)
 
-    if get_for_calculation: #direct return for day calculation
-        return grand_total
+    # if get_for_calculation: #direct return for day calculation
+    #     return grand_total
 
     n_goals = calculate_n_goals(grand_total)
     _items.append(n_goals)
