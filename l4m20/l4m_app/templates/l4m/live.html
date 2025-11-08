@@ -93,14 +93,16 @@
                     </tr> 
                     <tr>
                         <th colspan="6">
+                            {% if team_votes.1.2 != "hidden" %}
                             <button type="button" 
                             {% if team_votes.1.14 != -1 %} class="btn btn-secondary" {% else %} class="btn btn-danger" {% endif %} 
                             data-bs-toggle="modal" data-bs-target="#showLineupHistoryModal" 
                             id="showLUHist" data-team="{{team_votes.1.1}}">
                                 {% if team_votes.1.14 != -1 %}VERSIONE {{team_votes.1.14}} 
-                                {% else %} ULTIMA FORMAZIONE VALIDA
+                                {% else %} FORMAZIONE NON SCHIERATA
                                 {% endif %}
                             </button>
+                            {% endif %}
                         </th>
                     </tr>
                 </thead>

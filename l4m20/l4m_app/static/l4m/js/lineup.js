@@ -201,6 +201,7 @@ function load_last_lineup(comp_id = 1) {
                 }
 
                 last_lineup = JSON.parse(response);
+                //check for late lineup here
 
                 mod = last_lineup[0].mod;
                 $('#mods').val(mod);
