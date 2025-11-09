@@ -8,6 +8,17 @@ from . import utilities as U
 from django.db.models import Q
 import requests as req
 
+def format_votes(mr):
+    votes_tit = U.cleanJSON(mr.Votes_Tit)
+    votes_tit = votes_tit.replace('<class "str">','')
+    votes_tit = votes_tit.replace('<class "int">','')
+    votes_tit_j = json.loads(votes_tit)
+    remake_vote_obj(votes_tit_j)
+    pass
+
+def get_matches_results(couples):
+    return [matches_results.MatchesResults.objects.filter(MatchesCalendar=couple[2]) for couple in couples]
+
 def get_votes_total(b11_lineup, home=True, homeAway=False):
     votes_tit = []
     votes_ris = []
@@ -40,7 +51,7 @@ def get_votes_total(b11_lineup, home=True, homeAway=False):
         _items.append(0)
 
     tits = b11_lineup['players'][:11]
-    riss = b11_lineup['players'][12:]
+    riss = b11_lineup['players'][11:]
     
     votes_tit = [vt['player_stats'] for vt in tits]
     votes_ris = [vr['player_stats'] for vr in riss]
@@ -462,6 +473,36 @@ def adjust_vote_obj(_vote_obj, cap_id, empty=False):
     _vote_obj.TotVote = calculate_total(_vote_obj) if not empty else 6
     
     return _vote_obj
+
+def remake_vote_obj(_vote, cap_id):
+    v_obj = vote.Vote.Vote_Obj()
+    v_obj.AssH = _vote.AssH
+    v_obj.AssL = _vote.AssL
+    v_obj.AssP = _vote.AssP
+    v_obj.AssS = _vote.AssS
+    v_obj.Player = _vote.Player
+    v_obj.Competition = _vote.Competition
+    v_obj.Day = _vote.Day
+    v_obj.GoalDe = _vote.GoalDe
+    v_obj.GoalSc = _vote.GoalSc
+    v_obj.GoalTa = _vote.GoalTa
+    v_obj.Own = _vote.Own
+    v_obj.PenMi = _vote.PenMi
+    v_obj.PenSa = _vote.PenSa
+    v_obj.PenSc = _vote.PenSc
+    v_obj.Red = _vote.Red
+    v_obj.YelRed = _vote.YelRed
+    v_obj.Sub = _vote.Sub 
+    v_obj.Status = C.PlayerStatus.PLAYED #TODO
+    v_obj.SubJ = _vote.SubJ
+    v_obj.Yel = _vote.Yel
+    v_obj.Vote = _vote.Vote
+    v_obj.TotVote = calculate_total(_vote)
+    if(_vote.Player_id == cap_id):
+        v_obj.Cap = True
+    v_obj.Status = C.PlayerStatus.PLAYED
+
+    return v_obj
 
 def make_vote_obj(_vote:vote.Vote, cap_id):
     v_obj = vote.Vote.Vote_Obj()

@@ -1,3 +1,4 @@
+import json
 from l4m20 import constants as C
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -60,4 +61,35 @@ class Vote(models.Model):
         ChangedIn = str
         ChangedOut = str
         Msg = str
+
+        def todict(self):
+            d= {
+                'player': self.Player.id if self.Player is not None else '',
+                'day': self.Day,
+                'vote': self.Vote,
+                'goalsc': self.GoalSc,
+                'goalta': self.GoalTa,
+                'goalde': self.GoalDe,
+                'pensc': self.PenSc,
+                'penmi': self.PenMi,
+                'pensa': self.PenSa,
+                'own': self.Own,
+                'yel': self.Yel,
+                'red': self.Red,
+                'yelred': self.YelRed,
+                'asss': self.AssS,
+                'assh': self.AssH,
+                'assl': self.AssL,
+                'assp': self.AssP,
+                'subj': self.SubJ,
+                'sub': self.Sub,
+                'cap': self.Cap,
+                'totvote': self.TotVote,
+                'status': str(self.Status),
+                'livestatus': str(self.LiveStatus),
+                'changedin': str(self.ChangedIn),
+                'changedout': str(self.ChangedOut),
+            }
+
+            return json.dumps(d)
 

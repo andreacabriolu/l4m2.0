@@ -25,8 +25,8 @@ def write_league_rankings(vote_per_series, competition_id, day, seriesid, noLine
     for _vote in vote_per_series:
         team_home = _vote[0][0]
         team_away = _vote[1][0]
-        fp_home = _vote[0][1]
-        fp_away = _vote[1][1]
+        fp_home = _vote[0][1][1][8] #VERY BAD, but useful for rendering
+        fp_away = _vote[1][1][1][8] #VERY BAD, but useful for rendering
         goal_home = U.calculate_n_goals(fp_home)
         goal_away = U.calculate_n_goals(fp_away)
         result = 'h' if goal_home > goal_away else 'a' if goal_away > goal_home else 'n'
@@ -245,8 +245,8 @@ def save_results(votes_per_series):
         home_team_data = home_results[1]
         home_team_items = home_team_data[1]
         home_data = {
-            'votes_tit': [vars(hd) for hd in home_team_data[0]],
-            'votes_ris': [vars(hd) for hd in home_team_data[2]],
+            'votes_tit': [hd.todict() for hd in home_team_data[0]],
+            'votes_ris': [hd.todict() for hd in home_team_data[2]],
             'fp': home_team_items[8],
             'home': home_team_items[0],
             'partial_score': home_team_items[2],
@@ -267,8 +267,8 @@ def save_results(votes_per_series):
         away_team_data = away_results[1]
         away_team_items = away_team_data[1]
         away_data = {
-            'votes_tit': [vars(ad) for ad in away_team_data[0]],
-            'votes_ris': [vars(ad) for ad in away_team_data[2]],
+            'votes_tit': [ad.todict() for ad in away_team_data[0]],
+            'votes_ris': [ad.todict() for ad in away_team_data[2]],
             'fp': away_team_items[8],
             'home': away_team_items[0],
             'partial_score': away_team_items[2],

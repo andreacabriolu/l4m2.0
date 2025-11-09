@@ -72,6 +72,19 @@ def LiveView(request):
     last_lineups_d = {}
     overtime, _ = U.check_day_already_started(day)
 
+    #QUICK LOAD THE PAST
+    if int(day < int(current_day)):
+        couples = LU.get_couples_and_matches_from_calendar(seriesid, day, competition_id=competition_id)
+        couples = [couples.pop(couples.index(i)) for i in couples if (i[0]==teamid or i[1]==teamid)]+couples #get user match as first
+        
+        all_votes = []
+        mrs = LU.get_matches_results(couples)
+
+        for mr in mrs:
+            votes_home = LU.format_votes(mr[0]) #format votes_tit, items, votes_ris
+
+
+
     #VALIDO PER:
     # TOTAL LEAGUE
     total_league = all_competitions.get(Name='Total League')
