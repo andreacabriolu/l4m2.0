@@ -27,7 +27,7 @@ def get_votes_total(b11_lineup, home=True, homeAway=False):
     bonus_home = get_bonus_home(homeAway, home)
     _items.append(b11_lineup['score'] + bonus_home)
 
-    n_goals = calculate_n_goals(b11_lineup['score'])
+    n_goals = calculate_n_goals(b11_lineup['score'] + bonus_home)
     _items.append(n_goals)
     _items.append(module)    
     _items.append('same_module')
@@ -40,7 +40,7 @@ def get_votes_total(b11_lineup, home=True, homeAway=False):
         _items.append(0)
 
     tits = b11_lineup['players'][:11]
-    riss = b11_lineup['players'][12:]
+    riss = b11_lineup['players'][11:]
     
     votes_tit = [vt['player_stats'] for vt in tits]
     votes_ris = [vr['player_stats'] for vr in riss]
