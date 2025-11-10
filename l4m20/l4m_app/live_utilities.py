@@ -9,12 +9,21 @@ from django.db.models import Q
 import requests as req
 
 def format_votes(mr):
-    votes_tit = U.cleanJSON(mr.Votes_Tit)
-    votes_tit = votes_tit.replace('<class "str">','')
-    votes_tit = votes_tit.replace('<class "int">','')
-    votes_tit_j = json.loads(votes_tit)
-    remake_vote_obj(votes_tit_j)
-    pass
+    _votes_tit = U.cleanJSON(mr.Votes_Tit)
+    _votes_tit = _votes_tit.replace('<class "str">','')
+    _votes_tit = _votes_tit.replace('<class "int">','')
+    votes_tit_j = json.loads(_votes_tit)
+    
+    _votes_ris = U.cleanJSON(mr.Votes_Ris)
+    _votes_ris = _votes_ris.replace('<class "str">','')
+    _votes_ris = _votes_ris.replace('<class "int">','')
+    votes_ris_j = json.loads(_votes_ris)
+
+    votes_tit = remake_votes_obj(votes_tit_j)
+    items = remake_items(mr)
+    votes_ris = remake_votes_obj(votes_ris_j)
+    
+    return votes_tit, items, votes_ris
 
 def get_matches_results(couples):
     return [matches_results.MatchesResults.objects.filter(MatchesCalendar=couple[2]) for couple in couples]
@@ -474,35 +483,59 @@ def adjust_vote_obj(_vote_obj, cap_id, empty=False):
     
     return _vote_obj
 
-def remake_vote_obj(_vote, cap_id):
-    v_obj = vote.Vote.Vote_Obj()
-    v_obj.AssH = _vote.AssH
-    v_obj.AssL = _vote.AssL
-    v_obj.AssP = _vote.AssP
-    v_obj.AssS = _vote.AssS
-    v_obj.Player = _vote.Player
-    v_obj.Competition = _vote.Competition
-    v_obj.Day = _vote.Day
-    v_obj.GoalDe = _vote.GoalDe
-    v_obj.GoalSc = _vote.GoalSc
-    v_obj.GoalTa = _vote.GoalTa
-    v_obj.Own = _vote.Own
-    v_obj.PenMi = _vote.PenMi
-    v_obj.PenSa = _vote.PenSa
-    v_obj.PenSc = _vote.PenSc
-    v_obj.Red = _vote.Red
-    v_obj.YelRed = _vote.YelRed
-    v_obj.Sub = _vote.Sub 
-    v_obj.Status = C.PlayerStatus.PLAYED #TODO
-    v_obj.SubJ = _vote.SubJ
-    v_obj.Yel = _vote.Yel
-    v_obj.Vote = _vote.Vote
-    v_obj.TotVote = calculate_total(_vote)
-    if(_vote.Player_id == cap_id):
-        v_obj.Cap = True
-    v_obj.Status = C.PlayerStatus.PLAYED
+def remake_items(mr):
+    _items = []
+    _items.append(mr.Home)
+    _items.append(mr.Team.Name)
+    _items.append(mr.PartialScore)
+    _items.append(mr.ModifierVal)
+    _items.append(mr.ModifierScore)
+    _items.append(mr.BonusCap)
+    _items.append(mr.BonusDisc)
+    _items.append(mr.BonusPrest)
+    _items.append(mr.Fp)
+    _items.append(mr.NGoals)
+    _items.append(mr.Module)
+    _items.append(mr.OrigModule)
+    _items.append(mr.ModNoGk)
+    _items.append(mr.MissingSlots)
+    _items.append(mr.Version)
+    _items.append(mr.BonusHome)
 
-    return v_obj
+    return _items
+
+def remake_votes_obj(_votes):
+    _votes_obj = []
+    for _vote in _votes:
+        v_obj = vote.Vote.Vote_Obj()
+        v_obj.AssH = _vote['assh']
+        v_obj.AssL = _vote['assl']
+        v_obj.AssP = _vote['assp']
+        v_obj.AssS = _vote['asss']
+        v_obj.Player = player.Player.objects.get(pk=_vote['player'])
+        v_obj.Day = _vote['day']
+        v_obj.GoalDe = _vote['goalde']
+        v_obj.GoalSc = _vote['goalsc']
+        v_obj.GoalTa = _vote['goalta']
+        v_obj.Own = _vote['own']
+        v_obj.PenMi = _vote['penmi']
+        v_obj.PenSa = _vote['pensa']
+        v_obj.PenSc = _vote['pensc']
+        v_obj.Red = _vote['red']
+        v_obj.YelRed = _vote['yelred']
+        v_obj.Sub = _vote['sub'] 
+        v_obj.Status = C.PlayerStatus.PLAYED
+        v_obj.SubJ = _vote['sub']
+        v_obj.Yel = _vote['yel']
+        v_obj.Vote = _vote['vote']
+        v_obj.TotVote = _vote['totvote']
+        v_obj.Cap = _vote['cap']
+        v_obj.ChangedIn = _vote['changedin']
+        v_obj.ChangedOut = _vote['changedout']
+        v_obj.LiveStatus = _vote['livestatus']
+        _votes_obj.append(v_obj)
+
+    return _votes_obj
 
 def make_vote_obj(_vote:vote.Vote, cap_id):
     v_obj = vote.Vote.Vote_Obj()
