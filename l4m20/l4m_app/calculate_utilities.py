@@ -134,13 +134,10 @@ def calculate_total_league(competition, day):
     comp_series = U.get_all_series(competition.id)
     curr_day = U.get_current_day() 
     days = U.get_days(competition.id)
-    days_to_calculate = sorted([d['Day'] for d in days if d['Day'] <= int(curr_day)])# if (int(day) < int(curr_day)) else [int(curr_day)]
+    days_to_calculate = sorted([d['Day'] for d in days if d['Day'] <= int(curr_day)])
     homeAway=U.get_homeaway(competition.id, day)
 
     for _day in days_to_calculate:
-
-        if _day not in days:
-            continue
         for series in comp_series:
             series_teams = team.Team.objects.filter(Series__id=series.id)
 
@@ -194,8 +191,6 @@ def calculate_league(competition, day):
     homeAway=U.get_homeaway(competition.id, day)
 
     for _day in days_to_calculate:
-        if _day not in days:
-            continue
         for series in comp_series:
             series_teams = team.Team.objects.filter(Series__id=series.id)
 
