@@ -133,14 +133,13 @@ def calculate_total_league(competition, day):
     comp_series = U.get_all_series(competition.id)
     curr_day = U.get_current_day() 
     days = U.get_days(competition.id)
-    days_to_calculate = sorted([d['Day'] for d in days if d['Day'] <= int(curr_day)]) if (int(day) < int(curr_day)) else [int(curr_day)]
+    days_to_calculate = sorted([d['Day'] for d in days if d['Day'] <= int(curr_day)])# if (int(day) < int(curr_day)) else [int(curr_day)]
     homeAway=U.get_homeaway(competition.id, day)
 
     for _day in days_to_calculate:
-        if _day == int(curr_day): #arrow anti pattern...
-            if not U.is_current_day_completed(): 
-                continue
 
+        if _day not in days:
+            continue
         for series in comp_series:
             series_teams = team.Team.objects.filter(Series__id=series.id)
 
@@ -152,7 +151,7 @@ def calculate_total_league(competition, day):
                 lineup_to_show['t']=t
                 last_lineups_d[t.id] = lineup_to_show
 
-            couples = LU.get_couples_and_matches_from_calendar(series.id, day, competition_id=competition.id)
+            couples = LU.get_couples_and_matches_from_calendar(series.id, _day, competition_id=competition.id)
             lineup_couples = [ (last_lineups_d[c[0]], last_lineups_d[c[1]], c[2]) for c in couples ]
 
             all_votes = []
