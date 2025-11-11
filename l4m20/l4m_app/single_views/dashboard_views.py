@@ -21,15 +21,16 @@ class DashboardView(LoginRequiredMixin, View):
 
         my_team = U.get_user_team(request.user.id)
         my_series = U.get_all_my_series(teamid=my_team['id'])
-        my_competitions = U.get_my_competitions(my_series)
+        # my_competitions = U.get_my_competitions(my_series)
+        all_competitions = U.get_all_live_competitions()
 
         logo_path = my_team['LogoPath']
 
-        if len(my_series) <= 0 or len (my_competitions) <= 0:
+        if len(my_series) <= 0 or len (all_competitions) <= 0:
             return HttpResponse('error: no series for the team')
 
         params = {
-            'my_competitions' : my_competitions,
+            'my_competitions' : all_competitions,
             'main_league' : main_league[0],
             'my_main_league_series' : my_series[0],
             'day': U.get_current_day(),

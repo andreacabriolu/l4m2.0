@@ -56,6 +56,9 @@ def get_all_competitions():
 def get_all_active_competitions():
     return competition.Competition.objects.filter(Q(Active=True))
 
+def get_all_live_competitions():
+    return competition.Competition.objects.filter(Q(Live=True))
+
 def get_all_live_active_competitions():
     return competition.Competition.objects.filter(Q(Active=True) & Q(Live=True))
 

@@ -59,7 +59,7 @@
                     <div class="top-table">
                         <select class="form-select form-select-lg mb-3 form-select-selectors" id="select_comp">
                             {% for comp in my_competitions %}
-                            <option value="{{comp}}" data-id="{{comp.id}}">{{comp.Name}}</option>
+                            <option value="{{comp}}" data-id="{{comp.id}}" {% if comp.id == main_league.id %} selected {% endif %}>{{comp.Name}}</option>
                             {% endfor %}
                         </select>
                         <select class="form-select form-select-lg mb-3 form-select-series" id="select_series">

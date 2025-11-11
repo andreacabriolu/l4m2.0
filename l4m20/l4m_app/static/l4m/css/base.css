@@ -80,3 +80,11 @@
   color: steelblue;
   font-weight: bold;
 }
+
+.sidenav-collapsed {
+  padding: 0 !important;
+}
+
+.arrow-collapse {
+  margin-left: .5em;
+}
