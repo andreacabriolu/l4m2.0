@@ -133,11 +133,14 @@ def calculate_total_league(competition, day):
     all_votes_per_series = {}
     comp_series = U.get_all_series(competition.id)
     curr_day = U.get_current_day() 
-    days = U.get_days(competition.id)
-    days_to_calculate = sorted([d['Day'] for d in days if d['Day'] <= int(curr_day)])
+    all_league_days = U.get_days(competition.id)
+    league_days = sorted([d['Day'] for d in all_league_days if d['Day'] <= int(curr_day)])
+    days_to_calculate = league_days if (int(day) < int(curr_day)) else [int(curr_day)]
     homeAway=U.get_homeaway(competition.id, day)
 
     for _day in days_to_calculate:
+        if _day not in league_days:
+            continue
         for series in comp_series:
             series_teams = team.Team.objects.filter(Series__id=series.id)
 
@@ -156,17 +159,17 @@ def calculate_total_league(competition, day):
 
             for lineup_couple in lineup_couples:
 
-                fp_home = lineup_couple[0]['score'] + LU.get_bonus_home(homeaway=homeAway, home=True)
-                fp_away = lineup_couple[1]['score'] + LU.get_bonus_home(homeaway=homeAway, home=False)
+                votes_home = LU.get_votes_total(lineup_couple[0], home=True, homeAway=homeAway)
+                votes_away = LU.get_votes_total(lineup_couple[1], home=False, homeAway=homeAway)
 
-                all_votes.append( [[lineup_couple[0]['t'].id, fp_home], 
-                                   [lineup_couple[1]['t'].id, fp_away], 
+                all_votes.append( [[lineup_couple[0]['t'].id, votes_home], 
+                                   [lineup_couple[1]['t'].id, votes_away], 
                                    lineup_couple[2]] )
         
             all_votes_per_series[series.id] = all_votes
 
         for k, vote_per_series in all_votes_per_series.items():
-            save_results_for_total(vote_per_series) 
+            save_results(vote_per_series) 
             write_league_rankings(vote_per_series, competition.id, _day, seriesid=k, noLineup=True)
 
 def calculate_b11_league(competition, day):
@@ -179,6 +182,7 @@ def calculate_b11_league(competition, day):
         
         for _day in days_to_calculate:
             all_best = LU.get_best_11(team_ids_names, _day)
+            save_b11_results(all_best, _day)
             write_b11_ranking(all_best, competition.id, b11_series[0].id, _day)
 
 def calculate_league(competition, day):
@@ -186,11 +190,14 @@ def calculate_league(competition, day):
     comp_series = U.get_all_series(competition.id)
 
     curr_day = U.get_current_day() 
-    days = U.get_days(competition.id)
-    days_to_calculate = range(int(day), int(curr_day)) if (int(day) < int(curr_day)) else [int(curr_day)]
+    all_league_days = U.get_days(competition.id)
+    league_days = sorted([d['Day'] for d in all_league_days if d['Day'] <= int(curr_day)])
+    days_to_calculate = league_days if (int(day) < int(curr_day)) else [int(curr_day)]
     homeAway=U.get_homeaway(competition.id, day)
 
     for _day in days_to_calculate:
+        if _day not in league_days:
+            continue
         for series in comp_series:
             series_teams = team.Team.objects.filter(Series__id=series.id)
 
@@ -216,6 +223,21 @@ def calculate_league(competition, day):
         for k, vote_per_series in all_votes_per_series.items():
             save_results(vote_per_series) 
             write_league_rankings(vote_per_series, competition.id, _day, seriesid=k)
+
+def save_b11_results(all_best, day):
+    for best in all_best:
+        if best is not None: #RECALCULATE
+            existing_b11 = b11_results.B11Results.objects.filter(Q(Day=day) & Q(Team__id=best['team_id']))
+            if len(existing_b11) > 0:
+                existing_b11[0].delete()
+
+            b11_result = b11_results.B11Results(
+                Day = day,
+                Team = team.Team.objects.get(pk=best['team_id']),
+                B11Fp = best['score']
+            )
+            
+            b11_result.save()
 
 def save_results(votes_per_series):
 
@@ -334,9 +356,10 @@ def save_results_for_total(votes_per_series):
         mc = matches_calendar.MatchesCalendar.objects.get(pk=_votes[2])
         if mc is None:
             continue
-
-        t1 = team.Team.objects.get(pk=home_results[0])
-        t2 = team.Team.objects.get(pk=away_results[0])
+        home_team_id = home_results[0]
+        away_team_id = away_results[0]
+        t1 = team.Team.objects.get(pk=home_team_id)
+        t2 = team.Team.objects.get(pk=away_team_id)
         
         #RECALCULATE?
         existing_mr_home = matches_results.MatchesResults.objects.filter(Q(Team=t1) & Q(MatchesCalendar=mc))
