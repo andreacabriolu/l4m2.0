@@ -86,5 +86,15 @@
 }
 
 .arrow-collapse {
-  margin-left: .5em;
+  margin-left: .5rem !important;
+}
+
+.nav-collapsed-custom {
+  padding: 0 !important;
+}
+
+.nav-span-collapsed {
+  margin-left: 0;
+  font-size: 18px;
+  color: #ffffff40;
 }
