@@ -9,6 +9,7 @@ class Competition(models.Model):
     Active = models.BooleanField(default=False)
     Live = models.BooleanField(default=False)
     Lineup = models.BooleanField(default=False)
+    LogoPath = models.CharField(max_length=200, blank=True, null=True)
     
     def __str__(self):
         return " ".join([self.Name])

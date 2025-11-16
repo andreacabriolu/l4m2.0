@@ -1,5 +1,7 @@
 window.addEventListener('DOMContentLoaded', event => {
 
+    const token = Cookies.get('csrftoken');
+
     const sidebarToggle = document.body.querySelector('#sidebarToggle');
     if (sidebarToggle) {
         // Uncomment Below to persist sidebar toggle between refreshes
