@@ -8,6 +8,25 @@ from zoneinfo import ZoneInfo
 from l4m20 import constants as C
 import requests as req
 
+def get_results_calendar(series_id, day):
+    results = []
+    mcs = matches_calendar.MatchesCalendar.objects.filter(Q(Series_id=series_id) ) 
+                                                        #   & Q(CompetitionCalendar__Day__lte=int(day)))
+    
+    for mc in mcs:
+        ngoals_home = matches_results.MatchesResults.objects.filter(Q(MatchesCalendar_id=mc.id) & Q(Team_id=mc.HomeTeam.id)).values('NGoals')
+        ngoals_away = matches_results.MatchesResults.objects.filter(Q(MatchesCalendar_id=mc.id) & Q(Team_id=mc.AwayTeam.id)).values('NGoals')
+
+        results.append([
+            f'GIORNATA {mc.CompetitionCalendar.Day}',
+            mc.HomeTeam.Name,
+            ngoals_home[0]['NGoals'] if len(ngoals_home) > 0 else '-',
+            ngoals_away[0]['NGoals'] if len(ngoals_away) > 0 else '-',
+            mc.AwayTeam.Name,
+            ])
+    
+    return results
+
 def is_current_day_completed():
     url = "https://publicapi.fantamaster.it/livescores/?tcache=1756165942189"
     resp = req.get(url)

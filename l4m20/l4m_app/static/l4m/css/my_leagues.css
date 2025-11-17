@@ -31,6 +31,18 @@
   text-align: center !important;
 }
 
+.dt-teamname-home-calendar {
+  color: sienna;
+  font-weight: bolder;
+  text-align: right !important;
+}
+
+.dt-teamname-away-calendar {
+  color: darkgreen;
+  font-weight: bolder;
+  text-align: left !important;
+}
+
 .dt-teamname-b11 {
   color: crimson;
   font-weight: bolder;
@@ -43,6 +55,12 @@
   text-align: center !important;
 }
 
+.dt-teampt-calendar {
+  font-weight: bolder;
+  background: aliceblue;
+  text-align: center !important;
+  width: fit-content !important;
+}
 
 .team-name-dash {
     text-align: center;
@@ -187,4 +205,20 @@
 .view-live-btn {
   margin-left: .5em;
   margin-bottom: 1rem;
+}
+
+.calendarDt-thead th {
+  display: none;
+}
+
+tr.group,
+tr.group:hover {
+    background-color: lightgray !important;
+    font-weight: bolder;
+}
+ 
+:root.dark tr.group,
+:root.dark tr.group:hover {
+    background-color: lightgray !important;
+    font-weight: bolder;
 }

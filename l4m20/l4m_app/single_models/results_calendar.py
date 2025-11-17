@@ -6,8 +6,8 @@ from django.utils.translation import gettext_lazy as _
 class Results_Calendar(models.Model):
     
     Day = models.IntegerField()
-    TeamHome = models.CharField(max_length=100)
-    TeamAway = models.CharField(max_length=100)
+    TeamHome = models.ForeignKey(C.Constant_Strings.team, on_delete=models.CASCADE, related_name='rc_home_team')
+    TeamAway = models.ForeignKey(C.Constant_Strings.team, on_delete=models.CASCADE, related_name='rc_away_team')
     PointsHome = models.IntegerField()
     PointsAway = models.IntegerField()
 

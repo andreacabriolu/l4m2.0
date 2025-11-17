@@ -31,3 +31,14 @@ class MyLeaguesView(LoginRequiredMixin, View):
         }
         
         return render(request, self.template_name, params)
+    
+class RetrieveCalendarInfoView(View):
+    def get(self, request):
+        series_id = request.GET['s_id']
+        day = request.GET['day']
+        calendar_entries = U.get_results_calendar(series_id, day)
+
+        if calendar_entries is None:
+            return HttpResponse(json.dumps({ 'calendarlines': [] }))
+
+        return HttpResponse(json.dumps({ 'calendarlines': calendar_entries }))
