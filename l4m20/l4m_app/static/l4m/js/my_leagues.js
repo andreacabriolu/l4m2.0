@@ -27,10 +27,7 @@ window.addEventListener('DOMContentLoaded', event => {
 
     $('#select_series').on('change', function () {
         rankingDataTable.ajax.reload();
-    });
-
-    $('#view_live_btn').on('click', function () {
-        rankingDataTable.ajax.reload();
+        calendarDataTable.ajax.reload();
     });
 
     $(function () {
