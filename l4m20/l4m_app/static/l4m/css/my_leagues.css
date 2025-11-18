@@ -166,8 +166,7 @@
 }
 
 .featurette-image {
-    border-radius: 20%;
-    padding: 1em;
+  width: auto;
 }
 /* RESPONSIVE CSS
 -------------------------------------------------- */
