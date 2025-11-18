@@ -198,6 +198,8 @@ def calculate_league(competition, day):
     for _day in days_to_calculate:
         if _day not in league_days:
             continue
+        all_votes_per_series = {}
+
         for series in comp_series:
             series_teams = team.Team.objects.filter(Series__id=series.id)
 
@@ -207,8 +209,13 @@ def calculate_league(competition, day):
             for t in series_teams:
                 l = U.get_last_lineup(t, _day, comp_id=competition.id)
 
+                if len(l) <= 0:
+                    continue 
+
                 lineup_to_show = l[0]
                 last_lineups_d[t.id] = lineup_to_show
+
+            if not last_lineups_d: continue #no valid lineup, current day still not available, skipping
 
             couples = LU.get_couples_and_matches_from_calendar(series.id, _day, competition_id=competition.id)
             lineup_couples = [ (last_lineups_d[c[0]], last_lineups_d[c[1]], c[2]) for c in couples ]
@@ -220,6 +227,7 @@ def calculate_league(competition, day):
 
             all_votes_per_series[series.id] = all_votes
         
+        if not all_votes_per_series: continue
         for k, vote_per_series in all_votes_per_series.items():
             save_results(vote_per_series) 
             write_league_rankings(vote_per_series, competition.id, _day, seriesid=k)
