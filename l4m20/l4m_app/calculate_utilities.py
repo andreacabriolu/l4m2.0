@@ -134,13 +134,13 @@ def calculate_total_league(competition, day):
     comp_series = U.get_all_series(competition.id)
     curr_day = U.get_current_day() 
     all_league_days = U.get_days(competition.id)
-    league_days = sorted([d['Day'] for d in all_league_days if d['Day'] <= int(curr_day)])
+    league_days = sorted([d['Day'] for d in all_league_days if int(day) <= d['Day'] <= int(curr_day)])
     days_to_calculate = league_days if (int(day) < int(curr_day)) else [int(curr_day)]
-    homeAway=U.get_homeaway(competition.id, day)
 
     for _day in days_to_calculate:
         if _day not in league_days:
             continue
+        homeAway=U.get_homeaway(competition.id, day)
         for series in comp_series:
             series_teams = team.Team.objects.filter(Series__id=series.id)
 
@@ -188,17 +188,16 @@ def calculate_b11_league(competition, day):
 def calculate_league(competition, day):
     all_votes_per_series = {}
     comp_series = U.get_all_series(competition.id)
-
     curr_day = U.get_current_day() 
     all_league_days = U.get_days(competition.id)
-    league_days = sorted([d['Day'] for d in all_league_days if d['Day'] <= int(curr_day)])
+    league_days = sorted([d['Day'] for d in all_league_days if int(day) <= d['Day'] <= int(curr_day)])
     days_to_calculate = league_days if (int(day) < int(curr_day)) else [int(curr_day)]
-    homeAway=U.get_homeaway(competition.id, day)
 
     for _day in days_to_calculate:
         if _day not in league_days:
             continue
         all_votes_per_series = {}
+        homeAway=U.get_homeaway(competition.id, _day)
 
         for series in comp_series:
             series_teams = team.Team.objects.filter(Series__id=series.id)
