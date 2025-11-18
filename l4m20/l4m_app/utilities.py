@@ -11,7 +11,6 @@ import requests as req
 def get_results_calendar(series_id, day):
     results = []
     mcs = matches_calendar.MatchesCalendar.objects.filter(Q(Series_id=series_id) ) 
-                                                        #   & Q(CompetitionCalendar__Day__lte=int(day)))
     
     for mc in mcs:
         ngoals_home = matches_results.MatchesResults.objects.filter(Q(MatchesCalendar_id=mc.id) & Q(Team_id=mc.HomeTeam.id)).values('NGoals')
