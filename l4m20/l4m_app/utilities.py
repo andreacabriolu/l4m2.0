@@ -8,6 +8,14 @@ from zoneinfo import ZoneInfo
 from l4m20 import constants as C
 import requests as req
 
+def get_day_lineups(day):
+    lup_day_annotation = Count('lineup', filter=Q(lineup__Day=day))
+    team_comps =team.Team.objects.annotate(lup_day=lup_day_annotation)
+
+    #find a way to check if a current competition is valid for each team
+
+    pass
+
 def get_results_calendar(series_id, day):
     results = []
     mcs = matches_calendar.MatchesCalendar.objects.filter(Q(Series_id=series_id) ) 

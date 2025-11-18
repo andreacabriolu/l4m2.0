@@ -67,3 +67,12 @@
 .spinner-div {
     margin-left: 1em;
 }
+
+.lineups-label {
+    font-family: 'Mozilla Headline';
+    font-size: larger;
+    color: #eff1f1;
+    font-weight: bolder;
+    margin-bottom: .5em;
+    margin-top: 1rem;
+}

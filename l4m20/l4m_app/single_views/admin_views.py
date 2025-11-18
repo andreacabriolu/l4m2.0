@@ -14,7 +14,8 @@ class CalculateView(LoginRequiredMixin, View):
     def get(self,request):
 
         all_competitions = U.get_all_active_competitions()
-        current_day = U.get_current_day() #TODO: per competition?
+        current_day = U.get_current_day()
+        day_lineups = U.get_day_lineups(current_day)
         
         params = {
             'all_competitions': all_competitions,
@@ -37,9 +38,6 @@ class GetCurrentDayByCompetition(View):
     
 class CalculateDayView(View):
     def post(self, request):
-
-        #TODO: write in:
-        # calendar (NEW)
 
         try:
 
