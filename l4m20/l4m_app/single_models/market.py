@@ -12,7 +12,6 @@ class Market(models.Model):
     Name = models.CharField(max_length=100)
     Status = models.CharField(max_length=1, choices=STATUSES)
     Players = models.ManyToManyField(C.Constant_Strings.player)
-    MarkPlayers = models.ManyToManyField(C.Constant_Strings.player, through=C.Constant_Strings.mark_players, related_name="markplayers")
     Series = models.ForeignKey(on_delete=models.CASCADE, to=C.Constant_Strings.series, null=True)
     
     def __str__(self):
