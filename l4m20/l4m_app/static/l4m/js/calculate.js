@@ -86,6 +86,30 @@ function advanceDay(nopopup=false) {
     set_day(parseInt(cur_day_val) + 1, nopopup);
 }
 
+function showMissingLups(teamid, teamname) {
+
+    $('#missingLupModal_title').text(teamname);
+    var cur_day_val = $('#cur-day-val').val();
+
+    const token = Cookies.get('csrftoken');
+
+    var data = { 't_id': teamid, 'day': cur_day_val, 'csrfmiddlewaretoken': token };
+
+    $.get("/l4m/calculate/getMissingLineups/", data, function (response) {
+        if (response.startsWith('error')) {
+            showErrorAlert(response);
+        }
+        else {
+
+        }
+    });
+    
+
+
+    $('#missingLupModal').modal('show');
+
+}
+
 window.addEventListener('DOMContentLoaded', event => {
     c_id = $('#select_comp').children('option:selected').data().id;
     fill_days(c_id);

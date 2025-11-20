@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render
 from django.views import View
 from django.http import HttpResponse
@@ -15,11 +16,12 @@ class CalculateView(LoginRequiredMixin, View):
 
         all_competitions = U.get_all_active_competitions()
         current_day = U.get_current_day()
-        day_lineups = U.get_day_lineups(current_day)
+        team_comps_lineups = U.get_day_comps_lineups(current_day)
         
         params = {
             'all_competitions': all_competitions,
             'current_day': current_day,
+            'team_comps_lineups': team_comps_lineups
         }
         
         return render(request, self.template_name, params)
@@ -94,3 +96,21 @@ class SetDayView(View):
         config_day.save()
 
         return HttpResponse(c_day)
+    
+class GetMissingLineupsView(View):
+    def get(self, request):
+        t_id = request.GET['t_id']
+        day = request.GET['day']
+
+        my_lups = U.get_my_lineups_competitions_by_day(t_id, day)
+        my_active_comps = U.get_my_active_competitions_filtered(t_id, day)
+
+        lup_ids = [v['Series_id__Competition_id'] for v in my_lups.distinct()]
+        comp_ids = [v.id for v in my_active_comps]
+        missing_comps = list(set(comp_ids)-set(lup_ids))
+
+        if len(missing_comps) > 0:
+            missing_comps_names = [U.get_competition_by_id(missing_comp) for missing_comp in missing_comps]
+
+        return HttpResponse(json.dumps(missing_comps_names))
+

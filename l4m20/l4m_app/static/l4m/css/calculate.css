@@ -76,3 +76,26 @@
     margin-bottom: .5em;
     margin-top: 1rem;
 }
+
+.sm {
+    font-weight: bold !important;
+    font-size: medium !important;
+}
+
+.lineups-div .btn-lup {
+    margin-left: .5rem;
+    width: 10rem;
+}
+
+.lineups-div .div-lups-btns {
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    border-style: solid;
+    padding: .5em;
+}
+
+@media (max-width:800px) {
+.lineups-div .div-lups-btns {
+    display: block !important;
+    }
+}

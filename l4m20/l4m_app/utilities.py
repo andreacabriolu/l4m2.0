@@ -8,13 +8,30 @@ from zoneinfo import ZoneInfo
 from l4m20 import constants as C
 import requests as req
 
-def get_day_lineups(day):
-    lup_day_annotation = Count('lineup', filter=Q(lineup__Day=day))
-    team_comps =team.Team.objects.annotate(lup_day=lup_day_annotation)
+def get_day_comps_lineups(day):
+    teams = team.Team.objects.all().values('id','Name')
+    team_lups_comps = {}
 
-    #find a way to check if a current competition is valid for each team
+    for t in teams:
+        t_nlineups = get_my_lineups_by_day_distinct(t['id'], day)
+        t_comps = get_my_active_competitions_filtered(t['id'], day)
+        
+        team_lups_comps[t['id']] = { 'tname':t['Name'], 'nlineups': t_nlineups['nlin'], 'ncomps': len(t_comps), \
+                                    'full': t_nlineups['nlin'] - len(t_comps) == 0}
 
-    pass
+    return team_lups_comps
+
+def get_my_lineups_competitions_by_day(teamid, day):
+    return lineup.Lineup.objects.filter(Q(Team=teamid) & Q(Day=day)).values('Series_id__Competition_id')
+
+def get_my_lineups_by_day_distinct(teamid, day):
+    return lineup.Lineup.objects.filter(Q(Team=teamid) & Q(Day=day)).aggregate(nlin=Count('Series_id', distinct=True))
+
+def get_my_active_competitions_filtered(teamid, day):
+    return competition.Competition.objects.filter(Q(Active=True) & \
+                                                  Q(Lineup=True) & \
+                                                  Q(team_competition__Team_id=teamid) & \
+                                                  Q(competitioncalendar__Day=day))
 
 def get_results_calendar(series_id, day):
     results = []
@@ -73,6 +90,9 @@ def get_ranking(c_id, s_id, day):
 def get_days(c_id):
     return competition_calendar.CompetitionCalendar.objects.filter(Competition=c_id).values('Day')
 
+def get_competition_by_id(id):
+    return competition.Competition.get(pk=id)
+
 def get_competition(name):
     return competition.Competition.objects.filter(Name=name)
 
@@ -96,6 +116,13 @@ def get_my_lineup_active_competitions(my_series, day):
                                                   Q(Lineup=True) & \
                                                   Q(series__id__in=my_series) & \
                                                   Q(competitioncalendar__Day=day))
+    #TODO modify:
+    #competition.Competition.objects.filter(Q(Active=True) & \
+    #                                              Q(Lineup=True) & \
+    #                                              Q(team_competition__Team_id=t['id']) & \
+    #                                              Q(competitioncalendar__Day=day))
+
+
 
 def get_my_competitions(my_series):
     return competition.Competition.objects.filter(series__id__in=my_series)

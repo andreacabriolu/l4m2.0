@@ -10,7 +10,7 @@ class Team(models.Model):
     Series = models.ManyToManyField(C.Constant_Strings.series)
     Users = models.ManyToManyField(User, related_name='user')
     LogoPath = models.CharField(null=True)
-    Competition = models.ManyToManyField(C.Constant_Strings.competition)
+    Competition = models.ManyToManyField(C.Constant_Strings.competition, through=C.Constant_Strings.team_competition)
     
     def __str__(self):
         return " ".join([self.Name])
