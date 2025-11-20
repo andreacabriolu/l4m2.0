@@ -115,7 +115,7 @@
                     <p class="lineups-label sm">{{v.tname|upper}}</p>
                     <button type="button" {% if v.full %} class="btn btn-success btn-lup" {% else %}
                         class="btn btn-danger btn-lup" {% endif %} id="btn_lup_{{k}}" 
-                        {% if not v.full %} onclick="showMissingLups('{{k}}','{{v.tname|upper}}')" {% endif %}>
+                        onclick="showMissingLups('{{k}}','{{v.tname|upper}}')">
                         {{v.nlineups}}/{{v.ncomps}}
                     </button>
                 </div>
