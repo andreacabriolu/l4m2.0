@@ -106,7 +106,7 @@ function showMissingLups(teamid, teamname) {
             lups.filled_comps_names.forEach(lup => 
                 {
                 var chk = `<div class="form-check">
-                            <input class="form-check-input" type="checkbox" checked>
+                            <input class="form-check-input" type="checkbox" checked readonly>
                             <label class="form-check-label">
                                 ${lup}
                             </label>
@@ -128,8 +128,6 @@ function showMissingLups(teamid, teamname) {
             });
         }
     });
-
-
 
     $('#missingLupModal').modal('show');
 
