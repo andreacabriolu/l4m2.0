@@ -91,7 +91,7 @@ def get_days(c_id):
     return competition_calendar.CompetitionCalendar.objects.filter(Competition=c_id).values('Day')
 
 def get_competition_by_id(id):
-    return competition.Competition.get(pk=id)
+    return competition.Competition.objects.get(pk=id)
 
 def get_competition(name):
     return competition.Competition.objects.filter(Name=name)

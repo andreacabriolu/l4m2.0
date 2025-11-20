@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 class Team(models.Model):
     
     Name = models.CharField(max_length=100)
+    ShortName = models.CharField(null=True)
     Series = models.ManyToManyField(C.Constant_Strings.series)
     Users = models.ManyToManyField(User, related_name='user')
     LogoPath = models.CharField(null=True)

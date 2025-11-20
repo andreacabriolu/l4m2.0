@@ -105,12 +105,14 @@ class GetMissingLineupsView(View):
         my_lups = U.get_my_lineups_competitions_by_day(t_id, day)
         my_active_comps = U.get_my_active_competitions_filtered(t_id, day)
 
-        lup_ids = [v['Series_id__Competition_id'] for v in my_lups.distinct()]
-        comp_ids = [v.id for v in my_active_comps]
-        missing_comps = list(set(comp_ids)-set(lup_ids))
+        my_lup_ids = [v['Series_id__Competition_id'] for v in my_lups.distinct()]
+        my_comp_ids = [v.id for v in my_active_comps]
+        missing_comps = list(set(my_comp_ids)-set(my_lup_ids))
 
-        if len(missing_comps) > 0:
-            missing_comps_names = [U.get_competition_by_id(missing_comp) for missing_comp in missing_comps]
+        ret_dict = {
+            'filled_comps_names' : [U.get_competition_by_id(filled_comp).Name for filled_comp in my_lup_ids],
+            'missing_comps_names' : [U.get_competition_by_id(missing_comp).Name for missing_comp in missing_comps]
+        }
 
-        return HttpResponse(json.dumps(missing_comps_names))
+        return HttpResponse(json.dumps(ret_dict))
 

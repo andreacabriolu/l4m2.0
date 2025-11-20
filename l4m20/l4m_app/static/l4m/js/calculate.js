@@ -40,7 +40,7 @@ function fill_days(c_id) {
     });
 }
 
-function calculate(c_id, d_id, allcomp=true) {
+function calculate(c_id, d_id, allcomp = true) {
     const token = Cookies.get('csrftoken');
 
     var data = { 'competitionid': c_id, 'all_comp': $('#allCompChk').prop('checked'), 'day': parseInt(d_id), 'csrfmiddlewaretoken': token };
@@ -54,15 +54,15 @@ function calculate(c_id, d_id, allcomp=true) {
         else {
             $('#spinner').attr('hidden', true);
             showPopupErrorAlert(response);
-            if(allcomp) {
-                advanceDay(nopopup=true); //calculate AND advance
+            if (allcomp) {
+                advanceDay(nopopup = true); //calculate AND advance
             }
         }
     });
 
 }
 
-function set_day(day, nopopup=false) {
+function set_day(day, nopopup = false) {
     const token = Cookies.get('csrftoken');
 
     var data = { 'day': parseInt(day), 'csrfmiddlewaretoken': token };
@@ -73,7 +73,7 @@ function set_day(day, nopopup=false) {
         }
         else {
             $('#cur-day-val').val(response);
-            if(!nopopup) { 
+            if (!nopopup) {
                 $('#modal-text').text('GIORNATA AVANZATA O IMPOSTATA');
                 $('#confirmModal').modal('show');
             }
@@ -81,7 +81,7 @@ function set_day(day, nopopup=false) {
     });
 }
 
-function advanceDay(nopopup=false) {
+function advanceDay(nopopup = false) {
     var cur_day_val = $('#cur-day-val').val();
     set_day(parseInt(cur_day_val) + 1, nopopup);
 }
@@ -100,10 +100,35 @@ function showMissingLups(teamid, teamname) {
             showErrorAlert(response);
         }
         else {
+            $('#missingLupModal .modal-body').empty();
+            lups = JSON.parse(response);
 
+            lups.filled_comps_names.forEach(lup => 
+                {
+                var chk = `<div class="form-check">
+                            <input class="form-check-input" type="checkbox" checked>
+                            <label class="form-check-label">
+                                ${lup}
+                            </label>
+                            </div>`;
+
+                $('#missingLupModal .modal-body').append(chk);
+            });
+
+            lups.missing_comps_names.forEach(lup => 
+                {
+                var chk = `<div class="form-check">
+                            <input class="form-check-input" type="checkbox">
+                            <label class="form-check-label">
+                                ${lup}
+                            </label>
+                            </div>`;
+
+                $('#missingLupModal .modal-body').append(chk);
+            });
         }
     });
-    
+
 
 
     $('#missingLupModal').modal('show');

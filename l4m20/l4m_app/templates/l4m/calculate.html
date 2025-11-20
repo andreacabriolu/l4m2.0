@@ -1,7 +1,7 @@
 {% extends "./base.html" %}
 {% load static %}
 
-{% block title %} L4M2.0 - Calcolo giornate {% endblock %}
+{% block title %} L4M2.0 - Admin panel {% endblock %}
 
 {% block links %}
 <link href="{% static 'l4m/css/calculate.css' %}" rel="stylesheet">
@@ -50,10 +50,10 @@
                     </h5>
                 </div>
                 <div class="modal-body">
-                    <p id="modal-text"></p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK</button>
+                    <button type="button" class="btn btn-secondary" data-bs-target="#missingLupModal" 
+                    data-bs-dismiss="modal">OK</button>
                 </div>
             </div>
         </div>

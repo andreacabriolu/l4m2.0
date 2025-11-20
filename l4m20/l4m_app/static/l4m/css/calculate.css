@@ -92,10 +92,15 @@
     grid-template-columns: auto auto auto auto;
     border-style: solid;
     padding: .5em;
+    justify-content: space-around;
 }
 
 @media (max-width:800px) {
 .lineups-div .div-lups-btns {
     display: block !important;
     }
+}
+
+#missingLupModal .modal-content {
+    background-color: ivory;
 }
