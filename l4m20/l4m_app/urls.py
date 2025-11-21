@@ -7,6 +7,7 @@ app_name = "l4m"
 
 urlpatterns = [
     path("", login_views.LoginView.as_view(), name="login"),
+    path("accounts/login/", login_views.LoginView.as_view(), name="login"),
     path("login/", login_views.LoginView.as_view(), name="login"),
     path("logout/", login_views.LogoutView.as_view(), name="logout"),
     path("register/", login_views.RegisterView.as_view(), name="register"),

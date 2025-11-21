@@ -207,7 +207,8 @@ window.addEventListener('DOMContentLoaded', event => {
                 var l_ups = JSON.parse(j_res.l_ups);
                 var map = j_res.map;
                 add_lineups(l_ups, map);
-                $('#showLineupHistoryModalLabel').append(" " + e.relatedTarget.dataset.team);
+                $('#showLineupHistoryModalLabel').empty();
+                $('#showLineupHistoryModalLabel').append("STORICO FORMAZIONI " + e.relatedTarget.dataset.team);
             }
         });
     });
