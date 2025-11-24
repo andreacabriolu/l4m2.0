@@ -145,10 +145,10 @@ table .w-30 {
   }
 
   .selectors-div {
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: baseline;
-  }
+    display: grid;
+    grid-template-columns: 18em 11em 14em 10em 1fr;
+    align-items: center;  
+}
 
   .form-select-selectors {
     margin-right: 1em;
@@ -208,6 +208,10 @@ table .w-30 {
   right: 5vw;
 }
 
-.view-live-btn {
+.selectors-div button {
   margin-left: .5em;
+}
+
+.view-live-btn {
+  /* margin-left: .5em; */
 }
