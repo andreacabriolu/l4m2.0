@@ -212,6 +212,20 @@ table .w-30 {
   margin-left: .5em;
 }
 
-.view-live-btn {
-  /* margin-left: .5em; */
+.comp-title {
+  color: darkred;
+font-family: Didot, 'Bodoni MT', 'Noto Serif Display', 'URW Palladio L', P052, Sylfaen, serif;
+font-weight: 900;
+font-size: xxx-large;
+}
+
+.comp-div {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: .5em;
+}
+
+.small-logo img {
+    height: 45%;
+    width: 45%;
 }

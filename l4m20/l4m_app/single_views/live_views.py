@@ -11,21 +11,21 @@ from .. import live_utilities as LU
 from ..models import *
 
 class MyLiveView(View):
-    template_name = 'l4m/my_lives.html'
+    template_name = 'l4m/my_live.html'
 
     def get(self, request):
         myteam = U.get_user_team(request.user.id)
         current_day = U.get_current_day()   
-        last_lineups_d = {}
         lineup_couples = []
         overtime, _ = U.check_day_already_started(current_day)
         total_league = U.get_competition('Total League').first()
     
-        # my_today_competitions = U.get_my_active_competitions_filtered(teamid, current_day)
         my_today_couples = LU.get_my_couples_from_calendar(myteam['id'], current_day)
 
         for c in my_today_couples:
             comp_id = c.CompetitionCalendar.Competition_id
+            comp = U.get_competition_by_id(comp_id)
+            homeAway=U.get_homeaway(comp_id, current_day)
 
             #skip total for now
             if comp_id == total_league.id:
@@ -33,18 +33,33 @@ class MyLiveView(View):
 
             h_lineup_to_show = LU.get_lineup_to_show(c.HomeTeam, current_day, comp_id, overtime)
             a_lineup_to_show = LU.get_lineup_to_show(c.AwayTeam, current_day, comp_id, overtime)
-            
-            # last_lineups_d[c.HomeTeam.id] = h_lineup_to_show
-            # last_lineups_d[c.AwayTeam.id] = a_lineup_to_show
 
-            lineup_couples.append((h_lineup_to_show, a_lineup_to_show))
+            lineup_couples.append((h_lineup_to_show, a_lineup_to_show, homeAway, comp))
 
-        pass
+        all_votes = []
+        all_comps = []
 
-        # lineup_couples = [ (U.get_last_lineup(c[0], current_day, comp_id=c.CompetitionCalendar.Competition_id), \
-        #                     U.get_last_lineup(c[0], current_day, comp_id=c.CompetitionCalendar.Competition_id)) 
-        #                     for c in my_today_couples ]
+        live_votes, live_teams, already_played_teams = LU.get_live_votes(current_day)
+
+        for lineup_couple in lineup_couples:
+            _homeaway = lineup_couple[2]
+            _comp = lineup_couple[3]
+
+            votes_home = LU.get_votes(lineup_couple[0], current_day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=myteam['id'], homeAway=_homeaway)
+            votes_away = LU.get_votes(lineup_couple[1], current_day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=myteam['id'], home=False, homeAway=_homeaway)
+            all_votes.append( \
+                [votes_home, votes_away]
+            )
+            all_comps.append(_comp)
+
+        params = { 
+        'all_votes_comps' : zip(all_votes, all_comps),
+        'current_day': current_day,
+        'all_comps' : all_comps,
+            }
     
+        return render(request, self.template_name, params)
+
     def post(self, request):
         pass
 

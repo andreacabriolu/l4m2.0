@@ -105,8 +105,6 @@ window.addEventListener('DOMContentLoaded', event => {
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
     const token = Cookies.get('csrftoken');
 
-
-
     $('#showLineupHistoryModal').on('show.bs.modal', function (e) {
         const token = Cookies.get('csrftoken');
 
