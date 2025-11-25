@@ -46,9 +46,14 @@ class CalculateDayView(View):
             competitionid = request.POST['competitionid']
             day = request.POST['day']
             all_comp = eval(request.POST['all_comp'].capitalize())
+            is_day_completed, json_day = U.is_current_day_completed()
+            curr_day = U.get_current_day()
 
-            if day == U.get_current_day() and not U.is_current_day_completed():
+            if day == curr_day and not is_day_completed:
                 return HttpResponse(f'error GIORNATA {day} ANCORA IN CORSO!')
+            
+            if day == curr_day and int(day) > int(json_day):
+                return HttpResponse(f'error DATI FANTAMASTER NON ANCORA DISPONIBILI PER LA GIORNATA {day}')
 
             main_league = U.get_competition(name='Campionato')[0]
             b11_league = U.get_competition(name='Best 11')[0]

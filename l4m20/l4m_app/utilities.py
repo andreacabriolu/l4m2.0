@@ -56,12 +56,13 @@ def is_current_day_completed():
     resp = req.get(url)
     resp_content = resp.content
     resp_json = json.loads(resp_content)
+    resp_day = resp_json['day']
 
     for score in resp_json['scores']:
         if score['time'] != C.Events.END_MATCH:
-            return False
+            return False, resp_day
 
-    return True
+    return True, resp_day
 
 def clean_name(name):
     return name.replace(' ','_').replace('\'','')
