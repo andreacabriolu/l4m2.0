@@ -15,7 +15,7 @@ class MyLiveView(View):
 
     def get(self, request):
         myteam = U.get_user_team(request.user.id)
-        current_day = U.get_current_day()   
+        current_day = int(U.get_current_day())   
         lineup_couples = []
         overtime, _ = U.check_day_already_started(current_day)
         total_league = U.get_competition('Total League').first()
@@ -27,12 +27,14 @@ class MyLiveView(View):
             comp = U.get_competition_by_id(comp_id)
             homeAway=U.get_homeaway(comp_id, current_day)
 
-            #skip total for now
             if comp_id == total_league.id:
-                continue
-
-            h_lineup_to_show = LU.get_lineup_to_show(c.HomeTeam, current_day, comp_id, overtime)
-            a_lineup_to_show = LU.get_lineup_to_show(c.AwayTeam, current_day, comp_id, overtime)
+                h_lineup_to_show = LU.get_b11_lineup(c.HomeTeam, current_day)
+                h_lineup_to_show['t']=c.HomeTeam
+                a_lineup_to_show = LU.get_b11_lineup(c.AwayTeam, current_day)
+                a_lineup_to_show['t']=c.AwayTeam
+            else:
+                h_lineup_to_show = LU.get_lineup_to_show(c.HomeTeam, current_day, comp_id, overtime)
+                a_lineup_to_show = LU.get_lineup_to_show(c.AwayTeam, current_day, comp_id, overtime)
 
             lineup_couples.append((h_lineup_to_show, a_lineup_to_show, homeAway, comp))
 
@@ -43,19 +45,23 @@ class MyLiveView(View):
 
         for lineup_couple in lineup_couples:
             _homeaway = lineup_couple[2]
-            _comp = lineup_couple[3]
+            _lineup_comp = lineup_couple[3]
 
-            votes_home = LU.get_votes(lineup_couple[0], current_day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=myteam['id'], homeAway=_homeaway)
-            votes_away = LU.get_votes(lineup_couple[1], current_day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=myteam['id'], home=False, homeAway=_homeaway)
+            if _lineup_comp.id == total_league.id:
+                votes_home = LU.get_votes_total(lineup_couple[0], home=True, homeAway=homeAway)
+                votes_away = LU.get_votes_total(lineup_couple[1], home=False, homeAway=homeAway)
+            else: 
+                votes_home = LU.get_votes(lineup_couple[0], current_day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=myteam['id'], homeAway=_homeaway)
+                votes_away = LU.get_votes(lineup_couple[1], current_day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=myteam['id'], home=False, homeAway=_homeaway)
+            
             all_votes.append( \
                 [votes_home, votes_away]
             )
-            all_comps.append(_comp)
+            all_comps.append(_lineup_comp)
 
         params = { 
-        'all_votes_comps' : zip(all_votes, all_comps),
-        'current_day': current_day,
-        'all_comps' : all_comps,
+            'all_votes_comps' : zip(all_votes, all_comps),
+            'current_day': current_day,
             }
     
         return render(request, self.template_name, params)

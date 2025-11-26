@@ -109,26 +109,44 @@ window.addEventListener('DOMContentLoaded', event => {
         const token = Cookies.get('csrftoken');
 
         var data = {
-            'teamname': e.relatedTarget.dataset.team,
-            'series': $('#current_series').val(),
-            'day': $('#current_day').val(),
+            'c_id': e.relatedTarget.dataset.comp,
+            't_name': e.relatedTarget.dataset.team,
             'csrfmiddlewaretoken': token
-        };
+        }
 
-        $.post("/l4m/getLineupsByTeam/", data, function (response) {
+        $.post("/l4m/getTeamSeriesByCompetition/", data, function (response) {
             if (response.startsWith('error')) {
                 showErrorAlert(response);
             }
             else {
-                var j_res = JSON.parse(response);
-                var l_ups = JSON.parse(j_res.l_ups);
-                var map = j_res.map;
-                add_lineups(l_ups, map);
-                $('#showLineupHistoryModalLabel').empty();
-                $('#showLineupHistoryModalLabel').append("STORICO FORMAZIONI " + e.relatedTarget.dataset.team);
+                var series = JSON.parse(response);
+                if (series.length <= 0) { return; }
+
+                var _data = {
+                    'teamname': e.relatedTarget.dataset.team,
+                    'series': series[0],
+                    'day': $('#current_day').val(),
+                    'csrfmiddlewaretoken': token
+                };
+
+                $.post("/l4m/getLineupsByTeam/", _data, function (response) {
+                    if (response.startsWith('error')) {
+                        showErrorAlert(response);
+                    }
+                    else {
+                        if (response == "") { return; }
+                        var j_res = JSON.parse(response);
+                        var l_ups = JSON.parse(j_res.l_ups);
+                        var map = j_res.map;
+                        add_lineups(l_ups, map);
+                        $('#showLineupHistoryModalLabel').empty();
+                        $('#showLineupHistoryModalLabel').append("STORICO FORMAZIONI " + e.relatedTarget.dataset.team);
+                    }
+                });
+
+
             }
+
         });
     });
-
-
-})
+});

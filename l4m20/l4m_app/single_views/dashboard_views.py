@@ -40,6 +40,15 @@ class DashboardView(LoginRequiredMixin, View):
         
         return render(request, self.template_name, params)
 
+class GetTeamSeriesByCompetitionView(View):
+    def post(self, request):
+        c_id = request.POST['c_id']
+        t_name = request.POST['t_name']
+        t_id = U.get_team_by_name(t_name)
+        series = U.get_my_series(t_id, c_id)
+        return HttpResponse(json.dumps([(s.id) for s in series]))
+
+
 class GetSeriesByCompetitionView(View):
     def post(self, request):
         c_id = request.POST['c_id']

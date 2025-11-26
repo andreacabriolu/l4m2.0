@@ -30,7 +30,8 @@
     <div class="alert alert-success" role="alert" id="info-alert" hidden>
         <span id="span-info-alert"></span>
     </div>
-    <!-- <input type="hidden" value="{{my_competitions}}" id="my_competitions"> -->
+
+    <input type="hidden" value="{{current_day}}" id="current_day">
 
     <div class="modal fade" id="showLineupHistoryModal" tabindex="-1" role="dialog" aria-labelledby="showLineupHistoryModalLabel">
         <div class="modal-dialog" role="document">
@@ -79,7 +80,7 @@
                             <button type="button" 
                             {% if team_votes.1.14 != -1 %} class="btn btn-secondary" {% else %} class="btn btn-danger" {% endif %} 
                             data-bs-toggle="modal" data-bs-target="#showLineupHistoryModal" 
-                            id="showLUHist" data-team="{{team_votes.1.1}}">
+                            id="showLUHist" data-team="{{team_votes.1.1}}" data-comp="{{comp.id}}">
                                 {% if team_votes.1.14 != -1 %}VERSIONE {{team_votes.1.14}} 
                                 {% else %} FORMAZIONE NON SCHIERATA
                                 {% endif %}
