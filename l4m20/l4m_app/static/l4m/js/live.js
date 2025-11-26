@@ -168,6 +168,10 @@ window.addEventListener('DOMContentLoaded', event => {
     if (day_to_sel.length <= 0) { return; }
     $('#select_day').val(day_to_sel[0].value);
 
+    $('#b11_live_btn').on('click', function(){
+        window.location.href = '/l4m/live_b11';
+    });
+
     $('#view_live_btn').on('click', function () {
         var data = {
             'competition': $('#select_comp').children('option:selected').data().id,

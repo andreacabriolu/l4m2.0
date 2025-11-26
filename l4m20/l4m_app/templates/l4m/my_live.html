@@ -1,11 +1,10 @@
 {% extends "./base.html" %}
 {% load static %}
 
-{% block title %} L4M2.0 - LIVE! {% endblock %}
+{% block title %} L4M2.0 - I MIEI LIVE! {% endblock %}
 
 {% block links %}
 <link href="{% static 'l4m/css/live.css' %}" rel="stylesheet">
-<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,7 +17,7 @@
 {% endblock %}
 
 {% block scripts %}
-<script type="text/javascript" src="{% static 'l4m/js/live.js' %}"></script>
+<script type="text/javascript" src="{% static 'l4m/js/my_live.js' %}"></script>
 
 {% endblock %}
 
@@ -31,11 +30,8 @@
     <div class="alert alert-success" role="alert" id="info-alert" hidden>
         <span id="span-info-alert"></span>
     </div>
-    <input type="hidden" value="{{current_competition}}" id="current_competition">
-    <input type="hidden" value="{{current_series}}" id="current_series">
+
     <input type="hidden" value="{{current_day}}" id="current_day">
-    <input type="hidden" value="{{my_competitions}}" id="my_competitions">
-    <input type="hidden" value="{{all_my_series_ids}}" id="all_my_series_ids">
 
     <div class="modal fade" id="showLineupHistoryModal" tabindex="-1" role="dialog" aria-labelledby="showLineupHistoryModalLabel">
         <div class="modal-dialog" role="document">
@@ -45,54 +41,28 @@
                     <span class="close" id="closeGk" data-bs-dismiss="modal"><img
                             src="{% static 'l4m/images/close-blue.png' %}"></span>
                 </div>
-    
                 <div id="lineups">
-                    
                 </div>
             </div>
         </div>
     </div>
 
     <div class="bg-body-tertiary main-div p-5 live-tables bg-success bg-opacity-50" id="liveMainDiv">
-        <div class="selectors-div">
-            <div>
-            <label for="select_comp" class="series-label">COMPETIZIONE</label>
-            <select class="form-select form-select-lg mb-3 form-select-selectors" id="select_comp">
-                {% for comp in all_competitions %}
-                <option value="{{comp}}" data-id="{{comp.id}}">{{comp.Name}}</option>
-                {% endfor %}
-            </select>
-            </div>
 
+        {% for match_votes, comp in all_votes_comps %}
+        <div class="comp-div small-logo">
             <div>
-            <label for="select_day" class="series-label">GIORNATA</label>
-            <select class="form-select form-select-lg mb-3 form-select-selectors" id="select_day">
-                {% for day in all_days %}
-                <option value="{{day}}">{{day}}</option>
-                {% endfor %}
-            </select>
+                {% if comp.LogoPath %}
+                {% static 'l4m/images/comp_logos/' as comp_logos_path %}
+                <img src="{{comp_logos_path}}{{comp.LogoPath}}" loading="lazy">
+                {% else %}
+                <img src="{% static 'l4m/images/logo.jpeg' %}" loading="lazy">
+                {% endif %}
             </div>
-
             <div>
-            <label for="select_series" class="series-label">SERIE</label>
-            <select class="form-select form-select-lg mb-3 form-select-series" id="select_series">
-                {% for series in all_series %}
-                <option value="{{series}}" data-id="{{series.id}}">{{series.Name}}</option>
-                {% endfor %}
-            </select>
+                <h2 class="comp-title">{{comp.Name|upper}}</h2>
             </div>
-
-            <div>
-                <button type="button" class="btn btn-primary view-live-btn" id="view_live_btn">VISUALIZZA</button>
-            </div>
-
-            <div>
-                <button type="button" class="btn btn-success b11-live-btn" id="b11_live_btn">BEST 11 LIVE!</button>
-            </div>
-
         </div>
-
-        {% for match_votes in all_votes %}
         <div class="match-div">
             {% for team_votes in match_votes %}
             <table class="table table-striped-columns table-dark table-match rounded-3 table-bordered rounded-pill">
@@ -110,7 +80,7 @@
                             <button type="button" 
                             {% if team_votes.1.14 != -1 %} class="btn btn-secondary" {% else %} class="btn btn-danger" {% endif %} 
                             data-bs-toggle="modal" data-bs-target="#showLineupHistoryModal" 
-                            id="showLUHist" data-team="{{team_votes.1.1}}">
+                            id="showLUHist" data-team="{{team_votes.1.1}}" data-comp="{{comp.id}}">
                                 {% if team_votes.1.14 != -1 %}VERSIONE {{team_votes.1.14}} 
                                 {% else %} FORMAZIONE NON SCHIERATA
                                 {% endif %}

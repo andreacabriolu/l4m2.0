@@ -10,6 +10,65 @@ from .. import utilities as U
 from .. import live_utilities as LU
 from ..models import *
 
+class MyLiveView(View):
+    template_name = 'l4m/my_live.html'
+
+    def get(self, request):
+        myteam = U.get_user_team(request.user.id)
+        current_day = int(U.get_current_day())   
+        lineup_couples = []
+        overtime, _ = U.check_day_already_started(current_day)
+        total_league = U.get_competition('Total League').first()
+    
+        my_today_couples = LU.get_my_couples_from_calendar(myteam['id'], current_day)
+
+        for c in my_today_couples:
+            comp_id = c.CompetitionCalendar.Competition_id
+            comp = U.get_competition_by_id(comp_id)
+            homeAway=U.get_homeaway(comp_id, current_day)
+
+            if comp_id == total_league.id:
+                h_lineup_to_show = LU.get_b11_lineup(c.HomeTeam, current_day)
+                h_lineup_to_show['t']=c.HomeTeam
+                a_lineup_to_show = LU.get_b11_lineup(c.AwayTeam, current_day)
+                a_lineup_to_show['t']=c.AwayTeam
+            else:
+                h_lineup_to_show = LU.get_lineup_to_show(c.HomeTeam, current_day, comp_id, overtime)
+                a_lineup_to_show = LU.get_lineup_to_show(c.AwayTeam, current_day, comp_id, overtime)
+
+            lineup_couples.append((h_lineup_to_show, a_lineup_to_show, homeAway, comp))
+
+        all_votes = []
+        all_comps = []
+
+        live_votes, live_teams, already_played_teams = LU.get_live_votes(current_day)
+
+        for lineup_couple in lineup_couples:
+            _homeaway = lineup_couple[2]
+            _lineup_comp = lineup_couple[3]
+
+            if _lineup_comp.id == total_league.id:
+                votes_home = LU.get_votes_total(lineup_couple[0], home=True, homeAway=homeAway)
+                votes_away = LU.get_votes_total(lineup_couple[1], home=False, homeAway=homeAway)
+            else: 
+                votes_home = LU.get_votes(lineup_couple[0], current_day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=myteam['id'], homeAway=_homeaway)
+                votes_away = LU.get_votes(lineup_couple[1], current_day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=myteam['id'], home=False, homeAway=_homeaway)
+            
+            all_votes.append( \
+                [votes_home, votes_away]
+            )
+            all_comps.append(_lineup_comp)
+
+        params = { 
+            'all_votes_comps' : zip(all_votes, all_comps),
+            'current_day': current_day,
+            }
+    
+        return render(request, self.template_name, params)
+
+    def post(self, request):
+        pass
+
 class LiveB11View(LoginRequiredMixin, View):
     template_name = 'l4m/live_b11.html'
 

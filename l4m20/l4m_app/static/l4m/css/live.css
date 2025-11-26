@@ -145,10 +145,10 @@ table .w-30 {
   }
 
   .selectors-div {
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: baseline;
-  }
+    display: grid;
+    grid-template-columns: 18em 11em 14em 10em 1fr;
+    align-items: center;  
+}
 
   .form-select-selectors {
     margin-right: 1em;
@@ -208,6 +208,24 @@ table .w-30 {
   right: 5vw;
 }
 
-.view-live-btn {
+.selectors-div button {
   margin-left: .5em;
+}
+
+.comp-title {
+  color: darkred;
+font-family: Didot, 'Bodoni MT', 'Noto Serif Display', 'URW Palladio L', P052, Sylfaen, serif;
+font-weight: 900;
+font-size: xxx-large;
+}
+
+.comp-div {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: .5em;
+}
+
+.small-logo img {
+    height: 45%;
+    width: 45%;
 }

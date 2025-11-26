@@ -8,6 +8,36 @@ from . import utilities as U
 from django.db.models import Q
 import requests as req
 
+def get_lineup_to_show(_team, day, comp_id, overtime):
+    l = U.get_last_lineup(_team, day, comp_id=comp_id)
+    if(len(l) <= 0 and overtime):
+        last_valid_l = U.get_last_valid_lineup(_team.id)
+
+    lineup_to_show = _team.Name #base
+
+    if not overtime:
+        if len(l) > 0:
+            lineup_to_show = l[0]
+        else:
+            lineup_to_show = _team.Name
+
+    if overtime:
+        if len(l) > 0:
+            lineup_to_show = l[0]
+        else:
+            lineup_to_show = last_valid_l
+            
+    else:  #filter for historical data
+        lineup_to_show = l[0] if len(l)> 0 else _team.Name #always valued because we SHOULD save the lineup
+
+    return lineup_to_show
+
+def get_my_couples_from_calendar(teamid, day):
+    return matches_calendar.MatchesCalendar.objects.filter(
+        (Q(HomeTeam=teamid) | Q(AwayTeam=teamid)) &
+        Q(CompetitionCalendar__Day=day)
+    )
+
 def format_votes(mr):
     _votes_tit = U.cleanJSON(mr.Votes_Tit)
     _votes_tit = _votes_tit.replace('<class "str">','')
@@ -418,7 +448,7 @@ def get_live_votes(day, comp=1):
 
 def get_couples_and_matches_from_calendar(seriesid, day, competition_id=1):
     matches_ = matches_calendar.MatchesCalendar.objects.filter(
-        Q(CompetitionCalendar__Competition_id=competition_id) & 
+        # Q(CompetitionCalendar__Competition_id=competition_id) & 
         Q(CompetitionCalendar__Day=day) & 
         Q(Series_id=seriesid))
     couples = [(match.HomeTeam.id, match.AwayTeam.id, match.id) for match in matches_]

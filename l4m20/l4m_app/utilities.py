@@ -148,7 +148,7 @@ def get_my_markets(seriesid):
     return market.Market.objects.filter(Series_id=seriesid)
 
 def get_squads(teamid):
-    return squads.Squads.objects.filter(Team_id=teamid)
+    return squads.Squads.objects.filter(Q(Team_id=teamid)&Q(Quarantine=False))
 
 def get_players_by_squad(_squads):
     pl_ids = [pl.Player_id for pl in _squads]
