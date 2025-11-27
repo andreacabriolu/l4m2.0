@@ -107,6 +107,8 @@ def LiveView(request):
     my_seriesid_mainleague = my_series_mainleague[0].id
 
     all_competitions = U.get_all_live_active_competitions()
+    today_competitions = U.get_all_today_competitions(current_day)
+    today_competitions_ids = [tc.id for tc in today_competitions]
 
     if(len(request.POST) > 0 and 'jsonData' in request.POST):
         data = json.loads(request.POST['jsonData'])
@@ -226,7 +228,8 @@ def LiveView(request):
         'current_day': day,
         'all_competitions' : all_competitions,
         'all_my_series_ids' : all_my_series_ids,
-        'homeAway': homeAway
+        'homeAway': homeAway,
+        'today_competitions_ids': today_competitions_ids
         }
     
     return render(request, template_name, params)

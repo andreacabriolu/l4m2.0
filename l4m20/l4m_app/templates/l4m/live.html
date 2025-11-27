@@ -59,7 +59,9 @@
             <label for="select_comp" class="series-label">COMPETIZIONE</label>
             <select class="form-select form-select-lg mb-3 form-select-selectors" id="select_comp">
                 {% for comp in all_competitions %}
-                <option value="{{comp}}" data-id="{{comp.id}}">{{comp.Name}}</option>
+                <option value="{{comp}}" data-id="{{comp.id}}">{{comp.Name}} 
+                    {% if comp.id in today_competitions_ids %} [LIVE] {% endif %}
+                </option>
                 {% endfor %}
             </select>
             </div>
