@@ -97,15 +97,13 @@ def get_votes_total(b11_lineup, home=True, homeAway=False):
 
     return votes_tit, _items, votes_ris
 
-def enrich_and_sort_players_live(teamid, current_day):
+def enrich_and_sort_players_live(teamid, current_day, live_votes, live_teams, already_played_teams):
 
     mysquads = U.get_squads(teamid)
     players = U.get_players_by_squad(mysquads)
 
     enriched_players = []
     cap_id = -1 #not used for b11
-
-    live_votes, live_teams, already_played_teams = get_live_votes(current_day)
 
     for squad_pl in players:
         votes = []
@@ -175,35 +173,18 @@ def enrich_and_sort_players_live(teamid, current_day):
     return sorted_players
 
 
-def get_b11_lineup(teamid, day):
-    players = enrich_and_sort_players_live(teamid, current_day=day)
+def get_b11_lineup(teamid, day, live_votes, live_teams, already_played_teams):
+    players = enrich_and_sort_players_live(teamid, day, live_votes, live_teams, already_played_teams)
     b11_live = pick_best_11(players['P'],players['D'],players['C'],players['A'])
     
     return b11_live
 
-def get_best_11(team_ids_names, day):
+def get_best_11(team_ids_names, day, live_votes, live_teams, already_played_teams):
     all_best = []
-    already_played_teams = []
-    url = "https://publicapi.fantamaster.it/livescores/?tcache=1756165942189"
-    resp = req.get(url)
-    resp_content = resp.content
-    resp_json = json.loads(resp_content)
-
-    for score in resp_json['scores']:
-        d_start = datetime.datetime.strptime(score['rawdate'], '%Y-%m-%d %H:%M').replace(tzinfo=ZoneInfo('Europe/Rome'))
-        if(d_start < datetime.datetime.now(ZoneInfo('Europe/Rome'))):
-            already_played_teams.append(score['home_name'])
-            already_played_teams.append(score['away_name'])
 
     # crea best 11 per ogni squadra
     for tid,name in team_ids_names:
-        keepers = enrich_and_sort_players('P', tid, day, already_played_teams=already_played_teams)
-        defenders = enrich_and_sort_players('D', tid, day, already_played_teams=already_played_teams)
-        midfielders = enrich_and_sort_players('C', tid, day, already_played_teams=already_played_teams)
-        attackers = enrich_and_sort_players('A', tid, day, already_played_teams=already_played_teams)
-        if (keepers == [] and defenders == [] and midfielders == [] and attackers == []):
-            continue
-        best = pick_best_11(keepers, defenders, midfielders, attackers)
+        best = get_b11_lineup(tid, day, live_votes, live_teams, already_played_teams)
         if(best):
             best["team_id"]=tid
             best["team_name"]=name

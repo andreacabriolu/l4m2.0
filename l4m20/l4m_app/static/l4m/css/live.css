@@ -146,7 +146,7 @@ table .w-30 {
 
   .selectors-div {
     display: grid;
-    grid-template-columns: 18em 11em 14em 10em 1fr;
+    grid-template-columns: auto auto auto 1fr 3fr;
     align-items: center;  
 }
 

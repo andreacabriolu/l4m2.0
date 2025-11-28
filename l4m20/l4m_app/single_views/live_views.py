@@ -22,15 +22,17 @@ class MyLiveView(View):
     
         my_today_couples = LU.get_my_couples_from_calendar(myteam['id'], current_day)
 
+        live_votes, live_teams, already_played_teams = LU.get_live_votes(current_day)
+
         for c in my_today_couples:
             comp_id = c.CompetitionCalendar.Competition_id
             comp = U.get_competition_by_id(comp_id)
             homeAway=U.get_homeaway(comp_id, current_day)
 
             if comp_id == total_league.id:
-                h_lineup_to_show = LU.get_b11_lineup(c.HomeTeam, current_day)
+                h_lineup_to_show = LU.get_b11_lineup(c.HomeTeam, current_day, live_votes, live_teams, already_played_teams)
                 h_lineup_to_show['t']=c.HomeTeam
-                a_lineup_to_show = LU.get_b11_lineup(c.AwayTeam, current_day)
+                a_lineup_to_show = LU.get_b11_lineup(c.AwayTeam, current_day, live_votes, live_teams, already_played_teams)
                 a_lineup_to_show['t']=c.AwayTeam
             else:
                 h_lineup_to_show = LU.get_lineup_to_show(c.HomeTeam, current_day, comp_id, overtime)
@@ -40,8 +42,6 @@ class MyLiveView(View):
 
         all_votes = []
         all_comps = []
-
-        live_votes, live_teams, already_played_teams = LU.get_live_votes(current_day)
 
         for lineup_couple in lineup_couples:
             _homeaway = lineup_couple[2]
@@ -74,14 +74,12 @@ class LiveB11View(LoginRequiredMixin, View):
 
     def get(self, request):
         current_day = U.get_current_day()
-
-        day_already_started, _ = U.check_day_already_started(current_day)
-        if not day_already_started:
-            return render(request, self.template_name, {})
         
         team_ids_names = team.Team.objects.values_list("id", "Name")
+
+        live_votes, live_teams, already_played_teams = LU.get_live_votes(current_day)
         
-        all_best = LU.get_best_11(team_ids_names, int(current_day))
+        all_best = LU.get_best_11(team_ids_names, int(current_day), live_votes, live_teams, already_played_teams)
 
         sorted_best = sorted(
             (b for b in all_best if b is not None),
@@ -133,6 +131,9 @@ def LiveView(request):
     last_lineups_d = {}
     overtime, _ = U.check_day_already_started(day)
 
+    #get all live players
+    live_votes, live_teams, already_played_teams = LU.get_live_votes(day)
+
     #QUICK LOAD THE PAST
     if int(day < int(current_day)):
         couples = LU.get_couples_and_matches_from_calendar(seriesid, day, competition_id=competition_id)
@@ -155,7 +156,7 @@ def LiveView(request):
         total_league = all_competitions.get(Name='Total League')
         if competition_id == total_league.id:
             for t in series_teams:
-                lineup_to_show = LU.get_b11_lineup(t, day)
+                lineup_to_show = LU.get_b11_lineup(t, day, live_votes, live_teams, already_played_teams)
                 lineup_to_show['t']=t
                 last_lineups_d[t.id] = lineup_to_show
 
@@ -208,9 +209,6 @@ def LiveView(request):
             lineup_couples = [ (last_lineups_d[c[0]], last_lineups_d[c[1]]) for c in couples ]
 
             all_votes = []
-
-            #get all live players
-            live_votes, live_teams, already_played_teams = LU.get_live_votes(day)
 
             for lineup_couple in lineup_couples:
                 votes_home = LU.get_votes(lineup_couple[0], day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=teamid, homeAway=homeAway)
