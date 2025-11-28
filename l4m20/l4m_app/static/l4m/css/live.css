@@ -146,7 +146,8 @@ table .w-30 {
 
   .selectors-div {
     display: grid;
-    grid-template-columns: 18em 11em 14em 10em 1fr;
+    grid-template-columns: 0fr 0fr 0fr 1fr;
+    grid-template-rows: auto;
     align-items: center;  
 }
 
@@ -228,4 +229,13 @@ font-size: xxx-large;
 .small-logo img {
     height: 45%;
     width: 45%;
+}
+
+.b11-live-btn {
+  margin-bottom: .5em;
+}
+
+.ranking-live-btn {
+  margin-bottom: .5em;
+  white-space: nowrap;
 }

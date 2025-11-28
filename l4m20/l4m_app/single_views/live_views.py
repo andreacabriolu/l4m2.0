@@ -218,7 +218,8 @@ def LiveView(request):
                 )
         
     params = { 
-        'all_votes' : all_votes,
+        'all_votes' : all_votes, 
+        'all_scores' : [[(v[1][1], v[1][9]) for v in vote] for vote in all_votes],
         'all_series' : all_series,
         'current_competition': competition_id,
         'current_series' : seriesid,
@@ -250,3 +251,18 @@ class GetLineupsByTeamView(View):
             pls_dict[pl['id']] = [pl['Surname'],pl['Role']]
         json_l_ups = U.cleanJSON(serializers.serialize('json', l_ups))
         return HttpResponse(json.dumps({'map':pls_dict,'l_ups':json_l_ups}))
+    
+class GetLiveRankingView(View):
+    def get(self, request):
+        competition_id = request.GET['competition_id']
+        seriesid = request.GET['series_id']
+        day = request.GET['day']
+        all_scores = request.GET['all_scores']
+        last_ranking = U.get_last_available_ranking_by_day(competition_id, seriesid, int(day))
+    
+        if(last_ranking is not None):
+            last_ranking = json.loads(last_ranking[0].RankingLine)
+
+        # last_ranking_home = [item[team_home.__str__()] for item in last_ranking if team_home.__str__() in item] #QUITE BAD
+
+        return HttpResponse()

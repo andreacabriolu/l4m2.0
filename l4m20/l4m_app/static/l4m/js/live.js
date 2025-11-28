@@ -217,5 +217,31 @@ window.addEventListener('DOMContentLoaded', event => {
         });
     });
 
+    $('#showLiveRankingModal').on('show.bs.modal', function (e) {
+        const token = Cookies.get('csrftoken');
+
+        var allScores = $('#all_scores').val();
+        var data = {
+            'competition_id': $('#current_competition').val(),
+            'series_id': $('#current_series').val(),
+            'day': $('#current_day').val(),
+            'all_scores' : allScores,
+            'csrfmiddlewaretoken': token
+        };
+
+        $.get("/l4m/get_live_ranking/", data, function (response) {
+            if (response.startsWith('error')) {
+                showErrorAlert(response);
+            }
+            else {
+                var j_res = JSON.parse(response);
+                // var l_ups = JSON.parse(j_res.l_ups);
+                // var map = j_res.map;
+                // add_lineups(l_ups, map);
+
+            }
+        });
+    });
+
 
 })
