@@ -48,8 +48,8 @@ class MyLiveView(View):
             _lineup_comp = lineup_couple[3]
 
             if _lineup_comp.id == total_league.id:
-                votes_home = LU.get_votes_total(lineup_couple[0], home=True, homeAway=homeAway)
-                votes_away = LU.get_votes_total(lineup_couple[1], home=False, homeAway=homeAway)
+                votes_home = LU.get_votes_total(lineup_couple[0], home=True, homeAway=_homeaway)
+                votes_away = LU.get_votes_total(lineup_couple[1], home=False, homeAway=_homeaway)
             else: 
                 votes_home = LU.get_votes(lineup_couple[0], current_day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=myteam['id'], homeAway=_homeaway)
                 votes_away = LU.get_votes(lineup_couple[1], current_day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=myteam['id'], home=False, homeAway=_homeaway)
