@@ -77,7 +77,7 @@ class LiveB11View(LoginRequiredMixin, View):
         
         team_ids_names = team.Team.objects.values_list("id", "Name")
 
-        live_votes, live_teams, already_played_teams = LU.get_live_votes(current_day)
+        live_votes, live_teams, already_played_teams = LU.get_live_votes(int(current_day))
         
         all_best = LU.get_best_11(team_ids_names, int(current_day), live_votes, live_teams, already_played_teams)
 

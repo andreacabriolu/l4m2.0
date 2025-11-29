@@ -59,12 +59,12 @@
                     <td>{{player.player_surname}}</td>
                     <td>
                         {% if player.player_vote %}
-                          {{ player.player_vote }}
+                          {{ player.player_vote|floatformat }}
                         {% endif %}
 	                </td>
                     <td>
                         {% if player.player_totvote %}
-                          {{ player.player_totvote }}
+                          {{ player.player_totvote|floatformat }}
                         {% endif %}
 	                </td>
                 </tr>
@@ -125,12 +125,12 @@
                     <td>{{player.player_surname}}</td>
                     <td>
                         {% if player.player_vote %}
-                          {{ player.player_vote }}
+                          {{ player.player_vote|floatformat }}
                         {% endif %}
 	                </td>
                     <td>
                         {% if player.player_totvote %}
-                          {{ player.player_totvote }}
+                          {{ player.player_totvote|floatformat }}
                         {% endif %}
 	                </td>
                 </tr>
