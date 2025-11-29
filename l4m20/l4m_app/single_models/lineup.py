@@ -12,3 +12,6 @@ class Lineup(models.Model):
     Day = models.IntegerField()
     HideLineup = models.BooleanField(default=False)
     ModNoGk = models.BooleanField(default=False)
+
+    def __str__(self):
+        return " ".join([self.Team.Name, self.Day.__str__(), self.Series.Name])
