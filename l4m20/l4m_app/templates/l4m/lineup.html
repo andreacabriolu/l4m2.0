@@ -63,7 +63,7 @@
                 </div>
             </div>
             <div class="btn-panel" id="btn_panel">
-                <button type="button" class="btn btn-primary top-panel-btn" id="btnSaveLineup">
+                <button type="button" class="btn btn-primary top-panel-btn" id="btnSaveLineup" {% if late_lineup %} disabled {% endif %}>
                     CONFERMA
                 </button>
                 <button type="button" class="btn btn-primary top-panel-btn" id="btnResetMainLineup" {% if day_already_started %} disabled {% endif %}>
@@ -82,6 +82,9 @@
                 {% if not day_already_started %}
                 <img src="{% static 'l4m/images/green.png' %}">
                 <span class="alert-limit">FORMAZIONE SCHIERABILE FINO A {{day_time_limit}}</span>
+                {% elif day_already_started and late_lineup %}
+                <img src="{% static 'l4m/images/red.png' %}">
+                <span class="alert-limit">FORMAZIONE NON SCHIERATA PER QUESTA COMPETIZIONE, NESSUNA MODIFICA POSSIBILE</span>
                 {% else %}
                 <img src="{% static 'l4m/images/orange.png' %}">
                 <span class="alert-limit">GIORNATA INIZIATA, FORMAZIONE MODIFICABILE AI LIMITI DEL REGOLAMENTO</span>
