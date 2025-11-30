@@ -43,7 +43,7 @@ function add_lineups(l_ups, map) {
         var _tdata = "";
 
         _tdata += `<thead><tr class="collapse-row"><td colspan="2">
-        <button class="lup-btn btn btn-secondary" data-bs-toggle="collapse" data-bs-target="#b_${l_up.pk}">VERSIONE ${l_up.fields.Version} (${new Date(l_up.fields.Timestamp).toLocaleString("it-IT", { timeZone: "UTC" })})</button>
+        <button class="lup-btn btn btn-secondary" data-bs-toggle="collapse" data-bs-target="#b_${l_up.pk}">VERSIONE ${l_up.fields.Version} (${new Date(l_up.fields.Timestamp).toLocaleString("it-IT")})</button>
         </td></tr></thead>`;
 
         _tdata += `<tbody id="b_${l_up.pk}" class="table-group-divider collapse">`;
