@@ -475,6 +475,7 @@ def save_last_valid_lineup(_lineup, day):
         Series = _lineup.Series,
         HideLineup = _lineup.HideLineup,
         ModNoGk = _lineup.ModNoGk,
+        LateEdit = False
     )
 
     last_lineup_late.save()
@@ -489,6 +490,7 @@ def save_lineup(lineup_info):
         Series = lineup_info['series'],
         HideLineup = lineup_info['hideLineup'],
         ModNoGk = lineup_info['modNoGk'],
+        LateEdit = lineup_info['late_edit']
         )
 
     lineup_new.save()
