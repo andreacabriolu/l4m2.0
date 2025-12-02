@@ -131,9 +131,6 @@ def LiveView(request):
     last_lineups_d = {}
     overtime, _ = U.check_day_already_started(day)
 
-    #get all live players
-    live_votes, live_teams, already_played_teams = LU.get_live_votes(day)
-
     #QUICK LOAD THE PAST
     if int(day < int(current_day)):
         couples = LU.get_couples_and_matches_from_calendar(seriesid, day, competition_id=competition_id)
@@ -151,6 +148,9 @@ def LiveView(request):
                 )
 
     else:
+        #get all live players
+        live_votes, live_teams, already_played_teams = LU.get_live_votes(day)
+
         #VALIDO PER:
         # TOTAL LEAGUE
         total_league = all_competitions.get(Name='Total League')

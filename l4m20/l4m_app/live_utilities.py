@@ -97,7 +97,7 @@ def get_votes_total(b11_lineup, home=True, homeAway=False):
 
     return votes_tit, _items, votes_ris
 
-def enrich_and_sort_players_live(teamid, current_day, live_votes, live_teams, already_played_teams):
+def enrich_and_sort_players_live(teamid, current_day, live_votes, live_teams, already_played_teams, getForCalculation=False):
 
     mysquads = U.get_squads(teamid)
     players = U.get_players_by_squad(mysquads)
@@ -109,7 +109,7 @@ def enrich_and_sort_players_live(teamid, current_day, live_votes, live_teams, al
         votes = []
 
         pl = player.Player.objects.get(pk=squad_pl['id'])
-        already_played = check_already_played(pl.RealTeam, already_played_teams, current_day)
+        already_played = check_already_played(pl.RealTeam, already_played_teams, current_day) if getForCalculation == False else True
 
         #check if player is LIVE
         if pl.id in live_votes:
@@ -173,18 +173,18 @@ def enrich_and_sort_players_live(teamid, current_day, live_votes, live_teams, al
     return sorted_players
 
 
-def get_b11_lineup(teamid, day, live_votes, live_teams, already_played_teams):
-    players = enrich_and_sort_players_live(teamid, day, live_votes, live_teams, already_played_teams)
+def get_b11_lineup(teamid, day, live_votes, live_teams, already_played_teams, getForCalculation=False):
+    players = enrich_and_sort_players_live(teamid, day, live_votes, live_teams, already_played_teams, getForCalculation)
     b11_live = pick_best_11(players['P'],players['D'],players['C'],players['A'])
     
     return b11_live
 
-def get_best_11(team_ids_names, day, live_votes, live_teams, already_played_teams):
+def get_best_11(team_ids_names, day, live_votes, live_teams, already_played_teams, getForCalculation=False):
     all_best = []
 
     # crea best 11 per ogni squadra
     for tid,name in team_ids_names:
-        best = get_b11_lineup(tid, day, live_votes, live_teams, already_played_teams)
+        best = get_b11_lineup(tid, day, live_votes, live_teams, already_played_teams, getForCalculation)
         if(best):
             best["team_id"]=tid
             best["team_name"]=name

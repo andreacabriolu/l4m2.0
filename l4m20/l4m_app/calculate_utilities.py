@@ -148,7 +148,7 @@ def calculate_total_league(competition, day):
             all_votes = []    
 
             for t in series_teams:
-                lineup_to_show = LU.get_b11_lineup(t, _day)
+                lineup_to_show = LU.get_b11_lineup(t, _day, live_votes=[], live_teams=[], already_played_teams=[], getForCalculation=True)
                 lineup_to_show['t']=t
                 last_lineups_d[t.id] = lineup_to_show
 
@@ -181,7 +181,7 @@ def calculate_b11_league(competition, day):
         days_to_calculate = range(int(day), int(curr_day)) if (int(day) < int(curr_day)) else [int(curr_day)]
         
         for _day in days_to_calculate:
-            all_best = LU.get_best_11(team_ids_names, _day)
+            all_best = LU.get_best_11(team_ids_names, _day, live_teams=[], live_votes=[], already_played_teams=[], getForCalculation=True)
             save_b11_results(all_best, _day)
             write_b11_ranking(all_best, competition.id, b11_series[0].id, _day)
 
@@ -192,6 +192,7 @@ def calculate_league(competition, day):
     all_league_days = U.get_days(competition.id)
     league_days = sorted([d['Day'] for d in all_league_days if int(day) <= d['Day'] <= int(curr_day)])
     days_to_calculate = league_days if (int(day) < int(curr_day)) else [int(curr_day)]
+    main_league = U.get_competition(name='Campionato')[0] #double fetch, I know
 
     for _day in days_to_calculate:
         if _day not in league_days:
@@ -206,7 +207,7 @@ def calculate_league(competition, day):
             all_votes = []
 
             for t in series_teams:
-                l = U.get_last_lineup(t, _day, comp_id=competition.id)
+                l = U.get_last_lineup(t, _day, comp_id=main_league.id) #take last lineup only from main league
 
                 if len(l) <= 0:
                     continue 
