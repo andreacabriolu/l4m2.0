@@ -204,6 +204,16 @@ table .w-30 {
   }
 }
 
+@media (max-width:800px) {
+  .modal-dialog {
+    margin : 0 !important;
+  }
+  .modal-full-mobile {
+    width : 100% !important;
+    height :100% !important;
+  }
+}
+
 .modal-dialog {
   top: 10vh;
   right: 5vw;
