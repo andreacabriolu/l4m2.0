@@ -168,7 +168,7 @@ window.addEventListener('DOMContentLoaded', event => {
     if (day_to_sel.length <= 0) { return; }
     $('#select_day').val(day_to_sel[0].value);
 
-    $('#b11_live_btn').on('click', function(){
+    $('#b11_live_btn').on('click', function () {
         window.location.href = '/l4m/live_b11';
     });
 
@@ -217,15 +217,51 @@ window.addEventListener('DOMContentLoaded', event => {
         });
     });
 
+    $(function () {
+        live_rankingDataTable = $('#liveRankingDataTable').DataTable(
+            {
+                paging: false,
+                searching: false,
+                ordering: false,
+                layout: {
+                    bottomStart: null,
+                },
+                order: [
+                    [1, 'desc'], //Punti
+                ],
+                ajax: {
+                    url: "/l4m/get_live_ranking/",
+                    type: 'GET',
+                    data: function (d) {
+                        d.competition_id = $('#current_competition').val(),
+                            d.series_id = $('#current_series').val(),
+                            d.day = $('#current_day').val(),
+                            d.all_scores = allScores,
+                            d.csrfmiddlewaretoken = token
+                    },
+                    dataSrc: "lines",
+                },
+                columnDefs: [
+                    { className: "dt-teamname", targets: [0] },
+                    { className: "dt-teampt", targets: [1] },
+                ],
+                initComplete: function (settings, json) {
+                    // $('#team_h_camp').removeClass('dt-teamname');
+                    // $('#team_fp_h_camp').removeClass('dt-teampt');
+                },
+            });
+    });
+
     $('#showLiveRankingModal').on('show.bs.modal', function (e) {
         const token = Cookies.get('csrftoken');
+        $('#live_ranking_tbody').empty();
 
         var allScores = $('#all_scores').val();
         var data = {
             'competition_id': $('#current_competition').val(),
             'series_id': $('#current_series').val(),
             'day': $('#current_day').val(),
-            'all_scores' : allScores,
+            'all_scores': allScores,
             'csrfmiddlewaretoken': token
         };
 
@@ -234,14 +270,29 @@ window.addEventListener('DOMContentLoaded', event => {
                 showErrorAlert(response);
             }
             else {
-                var j_res = JSON.parse(response);
-                // var l_ups = JSON.parse(j_res.l_ups);
-                // var map = j_res.map;
-                // add_lineups(l_ups, map);
+                var live_ranking_items = JSON.parse(response);
 
+                var _tdata = "";
+
+                $.each(live_ranking_items, function (i, v) {
+                    _tdata +=
+                        `<tr class="lup-row">
+                <td>
+                    ${v[0]}
+                </td>
+                <td>
+                    ${v[1]}
+                </td>
+            </tr>`;
+                });
+
+                $('#live_ranking_tbody').append(_tdata);
             }
         });
+
+
+
+
     });
 
-
-})
+});

@@ -63,7 +63,12 @@
                             src="{% static 'l4m/images/close-blue.png' %}"></span>
                 </div>
                 <div id="live-ranking">
-                    
+                    <table class="table table-striped-columns table-dark 
+                    table-liveranking rounded-3 table-bordered rounded-pill">
+                        <tbody class="table-group-divider" id="live_ranking_tbody">
+
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -106,10 +111,12 @@
                 <button type="button" class="btn btn-success b11-live-btn" id="b11_live_btn">BEST 11 LIVE</button>
             </div>
 
+            {% if show_live_ranking %}
             <div>
                 <button type="button" class="btn btn-warning ranking-live-btn" id="ranking_live_btn" 
                 data-bs-toggle="modal" data-bs-target="#showLiveRankingModal">CLASSIFICA LIVE</button>
             </div>
+            {% endif %}
 
         </div>
 

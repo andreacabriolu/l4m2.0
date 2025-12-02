@@ -130,6 +130,7 @@ def LiveView(request):
     series_teams = team.Team.objects.filter(Series__id=seriesid)
     last_lineups_d = {}
     overtime, _ = U.check_day_already_started(day)
+    show_live_ranking = True
 
     #QUICK LOAD THE PAST
     if int(day < int(current_day)):
@@ -146,6 +147,8 @@ def LiveView(request):
             all_votes.append( \
                     [votes_home, votes_away]
                 )
+            
+        show_live_ranking = False
 
     else:
         #VALIDO PER:
@@ -219,7 +222,7 @@ def LiveView(request):
         
     params = { 
         'all_votes' : all_votes, 
-        'all_scores' : [[(v[1][1], v[1][9]) for v in vote] for vote in all_votes],
+        'all_scores' : json.dumps([[(v[1][1], v[1][9]) for v in vote] for vote in all_votes]),
         'all_series' : all_series,
         'current_competition': competition_id,
         'current_series' : seriesid,
@@ -227,7 +230,8 @@ def LiveView(request):
         'current_day': day,
         'all_competitions' : all_competitions,
         'all_my_series_ids' : all_my_series_ids,
-        'homeAway': homeAway
+        'homeAway': homeAway,
+        'show_live_ranking': show_live_ranking
         }
     
     return render(request, template_name, params)
@@ -263,6 +267,10 @@ class GetLiveRankingView(View):
         if(last_ranking is not None):
             last_ranking = json.loads(last_ranking[0].RankingLine)
 
-        # last_ranking_home = [item[team_home.__str__()] for item in last_ranking if team_home.__str__() in item] #QUITE BAD
+        if(all_scores is not None):
+            all_scores = json.loads(all_scores)
 
-        return HttpResponse()
+        live_ranking = LU.create_live_ranking(all_scores, last_ranking)
+
+        return HttpResponse(json.dumps(live_ranking))
+        # return HttpResponse(json.dumps({'lines': live_ranking}))

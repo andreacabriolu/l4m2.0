@@ -239,3 +239,15 @@ font-size: xxx-large;
   margin-bottom: .5em;
   white-space: nowrap;
 }
+
+.dt-teamname {
+  color: aliceblue;
+  font-weight: bolder;
+  text-align: center !important;
+}
+
+.dt-teampt {
+  font-weight: bolder;
+  background: aliceblue;
+  text-align: center !important;
+}
