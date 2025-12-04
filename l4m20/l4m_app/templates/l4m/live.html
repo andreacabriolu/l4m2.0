@@ -109,11 +109,13 @@
                 <button type="button" class="btn btn-primary view-live-btn" id="view_live_btn">VISUALIZZA</button>
             </div>
 
+            {% if is_live_day %}
             <div>
                 <button type="button" class="btn btn-success b11-live-btn" id="b11_live_btn">BEST 11 LIVE</button>
             </div>
+            {% endif %}
 
-            {% if show_live_ranking %}
+            {% if is_live_day %}
             <div>
                 <button type="button" class="btn btn-warning ranking-live-btn" id="ranking_live_btn" 
                 data-bs-toggle="modal" data-bs-target="#showLiveRankingModal">CLASSIFICA LIVE</button>

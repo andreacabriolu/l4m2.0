@@ -130,7 +130,8 @@ def LiveView(request):
     series_teams = team.Team.objects.filter(Series__id=seriesid)
     last_lineups_d = {}
     overtime, _ = U.check_day_already_started(day)
-    show_live_ranking = True
+    is_live_day = True
+    already_played_teams = []
 
     #QUICK LOAD THE PAST
     if int(day < int(current_day)):
@@ -148,7 +149,7 @@ def LiveView(request):
                     [votes_home, votes_away]
                 )
             
-        show_live_ranking = False
+        is_live_day = False
 
     else:
         #get all live players
@@ -232,7 +233,7 @@ def LiveView(request):
         'all_competitions' : all_competitions,
         'all_my_series_ids' : all_my_series_ids,
         'homeAway': homeAway,
-        'show_live_ranking': show_live_ranking,
+        'is_live_day': is_live_day,
         'today_competitions_ids': today_competitions_ids
         }
     
