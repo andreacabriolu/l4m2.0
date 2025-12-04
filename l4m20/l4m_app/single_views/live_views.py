@@ -196,8 +196,7 @@ def LiveView(request):
                         lineup_to_show = l[0]
                     else:
                         lineup_to_show = last_valid_l
-                        U.save_last_valid_lineup(last_valid_l, day)
-                        U.update_balance(t.id)
+                        U.save_last_valid_lineup(last_valid_l, day, seriesid)
                         
                 else:  #filter for historical data
                     lineup_to_show = l[0] if len(l)> 0 else t.Name #always valued because we SHOULD save the lineup
