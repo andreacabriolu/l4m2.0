@@ -257,6 +257,13 @@ window.addEventListener('DOMContentLoaded', event => {
         $('#live_ranking_tbody').empty();
 
         var allScores = $('#all_scores').val();
+
+        if (allScores=='[]') {
+            var _tdata = `<tr class="lup-row"><td>ANCORA NESSUN RISULTATO LIVE DISPONIBILE</td></tr>`;
+            $('#live_ranking_tbody').append(_tdata);
+            return;
+        }
+
         var data = {
             'competition_id': $('#current_competition').val(),
             'series_id': $('#current_series').val(),

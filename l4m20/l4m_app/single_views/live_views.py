@@ -218,10 +218,12 @@ def LiveView(request):
                 all_votes.append( \
                     [votes_home, votes_away]
                 )
-        
+    
+    all_scores = json.dumps([[(v[1][1], v[1][9]) for v in vote] for vote in all_votes]) if len(already_played_teams) > 0 else []
+
     params = { 
         'all_votes' : all_votes, 
-        'all_scores' : json.dumps([[(v[1][1], v[1][9]) for v in vote] for vote in all_votes]),
+        'all_scores' : all_scores,
         'all_series' : all_series,
         'current_competition': competition_id,
         'current_series' : seriesid,
