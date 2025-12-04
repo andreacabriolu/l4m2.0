@@ -328,6 +328,7 @@ window.addEventListener('DOMContentLoaded', event => {
             jsonOpts = JSON.stringify(options);
 
             allComp = $('#allCompSwitch').prop('checked');
+            late_edit = $('#day_already_started').val();
 
             if (allComp) {
                 all_comp_ids = [];
@@ -346,7 +347,8 @@ window.addEventListener('DOMContentLoaded', event => {
                 
             }
             else {
-                var data = { 'tits': jsonPlayers, 'comp_id': comp_id, 'options': jsonOpts, 'csrfmiddlewaretoken': token };
+                var data = { 'tits': jsonPlayers, 'comp_id': comp_id, 'late_edit': late_edit,
+                    'options': jsonOpts, 'csrfmiddlewaretoken': token };
 
                 $.post("/l4m/lineup/save/", data, function (response) {
                     if (response.startsWith('error')) {

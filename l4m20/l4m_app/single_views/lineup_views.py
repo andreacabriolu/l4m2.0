@@ -131,6 +131,7 @@ class SaveMultipleLineupView(View):
                     "series": U.get_my_series(teamid, competitionid=single_comp_id)[0],
                     "hideLineup": options['hideLineup'],
                     "modNoGk": options['modNoGk'],
+                    "late_edit": False
                 }
 
                 U.save_lineup(lineup_info)
@@ -146,6 +147,7 @@ class SaveLineupView(View):
         tits = request.POST['tits']
         options = request.POST['options']
         comp_id = request.POST['comp_id']
+        late_edit = request.POST['late_edit']
 
         if (tits is None or options is None): return
 
@@ -169,6 +171,7 @@ class SaveLineupView(View):
             "series": U.get_my_series(teamid, competitionid=comp_id)[0],
             "hideLineup": options['hideLineup'],
             "modNoGk": options['modNoGk'],
+            "late_edit": late_edit,
         }
 
         U.save_lineup(lineup_info)
