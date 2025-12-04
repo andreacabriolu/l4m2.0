@@ -130,6 +130,7 @@ def LiveView(request):
     series_teams = team.Team.objects.filter(Series__id=seriesid)
     last_lineups_d = {}
     overtime, _ = U.check_day_already_started(day)
+    show_live_ranking = True
 
     #QUICK LOAD THE PAST
     if int(day < int(current_day)):
@@ -146,6 +147,8 @@ def LiveView(request):
             all_votes.append( \
                     [votes_home, votes_away]
                 )
+            
+        show_live_ranking = False
 
     else:
         #get all live players
@@ -217,7 +220,8 @@ def LiveView(request):
                 )
         
     params = { 
-        'all_votes' : all_votes,
+        'all_votes' : all_votes, 
+        'all_scores' : json.dumps([[(v[1][1], v[1][9]) for v in vote] for vote in all_votes]),
         'all_series' : all_series,
         'current_competition': competition_id,
         'current_series' : seriesid,
@@ -226,6 +230,7 @@ def LiveView(request):
         'all_competitions' : all_competitions,
         'all_my_series_ids' : all_my_series_ids,
         'homeAway': homeAway,
+        'show_live_ranking': show_live_ranking,
         'today_competitions_ids': today_competitions_ids
         }
     
@@ -250,3 +255,22 @@ class GetLineupsByTeamView(View):
             pls_dict[pl['id']] = [pl['Surname'],pl['Role']]
         json_l_ups = U.cleanJSON(serializers.serialize('json', l_ups))
         return HttpResponse(json.dumps({'map':pls_dict,'l_ups':json_l_ups}))
+    
+class GetLiveRankingView(View):
+    def get(self, request):
+        competition_id = request.GET['competition_id']
+        seriesid = request.GET['series_id']
+        day = request.GET['day']
+        all_scores = request.GET['all_scores']
+        last_ranking = U.get_last_available_ranking_by_day(competition_id, seriesid, int(day))
+    
+        if(last_ranking is not None):
+            last_ranking = json.loads(last_ranking[0].RankingLine)
+
+        if(all_scores is not None):
+            all_scores = json.loads(all_scores)
+
+        live_ranking = LU.create_live_ranking(all_scores, last_ranking)
+
+        return HttpResponse(json.dumps(live_ranking))
+        # return HttpResponse(json.dumps({'lines': live_ranking}))

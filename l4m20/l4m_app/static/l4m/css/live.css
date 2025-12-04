@@ -146,7 +146,8 @@ table .w-30 {
 
   .selectors-div {
     display: grid;
-    grid-template-columns: auto auto auto 1fr 3fr;
+    grid-template-columns: 0fr 0fr 0fr 1fr;
+    grid-template-rows: auto;
     align-items: center;  
 }
 
@@ -203,6 +204,16 @@ table .w-30 {
   }
 }
 
+@media (max-width:800px) {
+  .modal-dialog {
+    margin : 0 !important;
+  }
+  .modal-full-mobile {
+    width : 100% !important;
+    height :100% !important;
+  }
+}
+
 .modal-dialog {
   top: 10vh;
   right: 5vw;
@@ -228,4 +239,25 @@ font-size: xxx-large;
 .small-logo img {
     height: 45%;
     width: 45%;
+}
+
+.b11-live-btn {
+  margin-bottom: .5em;
+}
+
+.ranking-live-btn {
+  margin-bottom: .5em;
+  white-space: nowrap;
+}
+
+.dt-teamname {
+  color: aliceblue;
+  font-weight: bolder;
+  text-align: center !important;
+}
+
+.dt-teampt {
+  font-weight: bolder;
+  background: aliceblue;
+  text-align: center !important;
 }

@@ -44,6 +44,7 @@ urlpatterns = [
     path("l4m/myleagues/<int:competition_id>/", my_leagues_views.MyLeaguesView.as_view(), name="my_leagues"),
     path("l4m/retrieveCalendarInfo/", my_leagues_views.RetrieveCalendarInfoView.as_view(), name="retrieve_calendar_info"),
     path("l4m/calculate/getMissingLineups/", admin_views.GetMissingLineupsView.as_view(), name="get_missing_lineups"),
+    path("l4m/get_live_ranking/", live_views.GetLiveRankingView.as_view(), name="get_live_ranking"),
 
 
 ]

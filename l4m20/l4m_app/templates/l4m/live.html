@@ -36,9 +36,10 @@
     <input type="hidden" value="{{current_day}}" id="current_day">
     <input type="hidden" value="{{my_competitions}}" id="my_competitions">
     <input type="hidden" value="{{all_my_series_ids}}" id="all_my_series_ids">
+    <input type="hidden" value="{{all_scores}}" id="all_scores">
 
     <div class="modal fade" id="showLineupHistoryModal" tabindex="-1" role="dialog" aria-labelledby="showLineupHistoryModalLabel">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-full-mobile" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title lup-hist-title" id="showLineupHistoryModalLabel">STORICO FORMAZIONI</h4>
@@ -48,6 +49,26 @@
     
                 <div id="lineups">
                     
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="showLiveRankingModal" tabindex="-1" role="dialog" aria-labelledby="showLiveRankingModalLabel">
+        <div class="modal-dialog modal-full-mobile" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title lup-hist-title" id="showLiveRankingModalLabel">CLASSIFICA LIVE</h4>
+                    <span class="close" id="closeGk" data-bs-dismiss="modal"><img
+                            src="{% static 'l4m/images/close-blue.png' %}"></span>
+                </div>
+                <div id="live-ranking">
+                    <table class="table table-striped-columns table-dark 
+                    table-liveranking rounded-3 table-bordered rounded-pill">
+                        <tbody class="table-group-divider" id="live_ranking_tbody">
+
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -89,8 +110,15 @@
             </div>
 
             <div>
-                <button type="button" class="btn btn-success b11-live-btn" id="b11_live_btn">BEST 11 LIVE!</button>
+                <button type="button" class="btn btn-success b11-live-btn" id="b11_live_btn">BEST 11 LIVE</button>
             </div>
+
+            {% if show_live_ranking %}
+            <div>
+                <button type="button" class="btn btn-warning ranking-live-btn" id="ranking_live_btn" 
+                data-bs-toggle="modal" data-bs-target="#showLiveRankingModal">CLASSIFICA LIVE</button>
+            </div>
+            {% endif %}
 
         </div>
 

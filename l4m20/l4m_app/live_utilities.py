@@ -8,6 +8,25 @@ from . import utilities as U
 from django.db.models import Q
 import requests as req
 
+def create_live_ranking(all_scores, last_ranking):
+    results_map = {}
+
+    for score in all_scores:
+        ht = U.get_team_by_name(score[0][0]).id
+        at = U.get_team_by_name(score[1][0]).id
+        hp = score[0][1]
+        ap = score[1][1]
+        last_ranking_home = [item[ht.__str__()] for item in last_ranking if ht.__str__() in item.keys()]
+        last_ranking_away = [item[at.__str__()] for item in last_ranking if at.__str__() in item.keys()]
+        if len(last_ranking_home) <=0 or len(last_ranking_away)<=0:
+            continue
+        ht_pt = last_ranking_home[0]['pt']
+        at_pt = last_ranking_away[0]['pt']
+        results_map[score[0][0]] = ht_pt + (C.WIN_PT if int(hp) > int(ap) else C.LOSE_PT if int(hp) < int(ap) else C.DRAW_PT)
+        results_map[score[1][0]] = at_pt + (C.LOSE_PT if int(hp) > int(ap) else C.WIN_PT if int(hp) < int(ap) else C.DRAW_PT)
+
+    return sorted(results_map.items(),key=lambda kv: kv[1], reverse=True)
+
 def get_lineup_to_show(_team, day, comp_id, overtime):
     l = U.get_last_lineup(_team, day, comp_id=comp_id)
     if(len(l) <= 0 and overtime):
