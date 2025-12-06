@@ -560,18 +560,16 @@ def get_scores(t_id):
     return fps
 
 def count_non_schierate(t_id):
-    return matches_results.MatchesResults.objects.filter(Q(Pen=1)&Q(Team=t_id)).count()
+    non_schierate = matches_results.MatchesResults.objects.filter(Q(Pen=1)&Q(Team=t_id)).aggregate(num=Count("MatchesCalendar__CompetitionCalendar__Day"))
+    return non_schierate['num']
 
 def check_penalties(t_id, day, comp_id):
-    # bal = get_balance_obj(t_id)[0]
     l = get_last_lineup(t_id, day, comp_id=comp_id)[0]
 
     if l.Version > 0:
         return 3, 1, 0 #standard
     
     if l.Version < 0: #TODO: in case of recalculation this counter is wrong! use march_result instead
-        # update_balance_latelineup(bal)
-        # n_non_schierate = bal.N_formazioni_non_schierate
         n_non_schierate = count_non_schierate(t_id)
         if n_non_schierate <= C.MAX_NON_SCHIERATE:
             return 0, 0, 0 #0 pt

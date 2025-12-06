@@ -220,7 +220,7 @@ def LiveView(request):
                     [votes_home, votes_away]
                 )
     
-    all_scores = json.dumps([[(v[1][1], v[1][9]) for v in vote] for vote in all_votes]) if len(already_played_teams) > 0 else []
+    all_scores = json.dumps([[(v[1][1], v[1][9]) for v in vote] for vote in all_votes]) if overtime else []
 
     params = { 
         'all_votes' : all_votes, 
