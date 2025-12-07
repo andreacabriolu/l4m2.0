@@ -434,6 +434,7 @@ def get_my_players_filtered(filter_role, teamid):
     return squads.Squads.objects.\
         filter(Team_id=teamid).\
         filter(Player__Role=filter_role).\
+        filter(Quarantine=False).\
         values('id','Player__id','Player__Surname','Player__RealTeam__Name','Amount','Player__Role', 'Player__RealTeam__id').\
         order_by('Player__Surname')
 
