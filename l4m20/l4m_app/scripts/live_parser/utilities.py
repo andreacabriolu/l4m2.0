@@ -121,6 +121,7 @@ def fill_with_events(events, players, votes):
 
                 vote = votes[pl_id]
                 vote.Red = 1
+                vote.Yel = 0
 
             case C.Events.YELLOW_RED_CARD:
                 pl_id = players[clean_name(event['player'])]

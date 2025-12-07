@@ -43,8 +43,6 @@ try:
     #creating votes ONLY for playing players, warning!
     for name, grade in grades.items():
         name = U.clean_name(name)
-        #FOOL name exceptions
-        # name = U.manage_fool_name_exceptions(name)
         if name not in players:
             continue
         vote = Vote_Live_Obj()
