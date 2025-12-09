@@ -31,6 +31,11 @@ class DB_Connector:
         
         self.cur.execute(insert_q, data)
 
+    def insert_player(self, surname, role, realteam_id):
+        insert_q = f"insert into l4m_app_player (\"Surname\", \"Role\", \"RealTeam_id\", \"Status\") values (%s,%s,%s,%s)"
+
+        self.cur.execute(insert_q, (surname, role, realteam_id, 'A'))
+
     def close(self):
         self.cur.close()
         self.conn.close()

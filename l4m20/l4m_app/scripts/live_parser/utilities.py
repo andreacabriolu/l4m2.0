@@ -1,5 +1,38 @@
+import csv
 import constants as C
 from db_connector import *
+
+def report_players_name_alignment(players_csv, players_db):
+    report = {
+        'aligned': [],
+        'not_aligned': []
+    }
+
+    for player_name_csv, (team_csv, role_csv) in players_csv.items():
+        if player_name_csv in players_db:
+            report['aligned'].append((player_name_csv, team_csv, role_csv, players_db[player_name_csv]))
+        else:
+            report['not_aligned'].append((player_name_csv, team_csv, role_csv, None))
+    
+    return report
+
+def read_csv(path):
+    players = {}
+    try:
+        with open(path, mode='r', encoding='utf-8') as csvfile:
+            csvreader = csv.reader(csvfile)
+            next(csvreader)  # Skip header
+            for row in csvreader:
+                if len(row) < 2:
+                    continue
+                surname = clean_name(row[0].strip())
+                playerteam = row[1].strip()
+                playerrole = row[2].strip()
+                players[surname] = (playerteam, playerrole)
+    except Exception as e:
+        print(f"Error reading CSV file {path}: {e}")
+        
+    return players
 
 def clean_name(name):
     return name.replace(' ','_').replace('\'','')
@@ -247,5 +280,11 @@ def get_current_assp(conn:DB_Connector, vote):
             return 0
         return rows[0][0]
 
+    except Exception as e:
+        raise e
+    
+def get_realteams(conn:DB_Connector):
+    try:
+        return conn.select(table="l4m_app_realteam", cols='\"Name\",\"id\"', conditions='"Status"=%s', data=('A',))
     except Exception as e:
         raise e
