@@ -1,0 +1,40 @@
+{% extends "./base.html" %}
+{% load static %}
+
+{% block title %} L4M2.0 - I MIEI LIVE! {% endblock %}
+
+{% block links %}
+<link href="{% static 'l4m/css/statistics.css' %}" rel="stylesheet">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+    href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap"
+    rel="stylesheet">
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Mozilla+Headline:wght@200..700&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="{% static 'l4m/js/my_live.js' %}"></script>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="container my-4">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4">Statistiche Giocatore</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <canvas id="playerStatisticsChart"></canvas>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
