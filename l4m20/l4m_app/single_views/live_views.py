@@ -4,13 +4,14 @@ from django.views import View
 from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 import json
+from django.contrib.auth.decorators import login_required
 
 
 from .. import utilities as U
 from .. import live_utilities as LU
 from ..models import *
 
-class MyLiveView(View):
+class MyLiveView(LoginRequiredMixin, View):
     template_name = 'l4m/my_live.html'
 
     def get(self, request):
@@ -93,6 +94,7 @@ class LiveB11View(LoginRequiredMixin, View):
 
         return render(request, self.template_name, params)
 
+@login_required
 def LiveView(request):
     template_name = 'l4m/live.html'
 

@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 import json
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 
 from .. import utilities as U
 from ..models import *
@@ -17,6 +18,7 @@ class LineupView(View):
     def post(self, request):
         pass
 
+@login_required
 def LineupView_(request):
     #TODO: implement control on user passes test (https://docs.djangoproject.com/en/4.2/topics/auth/default/#limiting-access-to-logged-in-users-that-pass-a-test)
     template_name = 'l4m/lineup.html'
