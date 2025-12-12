@@ -8,11 +8,10 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link
-    href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap"
-    rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap"
+        rel="stylesheet">
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Mozilla+Headline:wght@200..700&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Mozilla+Headline:wght@200..700&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
 </style>
 {% endblock %}
 
@@ -25,62 +24,59 @@
 
 <div class="container my-4">
 
-    <div class="container">
-        <h1>Football Player Statistics</h1>
+                <!-- <h1>Football Player Statistics</h1> -->
 
-        <div class="player-card">
-            <div class="player-header">
-                <h2 class="player-name">Lionel Messi</h2>
-                <div class="player-info">
-                    Squadra: PSG | Ruolo: Forward
+                <div class="player-card">
+                        <div class="player-header">
+                                <h2 class="player-name">{{ player_stats.name_surname }}</h2>
+                                <div class="player-info">
+                                        Squadra: {{ player_stats.realteam }} | Ruolo: {{ player_stats.role }}
+                                </div>
+                        </div>
+
+                        <div class="stats-row">
+                                <div class="stat"><span><i class="fas fa-star"></i> Voto</span><strong class="counter"
+                                                data-target="{{ player_stats.average_vote }}">0</strong></div>
+                                <div class="stat"><span><i class="fas fa-trophy"></i> Fantamedia</span><strong
+                                                class="counter" data-target="{{ player_stats.average_fantamedia }}">0</strong></div>
+                        </div>
+
+                        <div class="stats-row">
+                                <div class="stat"><span><i class="fas fa-futbol"></i> Goal Segnati</span><strong
+                                                class="counter" data-target="{{ player_stats.goals }}">0</strong></div>
+                                <div class="stat"><span><i class="fas fa-futbol"></i> Goal Subiti</span><strong
+                                                class="counter" data-target="{{ player_stats.goals_conceded }}">0</strong></div>
+                                <div class="stat"><span><i class="fas fa-bullseye"></i> Rigori Segnati</span><strong
+                                                class="counter" data-target="{{ player_stats.penalties_scored }}">0</strong></div>
+                                <div class="stat"><span><i class="fas fa-times-circle"></i> Rigori
+                                                Sbagliati</span><strong class="counter" data-target="{{ player_stats.penalties_missed }}">0</strong></div>
+                                <div class="stat"><span><i class="fas fa-shield-alt"></i> Rigori Parati</span><strong
+                                                class="counter" data-target="{{ player_stats.penalties_saved }}">0</strong></div>
+                                <div class="stat"><span><i class="fas fa-exclamation-triangle"></i>
+                                                Autogol</span><strong class="counter" data-target="{{ player_stats.own_goals }}">0</strong></div>
+                                <div class="stat"><span><i class="fas fa-square"></i> Ammonizioni</span><strong
+                                                class="counter" data-target="{{ player_stats.yellow_cards }}">0</strong></div>
+                                <div class="stat"><span><i class="fas fa-user-slash"></i> Espulsioni</span><strong
+                                                class="counter" data-target="{{ player_stats.red_cards }}">0</strong></div>
+                                <div class="stat"><span><i class="fas fa-hands-helping"></i> Assist</span><strong
+                                                class="counter" data-target="{{ player_stats.assists }}">0</strong></div>
+                                <div class="stat"><span><i class="fas fa-futbol"></i> Rigori Procurati</span><strong
+                                                class="counter" data-target="{{ player_stats.penalty_wins }}">0</strong></div>
+                        </div>
+
+                        <div class="match-stats">
+                                <h3>League Day Statistics</h3>
+                                <div class="match-grid">
+                                        <div class="match-day"><span>Giornata 1</span><strong>2 Goals</strong></div>
+                                        <div class="match-day"><span>Giornata 2</span><strong>1 Goal</strong></div>
+                                        <div class="match-day"><span>Giornata 3</span><strong>0 Goals</strong></div>
+                                        <div class="match-day"><span>Giornata 4</span><strong>3 Goals</strong></div>
+                                        <div class="match-day"><span>Giornata 5</span><strong>1 Goal</strong></div>
+                                </div>
+                        </div>
+
                 </div>
-            </div>
 
-            <div class="stats-row">
-                <div class="stat"><span><i class="fas fa-star"></i> Voto</span><strong class="counter"
-                        data-target="8.5">0</strong></div>
-                <div class="stat"><span><i class="fas fa-trophy"></i> Fantamedia</span><strong class="counter"
-                        data-target="7.8">0</strong></div>
-            </div>
-
-            <div class="stats-row">
-                <div class="stat"><span><i class="fas fa-futbol"></i> Goal Segnati</span><strong class="counter"
-                        data-target="20">0</strong></div>
-                <div class="stat"><span><i class="fas fa-futbol"></i> Goal Subiti</span><strong class="counter"
-                        data-target="5">0</strong></div>
-                <div class="stat"><span><i class="fas fa-bullseye"></i> Rigori Segnati</span><strong class="counter"
-                        data-target="2">0</strong></div>
-                <div class="stat"><span><i class="fas fa-times-circle"></i> Rigori Sbagliati</span><strong
-                        class="counter" data-target="1">0</strong></div>
-                <div class="stat"><span><i class="fas fa-shield-alt"></i> Rigori Parati</span><strong class="counter"
-                        data-target="1">0</strong></div>
-                <div class="stat"><span><i class="fas fa-exclamation-triangle"></i> Autogol</span><strong
-                        class="counter" data-target="0">0</strong></div>
-                <div class="stat"><span><i class="fas fa-square"></i> Ammonizioni</span><strong class="counter"
-                        data-target="3">0</strong></div>
-                <div class="stat"><span><i class="fas fa-user-slash"></i> Espulsioni</span><strong class="counter"
-                        data-target="0">0</strong></div>
-                <div class="stat"><span><i class="fas fa-hands-helping"></i> Assist</span><strong class="counter"
-                        data-target="12">0</strong></div>
-                <div class="stat"><span><i class="fas fa-futbol"></i> Rigori Procurati</span><strong class="counter"
-                        data-target="4">0</strong></div>
-            </div>
-
-            <div class="match-stats">
-                <h3>League Day Statistics</h3>
-                <div class="match-grid">
-                    <div class="match-day"><span>Giornata 1</span><strong>2 Goals</strong></div>
-                    <div class="match-day"><span>Giornata 2</span><strong>1 Goal</strong></div>
-                    <div class="match-day"><span>Giornata 3</span><strong>0 Goals</strong></div>
-                    <div class="match-day"><span>Giornata 4</span><strong>3 Goals</strong></div>
-                    <div class="match-day"><span>Giornata 5</span><strong>1 Goal</strong></div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-</div>
 </div>
 
 {% endblock %}

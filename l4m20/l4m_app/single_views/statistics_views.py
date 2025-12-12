@@ -10,11 +10,9 @@ class StatisticsView(LoginRequiredMixin, View):
     def get(self, request, player_id=None):
         player_stats = SU.aggregate_player_statistics(player_id) 
         
-
         params = {
             'player_stats': player_stats,
         }
-        
 
         return render(request, self.template_name, params)
 
