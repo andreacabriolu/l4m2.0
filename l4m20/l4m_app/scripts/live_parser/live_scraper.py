@@ -8,9 +8,9 @@ import utilities as U
 import logging
 logger = logging.getLogger("live_scraper")
 
-# logging.basicConfig(filename='log/scarper.log', level=logging.INFO)
+logging.basicConfig(filename='log/scarper.log', level=logging.INFO)
 
-TEST = True
+TEST = False
 
 if(not TEST):
     url = "https://publicapi.fantamaster.it/livescores/?tcache=1756165942189"
@@ -86,10 +86,10 @@ try:
     #write ONLY final votes
     U.insert_votes(conn, votes)
     conn.commit()
-    # logger.log(logging.INFO, f'executed at {datetime.datetime.now()}')
+    logger.log(logging.INFO, f'executed at {datetime.datetime.now()}')
 
 except Exception as e:
-    # logger.log(logging.CRITICAL, f'ERROR {e}')
+    logger.log(logging.CRITICAL, f'ERROR {e}')
     pass
 
 
