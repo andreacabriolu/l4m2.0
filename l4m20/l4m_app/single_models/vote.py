@@ -12,6 +12,7 @@ class Vote(models.Model):
     RealTeam = models.ForeignKey(on_delete=models.CASCADE,to=C.Constant_Strings.real_team, null=True)
     Day = models.IntegerField()              # day of play
     Vote = models.FloatField(default=0.0)    # vote
+    TotVote = models.FloatField(default=0.0)    # fantavote
     GoalSc = models.IntegerField(default=0)  # gol scored
     GoalTa = models.IntegerField(default=0)  # gol taken
     GoalDe = models.IntegerField(default=0)  # bonus: decider, gol partita, not used, maybe one day, maybe not
