@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.views import View
-from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 import json
 from .. import statistics_utilities as SU
@@ -13,7 +12,7 @@ class StatisticsView(LoginRequiredMixin, View):
         
 
         params = {
-
+            'player_stats': player_stats,
         }
         
 
