@@ -22,60 +22,103 @@
 
 {% block content %}
 
-<div class="container my-4">
+<div class="container container-stats">
+        <!-- <input type="hidden" id="stats-per-day-data" value='{{ stats_per_day|escapejs }}'> -->
 
-                <!-- <h1>Football Player Statistics</h1> -->
-
-                <div class="player-card">
-                        <div class="player-header">
-                                <h2 class="player-name">{{ player_stats.name_surname }}</h2>
-                                <div class="player-info">
-                                        Squadra: {{ player_stats.realteam }} | Ruolo: {{ player_stats.role }}
-                                </div>
+        <div class="player-card">
+                <div class="player-header">
+                        <h2 class="player-name">{{ player_stats.name_surname }}</h2>
+                        <div class="player-info">
+                                Squadra: {{ player_stats.realteam }} | Ruolo: {{ player_stats.role }}
                         </div>
-
-                        <div class="stats-row">
-                                <div class="stat"><span><i class="fas fa-star"></i> Voto</span><strong class="counter"
-                                                data-target="{{ player_stats.average_vote }}">0</strong></div>
-                                <div class="stat"><span><i class="fas fa-trophy"></i> Fantamedia</span><strong
-                                                class="counter" data-target="{{ player_stats.average_fantamedia }}">0</strong></div>
-                        </div>
-
-                        <div class="stats-row">
-                                <div class="stat"><span><i class="fas fa-futbol"></i> Goal Segnati</span><strong
-                                                class="counter" data-target="{{ player_stats.goals }}">0</strong></div>
-                                <div class="stat"><span><i class="fas fa-futbol"></i> Goal Subiti</span><strong
-                                                class="counter" data-target="{{ player_stats.goals_conceded }}">0</strong></div>
-                                <div class="stat"><span><i class="fas fa-bullseye"></i> Rigori Segnati</span><strong
-                                                class="counter" data-target="{{ player_stats.penalties_scored }}">0</strong></div>
-                                <div class="stat"><span><i class="fas fa-times-circle"></i> Rigori
-                                                Sbagliati</span><strong class="counter" data-target="{{ player_stats.penalties_missed }}">0</strong></div>
-                                <div class="stat"><span><i class="fas fa-shield-alt"></i> Rigori Parati</span><strong
-                                                class="counter" data-target="{{ player_stats.penalties_saved }}">0</strong></div>
-                                <div class="stat"><span><i class="fas fa-exclamation-triangle"></i>
-                                                Autogol</span><strong class="counter" data-target="{{ player_stats.own_goals }}">0</strong></div>
-                                <div class="stat"><span><i class="fas fa-square"></i> Ammonizioni</span><strong
-                                                class="counter" data-target="{{ player_stats.yellow_cards }}">0</strong></div>
-                                <div class="stat"><span><i class="fas fa-user-slash"></i> Espulsioni</span><strong
-                                                class="counter" data-target="{{ player_stats.red_cards }}">0</strong></div>
-                                <div class="stat"><span><i class="fas fa-hands-helping"></i> Assist</span><strong
-                                                class="counter" data-target="{{ player_stats.assists }}">0</strong></div>
-                                <div class="stat"><span><i class="fas fa-futbol"></i> Rigori Procurati</span><strong
-                                                class="counter" data-target="{{ player_stats.penalty_wins }}">0</strong></div>
-                        </div>
-
-                        <div class="match-stats">
-                                <h3>League Day Statistics</h3>
-                                <div class="match-grid">
-                                        <div class="match-day"><span>Giornata 1</span><strong>2 Goals</strong></div>
-                                        <div class="match-day"><span>Giornata 2</span><strong>1 Goal</strong></div>
-                                        <div class="match-day"><span>Giornata 3</span><strong>0 Goals</strong></div>
-                                        <div class="match-day"><span>Giornata 4</span><strong>3 Goals</strong></div>
-                                        <div class="match-day"><span>Giornata 5</span><strong>1 Goal</strong></div>
-                                </div>
-                        </div>
-
                 </div>
+
+                <div class="stats-row">
+                        <div class="stat"><span><i class="fas fa-star"></i> Media Voto</span><strong class="counter vote"
+                                        data-target="{{ player_stats.average_vote }}">0</strong></div>
+                        <div class="stat"><span><i class="fas fa-trophy"></i> Fantamedia</span><strong class="counter fvote"
+                                        data-target="{{ player_stats.average_fantamedia }}">0</strong></div>
+                </div>
+
+                <div class="stats-row">
+                        <div class="stat"><span><i class="fas fa-futbol"></i> Goal Segnati</span><strong class="counter"
+                                        data-target="{{ player_stats.goals }}">0</strong></div>
+                        {% if player_stats.role == "PORTIERE" %}<div class="stat"><span><i class="fas fa-futbol"></i> Goal Subiti</span><strong class="counter"
+                                        data-target="{{ player_stats.goals_conceded }}">0</strong></div> {% endif %}
+                        <div class="stat"><span><i class="fas fa-bullseye"></i> Rigori Segnati</span><strong
+                                        class="counter" data-target="{{ player_stats.penalties_scored }}">0</strong>
+                        </div>
+                        <div class="stat"><span><i class="fas fa-times-circle"></i> Rigori
+                                        Sbagliati</span><strong class="counter"
+                                        data-target="{{ player_stats.penalties_missed }}">0</strong></div>
+                        {% if player_stats.role == "PORTIERE" %}<div class="stat"><span><i class="fas fa-shield-alt"></i> Rigori Parati</span><strong
+                                        class="counter" data-target="{{ player_stats.penalties_saved }}">0</strong>
+                        </div> {% endif %}
+                        <div class="stat"><span><i class="fas fa-exclamation-triangle"></i>
+                                        Autogol</span><strong class="counter"
+                                        data-target="{{ player_stats.own_goals }}">0</strong></div>
+                        <div class="stat"><span><i class="fas fa-square"></i> Ammonizioni</span><strong class="counter"
+                                        data-target="{{ player_stats.yellow_cards }}">0</strong></div>
+                        <div class="stat"><span><i class="fas fa-user-slash"></i> Espulsioni</span><strong
+                                        class="counter" data-target="{{ player_stats.red_cards }}">0</strong></div>
+                        <div class="stat"><span><i class="fas fa-hands-helping"></i> Assist</span><strong
+                                        class="counter" data-target="{{ player_stats.assists }}">0</strong></div>
+                        <div class="stat"><span><i class="fas fa-futbol"></i> Rigori Procurati</span><strong
+                                        class="counter" data-target="{{ player_stats.penalty_wins }}">0</strong></div>
+                </div>
+
+                <div class="match-stats">
+                        <h3>STATISTICHE PER GIORNATA</h3>
+                        <div class="match-grid" id="stats-per-match-grid">
+                                {% for stat in stats_per_day %}
+                                <div class="match-day"><span>Giornata {{ stat.day }}</span>
+                                        <strong>V {{stat.vote}} FV {{stat.tot_vote}}</strong>
+                                        {% for _ in stat.goal_conceded %}
+                                        <img src="{% static 'l4m/images/goal_taken.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="GOAL PRESO (-1)">
+                                        {% endfor %}
+                                        {% for _ in stat.goal %}
+                                        <img src="{% static 'l4m/images/goal.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="GOAL SEGNATO (+3)">
+                                        {% endfor %}
+                                        {% for _ in stat.penalty_scored %}
+                                        <img src="{% static 'l4m/images/pen_sco.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="RIGORE SEGNATO (+3)">
+                                        {% endfor %}
+                                        {% for _ in stat.penalty_missed %}
+                                        <img src="{% static 'l4m/images/pen_mis.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="RIGORE SBAGLIATO (-2)">
+                                        {% endfor %}
+                                        {% for _ in stat.penalty_saved %}
+                                        <img src="{% static 'l4m/images/pen_sav.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="RIGORE PARATO (+3)">
+                                        {% endfor %}
+                                        {% for _ in stat.own_goal %}
+                                        <img src="{% static 'l4m/images/own.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="AUTOGOL (-2)">
+                                        {% endfor %}
+                                        {% for _ in stat.yellow_card %}
+                                        <img src="{% static 'l4m/images/yelcard.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="AMMONIZIONE (-1)">
+                                        {% endfor %}
+                                        {% for _ in stat.red_card %}
+                                        <img src="{% static 'l4m/images/redcard.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="ESPULSIONE (-3)">
+                                        {% endfor %}
+                                        {% for _ in stat.assist %}
+                                        <img src="{% static 'l4m/images/assist.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="ASSIST (+1)">
+                                        {% endfor %}
+                                        {% for _ in stat.penalty_won %}
+                                        <img src="{% static 'l4m/images/pen_pro.png' %}" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-title="RIGORE PROCURATO (+1)">
+                                        {% endfor %}
+                                </div>
+                                {% endfor %}
+                        </div>
+                </div>
+
+        </div>
 
 </div>
 

@@ -18,6 +18,12 @@
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
     }
 
+    .container-stats {
+      background: linear-gradient(135deg, #e0f7fa, #ffffff);
+      border: 2px solid #02336a;
+      margin-top: 2.5rem !important;
+    }
+
     h1 {
       text-align: center;
       font-size: 36px;
@@ -116,7 +122,7 @@
 
     .match-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 15px;
     }
 
@@ -139,6 +145,21 @@
       font-size: 18px;
       color: #222;
       margin-top: 4px;
+    }
+
+    .vote {
+      color: #007bff !important;
+    }
+
+    .fvote {
+      color: #28a745 !important;
+    }
+
+    @media (max-width: 600px) {
+      .match-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      }
+
     }
 
     @media (max-width: 600px) {

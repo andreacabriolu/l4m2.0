@@ -2,6 +2,34 @@ from .models import *
 from django.db.models import F, Q, Avg
 from l4m20 import constants as C
 
+def get_player_statistics_per_day(player_id):
+    stats = vote.Vote.objects.filter(Q(Player_id=player_id) & Q(Day__gt=0)).order_by('Day')
+
+    if len(stats) <= 0:
+        return None
+    
+    stats_per_day = []
+
+    for stat in stats:
+        day_stat = {
+            'day': stat.Day,
+            'vote': stat.Vote,
+            'tot_vote': stat.TotVote,
+            'goal_scored': range(stat.GoalSc),
+            'goal_conceded': range(stat.GoalTa),
+            'penalty_scored': range(stat.PenSc),
+            'penalty_missed': range(stat.PenMi),
+            'penalty_saved': range(stat.PenSa),
+            'own_goal': range(stat.Own),
+            'assist': range(stat.AssS),
+            'yellow_card': range(stat.Yel),
+            'red_card': range(stat.Red + stat.YelRed),
+            'penalty_won': range(stat.AssP),
+        }
+        stats_per_day.append(day_stat)
+
+    return stats_per_day
+
 def aggregate_player_statistics(player_id):
     _player = player.Player.objects.get(pk=player_id)
     stats = vote.Vote.objects.filter(Q(Player_id=player_id) & Q(Day__gt=0))
