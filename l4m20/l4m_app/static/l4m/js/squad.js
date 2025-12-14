@@ -7,6 +7,11 @@ function groupPlayersByRole(players) {
     }, {});
 }
 
+function viewPlayerStats(player_id) {
+    const url = `/l4m/player_statistics/${player_id}/`;
+    window.location.href = url;
+}
+
 function fillSingleTeamTable() {
     const roleCounts = { P: 3, D: 8, C: 8, A: 6 };
     const roleLabels = { P: 'P', D: 'D', C: 'C', A: 'A' };
@@ -27,22 +32,6 @@ function fillSingleTeamTable() {
 
     html += `<table  style="width:90%"  class="table custom-table hover" id="allTeamsTable" cellspacing="0" cellpadding="5">`;
 
-    html += `<thead><tr>`;
-    html += `<th>Logo</th><th>Squadra</th><th>Serie</th><th>User</th>`;
-    html += `</tr></thead>`;
-    html += `<tbody>`;
-    const label = 'L';
-    html += `<tr  class="role-label P-row first_column" >`;
-    html += `<td class='role-label'>L</td>`;
-    html += `<td>${tinfo.team_name}</td>`;
-    html += `<td>${tinfo.team_series}</td>`;
-    html += `<td>${tinfo.team_user}</td>`;
-    html += `</tr>`;
-        html += `<tr class="role-separator"><td colspan="4"></td></tr>`;
-        html += `<tr class="role-separator"><td colspan="4"></td></tr>`;
-
-    html += `</tbody>`
-
     html += `<tbody><tr>`;
     html += `<th>Ruolo</th><th>Giocatore</th><th>Squadra</th><th>Costo</th>`;
     html += `</tr></tbody>`;
@@ -54,11 +43,12 @@ function fillSingleTeamTable() {
         const playersOfRole = roleRows[role];
 
         for (let i = 0; i < count; i++) {
-            html += `<tr  class="role-label ${label}-row first_column" >`;
+            const player = playersOfRole[i] || {};
+
+            html += `<tr class="role-label ${label}-row first_column" onclick="viewPlayerStats(${player.Player__id})">`;
             if (i === 0) {
                 html += `<td class="role-label ${label}-row" rowspan="${count}"><strong>${label}</strong></td>`;
             }
-            const player = playersOfRole[i] || {};
             html += `<td>${player.Player__Surname || '-'}</td>`;
             html += `<td>${player.Player__RealTeam__Name || ''}</td>`;
             html += `<td>${player.Amount || ''}</td>`;

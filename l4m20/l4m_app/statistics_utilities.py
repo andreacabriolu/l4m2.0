@@ -1,10 +1,12 @@
+from os import stat
 from .models import *
 from django.db.models import F, Q, Avg
 from l4m20 import constants as C
+from . import utilities as U
 
-def get_real_match_string(stat):
-    match = real_calendar.Real_calendar.objects.filter(Q(Day=stat.Day) & 
-                                               (Q(RealTeamAway_id=stat.Player.RealTeam_id) | Q(RealTeamHome_id=stat.Player.RealTeam_id)))
+def get_real_match_string(day, real_team_id):
+    match = real_calendar.Real_calendar.objects.filter(Q(Day=day) & 
+                                               (Q(RealTeamAway_id=real_team_id) | Q(RealTeamHome_id=real_team_id)))
 
     match_name = ""
     if match.exists():
@@ -15,36 +17,78 @@ def get_real_match_string(stat):
 
 def get_player_statistics_per_day(player_id):
     stats = vote.Vote.objects.filter(Q(Player_id=player_id) & Q(Day__gt=0)).order_by('Day')
+    _player = player.Player.objects.get(pk=player_id)
 
     if len(stats) <= 0:
         return None
     
     stats_per_day = []
 
-    for stat in stats:
-        day_stat = {
-            'day': stat.Day,
-            'vote': stat.Vote,
-            'tot_vote': stat.TotVote,
-            'goal_scored': range(stat.GoalSc),
-            'goal_conceded': range(stat.GoalTa),
-            'penalty_scored': range(stat.PenSc),
-            'penalty_missed': range(stat.PenMi),
-            'penalty_saved': range(stat.PenSa),
-            'own_goal': range(stat.Own),
-            'assist': range(stat.AssS),
-            'yellow_card': range(stat.Yel),
-            'red_card': range(stat.Red + stat.YelRed),
-            'penalty_won': range(stat.AssP),
-            'real_match_name': get_real_match_string(stat),
-        }
-        stats_per_day.append(day_stat)
+    current_day = U.get_current_day()
+
+    for i in range(1, int(current_day) + 1):
+        if not stats.filter(Day=i).exists():
+            day_stat = {
+                'day': i,
+                'vote': None,
+                'tot_vote': None,
+                'goal_scored': [],
+                'goal_conceded': [],
+                'penalty_scored': [],
+                'penalty_missed': [],
+                'penalty_saved': [],
+                'own_goal': [],
+                'assist': [],
+                'yellow_card': [],
+                'red_card': [],
+                'penalty_won': [],
+                'real_match_name': get_real_match_string(i, _player.RealTeam_id),
+            }
+            stats_per_day.append(day_stat)
+        else:
+            stat = stats.get(Day=i)
+            day_stat = {
+                'day': stat.Day,
+                'vote': stat.Vote,
+                'tot_vote': stat.TotVote,
+                'goal_scored': range(stat.GoalSc),
+                'goal_conceded': range(stat.GoalTa),
+                'penalty_scored': range(stat.PenSc),
+                'penalty_missed': range(stat.PenMi),
+                'penalty_saved': range(stat.PenSa),
+                'own_goal': range(stat.Own),
+                'assist': range(stat.AssS),
+                'yellow_card': range(stat.Yel),
+                'red_card': range(stat.Red + stat.YelRed),
+                'penalty_won': range(stat.AssP),
+                'real_match_name': get_real_match_string(stat.Day, stat.Player.RealTeam_id),
+            }
+            stats_per_day.append(day_stat)
+
+    # for stat in stats:
+    #     day_stat = {
+    #         'day': stat.Day,
+    #         'vote': stat.Vote,
+    #         'tot_vote': stat.TotVote,
+    #         'goal_scored': range(stat.GoalSc),
+    #         'goal_conceded': range(stat.GoalTa),
+    #         'penalty_scored': range(stat.PenSc),
+    #         'penalty_missed': range(stat.PenMi),
+    #         'penalty_saved': range(stat.PenSa),
+    #         'own_goal': range(stat.Own),
+    #         'assist': range(stat.AssS),
+    #         'yellow_card': range(stat.Yel),
+    #         'red_card': range(stat.Red + stat.YelRed),
+    #         'penalty_won': range(stat.AssP),
+    #         'real_match_name': get_real_match_string(stat),
+    #     }
+    #     stats_per_day.append(day_stat)
 
     return stats_per_day
 
 def aggregate_player_statistics(player_id):
     _player = player.Player.objects.get(pk=player_id)
-    stats = vote.Vote.objects.filter(Q(Player_id=player_id) & Q(Day__gt=0))
+    stats = vote.Vote.objects.filter(Q(Player_id=player_id) & Q(Day__gt=0) & Q(Vote__gt=0))
 
     if len(stats) <= 0:
         return None
@@ -65,8 +109,6 @@ def aggregate_player_statistics(player_id):
         'yellow_cards': stats.aggregate(total_yellow_cards=models.Sum('Yel'))['total_yellow_cards'] or 0,
         'red_cards': stats.aggregate(total_red_cards=models.Sum(F('Red') + F('YelRed')))['total_red_cards'] or 0,
         'penalty_wins': stats.aggregate(total_penalty_wins=models.Sum('AssP'))['total_penalty_wins'] or 0,
-
-
         
     }
 

@@ -203,6 +203,10 @@
       font-size: 14px;
       font-weight: bold;
     }
+
+    .main-div {
+      background-color: black;
+    }
   
     @media (max-width: 600px) {
       .match-grid {

@@ -66,6 +66,15 @@
     margin: 0 !important;
     border: none !important;}
 
+.role-label {
+    background-color: #333;
+    color: white;
+    font-weight: bold;
+    vertical-align: middle;
+    width: 5%;
+    cursor: pointer;
+}
+
 #allTeamsTable th, #allTeamsTable td {
     border: 1px solid #ccc;
     padding: 10px 10px;
