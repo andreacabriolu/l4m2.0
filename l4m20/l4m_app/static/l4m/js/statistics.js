@@ -4,18 +4,27 @@ window.addEventListener('DOMContentLoaded', event => {
 
   const counters = document.querySelectorAll('.counter');
   counters.forEach(counter => {
-    const updateCount = () => {
-      const target = +counter.getAttribute('data-target');
-      const count = +counter.innerText;
-      const increment = target / 100;
-      if (count < target) {
-        counter.innerText = (Math.ceil((count + increment) * 10) / 10).toString();
-        setTimeout(updateCount, 20);
-      } else {
-        counter.innerText = target;
-      }
-    };
-    updateCount();
+    const update = () => {
+        const target = Number(counter.dataset.target);
+        const value = Number(counter.innerText);
+        const inc = target / 100;
+
+        if (value < target) {
+          counter.innerText = (value + inc).toFixed(1);
+          setTimeout(update, 20);
+        } else {
+          counter.innerText = target;
+          const stat = counter.closest('.stat');
+          if (stat) {
+            stat.classList.remove('high', 'medium', 'low');
+            if (target >= 7.5) stat.classList.add('high');
+            else if (target >= 6.5) stat.classList.add('medium');
+            else stat.classList.add('low');
+          }
+        }
+      };
+
+      update();
   });
 
 

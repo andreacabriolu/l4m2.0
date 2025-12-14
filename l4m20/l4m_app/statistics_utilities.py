@@ -2,6 +2,17 @@ from .models import *
 from django.db.models import F, Q, Avg
 from l4m20 import constants as C
 
+def get_real_match_string(stat):
+    match = real_calendar.Real_calendar.objects.filter(Q(Day=stat.Day) & 
+                                               (Q(RealTeamAway_id=stat.Player.RealTeam_id) | Q(RealTeamHome_id=stat.Player.RealTeam_id)))
+
+    match_name = ""
+    if match.exists():
+        match = match.first().__str__()
+        match_name = match
+    
+    return match_name
+
 def get_player_statistics_per_day(player_id):
     stats = vote.Vote.objects.filter(Q(Player_id=player_id) & Q(Day__gt=0)).order_by('Day')
 
@@ -25,6 +36,7 @@ def get_player_statistics_per_day(player_id):
             'yellow_card': range(stat.Yel),
             'red_card': range(stat.Red + stat.YelRed),
             'penalty_won': range(stat.AssP),
+            'real_match_name': get_real_match_string(stat),
         }
         stats_per_day.append(day_stat)
 

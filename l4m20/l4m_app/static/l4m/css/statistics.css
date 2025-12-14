@@ -147,6 +147,41 @@
       margin-top: 4px;
     }
 
+    .match-day-header {
+      background: linear-gradient(90deg, #1e90ff, #00bfff);
+      color: #fff;
+      padding: 10px;
+      font-weight: bold;
+    }
+
+    .match-day-body {
+      padding: 14px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .match-day-body span {
+      display: block;
+      font-size: 13px;
+      color: #555;
+    }
+
+    .match-day-body i {
+      margin-right: 6px;
+      color: #ff6600;
+    }
+
+    .match-day-body strong {
+      display: block;
+      font-size: 20px;
+      margin-top: 4px;
+    }
+
+    .score.high strong { color: #2e7d32; }
+    .score.medium strong { color: #f9a825; }
+    .score.low strong { color: #c62828; }
+
     .vote {
       color: #007bff !important;
     }
@@ -155,6 +190,20 @@
       color: #28a745 !important;
     }
 
+    .match-day-icons {
+      margin-top: 0px;
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+    }
+
+   .match-name {
+      background: rgba(0, 0, 0, 0.05);
+      padding: 8px 10px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+  
     @media (max-width: 600px) {
       .match-grid {
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -222,4 +271,10 @@
       .match-day strong {
         color: #fff;
       }
+
+      .match-day-body span { color: #bbb; }
+
+      .score.high strong { color: #4caf50; }
+      .score.medium strong { color: #ffca28; }
+      .score.low strong { color: #ef5350; }
     }
