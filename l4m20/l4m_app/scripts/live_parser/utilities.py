@@ -1,7 +1,7 @@
 import csv
 import constants as C
 from db_connector import *
-from live_parser.vote_live import Vote_Live_Obj
+from vote_live import *
 
 def report_players_name_alignment(players_csv, players_db):
     report = {
