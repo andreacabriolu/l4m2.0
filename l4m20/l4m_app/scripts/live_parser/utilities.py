@@ -1,6 +1,7 @@
 import csv
 import constants as C
 from db_connector import *
+from live_parser.vote_live import Vote_Live_Obj
 
 def report_players_name_alignment(players_csv, players_db):
     report = {
@@ -125,7 +126,29 @@ def set_live(score, votes, players):
         vote = votes[pl_id]
         vote.Live = True
 
-def fill_with_events(events, players, votes):
+def make_vote_for_player(pl_id, votes, players_realteam):
+    vote = Vote_Live_Obj()
+    vote.Player = pl_id
+    vote.Vote = 0.0
+    vote.TotVote = 0.0
+    vote.GoalSc = 0
+    vote.GoalTa = 0
+    vote.PenSc = 0
+    vote.PenMi = 0
+    vote.PenSa = 0
+    vote.Own = 0
+    vote.Yel = 0
+    vote.Red = 0
+    vote.YelRed = 0
+    vote.AssS = 0
+    vote.AssP = 0
+    vote.Live = False
+    vote.Sub = 0
+    vote.RealTeam = players_realteam[pl_id]
+
+    votes[pl_id] = vote
+
+def fill_with_events(events, players, votes, players_realteam):
     for event in events:
         
         #TODO: absolutely improve
@@ -144,6 +167,9 @@ def fill_with_events(events, players, votes):
                 pl_id = players[clean_name(event['player'])]
                 if pl_id is None:
                     continue
+
+                if pl_id not in votes:
+                    make_vote_for_player(pl_id, votes, players_realteam)
 
                 vote = votes[pl_id]
                 vote.Yel = 1
