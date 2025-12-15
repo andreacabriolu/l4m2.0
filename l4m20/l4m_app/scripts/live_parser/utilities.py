@@ -178,6 +178,9 @@ def fill_with_events(events, players, votes, players_realteam):
                 if pl_id is None:
                     continue
 
+                if pl_id not in votes:
+                    make_vote_for_player(pl_id, votes, players_realteam)
+
                 vote = votes[pl_id]
                 vote.Red = 1
                 vote.Yel = 0
@@ -186,6 +189,9 @@ def fill_with_events(events, players, votes, players_realteam):
                 pl_id = players[clean_name(event['player'])]
                 if pl_id is None:
                     continue
+
+                if pl_id not in votes:
+                    make_vote_for_player(pl_id, votes, players_realteam)
 
                 vote = votes[pl_id]
                 vote.YelRed = 1
