@@ -71,7 +71,7 @@ try:
         if (isLive): 
             U.set_live(score, votes, players)
         match_events = score['events']
-        U.fill_with_events(match_events, players, votes)
+        U.fill_with_events(match_events, players, votes, players_realteam)
 
     #complete votes
     for _,vote in votes.items():
