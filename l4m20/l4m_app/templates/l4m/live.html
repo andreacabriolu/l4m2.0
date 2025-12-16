@@ -447,7 +447,7 @@
                 <tfoot class="table-group-divider">
 
                     {% for vote in team_votes.2 %}
-                    <tr {% if vote.Status == 0 %} class="live-row" {% endif %}>
+                    <tr {% if vote.Status == 0 %} class="live-row" {% endif %} class="pl-row" data-pl-id="{{vote.Player.id}}">
                         <td>{{vote.Player.Role}}</td>
                         <td>{{vote.Player.RealTeam|upper|slice:":3"}}</td>
                         <td>{{vote.Player.Surname}}
