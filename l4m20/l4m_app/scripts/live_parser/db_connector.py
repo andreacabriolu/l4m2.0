@@ -26,8 +26,8 @@ class DB_Connector:
         return rows
 
     def insert(self, table, data):
-        insert_q = f"insert into {table} (\"Day\",\"Vote\",\"GoalSc\",\"GoalTa\",\"GoalDe\",\"PenSc\",\"PenMi\",\"PenSa\",\"Own\",\"Yel\",\
-            \"Red\",\"YelRed\",\"AssS\",\"AssL\",\"AssH\",\"AssP\",\"SubJ\",\"Sub\",\"Competition_id\",\"Player_id\",\"RealTeam_id\",\"Live\") values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+        insert_q = f"insert into {table} (\"Day\",\"Vote\",\"TotVote\",\"GoalSc\",\"GoalTa\",\"GoalDe\",\"PenSc\",\"PenMi\",\"PenSa\",\"Own\",\"Yel\",\
+            \"Red\",\"YelRed\",\"AssS\",\"AssL\",\"AssH\",\"AssP\",\"SubJ\",\"Sub\",\"Competition_id\",\"Player_id\",\"RealTeam_id\",\"Live\") values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
         
         self.cur.execute(insert_q, data)
 

@@ -38,6 +38,67 @@
     <input type="hidden" value="{{all_my_series_ids}}" id="all_my_series_ids">
     <input type="hidden" value="{{all_scores}}" id="all_scores">
 
+    <div class="modal fade" id="playerStatsModal" tabindex="-1" role="dialog" aria-labelledby="playerStatsModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-full-mobile" role="document">
+            <div class="modal-content modal-dark">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="playerStatsModalLabel">STATISTICHE GIOCATORE</h4>
+                    <span class="close" data-bs-dismiss="modal"><img src="{% static 'l4m/images/close-blue.png' %}"></span>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+                        <div><i class="fas fa-users me-2"></i><strong id="modal_stats_team"></strong></div>
+                        <div><i class="fas fa-user-tag me-2"></i><strong id="modal_stats_role"></strong></div>
+                        <div><i class="fas fa-calendar-check me-2"></i><strong id="modal_stats_games_played"></strong></div>
+                    </div>
+    
+                    <div class="row g-4 text-center mb-4">
+                        <div class="col-6 col-md-3">
+                            <i class="fas fa-star fa-lg mb-2"></i>
+                            <div>Voto</div>
+                            <strong id="modal_stats_rating"></strong>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <i class="fas fa-trophy fa-lg mb-2"></i>
+                            <div>Fantamedia</div>
+                            <strong id="modal_stats_fantamedia"></strong>
+                        </div>
+                        <div class="col-6 col-md-3" id="modal_div_goals">
+                            <i class="fas fa-futbol fa-lg mb-2"></i>
+                            <div>Goal</div>
+                            <strong id="modal_stats_goals"></strong>
+                        </div>
+                        <div class="col-6 col-md-3" id="modal_div_assists">
+                            <i class="fas fa-hands-helping fa-lg mb-2"></i>
+                            <div>Assist</div>
+                            <strong id="modal_stats_assists"></strong>
+                        </div>
+                        <div class="col-6 col-md-3" id="modal_div_goals_taken" hidden>
+                            <i class="fas fa-futbol fa-lg mb-2"></i>
+                            <div>Goal subiti</div>
+                            <strong id="modal_stats_goals_taken"></strong>
+                        </div>
+                        <div class="col-6 col-md-3" id="modal_div_penalty_saved" hidden>
+                            <i class="fas fa-hands-helping fa-lg mb-2"></i>
+                            <div>Rigori parati</div>
+                            <strong id="modal_stats_penalty_saved"></strong>
+                        </div>
+
+                    </div>
+    
+                    <div class="text-center">
+                        <button class="btn btn-primary btn-lg" id="view_full_player_stats_btn">
+                            <a id="full_pl_stats_href" class="modal-href">VEDI STATISTICHE COMPLETE</a>
+                        </button>
+                    </div>
+                </div>
+    
+            </div>
+    
+        </div>
+    </div>
+
     <div class="modal fade" id="showLineupHistoryModal" tabindex="-1" role="dialog" aria-labelledby="showLineupHistoryModalLabel">
         <div class="modal-dialog modal-full-mobile" role="document">
             <div class="modal-content">
@@ -166,7 +227,7 @@
                     </tr>
                     {% else %}
                     {% for vote in team_votes.0 %}
-                    <tr {% if vote.Status == 0 %} class="live-row" {% endif %}>
+                    <tr class="pl-row" {% if vote.Status == 0 %} class="live-row" {% endif %} data-pl-id="{{vote.Player.id}}">
                         <td>{{vote.Player.Role}}</td>
                         <td>{{vote.Player.RealTeam|upper|slice:":3"}}</td>
                         <td>{% if vote.Cap %} <img class="cap-img" src="{% static 'l4m/images/cap.png' %}">{% endif %}
@@ -386,7 +447,7 @@
                 <tfoot class="table-group-divider">
 
                     {% for vote in team_votes.2 %}
-                    <tr {% if vote.Status == 0 %} class="live-row" {% endif %}>
+                    <tr {% if vote.Status == 0 %} class="live-row" {% endif %} class="pl-row" data-pl-id="{{vote.Player.id}}">
                         <td>{{vote.Player.Role}}</td>
                         <td>{{vote.Player.RealTeam|upper|slice:":3"}}</td>
                         <td>{{vote.Player.Surname}}

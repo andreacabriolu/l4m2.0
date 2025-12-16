@@ -1,6 +1,25 @@
 import csv
 import constants as C
 from db_connector import *
+from live_parser.vote_live import Vote_Live_Obj
+
+def calculate_totvote(v):
+    sum = v.Vote
+    
+    sum += \
+    (v.AssP * C.Scores.PENALTY_PROCURED) + \
+    (v.AssS * C.Scores.ASS_STD) + \
+    (v.GoalTa * C.Scores.GOAL_TAKEN) + \
+    (v.GoalSc * C.Scores.GOAL) + \
+    (v.Own * C.Scores.OWN_GOAL) + \
+    (v.PenMi * C.Scores.PENALTY_MISSED) + \
+    (v.PenSa * C.Scores.PENALTY_SAVED) + \
+    (v.PenSc * C.Scores.PENALTY_SCORED) + \
+    (v.Red * C.Scores.RED) + \
+    (v.YelRed * C.Scores.RED) + \
+    (v.Yel * C.Scores.YELLOW)  
+
+    return sum
 from vote_live import *
 
 def report_players_name_alignment(players_csv, players_db):
@@ -268,6 +287,7 @@ def insert_votes(conn:DB_Connector, votes):
                 continue
             data_vote = (vote.Day, 
                          vote.Vote, 
+                         vote.TotVote,
                          vote.GoalSc, 
                          vote.GoalTa, 
                          0, #GoalDe 

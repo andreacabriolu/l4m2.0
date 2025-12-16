@@ -48,6 +48,7 @@ try:
         vote = Vote_Live_Obj()
         vote.Player = players[name]
         vote.Vote = float(grade)
+        vote.TotVote = 0.0
         vote.GoalSc = 0
         vote.GoalTa = 0
         vote.PenSc = 0
@@ -77,7 +78,7 @@ try:
         vote.Day = int(current_day)
         vote.Competition = int(1) #TODO magic number: campionato
         vote.AssP = U.get_current_assp(conn, vote)
-
+        vote.TotVote = U.calculate_totvote(vote)
 
     #clean up the table
     U.delete_votes_of_day(conn, current_day)
@@ -89,6 +90,7 @@ try:
 
 except Exception as e:
     logger.log(logging.CRITICAL, f'ERROR {e}')
+    pass
 
 
 

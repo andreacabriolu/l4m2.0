@@ -26,17 +26,6 @@ try:
     players_db = dict(U.get_players(conn))
 
     report = U.report_players_name_alignment(players_csv, players_db)
-
-    # with open('live_parser/players_name_alignment_report.csv', 'w') as report_file:
-    #     csv.writer(report_file).writerows([['Player_Name_CSV', 'Team_CSV', 'Role_CSV', 'Player_Name_DB']])
-    #     for row in report['aligned']:
-    #         csv.writer(report_file).writerows([row])
-    #     csv.writer(report_file).writerows([['---------------------------------------------------------------']])
-    #     for row in report['not_aligned']:
-    #         csv.writer(report_file).writerows([row])
-    #     csv.writer(report_file).writerows([['---------------------------------------------------------------']])
-    #     for row in players_db.items():
-    #         csv.writer(report_file).writerows([[row[0], row[1], '']])
     
     report['wrong'] = []
     # Manually manage known exceptions
