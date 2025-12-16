@@ -47,6 +47,7 @@ urlpatterns = [
     path("l4m/calculate/getMissingLineups/", admin_views.GetMissingLineupsView.as_view(), name="get_missing_lineups"),
     path("l4m/get_live_ranking/", live_views.GetLiveRankingView.as_view(), name="get_live_ranking"),
     path("l4m/player_statistics/<int:player_id>/", statistics_views.StatisticsView.as_view(), name="player_statistics"),
+    path("l4m/player_statistics/getBasicStats", statistics_views.GetBasicStatisticsView.as_view(), name="player_basic_statistics"),
 
 
 ]

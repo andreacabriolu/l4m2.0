@@ -65,25 +65,6 @@ def get_player_statistics_per_day(player_id):
             }
             stats_per_day.append(day_stat)
 
-    # for stat in stats:
-    #     day_stat = {
-    #         'day': stat.Day,
-    #         'vote': stat.Vote,
-    #         'tot_vote': stat.TotVote,
-    #         'goal_scored': range(stat.GoalSc),
-    #         'goal_conceded': range(stat.GoalTa),
-    #         'penalty_scored': range(stat.PenSc),
-    #         'penalty_missed': range(stat.PenMi),
-    #         'penalty_saved': range(stat.PenSa),
-    #         'own_goal': range(stat.Own),
-    #         'assist': range(stat.AssS),
-    #         'yellow_card': range(stat.Yel),
-    #         'red_card': range(stat.Red + stat.YelRed),
-    #         'penalty_won': range(stat.AssP),
-    #         'real_match_name': get_real_match_string(stat),
-    #     }
-    #     stats_per_day.append(day_stat)
-
     return stats_per_day
 
 def aggregate_player_statistics(player_id):
