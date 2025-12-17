@@ -10,7 +10,7 @@ window.addEventListener('DOMContentLoaded', event => {
         const inc = target / 100;
 
         if (value < target) {
-          counter.innerText = (value + inc).toFixed(1);
+          counter.innerText = (value + inc).toFixed(2);
           setTimeout(update, 20);
         } else {
           counter.innerText = target;
