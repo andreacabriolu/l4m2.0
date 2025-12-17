@@ -1,7 +1,7 @@
 import csv
 import constants as C
 from db_connector import *
-from live_parser.vote_live import Vote_Live_Obj
+from vote_live import *
 
 def calculate_totvote(v):
     sum = v.Vote
@@ -20,7 +20,7 @@ def calculate_totvote(v):
     (v.Yel * C.Scores.YELLOW)  
 
     return sum
-from vote_live import *
+
 
 def report_players_name_alignment(players_csv, players_db):
     report = {
