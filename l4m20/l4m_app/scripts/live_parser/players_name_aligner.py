@@ -18,7 +18,7 @@ else:
     resp_json = json.loads(f.read())
     f.close()
 
-players_csv_path = "/home/andrea/src/l4m2_0/l4m20/l4m_app/scripts/live_parser/all_players.csv"
+players_csv_path = "live_parser/all_players.csv"
 
 try:
     conn = DB_Connector()
