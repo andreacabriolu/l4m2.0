@@ -11,7 +11,7 @@ class CompetitionCalendar(models.Model):
     HomeAway = models.BooleanField(default=False)
     Overtime = models.BooleanField(default=False)
     Penalties = models.BooleanField(default=False)
-    
+    Suspended = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.Competition} - Giornata {self.Day})"
