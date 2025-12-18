@@ -247,6 +247,13 @@ window.addEventListener('DOMContentLoaded', event => {
     load_last_lineup(comp_id);
     reset_captain();
 
+    $('#secondary_lineup').children('div').each(function () {
+        $(this).on('click', function () {
+            $(this).children('select').toggleClass('bg-overtime-subtle');
+        });
+    });
+
+
     $('#select_comp').on('change', function () {
         var data = {
             'competition': $('#select_comp').children('option:selected').data().id,

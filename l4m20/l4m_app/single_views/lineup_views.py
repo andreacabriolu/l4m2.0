@@ -83,6 +83,7 @@ def LineupView_(request):
         competition_id=1
 
     late_lineup = U.check_late_lineup(teamid, current_day, competition_id)
+    overtime = U.check_competition_overtime(competition_id, current_day)
     
     params = { 
         'mods': mods,
@@ -97,7 +98,8 @@ def LineupView_(request):
         'day_already_started': day_already_started,
         'all_competitions': all_competitions,
         'competition_id': competition_id,
-        'late_lineup': late_lineup
+        'late_lineup': late_lineup,
+        'overtime': overtime,
         }
     
     return render(request, template_name, params)

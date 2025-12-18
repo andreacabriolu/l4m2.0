@@ -79,17 +79,24 @@
                 </div>
             </div>
 
-            <div class="alert-panel" id="alert_panel">
-                {% if not day_already_started %}
-                <img src="{% static 'l4m/images/green.png' %}">
-                <span class="alert-limit">FORMAZIONE SCHIERABILE FINO A {{day_time_limit}}</span>
-                {% elif day_already_started and late_lineup %}
-                <img src="{% static 'l4m/images/red.png' %}">
-                <span class="alert-limit">FORMAZIONE NON SCHIERATA PER QUESTA COMPETIZIONE, NESSUNA MODIFICA POSSIBILE</span>
-                {% else %}
-                <img src="{% static 'l4m/images/orange.png' %}">
-                <span class="alert-limit">GIORNATA INIZIATA, FORMAZIONE MODIFICABILE AI LIMITI DEL REGOLAMENTO</span>
-                {% endif %}
+            <div class="alerts">
+                <div class="alert-panel" id="alert_panel">
+                    {% if not day_already_started %}
+                    <img src="{% static 'l4m/images/green.png' %}">
+                    <span class="alert-limit">FORMAZIONE SCHIERABILE FINO A {{day_time_limit}}</span>
+                    {% elif day_already_started and late_lineup %}
+                    <img src="{% static 'l4m/images/red.png' %}">
+                    <span class="alert-limit">FORMAZIONE NON SCHIERATA PER QUESTA COMPETIZIONE, NESSUNA MODIFICA POSSIBILE</span>
+                    {% else %}
+                    <img src="{% static 'l4m/images/orange.png' %}">
+                    <span class="alert-limit">GIORNATA INIZIATA, FORMAZIONE MODIFICABILE AI LIMITI DEL REGOLAMENTO</span>
+                    {% endif %}
+                </div>
+            
+                <div class="overtime-panel" id="overtime_panel" {% if not overtime %} hidden {% endif %}>
+                    <img src="{% static 'l4m/images/orange.png' %}">
+                    <span class="overtime-info">POSSIBILI SUPPLEMENTARI, SELEZIONARE 6 GIOCATORI TRA LE RISERVE</span>
+                </div>
             </div>
             
         </div>
@@ -273,7 +280,7 @@
 
             <div class="secondary-lineup" id="secondary_lineup">
                 
-                <div class="form-floating">
+                <div class="form-floating" id="gk1r">
                     <select class="form-select form-select-lg mb-3 form-select-player" id="gk1_ris">
                         {% for gk in players_gk %}
                         <option value="{{gk}}" data-limit="{{gk.played}}" data-id="{{gk.Player__id}}">[{{gk.Player__Role}}] {{gk.Player__Surname}} ({{gk.Player__RealTeam__Name|upper|slice:":3"}}) | {{gk.vs|upper}}</option>
@@ -283,7 +290,7 @@
                     <label for="gk1_ris">Portiere 1 riserva</label>
                 </div>
 
-                <div class="form-floating">
+                <div class="form-floating" id="gk2r">
                     <select class="form-select form-select-lg mb-3 form-select-player" id="gk2_ris">
                         {% for gk in players_gk %}
                         <option value="{{gk}}" data-limit="{{gk.played}}" data-id="{{gk.Player__id}}">[{{gk.Player__Role}}] {{gk.Player__Surname}} ({{gk.Player__RealTeam__Name|upper|slice:":3"}}) | {{gk.vs|upper}}</option>

@@ -8,6 +8,10 @@ from zoneinfo import ZoneInfo
 from l4m20 import constants as C
 import requests as req
 
+def check_competition_overtime(competition_id, day):
+    cc = competition_calendar.CompetitionCalendar.objects.filter(Q(Competition=competition_id) & Q(Day=day)).values('Overtime')
+    return cc.first()['Overtime'] if len(cc) > 0 else False
+
 def check_late_lineup(teamid, day, competition_id):
     _series = get_my_series(teamid, competition_id)
     if len(_series) > 0:

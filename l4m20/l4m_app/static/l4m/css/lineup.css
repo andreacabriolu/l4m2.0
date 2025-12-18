@@ -174,3 +174,26 @@ label {
   .switch-all-comp {
     margin-top: .7em;
   }
+
+  .alert-panel {
+    margin-bottom: 1em;
+  }
+
+  .overtime-panel {
+    margin-bottom: 1em;
+  }
+
+     @media (max-width:800px) {
+        .overtime-panel {
+        margin-bottom: 1em;
+    }
+  }
+
+  .overtime-panel span {
+    font-weight: bold;
+    font-size: large;
+  }
+
+  .bg-overtime-subtle {
+    background-color: #9a9bd6 !important;
+  }
