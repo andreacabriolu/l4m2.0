@@ -28,6 +28,41 @@
     <input type="hidden" value="{{competition_id}}" id="competition_id">
     <input type="hidden" value="{{day_already_started}}" id="day_already_started">
 
+    <div class="modal fade" id="overtimeModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content modal-dark">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Selezionati per i supplementari</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <form id="playersForm">
+                <div class="row g-3">
+
+                    {% for i in "123456" %}
+                    <div class="col-md-6">
+                    <label class="form-label">Giocatore {{ forloop.counter }}</label>
+                    <select class="form-select player-select" id="overtime_{{ forloop.counter }}_pl">
+                        <option value="">Seleziona giocatore</option>
+                    </select>
+                    </div>
+                    {% endfor %}
+
+                </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">CHIUDI</button>
+                <button class="btn btn-primary" type="submit" form="playersForm">CONFERMA</button>
+            </div>
+
+            </div>
+        </div>
+    </div>
+
     <div class="bg-body-tertiary main-div p-5" id="lineupDiv">
         <label for="select_comp" class="comp-label">COMPETIZIONE</label>
             <select class="form-select form-select-lg mb-3 form-select-comp" id="select_comp">
@@ -95,11 +130,25 @@
             
                 <div class="overtime-panel" id="overtime_panel" {% if not overtime %} hidden {% endif %}>
                     <img src="{% static 'l4m/images/orange.png' %}">
-                    <span class="overtime-info">POSSIBILI SUPPLEMENTARI, SELEZIONARE 6 GIOCATORI TRA LE RISERVE</span>
+                    <span class="overtime-info">POSSIBILI SUPPLEMENTARI E RIGORI, SELEZIONARE I GIOCATORI E I RIGORISTI</span>
                 </div>
             </div>
-            
         </div>
+
+        {% if overtime %}
+        <div class="overtime-buttons">
+            <button type="button" data-bs-toggle="modal" data-bs-target="#overtimeModal" 
+            class="btn btn-warning top-panel-btn" id="btnOvertime" {% if day_already_started %} disabled
+                {% endif %}>
+                SELEZIONE SUPPLEMENTARI
+            </button>
+            <button type="button" class="btn btn-success top-panel-btn" id="btnPenaltyShootout" {% if day_already_started %}
+                disabled {% endif %}>
+                SCELTA RIGORISTI
+            </button>
+        </div>
+        {% endif %}
+
         <div class="lineups" id="l_ups">
             <div class="form-check form-switch form-floating form-switch-md" hidden>
                     <input class="form-check-input" type="checkbox" id="showVs">

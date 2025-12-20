@@ -247,12 +247,11 @@ window.addEventListener('DOMContentLoaded', event => {
     load_last_lineup(comp_id);
     reset_captain();
 
-    $('#secondary_lineup').children('div').each(function () {
-        $(this).on('click', function () {
-            $(this).children('select').toggleClass('bg-overtime-subtle');
-        });
-    });
-
+    // $('#secondary_lineup').children('div').each(function () {
+    //     $(this).on('click', function () {
+    //         $(this).children('select').toggleClass('bg-overtime-subtle');
+    //     });
+    // });
 
     $('#select_comp').on('change', function () {
         var data = {
@@ -339,7 +338,7 @@ window.addEventListener('DOMContentLoaded', event => {
 
             if (allComp) {
                 all_comp_ids = [];
-                $('#select_comp').children('option').each(function(){ all_comp_ids.push($(this).data().id) });
+                $('#select_comp').children('option').each(function () { all_comp_ids.push($(this).data().id) });
                 var data = { 'tits': jsonPlayers, 'all_comp_ids': JSON.stringify(all_comp_ids), 'options': jsonOpts, 'csrfmiddlewaretoken': token };
 
                 $.post("/l4m/lineup/saveMultiple/", data, function (response) {
@@ -351,11 +350,13 @@ window.addEventListener('DOMContentLoaded', event => {
                         $('#btnSaveLineup').prop('disabled', false);
                     }
                 });
-                
+
             }
             else {
-                var data = { 'tits': jsonPlayers, 'comp_id': comp_id, 'late_edit': late_edit,
-                    'options': jsonOpts, 'csrfmiddlewaretoken': token };
+                var data = {
+                    'tits': jsonPlayers, 'comp_id': comp_id, 'late_edit': late_edit,
+                    'options': jsonOpts, 'csrfmiddlewaretoken': token
+                };
 
                 $.post("/l4m/lineup/save/", data, function (response) {
                     if (response.startsWith('error')) {
@@ -389,6 +390,48 @@ window.addEventListener('DOMContentLoaded', event => {
         });
 
         reset_captain();
+    });
+
+    $('#overtimeModal').on('show.bs.modal', function (e) {
+
+        var overtime_players = [];
+        $('#secondary_lineup').children().each(function (idx) {
+            var sec_pl_id = $(this).children().children('option:selected').data().id;
+            if (typeof sec_pl_id !== 'undefined') {
+                overtime_players.push(sec_pl_id);
+                $(`#overtime_${idx + 1}_pl`).append($(`option[data-id='${$(this).children().children('option:selected').data().id}']`))
+            }
+        });
+
+        $('#overtimeModal').find('.player-select').each(function (index) {
+            $(this).val('');
+            $(this).children('option').each(function () {
+                if (overtime_players.includes($(this).data().id)) {
+                    $(this).hide();
+                }
+                else {
+                    $(this).show();
+                }
+            });
+        });
+
+        // $('#overtimeModal').find('.player-select').on('change', function(){
+        //     var id = $(this).children('option:selected').data().id;
+        //     $('#overtimeModal').find('.player-select').each(function(){
+        //         if (!($(this).is($(this)))) {
+        //             $(this).children('option').each(function(){
+        //                 if ($(this).data().id == id){
+        //                     $(this).hide();
+        //                 }
+        //             });
+        //         }
+        //     });
+        // });
+
+
+
+        // slot = $(this).children().get(0).id;
+        // id = $(this).children().children('option:selected').data().id;
     });
 
 })
