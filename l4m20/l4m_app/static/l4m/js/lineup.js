@@ -237,6 +237,7 @@ function freeze_who_played() {
 
 window.addEventListener('DOMContentLoaded', event => {
 
+    const overtime_players = [];
     const token = Cookies.get('csrftoken');
 
     var comp_id = $('#competition_id').val();
@@ -396,37 +397,44 @@ window.addEventListener('DOMContentLoaded', event => {
 
         var overtime_players = [];
         $('#secondary_lineup').children().each(function (idx) {
-            var sec_pl_id = $(this).children().children('option:selected').data().id;
-            if (typeof sec_pl_id !== 'undefined') {
+            var sec_pl_id = $(this).children().children('option:selected');
+            if (sec_pl_id.length > 0 && sec_pl_id.data().id != undefined) {
                 overtime_players.push(sec_pl_id);
-                $(`#overtime_${idx + 1}_pl`).append($(`option[data-id='${$(this).children().children('option:selected').data().id}']`))
             }
         });
 
         $('#overtimeModal').find('.player-select').each(function (index) {
-            $(this).val('');
-            $(this).children('option').each(function () {
-                if (overtime_players.includes($(this).data().id)) {
-                    $(this).hide();
-                }
-                else {
-                    $(this).show();
-                }
-            });
+            $(this).children('option:not(:first)').remove();
+            $.each(overtime_players, function(index, o_player) {
+                $(this).append(o_player.clone());
+            }.bind(this));
+            
         });
 
-        // $('#overtimeModal').find('.player-select').on('change', function(){
-        //     var id = $(this).children('option:selected').data().id;
-        //     $('#overtimeModal').find('.player-select').each(function(){
-        //         if (!($(this).is($(this)))) {
-        //             $(this).children('option').each(function(){
-        //                 if ($(this).data().id == id){
-        //                     $(this).hide();
-        //                 }
-        //             });
+        // $('#overtimeModal').find('.player-select').each(function (index) {
+        //     $(this).val('');
+        //     $(this).children('option').each(function () {
+        //         if (overtime_players.includes($(this).data().id)) {
+        //             $(this).hide();
+        //         }
+        //         else {
+        //             $(this).show();
         //         }
         //     });
         // });
+
+        $('#overtimeModal').find('.player-select').on('change', function(){
+            var id = $(this).children('option:selected').data().id;
+            $('#overtimeModal').find('.player-select').each(function(){
+                if (!($(this).is($(this)))) {
+                    $(this).children('option').each(function(){
+                        if ($(this).data().id == id){
+                            $(this).hide();
+                        }
+                    });
+                }
+            });
+        });
 
 
 
