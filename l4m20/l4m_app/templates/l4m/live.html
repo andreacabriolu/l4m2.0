@@ -227,7 +227,7 @@
                     </tr>
                     {% else %}
                     {% for vote in team_votes.0 %}
-                    <tr class="pl-row" {% if vote.Status == 0 %} class="live-row" {% endif %} data-pl-id="{{vote.Player.id}}">
+                    <tr class="pl-row {% if vote.Status == 0 %} live-row {% endif %}" data-pl-id="{{vote.Player.id}}">
                         <td>{{vote.Player.Role}}</td>
                         <td>{{vote.Player.RealTeam|upper|slice:":3"}}</td>
                         <td>{% if vote.Cap %} <img class="cap-img" src="{% static 'l4m/images/cap.png' %}">{% endif %}
