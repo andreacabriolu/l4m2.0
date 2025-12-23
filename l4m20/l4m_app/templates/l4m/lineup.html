@@ -28,8 +28,8 @@
     <input type="hidden" value="{{competition_id}}" id="competition_id">
     <input type="hidden" value="{{day_already_started}}" id="day_already_started">
 
-    <div class="modal fade" id="overtimeModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal fade" id="overtimeModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content modal-dark">
 
             <div class="modal-header">
@@ -55,8 +55,8 @@
             </div>
 
             <div class="modal-footer">
-                <button class="btn btn-secondary" data-bs-dismiss="modal">CHIUDI</button>
-                <button class="btn btn-primary" type="button">CONFERMA</button>
+                <button class="btn btn-secondary" type="button" id="btnResetOvertime">RESET</button>
+                <button class="btn btn-primary" type="button" id="btnConfirmOvertime">CONFERMA</button>
             </div>
 
             </div>
