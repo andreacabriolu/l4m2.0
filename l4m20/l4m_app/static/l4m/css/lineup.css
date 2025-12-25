@@ -248,3 +248,8 @@ label {
 .modal-dark .btn-secondary:hover {
   background-color: #5c6169;
 }
+
+.player-select:disabled {
+  background-color: #a5a8ae !important;
+  color: black !important;
+}

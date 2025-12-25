@@ -203,6 +203,13 @@ function load_lineup(lineup) {
     for (item in lineup) {
         if (item == "mod") { continue; }
 
+        if (item == 'ot') {
+            lineup[item].forEach((el, idx) => {
+                selected_overtime_players.add(el);
+            });
+            continue;
+        }
+
         pl = $(`#${item}`).children(`option[data-id=${lineup[item]}]`);
         if (pl.length <= 0) { continue; }
         $(`#${item}`).val(pl[0].value);
@@ -237,9 +244,9 @@ function load_last_lineup(comp_id = 1) {
                 load_lineup(last_lineup[0]);
                 load_options(last_lineup);
                 adjust_captain(reset = false);
-                if (last_lineup[0].hasOwnProperty('ot')) {
-                    selected_overtime_players = last_lineup[0]['ot'];
-                }
+                // if (last_lineup[0].hasOwnProperty('ot')) {
+                //     selected_overtime_players = last_lineup[0].ot;
+                // }
             }
             catch {
                     showErrorAlert("ERRORE NEL CARICAMENTO DELLA FORMAZIONE");
@@ -266,7 +273,7 @@ function freeze_who_played() {
     });
 }
 
-var selected_overtime_players = []; //TODO: so BAD global variable!!
+var selected_overtime_players = new Set(); //TODO: so BAD global variable!!
 
 window.addEventListener('DOMContentLoaded', event => {
 
@@ -337,6 +344,7 @@ window.addEventListener('DOMContentLoaded', event => {
 
             if (!allFilled) {
                 showPopupErrorAlert('RIEMPI TUTTI GLI SLOT TITOLARI PRIMA DI CONFERMARE');
+                $('#btnSaveLineup').prop('disabled', false);
                 return false;
             }
 
@@ -357,13 +365,12 @@ window.addEventListener('DOMContentLoaded', event => {
             playerSlots["captain"] = $('#captain').children('option:selected').data().id;
         }
 
-        if (selected_overtime_players.length > 0) {
+        if (selected_overtime_players.size > 0) {
             playerSlots['ot'] = [];
         }
 
         selected_overtime_players.forEach(function (item, index) {
-            slot = `ot${index + 1}`;
-            playerSlots['ot'].push(item.data().id);
+            playerSlots['ot'].push(item);
         });
 
         if (allFilled) {
@@ -453,14 +460,12 @@ window.addEventListener('DOMContentLoaded', event => {
             }
         });
 
-        if (selected_overtime_players.length > 0) {
-            selected_overtime_players.forEach(function (item, index) {
-                pl = $(`#overtime_${index + 1}_pl`).children(`option[data-id=${item}]`);
-                if (pl.length <= 0) { return; }
-                $(`#overtime_${index + 1}_pl`).val(pl[0].value);
-                $(`#overtime_${index + 1}_pl`).children().prop('disabled', true);
-            });
-        }
+        Array.from(selected_overtime_players).forEach(function (item, index) {
+            pl = $(`#overtime_${index + 1}_pl`).children(`option[data-id=${item}]`);
+            if (pl.length <= 0) { return; }
+            $(`#overtime_${index + 1}_pl`).val(pl[0].value);
+            $(`#overtime_${index + 1}_pl`).prop('disabled', true);
+        });
 
         $('#overtimeModal').find('.player-select').each(function (index) {
             if ($(this).children('option:selected').val() != '') {
@@ -472,15 +477,15 @@ window.addEventListener('DOMContentLoaded', event => {
         $('#overtimeModal').find('.player-select').on('change', function () {
             adjustOtherDropdowns($(this), $('#overtimeModal').find('.player-select'), true);
             $(this).off('change');
-            $(this).children('option').prop('disabled', true);
-            selected_overtime_players.push($(this).children('option:selected'));
+            $(this).prop('disabled', true);
+            selected_overtime_players.add($(this).children('option:selected').data().id);
         });
 
         $('#btnResetOvertime').on('click', function () {
             $('#overtimeModal').find('.player-select').each(function () {
                 $(this).val('');
-                $(this).children('option').prop('disabled', false);
-                selected_overtime_players = [];
+                $(this).prop('disabled', false);
+                selected_overtime_players = new Set();
             });
         });
 
