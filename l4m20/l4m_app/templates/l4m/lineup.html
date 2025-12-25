@@ -6,11 +6,12 @@
 {% block links %}
 <link href="{% static 'l4m/css/lineup.css' %}" rel="stylesheet">
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 {% endblock %}
 
 {% block scripts %}
 <script type="text/javascript" src="{% static 'l4m/js/lineup.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 
 {% endblock %}
 
@@ -57,6 +58,61 @@
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" id="btnResetOvertime">RESET</button>
                 <button class="btn btn-primary" type="button" id="btnConfirmOvertime">CONFERMA</button>
+            </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="penaltiesModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content modal-dark">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Tiri di rigore</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="container">
+                    <!-- <h2>Ordine dei tiratori di rigore</h2> -->
+                    <div class="hint">Trascina i giocatori nell'ordine desiderato</div>
+            
+                    <div class="list" id="penaltyList">
+                        <!-- <div class="player"><span class="order">1</span><span class="name" id="pen1"></span><i
+                                class="fas fa-grip-lines drag"></i></div>
+                        <div class="player"><span class="order">2</span><span class="name" id="pen2"></span><i
+                                class="fas fa-grip-lines drag"></i></div>
+                        <div class="player"><span class="order">3</span><span class="name" id="pen3"></span><i
+                                class="fas fa-grip-lines drag"></i></div>
+                        <div class="player"><span class="order">4</span><span class="name" id="pen4"></span><i
+                                class="fas fa-grip-lines drag"></i></div>
+                        <div class="player"><span class="order">5</span><span class="name" id="pen5"></span><i
+                                class="fas fa-grip-lines drag"></i></div>
+                        <div class="player"><span class="order">6</span><span class="name" id="pen6"></span><i
+                                class="fas fa-grip-lines drag"></i></div>
+                        <div class="player"><span class="order">7</span><span class="name" id="pen7"></span><i
+                                class="fas fa-grip-lines drag"></i></div>
+                        <div class="player"><span class="order">8</span><span class="name" id="pen8"></span><i
+                                class="fas fa-grip-lines drag"></i></div>
+                        <div class="player"><span class="order">9</span><span class="name" id="pen9"></span><i
+                                class="fas fa-grip-lines drag"></i></div>
+                        <div class="player"><span class="order">10</span><span class="name" id="pen10"></span><i
+                                class="fas fa-grip-lines drag"></i></div>
+                        <div class="player"><span class="order">11</span><span class="name" id="pen11"></span><i
+                                class="fas fa-grip-lines drag"></i></div> -->
+                    </div>
+            
+                    <!-- <div class="footer">
+                        <button class="btn" onclick="saveOrder()">Salva</button>
+                    </div> -->
+                </div>
+            
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" id="btnResetPenalties">RESET</button>
+                <button class="btn btn-primary" type="button" id="btnConfirmPenalties" onclick="savePenaltiesOrder()">CONFERMA</button>
             </div>
 
             </div>
@@ -142,7 +198,8 @@
                 {% endif %}>
                 SELEZIONE SUPPLEMENTARI
             </button>
-            <button type="button" class="btn btn-success top-panel-btn" id="btnPenaltyShootout" {% if day_already_started %}
+            <button type="button" data-bs-toggle="modal" data-bs-target="#penaltiesModal" 
+            class="btn btn-success top-panel-btn" id="btnPenaltyShootout" {% if day_already_started %}
                 disabled {% endif %}>
                 SCELTA RIGORISTI
             </button>

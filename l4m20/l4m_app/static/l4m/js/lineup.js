@@ -249,10 +249,10 @@ function load_last_lineup(comp_id = 1) {
                 // }
             }
             catch {
-                    showErrorAlert("ERRORE NEL CARICAMENTO DELLA FORMAZIONE");
-                }
-
+                showErrorAlert("ERRORE NEL CARICAMENTO DELLA FORMAZIONE");
             }
+
+        }
     });
 }
 
@@ -273,6 +273,18 @@ function freeze_who_played() {
     });
 }
 
+function updateOrder() {
+    document.querySelectorAll(".player").forEach((el, i) => {
+        el.querySelector(".order").textContent = i + 1;
+    });
+}
+
+function savePenaltiesOrder() {
+    const order = [...document.querySelectorAll(".name")].map(n => n.textContent);
+    console.log("Penalty order:", order);
+}
+
+
 var selected_overtime_players = new Set(); //TODO: so BAD global variable!!
 
 window.addEventListener('DOMContentLoaded', event => {
@@ -292,6 +304,14 @@ window.addEventListener('DOMContentLoaded', event => {
     //         $(this).children('select').toggleClass('bg-overtime-subtle');
     //     });
     // });
+
+    const penList = document.getElementById("penaltyList");
+
+    new Sortable(penList, {
+        animation: 150,
+        ghostClass: "sortable-ghost",
+        onEnd: updateOrder
+    });
 
     $('#select_comp').on('change', function () {
         var data = {
@@ -439,6 +459,19 @@ window.addEventListener('DOMContentLoaded', event => {
         });
 
         reset_captain();
+    });
+
+    $('#penaltiesModal').on('show.bs.modal', function (e) {
+
+        // TODO: load saved order if any
+        $('#main_lineup').children('div:visible').each(function (idx) {
+            var pl = $(this).children().children('option:selected');
+            if (pl.length > 0 && pl.data().id != undefined) {
+                var playerDiv = `<div class="player"><span class="order">${idx + 1}</span><span class="name">${pl.text()}</span><i class="fas fa-grip-lines drag"></i></div>`;
+                $('#penaltyList').append(playerDiv);
+            }
+        });
+
     });
 
     $('#overtimeModal').on('show.bs.modal', function (e) {
