@@ -28,6 +28,7 @@
 
     <input type="hidden" value="{{competition_id}}" id="competition_id">
     <input type="hidden" value="{{day_already_started}}" id="day_already_started">
+    <input type="hidden" value="{{overtime}}" id="overtime">
 
     <div class="modal fade" id="overtimeModal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
@@ -75,43 +76,16 @@
 
             <div class="modal-body">
                 <div class="container">
-                    <!-- <h2>Ordine dei tiratori di rigore</h2> -->
                     <div class="hint">Trascina i giocatori nell'ordine desiderato</div>
             
                     <div class="list" id="penaltyList">
-                        <!-- <div class="player"><span class="order">1</span><span class="name" id="pen1"></span><i
-                                class="fas fa-grip-lines drag"></i></div>
-                        <div class="player"><span class="order">2</span><span class="name" id="pen2"></span><i
-                                class="fas fa-grip-lines drag"></i></div>
-                        <div class="player"><span class="order">3</span><span class="name" id="pen3"></span><i
-                                class="fas fa-grip-lines drag"></i></div>
-                        <div class="player"><span class="order">4</span><span class="name" id="pen4"></span><i
-                                class="fas fa-grip-lines drag"></i></div>
-                        <div class="player"><span class="order">5</span><span class="name" id="pen5"></span><i
-                                class="fas fa-grip-lines drag"></i></div>
-                        <div class="player"><span class="order">6</span><span class="name" id="pen6"></span><i
-                                class="fas fa-grip-lines drag"></i></div>
-                        <div class="player"><span class="order">7</span><span class="name" id="pen7"></span><i
-                                class="fas fa-grip-lines drag"></i></div>
-                        <div class="player"><span class="order">8</span><span class="name" id="pen8"></span><i
-                                class="fas fa-grip-lines drag"></i></div>
-                        <div class="player"><span class="order">9</span><span class="name" id="pen9"></span><i
-                                class="fas fa-grip-lines drag"></i></div>
-                        <div class="player"><span class="order">10</span><span class="name" id="pen10"></span><i
-                                class="fas fa-grip-lines drag"></i></div>
-                        <div class="player"><span class="order">11</span><span class="name" id="pen11"></span><i
-                                class="fas fa-grip-lines drag"></i></div> -->
+                        <!-- Items will be dynamically added here -->
                     </div>
-            
-                    <!-- <div class="footer">
-                        <button class="btn" onclick="saveOrder()">Salva</button>
-                    </div> -->
                 </div>
             
             </div>
 
             <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" id="btnResetPenalties">RESET</button>
                 <button class="btn btn-primary" type="button" id="btnConfirmPenalties" onclick="savePenaltiesOrder()">CONFERMA</button>
             </div>
 
