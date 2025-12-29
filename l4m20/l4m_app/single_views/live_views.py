@@ -128,6 +128,7 @@ def LiveView(request):
     all_series = U.get_all_series(competitionid=competition_id)
     all_my_series_ids = [s.id for s in U.get_all_my_series(teamid)]
     homeAway=U.get_homeaway(competition_id, day)
+    overtime_penalties = U.get_overtime_penalties(competition_id, day)
 
     series_teams = team.Team.objects.filter(Series__id=seriesid)
     last_lineups_d = {}
@@ -236,7 +237,8 @@ def LiveView(request):
         'all_my_series_ids' : all_my_series_ids,
         'homeAway': homeAway,
         'is_live_day': is_live_day,
-        'today_competitions_ids': today_competitions_ids
+        'today_competitions_ids': today_competitions_ids,
+        'overtime_penalties': overtime_penalties,
         }
     
     return render(request, template_name, params)

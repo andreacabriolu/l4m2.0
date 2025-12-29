@@ -750,7 +750,7 @@ def get_votes(lineup, current_day, live_votes, live_teams, already_played_teams=
     cap_vote = 6
 
     for l in line.items(): #loop players in lineup
-        if l[0] == 'captain':
+        if l[0] in ['captain', 'ot', 'penalties']:
             continue
         if(l[0] == 'mod'):  
             module = l[1].replace('-','')

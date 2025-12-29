@@ -310,3 +310,141 @@ table .w-30 {
   --bs--btn-hover-bg: whitesmoke;
   --bs-link-hover-color: whitesmoke;
 }
+
+.extra-time-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  background: linear-gradient(180deg, #6b7a90, #8090af);
+  color: #e8eaed;
+
+  border: 1px solid #3a404c;
+  border-radius: 999px;
+
+  padding: 12px 18px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+
+  transition: all 0.25s ease;
+  margin-left: 0.5em;
+}
+
+/* Icon */
+.extra-time-btn i {
+  color: #4da3ff;
+  font-size: 16px;
+}
+
+/* +minutes badge */
+.extra-time-btn small {
+  background: #4da3ff;
+  color: #0b1b2e;
+  font-weight: 700;
+  font-size: 12px;
+
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+
+/* Hover */
+.extra-time-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 25px rgba(77,163,255,0.25);
+  border-color: #4da3ff;
+}
+
+/* Active */
+.extra-time-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(0,0,0,.4);
+}
+
+/* Subtle pulse (stadium clock feeling) */
+.extra-time-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(77,163,255,0.15), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.extra-time-btn:hover::after {
+  opacity: 1;
+}
+
+.penalty-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  background: linear-gradient(180deg, #587667, #57796a);
+  color: #e8eaed;
+
+  border: 1px solid #3a404c;
+  border-radius: 999px;
+
+  padding: 12px 18px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+
+  transition: all 0.25s ease;
+  margin-left: 0.5em;
+}
+
+/* Football icon */
+.penalty-btn i {
+  color: #4da3ff;
+  font-size: 16px;
+}
+
+/* PK badge */
+.penalty-btn small {
+  background: #4da3ff;
+  color: #0b1b2e;
+  font-weight: 700;
+  font-size: 12px;
+
+  padding: 4px 8px;
+  border-radius: 8px;
+  letter-spacing: 0.5px;
+}
+
+/* Hover effect */
+.penalty-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 25px rgba(77,163,255,0.25);
+  border-color: #4da3ff;
+}
+
+/* Active */
+.penalty-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(0,0,0,.4);
+}
+
+/* Soft blue glow */
+.penalty-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(77,163,255,0.15), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.penalty-btn:hover::after {
+  opacity: 1;
+}
+

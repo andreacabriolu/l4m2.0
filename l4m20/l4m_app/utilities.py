@@ -143,6 +143,14 @@ def get_all_today_competitions(day):
 def get_my_competitions(my_series):
     return competition.Competition.objects.filter(series__id__in=my_series)
 
+def get_overtime_penalties(competitionid, day):
+    cc= competition_calendar.CompetitionCalendar.objects.filter(Q(Competition=competitionid)&Q(Day=day)).values('Overtime','Penalties')
+    return cc.first()['Overtime'] if len(cc)>0 else False #here we assume that if overtime is true, penalties are true too
+
+def get_penalties(competitionid, day):
+    cc= competition_calendar.CompetitionCalendar.objects.filter(Q(Competition=competitionid)&Q(Day=day)).values('Penalties')
+    return cc.first()['Penalties'] if len(cc)>0 else False
+
 def get_homeaway(competitionid, day):
     cc= competition_calendar.CompetitionCalendar.objects.filter(Q(Competition=competitionid)&Q(Day=day)).values('HomeAway')
     return cc.first()['HomeAway'] if len(cc)>0 else False
@@ -173,7 +181,7 @@ def get_players_by_lups(l_ups):
     _lups = []
     for l_up in l_ups:
         j = json.loads(cleanJSON(l_up.Line))
-        _lups.append([v for _,v in j.items()][1:])
+        _lups.append([v for k,v in j.items() if k not in ['mod','captain','ot','penalties']])
 
     pl_ids = list(set().union(*_lups))
 
