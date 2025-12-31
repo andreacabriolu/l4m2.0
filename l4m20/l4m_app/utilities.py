@@ -8,6 +8,10 @@ from zoneinfo import ZoneInfo
 from l4m20 import constants as C
 import requests as req
 
+def check_day_suspended(day):
+    suspended = competition_calendar.CompetitionCalendar.objects.filter(Q(Day=day)&Q(Suspended=True)).values('Day')
+    return len(suspended) > 0
+
 def check_late_lineup(teamid, day, competition_id):
     _series = get_my_series(teamid, competition_id)
     if len(_series) > 0:
@@ -90,6 +94,13 @@ def get_last_available_ranking(c_id, s_id):
     return r
 
 def get_ranking(c_id, s_id, day):
+    #check the first not suspended day before (any competition, since b11 is not listed as regular competition)
+    if check_day_suspended(day):
+        days = competition_calendar.CompetitionCalendar.objects.filter(Q(Suspended=False)&Q(Day__lt=day)).values('Day').order_by('-Day')
+        if len(days) <= 0:
+            return None
+        day = days[0]['Day']
+
     r = ranking.Ranking.objects.filter(Q(Competition=c_id) & Q(Series=s_id) & Q(Day=int(day)))
     if len(r) <= 0:
         return None

@@ -961,7 +961,7 @@ def pick_best_11(keepers, defenders, midfielders, attackers):
             gk_vote = [keepers[0].votes.Vote] if keepers[0].votes.Vote is not None else []
             def_votes = [p.votes.Vote for p in defenders[:d] if p.votes.Vote is not None]
 
-            if d > 3:
+            if d > 3 and len(def_votes) > 3:
                 mod_k, mod_score_k = calculate_modifier(gk_vote, def_votes, modNoGk=False)
                 mod_nok, mod_score_nok = calculate_modifier(gk_vote, def_votes, modNoGk=True)
                 mod, mod_score, modNoGk_used = max(

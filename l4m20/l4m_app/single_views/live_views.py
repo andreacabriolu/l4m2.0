@@ -134,9 +134,10 @@ def LiveView(request):
     overtime, _ = U.check_day_already_started(day)
     is_live_day = True
     already_played_teams = []
+    is_suspended_day = U.check_day_suspended(day)
 
     #QUICK LOAD THE PAST
-    if int(day < int(current_day)):
+    if int(day) < int(current_day) and not is_suspended_day:
         couples = LU.get_couples_and_matches_from_calendar(seriesid, day, competition_id=competition_id)
         couples = [couples.pop(couples.index(i)) for i in couples if (i[0]==teamid or i[1]==teamid)]+couples #get user match as first
         
