@@ -8,6 +8,50 @@ from . import utilities as U
 from django.db.models import Q
 import requests as req
 
+def check_match_for_extratime(home_team_id, away_team_id, votes_home, votes_away, day, comp_id, seriesid):
+    is_round_trip = U.is_round_trip_match(day, comp_id)
+    if is_round_trip:
+        first_leg_results = (
+            matches_results.MatchesResults.objects
+            .select_related(
+                "MatchesCalendar",
+                "MatchesCalendar__CompetitionCalendar"
+            )
+            .filter(
+                MatchesCalendar__CompetitionCalendar__Competition_id=comp_id,
+                MatchesCalendar__CompetitionCalendar__Day__lt=day,
+                MatchesCalendar__CompetitionCalendar__HomeAway=True,
+                MatchesCalendar__Series_id=seriesid,
+                MatchesCalendar__HomeTeam_id=away_team_id,
+                MatchesCalendar__AwayTeam_id=home_team_id
+            )
+            .order_by("-MatchesCalendar__CompetitionCalendar__Day")
+        )
+
+        if first_leg_results:
+            home_goals_first_leg = first_leg_results.filter(Home=True).first().NGoals
+            away_goals_first_leg = first_leg_results.filter(Home=False).first().NGoals
+
+            #current leg result
+            home_goals_current_leg = votes_home[1][9] #BAD! change to dict!
+            away_goals_current_leg = votes_away[1][9] #BAD!
+            
+            #aggregate score
+            home_agg = home_goals_first_leg + away_goals_current_leg
+            away_agg = away_goals_first_leg + home_goals_current_leg
+
+            if home_agg == away_agg:
+                return True #match went to extratime
+            
+    else:
+        #single match knockout
+        home_goals = votes_home[1][9] #BAD! change to dict!
+        away_goals = votes_away[1][9] #BAD!
+        if home_goals == away_goals:
+            return True #match went to extratime
+        
+    return False
+
 def create_live_ranking(all_scores, last_ranking):
     results_map = {}
 

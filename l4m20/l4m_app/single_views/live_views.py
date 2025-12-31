@@ -128,7 +128,7 @@ def LiveView(request):
     all_series = U.get_all_series(competitionid=competition_id)
     all_my_series_ids = [s.id for s in U.get_all_my_series(teamid)]
     homeAway=U.get_homeaway(competition_id, day)
-    overtime_penalties = U.get_overtime_penalties(competition_id, day)
+    extratime_penalties = U.get_overtime_penalties(competition_id, day)
 
     series_teams = team.Team.objects.filter(Series__id=seriesid)
     last_lineups_d = {}
@@ -187,7 +187,7 @@ def LiveView(request):
             #COPPA DI SERIE
             for t in series_teams:
                 l = U.get_last_lineup(t, day, comp_id=competition_id)
-                if(len(l) <= 0 and overtime): #overtime
+                if(len(l) <= 0 and overtime): #overtime (day started)
                     last_valid_l = U.get_last_valid_lineup(t)
 
                 lineup_to_show = t.Name #base
@@ -219,6 +219,16 @@ def LiveView(request):
             for lineup_couple in lineup_couples:
                 votes_home = LU.get_votes(lineup_couple[0], day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=teamid, homeAway=homeAway)
                 votes_away = LU.get_votes(lineup_couple[1], day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=teamid, home=False, homeAway=homeAway)
+                
+                #check here for extratime and penalties
+                if extratime_penalties: 
+                    if(LU.check_match_for_extratime(lineup_couple[0].Team.id, lineup_couple[1].Team.id, 
+                                                 votes_home, votes_away, 
+                                                 day, competition_id, seriesid)):
+                        votes_home = LU.add_extratime_penalties_votes(votes_home, lineup_couple[0], day, competition_id)
+                    # votes_home = LU.add_extratime_penalties_votes(votes_home, lineup_couple[0], day, competition_id)
+                    # votes_away = LU.add_extratime_penalties_votes(votes_away, lineup_couple[1], day, competition_id)
+                
                 all_votes.append( \
                     [votes_home, votes_away]
                 )
@@ -238,7 +248,7 @@ def LiveView(request):
         'homeAway': homeAway,
         'is_live_day': is_live_day,
         'today_competitions_ids': today_competitions_ids,
-        'overtime_penalties': overtime_penalties,
+        # 'overtime_penalties': overtime_penalties,
         }
     
     return render(request, template_name, params)

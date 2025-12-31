@@ -566,7 +566,8 @@ window.addEventListener('DOMContentLoaded', event => {
     $('#overtimeModal').on('show.bs.modal', function (e) {
 
         var overtime_players = [];
-        $('#secondary_lineup').children().each(function (idx) {
+        // Collect players from secondary lineup, excluding goalkeepers
+        $('#secondary_lineup').children(':not([id^=gk])').each(function () {
             var sec_pl = $(this).children().children('option:selected');
             if (sec_pl.length > 0 && sec_pl.data().id != undefined) {
                 overtime_players.push(sec_pl);
