@@ -423,6 +423,7 @@ function calculate_expiration_date() {
         minute: 'numeric',
         second: 'numeric'
     }
+    //TODO: set parameter for betting expiration time
     return new Date(new Date(now).setDate(now.getDate() + 1)).toLocaleString("it-IT", options)
 }
 
