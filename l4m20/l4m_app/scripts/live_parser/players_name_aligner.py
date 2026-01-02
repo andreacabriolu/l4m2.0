@@ -5,18 +5,18 @@ import constants as C
 import utilities as U
 from db_connector import *
 
-TEST = False
+# TEST = False
 
-if(not TEST):
-    url = "https://publicapi.fantamaster.it/livescores/?tcache=1756165942189"
-    resp = req.get(url)
-    resp_content = resp.content
+# if(not TEST):
+#     url = "https://publicapi.fantamaster.it/livescores/?tcache=1756165942189"
+#     resp = req.get(url)
+#     resp_content = resp.content
 
-    resp_json = json.loads(resp_content)
-else:
-    f = open('live_parser/fake.json','r')
-    resp_json = json.loads(f.read())
-    f.close()
+#     resp_json = json.loads(resp_content)
+# else:
+#     f = open('live_parser/fake.json','r')
+#     resp_json = json.loads(f.read())
+#     f.close()
 
 players_csv_path = "live_parser/all_players.csv"
 
@@ -24,6 +24,19 @@ try:
     conn = DB_Connector()
     players_csv = U.read_csv(players_csv_path)
     players_db = dict(U.get_players(conn))
+    players_db_all = U.get_all_active_players(conn)
+
+    report_missing = U.report_old_players_missing_from_csv(players_db_all, players_csv)
+    if(len(report_missing) > 0):
+        print("Query for players present in DB but missing from CSV:")
+        print(f"UPDATE l4m_app_player SET \"Status\"='E' WHERE \"id\" IN ({', '.join([str(row[2]) for row in report_missing])});")
+        for row in report_missing:
+            print(row)
+
+    with(open('live_parser/players_name_missing_report.csv', 'w') as report_file):
+        csv.writer(report_file).writerows([['Player_Name_DB', 'Role_DB','id_DB']])
+        for row in report_missing:
+            csv.writer(report_file).writerows([[ row[0], row[1], row[2] ]])
 
     report = U.report_players_name_alignment(players_csv, players_db)
     

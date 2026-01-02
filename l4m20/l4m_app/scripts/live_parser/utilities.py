@@ -3,6 +3,13 @@ import constants as C
 from db_connector import *
 from vote_live import *
 
+def report_old_players_missing_from_csv(players_db, players_csv):
+    missing_players = []
+    for player_name_db in players_db:
+        if player_name_db[0] not in players_csv:
+            missing_players.append(player_name_db)
+    return missing_players
+
 def calculate_totvote(v):
     sum = v.Vote
     
@@ -317,7 +324,18 @@ def get_players_realteam(conn:DB_Connector):
         return conn.select(table="l4m_app_player", cols='\"id\",\"RealTeam_id\"', conditions='"Status"=%s', data='A')
     except Exception as e:
         raise e
-    
+
+def get_all_active_players(conn:DB_Connector):
+    try:
+        return conn.select(table="l4m_app_player", cols='\"Surname\",\"Role\",\"id\"', conditions='"Status"=%s', data='A')
+    except Exception as e:
+        raise e    
+
+def get_all_players(conn:DB_Connector):
+    try:
+        return conn.select_all(table="l4m_app_player", cols='\"Surname\",\"Role\",\"id\"')
+    except Exception as e:
+        raise e    
 
 def get_players(conn:DB_Connector):
     try:

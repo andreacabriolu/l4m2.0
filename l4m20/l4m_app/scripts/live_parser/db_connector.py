@@ -18,6 +18,13 @@ class DB_Connector:
         delete_q = f"delete from {table} where {conditions}"
         self.cur.execute(delete_q)
 
+    def select_all(self, table, cols):
+        select_q = f"select {cols} from {table}"
+        self.cur.execute(select_q)
+
+        rows = self.cur.fetchall()
+        return rows
+
     def select(self, table, cols, conditions, data):
         select_q = f"select {cols} from {table} where {conditions}"
         self.cur.execute(select_q, data)
