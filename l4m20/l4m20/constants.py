@@ -100,6 +100,8 @@ class Modifier_Scores_5:
     _GT_75 = 8
 
 class Various:
+    OT_BASE_SCORE = 36
+    OT_THRESHOLD_GOL = 3
     BASE_SCORE = 66
     THRESHOLD_GOL = 6
 

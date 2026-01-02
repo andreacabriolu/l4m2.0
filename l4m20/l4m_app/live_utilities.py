@@ -8,6 +8,26 @@ from . import utilities as U
 from django.db.models import Q
 import requests as req
 
+def calculate_n_ot_goals(ot_score):
+    diff = ot_score - C.Various.OT_BASE_SCORE
+    if (diff < 0):
+        return 0
+    
+    return int(diff / C.Various.OT_THRESHOLD_GOL) + 1
+
+def calculate_extratime_goals(votes, lineup):
+    if lineup is None:
+        return 0
+    
+    line = json.loads(U.cleanJSON(lineup.Line))
+    ot_players = line['ot'] if 'ot' in line else []
+    votes_ris = votes[2]
+
+    ot_score = sum([v.TotVote for v in votes_ris if v.TotVote is not None and v.Player.id in ot_players])
+    ot_goals = calculate_n_ot_goals(ot_score)
+
+    return ot_goals
+
 def check_match_for_extratime(home_team_id, away_team_id, votes_home, votes_away, day, comp_id, seriesid):
     is_round_trip = U.is_round_trip_match(day, comp_id)
     if is_round_trip:
@@ -33,6 +53,8 @@ def check_match_for_extratime(home_team_id, away_team_id, votes_home, votes_away
             away_goals_first_leg = first_leg_results.filter(Home=False).first().NGoals
 
             #current leg result
+            if votes_home is None or votes_away is None:
+                return False
             home_goals_current_leg = votes_home[1][9] #BAD! change to dict!
             away_goals_current_leg = votes_away[1][9] #BAD!
             
@@ -45,6 +67,8 @@ def check_match_for_extratime(home_team_id, away_team_id, votes_home, votes_away
             
     else:
         #single match knockout
+        if votes_home is None or votes_away is None:
+            return False
         home_goals = votes_home[1][9] #BAD! change to dict!
         away_goals = votes_away[1][9] #BAD!
         if home_goals == away_goals:

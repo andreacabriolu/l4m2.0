@@ -221,11 +221,20 @@ def LiveView(request):
                 votes_away = LU.get_votes(lineup_couple[1], day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=teamid, home=False, homeAway=homeAway)
                 
                 #check here for extratime and penalties
-                if extratime_penalties: 
+                if overtime and extratime_penalties: 
                     if(LU.check_match_for_extratime(lineup_couple[0].Team.id, lineup_couple[1].Team.id, 
                                                  votes_home, votes_away, 
                                                  day, competition_id, seriesid)):
-                        votes_home = LU.add_extratime_penalties_votes(votes_home, lineup_couple[0], day, competition_id)
+                        extra_goals_home = LU.calculate_extratime_goals(votes_home, lineup_couple[0])
+                        extra_goals_away = LU.calculate_extratime_goals(votes_away, lineup_couple[1])
+                        
+                        votes_home[1][9] += extra_goals_home #BAD
+                        votes_away[1][9] += extra_goals_away #BAD
+
+                        if extra_goals_home == extra_goals_away:
+                            penalties_home, penalties_away = 
+                            LU.calculate_penalties_votes(lineup_couple[0], lineup_couple[1], day, competition_id)
+                        pass
                     # votes_home = LU.add_extratime_penalties_votes(votes_home, lineup_couple[0], day, competition_id)
                     # votes_away = LU.add_extratime_penalties_votes(votes_away, lineup_couple[1], day, competition_id)
                 
