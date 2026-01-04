@@ -8,6 +8,58 @@ from . import utilities as U
 from django.db.models import Q
 import requests as req
 
+def extract_votes_for_penalties(pen_players, votes):
+    votes_tit = votes[0]
+    tit_players = [int(v.Player.id) for v in votes_tit]
+    pen_players = [int(p) for p in pen_players]
+
+    pen_votes = {}
+
+    for p in pen_players:
+        if p in tit_players:
+            matching_vote = next((v.Vote for v in votes_tit if int(v.Player.id) == p), None)
+            pen_votes[p] = matching_vote
+    
+    #complete the list if needed
+    diff = set(tit_players) - set(pen_players)
+    for d in diff:
+        pen_votes[d] = next((v.Vote for v in votes_tit if int(v.Player.id) == d), None)
+
+    return pen_votes
+
+def calculate_penalties_votes(lineup_home, lineup_away, votes_home, votes_away):
+    if lineup_home is None or lineup_away is None:
+        return 0,0
+    
+    n_pen_scored_home = 0
+    n_pen_scored_away = 0
+
+    line_home = json.loads(U.cleanJSON(lineup_home.Line))
+    pen_players_home = line_home['penalties'] if 'penalties' in line_home else []
+    votes_tit_home = votes_home[0]
+
+    line_away = json.loads(U.cleanJSON(lineup_away.Line))
+    pen_players_away = line_away['penalties'] if 'penalties' in line_away else []
+    votes_tit_away = votes_away[0]
+
+    gk_home_vote = votes_tit_home[0].Vote #home goalkeeper pure vote
+    gk_away_vote = votes_tit_away[0].Vote #away goalkeeper pure vote
+
+    pen_home_votes = extract_votes_for_penalties(pen_players_home, votes_home)
+    pen_away_votes = extract_votes_for_penalties(pen_players_away, votes_away)
+
+    # pen_score_home = sum([v.TotVote for v in votes_tit_home if v.TotVote is not None and v.Player.id in pen_players_home])
+    # n_pen_home = int((pen_score_home - C.Various.PEN_BASE_SCORE) / C.Various.PEN_THRESHOLD_GOL) + 1 if pen_score_home >= C.Various.PEN_BASE_SCORE else 0
+
+    # line_away = json.loads(U.cleanJSON(lineup_away.Line))
+    # pen_players_away = line_away['penalties'] if 'penalties' in line_away else []
+    # votes_tit_away = votes_away[2]
+
+    # pen_score_away = sum([v.TotVote for v in votes_tit_away if v.TotVote is not None and v.Player.id in pen_players_away])
+    # n_pen_away = int((pen_score_away - C.Various.PEN_BASE_SCORE) / C.Various.PEN_THRESHOLD_GOL) + 1 if pen_score_away >= C.Various.PEN_BASE_SCORE else 0
+
+    return {'pen_score_home': n_pen_scored_home, 'pen_score_away': n_pen_scored_away}
+
 def calculate_n_ot_goals(ot_score):
     diff = ot_score - C.Various.OT_BASE_SCORE
     if (diff < 0):
