@@ -7,6 +7,24 @@ import statistics
 from . import utilities as U
 from django.db.models import Q
 import requests as req
+from itertools import islice, cycle
+
+def add_extratime_penalties_votes(votes, extra_goals, penalties):
+    #add extratime goals
+    votes[1][9] += extra_goals #NGoals, BAD!
+
+    if penalties is None or len(penalties) == 0:
+        votes[1].append(1) #only extratime
+        return votes
+
+    votes[1].append(2) #extratime + penalties
+    #add penalties goals
+    pen_points = sum([1 for v in penalties.values() if (v)]) #count how many made at least one point
+
+    #add to votes items
+    votes[1][9] += pen_points #NGoals
+
+    return votes
 
 def extract_votes_for_penalties(pen_players, votes):
     votes_tit = votes[0]
@@ -31,8 +49,8 @@ def calculate_penalties_votes(lineup_home, lineup_away, votes_home, votes_away):
     if lineup_home is None or lineup_away is None:
         return 0,0
     
-    n_pen_scored_home = 0
-    n_pen_scored_away = 0
+    pen_results_home = {}
+    pen_results_away = {}
 
     line_home = json.loads(U.cleanJSON(lineup_home.Line))
     pen_players_home = line_home['penalties'] if 'penalties' in line_home else []
@@ -48,17 +66,47 @@ def calculate_penalties_votes(lineup_home, lineup_away, votes_home, votes_away):
     pen_home_votes = extract_votes_for_penalties(pen_players_home, votes_home)
     pen_away_votes = extract_votes_for_penalties(pen_players_away, votes_away)
 
-    # pen_score_home = sum([v.TotVote for v in votes_tit_home if v.TotVote is not None and v.Player.id in pen_players_home])
-    # n_pen_home = int((pen_score_home - C.Various.PEN_BASE_SCORE) / C.Various.PEN_THRESHOLD_GOL) + 1 if pen_score_home >= C.Various.PEN_BASE_SCORE else 0
+    #match the gk vote with opponent's players votes. If equal, player makes a point.
+    #round the list until 11 times
+    
+    #remove None from list
+    pen_home_votes = {k: v for k, v in pen_home_votes.items() if v is not None}
+    pen_away_votes = {k: v for k, v in pen_away_votes.items() if v is not None}
 
-    # line_away = json.loads(U.cleanJSON(lineup_away.Line))
-    # pen_players_away = line_away['penalties'] if 'penalties' in line_away else []
-    # votes_tit_away = votes_away[2]
+    pen_home_votes_list = list(pen_home_votes.items())
+    phv_size = len(pen_home_votes_list)
+    pen_away_votes_list = list(pen_away_votes.items())
+    pav_size = len(pen_away_votes_list)
 
-    # pen_score_away = sum([v.TotVote for v in votes_tit_away if v.TotVote is not None and v.Player.id in pen_players_away])
-    # n_pen_away = int((pen_score_away - C.Various.PEN_BASE_SCORE) / C.Various.PEN_THRESHOLD_GOL) + 1 if pen_score_away >= C.Various.PEN_BASE_SCORE else 0
+    for p_id,p_vote in pen_home_votes_list:
+        pen_results_home[p_id] = True if p_vote >= gk_away_vote else False
 
-    return {'pen_score_home': n_pen_scored_home, 'pen_score_away': n_pen_scored_away}
+    for p_id,p_vote in pen_away_votes_list:
+        pen_results_away[p_id] = True if p_vote >= gk_home_vote else False
+
+    #take first 5 penalties
+    first_5_home = dict(islice(pen_results_home.items(), 5))
+    first_5_away =  dict(islice(pen_results_away.items(), 5))
+    scores_home = [1 if v else 0 for v in first_5_home.values()]
+    scores_away = [1 if v else 0 for v in first_5_away.values()]
+    
+    if sum(scores_home) == sum(scores_away):
+        #sudden death
+        for i in range(5,11):
+            home_item = list(pen_results_home.items())[i] #WARNING: TODO cycle
+            away_item = list(pen_results_away.items())[i]
+            home_score = 1 if home_item[1] else 0
+            away_score = 1 if away_item[1] else 0
+
+            scores_home.append(home_score)
+            scores_away.append(away_score)
+            if sum(scores_home) != sum(scores_away):
+                break
+    else:
+        pen_results_home = first_5_home
+        pen_results_away = first_5_away
+
+    return {'pen_results_home': pen_results_home, 'pen_results_away': pen_results_away}
 
 def calculate_n_ot_goals(ot_score):
     diff = ot_score - C.Various.OT_BASE_SCORE

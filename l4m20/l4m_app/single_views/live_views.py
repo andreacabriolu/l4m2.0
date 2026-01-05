@@ -227,17 +227,16 @@ def LiveView(request):
                                                  day, competition_id, seriesid)):
                         extra_goals_home = LU.calculate_extratime_goals(votes_home, lineup_couple[0])
                         extra_goals_away = LU.calculate_extratime_goals(votes_away, lineup_couple[1])
+                        penalties_results = {}
                         
-                        votes_home[1][9] += extra_goals_home #BAD
-                        votes_away[1][9] += extra_goals_away #BAD
-
                         if extra_goals_home == extra_goals_away:
-                            penalties_home, penalties_away = \
+                            penalties_results = \
                                 LU.calculate_penalties_votes(lineup_couple[0], lineup_couple[1], votes_home, votes_away)
+
+                        votes_home = LU.add_extratime_penalties_votes(votes_home, extra_goals_home, penalties_results.get('pen_results_home', {}))
+                        votes_away = LU.add_extratime_penalties_votes(votes_away, extra_goals_away, penalties_results.get('pen_results_away', {}))
                         pass
-                    # votes_home = LU.add_extratime_penalties_votes(votes_home, lineup_couple[0], day, competition_id)
-                    # votes_away = LU.add_extratime_penalties_votes(votes_away, lineup_couple[1], day, competition_id)
-                
+
                 all_votes.append( \
                     [votes_home, votes_away]
                 )
