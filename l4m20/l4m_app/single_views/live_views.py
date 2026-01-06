@@ -225,17 +225,19 @@ def LiveView(request):
                     if(LU.check_match_for_extratime(lineup_couple[0].Team.id, lineup_couple[1].Team.id, 
                                                  votes_home, votes_away, 
                                                  day, competition_id, seriesid)):
-                        extra_goals_home = LU.calculate_extratime_goals(votes_home, lineup_couple[0])
-                        extra_goals_away = LU.calculate_extratime_goals(votes_away, lineup_couple[1])
-                        penalties_results = {}
-                        
-                        if extra_goals_home == extra_goals_away:
-                            penalties_results = \
-                                LU.calculate_penalties_votes(lineup_couple[0], lineup_couple[1], votes_home, votes_away)
 
-                        votes_home = LU.add_extratime_penalties_votes(votes_home, extra_goals_home, penalties_results.get('pen_results_home', {}))
-                        votes_away = LU.add_extratime_penalties_votes(votes_away, extra_goals_away, penalties_results.get('pen_results_away', {}))
-                        pass
+                        #move all this to API call? (only for LIVE)
+                        pass                        
+                        # extra_goals_home = LU.calculate_extratime_goals(votes_home, lineup_couple[0])
+                        # extra_goals_away = LU.calculate_extratime_goals(votes_away, lineup_couple[1])
+                        # penalties_results = {}
+                        
+                        # if extra_goals_home == extra_goals_away:
+                        #     penalties_results = \
+                        #         LU.calculate_penalties_votes(lineup_couple[0], lineup_couple[1], votes_home, votes_away)
+
+                        # votes_home = LU.add_extratime_penalties_votes(votes_home, extra_goals_home, penalties_results.get('pen_results_home', {}))
+                        # votes_away = LU.add_extratime_penalties_votes(votes_away, extra_goals_away, penalties_results.get('pen_results_away', {}))
 
                 all_votes.append( \
                     [votes_home, votes_away]
@@ -256,7 +258,7 @@ def LiveView(request):
         'homeAway': homeAway,
         'is_live_day': is_live_day,
         'today_competitions_ids': today_competitions_ids,
-        # 'overtime_penalties': overtime_penalties,
+        'extratime_penalties': extratime_penalties,
         }
     
     return render(request, template_name, params)
