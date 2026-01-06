@@ -191,7 +191,6 @@ def calculate_league(competition, day):
     all_league_days = U.get_days(competition.id)
     league_days = sorted([d['Day'] for d in all_league_days if int(day) <= d['Day'] <= int(curr_day)])
     days_to_calculate = league_days if (int(day) < int(curr_day)) else [int(curr_day)]
-    main_league = U.get_competition(name='Campionato')[0] #double fetch, I know
 
     for _day in days_to_calculate:
         if _day not in league_days:

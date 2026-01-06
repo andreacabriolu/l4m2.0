@@ -568,6 +568,35 @@ def remake_votes_obj(_votes):
 
     return _votes_obj
 
+def make_political_vote_obj(pl, comp, day, cap_id):
+    v_obj = vote.Vote.Vote_Obj()
+    v_obj.AssH = 0
+    v_obj.AssL = 0
+    v_obj.AssP = 0
+    v_obj.AssS = 0
+    v_obj.Player = pl
+    v_obj.Competition = comp
+    v_obj.Day = day
+    v_obj.GoalDe = 0
+    v_obj.GoalSc = 0
+    v_obj.GoalTa = 0
+    v_obj.Own = 0
+    v_obj.PenMi = 0
+    v_obj.PenSa = 0
+    v_obj.PenSc = 0
+    v_obj.Red = 0
+    v_obj.YelRed = 0
+    v_obj.Sub = 0 
+    v_obj.SubJ = 0
+    v_obj.Yel = 0
+    v_obj.Vote = 6
+    v_obj.TotVote = 6
+    if(pl.id == cap_id):
+        v_obj.Cap = True
+    v_obj.Status = C.PlayerStatus.PLAYED
+
+    return v_obj
+
 def make_vote_obj(_vote:vote.Vote, cap_id):
     v_obj = vote.Vote.Vote_Obj()
     v_obj.AssH = _vote.AssH
@@ -587,7 +616,6 @@ def make_vote_obj(_vote:vote.Vote, cap_id):
     v_obj.Red = _vote.Red
     v_obj.YelRed = _vote.YelRed
     v_obj.Sub = _vote.Sub 
-    v_obj.Status = C.PlayerStatus.PLAYED #TODO
     v_obj.SubJ = _vote.SubJ
     v_obj.Yel = _vote.Yel
     v_obj.Vote = _vote.Vote
@@ -783,17 +811,26 @@ def get_votes(lineup, current_day, live_votes, live_teams, already_played_teams=
                 cap_vote = 6
         else:
         #player NOT LIVE
-            _vote = vote.Vote.objects.filter(Q(Player_id=pl.id) & Q(Day=current_day))
-            if(l[0].endswith('tit')):
-                votes_tit.append(make_vote_obj(_vote[0], cap_id) if isValid(_vote) else \
-                                make_empty_vote_obj(pl.id, cap_id, already_played, current_day))
+            #EXCEPTION for 6 politico -- next year a vote for each competition REQUIRED!
+            if current_day ==  16 and \
+                lineup.Series.Competition.id in [7,8,9] and \
+                pl.RealTeam.id in [14,31,8,11,20,2,25,12]: #triple HARD check !!!!!!!!!!!
+                    if(l[0].endswith('tit')):
+                        votes_tit.append(make_political_vote_obj(pl, lineup.Series.Competition, current_day, cap_id))
+                    else:
+                        votes_ris.append(make_political_vote_obj(pl, lineup.Series.Competition, current_day, cap_id))
             else:
-                votes_ris.append(make_vote_obj(_vote[0], cap_id) if isValid(_vote) else \
-                                make_empty_vote_obj(pl.id, cap_id, already_played, current_day))
+                _vote = vote.Vote.objects.filter(Q(Player_id=pl.id) & Q(Day=current_day))
+                if(l[0].endswith('tit')):
+                    votes_tit.append(make_vote_obj(_vote[0], cap_id) if isValid(_vote) else \
+                                    make_empty_vote_obj(pl.id, cap_id, already_played, current_day))
+                else:
+                    votes_ris.append(make_vote_obj(_vote[0], cap_id) if isValid(_vote) else \
+                                    make_empty_vote_obj(pl.id, cap_id, already_played, current_day))
 
-            if len(_vote) > 0:
-                if(pl.id == cap_id):
-                    cap_vote = _vote[0].Vote
+                if len(_vote) > 0:
+                    if(pl.id == cap_id):
+                        cap_vote = _vote[0].Vote
     
     valid_votes = []
     n_subs = 0
@@ -858,9 +895,6 @@ def get_votes(lineup, current_day, live_votes, live_teams, already_played_teams=
 
     grand_total = total + modifier + bonus_cap + bonus_disc + bonus_prest + bonus_home
     _items.append(grand_total)
-
-    # if get_for_calculation: #direct return for day calculation
-    #     return grand_total
 
     n_goals = calculate_n_goals(grand_total)
     _items.append(n_goals)
