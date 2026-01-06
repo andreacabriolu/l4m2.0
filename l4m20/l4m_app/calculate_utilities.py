@@ -206,7 +206,7 @@ def calculate_league(competition, day):
             all_votes = []
 
             for t in series_teams:
-                l = U.get_last_lineup(t, _day, comp_id=main_league.id) #take last lineup only from main league
+                l = U.get_last_lineup(t, _day, comp_id=competition.id) #BUG fixed
 
                 if len(l) <= 0:
                     continue 
