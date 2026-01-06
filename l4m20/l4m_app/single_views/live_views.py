@@ -5,11 +5,35 @@ from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 import json
 from django.contrib.auth.decorators import login_required
+from requests import request
 
 
 from .. import utilities as U
 from .. import live_utilities as LU
 from ..models import *
+
+class GetLiveExtraTimeView(View):
+    def get(self, request):
+        t = U.get_team_by_name(request.GET['tname'])
+        day = request.GET['day']
+        competition_id = request.GET['competition']
+        lineup = U.get_last_lineup(t, day, comp_id=competition_id)[0]
+
+        live_votes, live_teams, already_played_teams = LU.get_live_votes(day)
+
+        votes_home = LU.get_votes(lineup, 
+                                  day, 
+                                  live_votes=live_votes, 
+                                  live_teams=live_teams, 
+                                  already_played_teams=already_played_teams, 
+                                  my_teamid=None, 
+                                  home=True, 
+                                  homeAway=None)
+
+
+        extra_goals, ot_votes_map = LU.calculate_extratime_goals(votes_home, lineup)
+        
+        return HttpResponse(json.dumps({'n_et_goals': extra_goals, 'ot_votes_map': ot_votes_map}))
 
 class MyLiveView(LoginRequiredMixin, View):
     template_name = 'l4m/my_live.html'

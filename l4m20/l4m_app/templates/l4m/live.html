@@ -265,21 +265,17 @@
                                 {% endif %}
                             </button>
 
-                                {% if team_votes.1.16 and team_votes.1.16 > 0 %}
-                                <button class="extra-time-btn">
+                                <button class="extra-time-btn" data-teamname="{{team_votes.1.1}}">
                                     <i class="fas fa-stopwatch"></i>
                                     <span>VEDI SUPPLEMENTARI</span>
                                     <small>+1</small>
                                 </button>
-                                {% endif %}
 
-                                {% if team_votes.1.16 and team_votes.1.16 > 1 %}                             
                                 <button class="penalty-btn">
                                     <i class="fas fa-futbol"></i>
                                     <span>VEDI RIGORI</span>
                                 </button>
 
-                                {% endif %}
 
                             {% endif %}
                         </th>

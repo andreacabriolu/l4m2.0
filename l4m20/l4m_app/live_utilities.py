@@ -123,10 +123,15 @@ def calculate_extratime_goals(votes, lineup):
     ot_players = line['ot'] if 'ot' in line else []
     votes_ris = votes[2]
 
+    ot_votes_map = {}
     ot_score = sum([v.TotVote for v in votes_ris if v.TotVote is not None and v.Player.id in ot_players])
     ot_goals = calculate_n_ot_goals(ot_score)
 
-    return ot_goals
+    for v in votes_ris:
+        if v.Player.id in ot_players and v.TotVote is not None:
+            ot_votes_map[v.Player.id] = v.TotVote
+
+    return ot_goals, ot_votes_map
 
 def check_match_for_extratime(home_team_id, away_team_id, votes_home, votes_away, day, comp_id, seriesid):
     is_round_trip = U.is_round_trip_match(day, comp_id)

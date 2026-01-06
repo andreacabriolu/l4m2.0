@@ -172,6 +172,23 @@ window.addEventListener('DOMContentLoaded', event => {
         window.location.href = '/l4m/live_b11';
     });
 
+    $('.extra-time-btn').on('click', function () {
+        const teamname = $(this).data('teamname');
+
+        $('#extraTimeModal').modal('show');
+        $('#extraTimeBody').html('<div class="text-center">Calcolo in corso...</div>');
+
+        $.get('/l4m/get_live_extratime/', {
+            tname: teamname,
+            day: $('#current_day').val(),
+            competition: $('#current_competition').val(),
+            csrfmiddlewaretoken: token
+        }, function (data) {
+
+            // renderExtraTimeModal(data);
+        });
+    });
+
     $('#view_live_btn').on('click', function () {
         var data = {
             'competition': $('#select_comp').children('option:selected').data().id,
