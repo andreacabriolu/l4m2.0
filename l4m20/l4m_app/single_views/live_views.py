@@ -12,7 +12,7 @@ from .. import utilities as U
 from .. import live_utilities as LU
 from ..models import *
 
-class GetLiveExtraTimeView(View):
+class GetExtraTimeView(View):
     def get(self, request):
         t = U.get_team_by_name(request.GET['tname'])
         day = request.GET['day']
@@ -31,9 +31,13 @@ class GetLiveExtraTimeView(View):
                                   homeAway=None)
 
 
-        extra_goals, ot_votes_map = LU.calculate_extratime_goals(votes_home, lineup)
+        extra_goals, extra_score, ot_votes_map = LU.calculate_extratime_goals(votes_home, lineup)
         
-        return HttpResponse(json.dumps({'n_et_goals': extra_goals, 'ot_votes_map': ot_votes_map}))
+        return HttpResponse(json.dumps({''
+        'teamname': lineup.Team.Name,
+        'n_et_goals': extra_goals, 
+        'et_score': extra_score, 
+        'ot_votes_map': ot_votes_map}))
 
 class MyLiveView(LoginRequiredMixin, View):
     template_name = 'l4m/my_live.html'

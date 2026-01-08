@@ -129,9 +129,9 @@ def calculate_extratime_goals(votes, lineup):
 
     for v in votes_ris:
         if v.Player.id in ot_players and v.TotVote is not None:
-            ot_votes_map[v.Player.id] = v.TotVote
+            ot_votes_map[v.Player.id] = [v.Player.Surname, v.TotVote]
 
-    return ot_goals, ot_votes_map
+    return ot_goals, ot_score, ot_votes_map
 
 def check_match_for_extratime(home_team_id, away_team_id, votes_home, votes_away, day, comp_id, seriesid):
     is_round_trip = U.is_round_trip_match(day, comp_id)
