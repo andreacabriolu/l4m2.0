@@ -540,6 +540,11 @@ def free_player(bet_id, session_svincolo):
     
     bet_history_new.save()
 
+    #if player estero/B, do not count svincolo
+    if _bet.Player.Status != 'A':
+        _bet.delete()
+        return
+
     my_bal = get_balance_obj(_bet.Team_id)
     if len(my_bal) <= 0:
         return
