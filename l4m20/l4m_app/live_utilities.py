@@ -9,6 +9,17 @@ from django.db.models import Q
 import requests as req
 from itertools import islice, cycle
 
+def add_extratime_penalties_flag(votes):
+    #add extratime flag
+    votes[1].append(True) #no extratime nor penalties
+
+    return votes
+
+def get_goalkeeper_from_votes(votes):
+    votes_tit = votes[0]
+
+    return [votes_tit[0].Player.Surname, votes_tit[0].Vote]
+
 def add_extratime_penalties_votes(votes, extra_goals, penalties):
     #add extratime goals
     votes[1][9] += extra_goals #NGoals, BAD!
@@ -35,15 +46,40 @@ def extract_votes_for_penalties(pen_players, votes):
 
     for p in pen_players:
         if p in tit_players:
-            matching_vote = next((v.Vote for v in votes_tit if int(v.Player.id) == p), None)
+            matching_vote = next(((v.Player.Surname, v.Vote) for v in votes_tit if int(v.Player.id) == p), None)
             pen_votes[p] = matching_vote
     
     #complete the list if needed
     diff = set(tit_players) - set(pen_players)
     for d in diff:
-        pen_votes[d] = next((v.Vote for v in votes_tit if int(v.Player.id) == d), None)
+        pen_votes[d] = next(((v.Player.Surname, v.Vote) for v in votes_tit if int(v.Player.id) == d), None)
 
     return pen_votes
+
+def calculate_penalties_single_team(lineup, gk_opponent_vote, votes):
+    if lineup is None:
+        return 0
+    
+    pen_results = {}
+
+    line_home = json.loads(U.cleanJSON(lineup.Line))
+    pen_players_home = line_home['penalties'] if 'penalties' in line_home else []
+
+    pen_home_votes = extract_votes_for_penalties(pen_players_home, votes)
+
+    #match the gk vote with opponent's players votes. If equal, player makes a point.
+    #round the list until 11 times
+    
+    #remove None from list
+    pen_home_votes = {k: v for k, v in pen_home_votes.items() if v[1] is not None}
+
+    pen_home_votes_list = list(pen_home_votes.items())
+
+    for _,(p_surname, p_vote) in pen_home_votes_list:
+        pen_results[p_surname] = [p_vote, True] if p_vote >= gk_opponent_vote else [p_vote, False]
+
+    return {'pen_results': pen_results}
+
 
 def calculate_penalties_votes(lineup_home, lineup_away, votes_home, votes_away):
     if lineup_home is None or lineup_away is None:
@@ -635,6 +671,19 @@ def get_couples_from_calendar(seriesid, day, competition_id=1):
         Q(Series_id=seriesid))
     couples = [(match.HomeTeam.id, match.AwayTeam.id) for match in matches_]
     return couples
+
+def get_opponent_from_calendar(teamid, day, competition_id=1):
+    matches_ = matches_calendar.MatchesCalendar.objects.filter(
+        Q(CompetitionCalendar__Competition_id=competition_id) & 
+        Q(CompetitionCalendar__Day=day) & 
+        (Q(HomeTeam=teamid) | Q(AwayTeam=teamid)))
+    opponents = []
+    for match in matches_:
+        if match.HomeTeam.id == teamid:
+            opponents.append(match.AwayTeam.id)
+        else:
+            opponents.append(match.HomeTeam.id)
+    return opponents
 
 def make_null_vote_obj(pl_id, cap_id=None):
     v_obj = vote.Vote.Vote_Obj()

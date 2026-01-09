@@ -524,3 +524,50 @@ table .w-30 {
   color: #0f172a;
 }
 
+.penalty-modal {
+  background: linear-gradient(180deg, #1f2933, #111827);
+  color: #e5e7eb;
+  border-radius: 16px;
+}
+
+.penalty-modal .modal-header {
+  border-bottom: 1px solid #334155;
+}
+
+.penalty-row {
+  display: grid;
+  grid-template-columns: 40px 1fr 80px 80px 90px;
+  gap: 10px;
+  align-items: center;
+  padding: 12px 10px;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  background: #1e293b;
+}
+
+.penalty-row.first-five {
+  border-left: 4px solid #3b82f6;
+}
+
+.penalty-row .shot {
+  font-weight: bold;
+  text-align: center;
+}
+
+.penalty-row .vote,
+.penalty-row .gk {
+  text-align: center;
+}
+
+.badge-goal {
+  background: #16a34a;
+}
+
+.badge-miss {
+  background: #dc2626;
+}
+
+.penalty-total strong {
+  font-size: 36px;
+  color: #3b82f6;
+}

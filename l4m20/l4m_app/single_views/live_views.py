@@ -12,6 +12,50 @@ from .. import utilities as U
 from .. import live_utilities as LU
 from ..models import *
 
+class GetPenaltiesView(View):
+    def get(self, request):
+        t = U.get_team_by_name(request.GET['tname'])
+        day = request.GET['day']
+        competition_id = request.GET['competition']
+        lineup = U.get_last_lineup(t, day, comp_id=competition_id)[0]
+
+        opponents = LU.get_opponent_from_calendar(t.id, day, competition_id)
+        if len(opponents) <= 0:
+            return HttpResponse(json.dumps({}))
+        opponent = opponents[0]
+        opponent_lineup = U.get_last_lineup(opponent, day, comp_id=competition_id)[0]
+
+        live_votes, live_teams, already_played_teams = LU.get_live_votes(day)
+
+        votes_home = LU.get_votes(lineup, 
+                                  day, 
+                                  live_votes=live_votes, 
+                                  live_teams=live_teams, 
+                                  already_played_teams=already_played_teams, 
+                                  my_teamid=None, 
+                                  home=True, 
+                                  homeAway=None)
+        
+        votes_opponent = LU.get_votes(opponent_lineup, 
+                                  day, 
+                                  live_votes=live_votes, 
+                                  live_teams=live_teams, 
+                                  already_played_teams=already_played_teams,
+                                  my_teamid=None,
+                                  home=False,
+                                  homeAway=None)
+                                
+        gk_opponent_surname, gk_opponent_vote = LU.get_goalkeeper_from_votes(votes_opponent)
+
+        penalties_results = LU.calculate_penalties_single_team(lineup, gk_opponent_vote, votes_home)
+        
+        return HttpResponse(json.dumps({''
+        'teamname': lineup.Team.Name,
+        'pen_results': penalties_results.get('pen_results', {}),
+        'gk_opponent_surname': gk_opponent_surname,
+        'gk_opponent_vote': gk_opponent_vote
+        }))
+
 class GetExtraTimeView(View):
     def get(self, request):
         t = U.get_team_by_name(request.GET['tname'])
@@ -255,7 +299,6 @@ def LiveView(request):
                                                  day, competition_id, seriesid)):
 
                         #move all this to API call? (only for LIVE)
-                        pass                        
                         # extra_goals_home = LU.calculate_extratime_goals(votes_home, lineup_couple[0])
                         # extra_goals_away = LU.calculate_extratime_goals(votes_away, lineup_couple[1])
                         # penalties_results = {}
@@ -264,8 +307,8 @@ def LiveView(request):
                         #     penalties_results = \
                         #         LU.calculate_penalties_votes(lineup_couple[0], lineup_couple[1], votes_home, votes_away)
 
-                        # votes_home = LU.add_extratime_penalties_votes(votes_home, extra_goals_home, penalties_results.get('pen_results_home', {}))
-                        # votes_away = LU.add_extratime_penalties_votes(votes_away, extra_goals_away, penalties_results.get('pen_results_away', {}))
+                        votes_home = LU.add_extratime_penalties_flag(votes_home)
+                        votes_away = LU.add_extratime_penalties_flag(votes_away)
 
                 all_votes.append( \
                     [votes_home, votes_away]

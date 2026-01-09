@@ -204,6 +204,38 @@ function buildExtraTimeModalBody(data) {
   return html;
 }
 
+function renderPenaltyModal(data) {
+    data = JSON.parse(data);
+
+    $('#penalty-team-name').empty();
+    $('#penalty-team-name').append(data.teamname);
+    renderPenalty(data.pen_results, data.gk_opponent_vote);
+}
+
+function renderPenalty(penalties, opponentGkVote) {
+  html = '';
+
+  Object.entries(penalties).map(([pname, p_exit], index) => {
+    isGoal = p_exit[1];
+    pvote = p_exit[0];
+
+    html += `<div class="penalty-row ${index < 5 ? 'first-five' : ''}">
+        <div class="shot">${index + 1}</div>
+        <div class="name">${pname}</div>
+        <div class="vote">${pvote}</div>
+        <div class="gk">${opponentGkVote}</div>
+        <div>
+          <span class="badge ${isGoal ? 'badge-goal' : 'badge-miss'}">
+            ${isGoal ? 'GOAL' : 'PARATO'}
+          </span>
+        </div>
+      </div>`;
+    }).join('');
+
+
+  document.getElementById('penalty-list').innerHTML = html;
+}
+
 
 window.addEventListener('DOMContentLoaded', event => {
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
@@ -227,6 +259,24 @@ window.addEventListener('DOMContentLoaded', event => {
 
     $('#b11_live_btn').on('click', function () {
         window.location.href = '/l4m/live_b11';
+    });
+
+    $('.penalty-btn').on('click', function () {
+        $('#penalty-list').empty();
+        const teamname = $(this).data('teamname');
+
+        $('#penaltyModal').modal('show');
+        $('#penaltyBody').html('<div class="text-center">Calcolo in corso...</div>');
+
+        $.get('/l4m/get_penalties/', {
+            tname: teamname,
+            day: $('#current_day').val(),
+            competition: $('#current_competition').val(),
+            csrfmiddlewaretoken: token
+        }, function (data) {
+
+            renderPenaltyModal(data);
+        });
     });
 
     $('.extra-time-btn').on('click', function () {
