@@ -27,6 +27,8 @@ class MatchesResults(models.Model):
     MissingSlots = models.IntegerField(null=True)
     Version = models.IntegerField(null=True)
     BonusHome = models.IntegerField(null=True)
+    ExtraTimePlayers = models.CharField(null=True)
+    PenaltyPlayers = models.CharField(null=True)
 
     def __str__(self):
         return f"{self.MatchesCalendar} | {self.Team} {self.Fp}"

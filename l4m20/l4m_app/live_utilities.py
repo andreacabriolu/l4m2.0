@@ -11,7 +11,7 @@ from itertools import islice, cycle
 
 def add_extratime_penalties_flag(votes):
     #add extratime flag
-    votes[1].append(True) #no extratime nor penalties
+    votes[1].append(True) #extratime or penalties played
 
     return votes
 
@@ -106,25 +106,25 @@ def calculate_penalties_votes(lineup_home, lineup_away, votes_home, votes_away):
     #round the list until 11 times
     
     #remove None from list
-    pen_home_votes = {k: v for k, v in pen_home_votes.items() if v is not None}
-    pen_away_votes = {k: v for k, v in pen_away_votes.items() if v is not None}
+    pen_home_votes = {k: v for k, v in pen_home_votes.items() if v[1] is not None}
+    pen_away_votes = {k: v for k, v in pen_away_votes.items() if v[1] is not None}
 
     pen_home_votes_list = list(pen_home_votes.items())
     phv_size = len(pen_home_votes_list)
     pen_away_votes_list = list(pen_away_votes.items())
     pav_size = len(pen_away_votes_list)
 
-    for p_id,p_vote in pen_home_votes_list:
-        pen_results_home[p_id] = True if p_vote >= gk_away_vote else False
+    for _,(p_surname, p_vote) in pen_home_votes_list:
+        pen_results_home[p_surname] = [p_vote, True] if p_vote >= gk_away_vote else [p_vote, False]
 
-    for p_id,p_vote in pen_away_votes_list:
-        pen_results_away[p_id] = True if p_vote >= gk_home_vote else False
+    for _,(p_surname, p_vote) in pen_away_votes_list:
+        pen_results_away[p_surname] = [p_vote, True] if p_vote >= gk_home_vote else [p_vote, False]
 
     #take first 5 penalties
     first_5_home = dict(islice(pen_results_home.items(), 5))
     first_5_away =  dict(islice(pen_results_away.items(), 5))
-    scores_home = [1 if v else 0 for v in first_5_home.values()]
-    scores_away = [1 if v else 0 for v in first_5_away.values()]
+    scores_home = [1 if v[1] else 0 for v in first_5_home.values()]
+    scores_away = [1 if v[1] else 0 for v in first_5_away.values()]
     
     if sum(scores_home) == sum(scores_away):
         #sudden death
@@ -142,7 +142,8 @@ def calculate_penalties_votes(lineup_home, lineup_away, votes_home, votes_away):
         pen_results_home = first_5_home
         pen_results_away = first_5_away
 
-    return {'pen_results_home': pen_results_home, 'pen_results_away': pen_results_away}
+    return {'pen_results_home': pen_results_home, 'score_home': sum(scores_home), 
+            'pen_results_away': pen_results_away, 'score_away': sum(scores_away)}
 
 def calculate_n_ot_goals(ot_score):
     diff = ot_score - C.Various.OT_BASE_SCORE

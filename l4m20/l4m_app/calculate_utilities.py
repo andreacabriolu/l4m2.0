@@ -206,7 +206,7 @@ def calculate_league(competition, day):
             all_votes = []
 
             for t in series_teams:
-                l = U.get_last_lineup(t, _day, comp_id=main_league.id) #take last lineup only from main league
+                l = U.get_last_lineup(t, _day, comp_id=competition.id)
 
                 if len(l) <= 0:
                     continue 
@@ -222,6 +222,26 @@ def calculate_league(competition, day):
             for lineup_couple in lineup_couples:
                 votes_home = LU.get_votes(lineup_couple[0], _day, live_votes=[], live_teams=[], get_for_calculation=True, homeAway=homeAway)
                 votes_away = LU.get_votes(lineup_couple[1], _day, live_votes=[], live_teams=[], get_for_calculation=True, homeAway=homeAway, home=False if homeAway else None)
+                
+                if(LU.check_match_for_extratime(lineup_couple[0].Team.id, lineup_couple[1].Team.id, 
+                                                 votes_home, votes_away, 
+                                                 day, competition.id, series.id)):
+                    
+                    extra_goals_home, extra_score_home, extra_votes_map_home = LU.calculate_extratime_goals(votes_home, lineup_couple[0])
+                    extra_goals_away, extra_score_away, extra_votes_map_away = LU.calculate_extratime_goals(votes_away, lineup_couple[1])
+
+                    penalties_results = {}
+                    if extra_goals_home == extra_goals_away:
+                        penalties_results = \
+                            LU.calculate_penalties_votes(lineup_couple[0], lineup_couple[1], votes_home, votes_away)
+
+                    votes_home.append({'extratime': json.dumps(extra_votes_map_home)})  #extratime home
+                    votes_away.append({'extratime': json.dumps(extra_votes_map_away)})  #extratime away
+                    votes_home.append({'penalties': json.dumps(penalties_results.get('pen_results_home', {}))})  #penalties home
+                    votes_away.append({'penalties': json.dumps(penalties_results.get('pen_results_away', {}))})  #penalties away
+                
+                    pass
+                
                 all_votes.append( [[lineup_couple[0].Team.id, votes_home], [lineup_couple[1].Team.id, votes_away], lineup_couple[2]] )
 
             all_votes_per_series[series.id] = all_votes
@@ -288,7 +308,9 @@ def save_results(votes_per_series):
             'missing_slots': home_team_items[13],
             'version': home_team_items[14],
             'bonus_home': home_team_items[15],
-            'pen': 1 if home_team_items[14] < 0 else 0 
+            'pen': 1 if home_team_items[14] < 0 else 0,
+            'extratime': home_team_data[3] if len(home_team_data) > 3 else None,
+            'penalties': home_team_data[4] if len(home_team_data) > 4 else None
         }
 
         away_team_data = away_results[1]
@@ -311,7 +333,9 @@ def save_results(votes_per_series):
             'missing_slots': away_team_items[13],
             'version': away_team_items[14],
             'bonus_home': away_team_items[15],
-            'pen': 1 if away_team_items[14] < 0 else 0 
+            'pen': 1 if away_team_items[14] < 0 else 0 ,
+            'extratime': away_team_data[3] if len(away_team_data) > 3 else None,
+            'penalties': away_team_data[4] if len(away_team_data) > 4 else None
         }
 
         mr_home = matches_results.MatchesResults(Team = t1, 
@@ -333,6 +357,8 @@ def save_results(votes_per_series):
                                               Version = home_data['version'], 
                                               BonusHome = home_data['bonus_home'], 
                                               Pen = home_data['pen'],
+                                              ExtraTimePlayers = home_data['extratime'],
+                                              PenaltyPlayers = home_data['penalties'],
                                               MatchesCalendar = mc)
 
         mr_away = matches_results.MatchesResults(Team = t2, 
@@ -354,6 +380,8 @@ def save_results(votes_per_series):
                                                 Version = away_data['version'], 
                                                 BonusHome = away_data['bonus_home'],
                                                 Pen = away_data['pen'],
+                                                ExtraTimePlayers = away_data['extratime'],
+                                                PenaltyPlayers = away_data['penalties'],
                                                 MatchesCalendar = mc)
         
         mr_home.save()

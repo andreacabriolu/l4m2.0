@@ -297,16 +297,6 @@ def LiveView(request):
                     if(LU.check_match_for_extratime(lineup_couple[0].Team.id, lineup_couple[1].Team.id, 
                                                  votes_home, votes_away, 
                                                  day, competition_id, seriesid)):
-
-                        #move all this to API call? (only for LIVE)
-                        # extra_goals_home = LU.calculate_extratime_goals(votes_home, lineup_couple[0])
-                        # extra_goals_away = LU.calculate_extratime_goals(votes_away, lineup_couple[1])
-                        # penalties_results = {}
-                        
-                        # if extra_goals_home == extra_goals_away:
-                        #     penalties_results = \
-                        #         LU.calculate_penalties_votes(lineup_couple[0], lineup_couple[1], votes_home, votes_away)
-
                         votes_home = LU.add_extratime_penalties_flag(votes_home)
                         votes_away = LU.add_extratime_penalties_flag(votes_away)
 
