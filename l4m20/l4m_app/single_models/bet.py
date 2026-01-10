@@ -13,7 +13,7 @@ class Bet(models.Model):
     Team = models.ForeignKey(on_delete=models.CASCADE, to=C.Constant_Strings.team, null=True)
     Session = models.ForeignKey(on_delete=models.CASCADE, to=C.Constant_Strings.session, null=True)
     Expiration_Date = models.TextField(max_length=100)
-    Slot = models.TextField(max_length=2)
+    Slot = models.TextField(max_length=10)
     IsExpired = models.BooleanField(default=False)
     IsRaised = models.BooleanField(default=False) #TODO move to Bet_history
     IsOfficial = models.BooleanField(default=False)
