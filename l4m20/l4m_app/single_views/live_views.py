@@ -16,6 +16,7 @@ class GetPenaltiesView(View):
     def get(self, request):
         t = U.get_team_by_name(request.GET['tname'])
         day = request.GET['day']
+        current_day = U.get_current_day()
         competition_id = request.GET['competition']
         lineup = U.get_last_lineup(t, day, comp_id=competition_id)[0]
 
@@ -25,33 +26,49 @@ class GetPenaltiesView(View):
         opponent = opponents[0]
         opponent_lineup = U.get_last_lineup(opponent, day, comp_id=competition_id)[0]
 
-        live_votes, live_teams, already_played_teams = LU.get_live_votes(day)
+        #QUICK LOAD THE PAST
+        if int(day) < int(current_day):
+            _match = LU.get_match_from_calendar(t.id, day, competition_id)
+            if len(_match) <= 0:
+                return HttpResponse(json.dumps({}))
+            
+            mr = LU.get_match_result(_match, t.id)
+            if mr is None:
+                return HttpResponse(json.dumps({}))
+            
+            pen_results = mr['PenaltyPlayers'] if 'PenaltyPlayers' in mr else {}
+            gk_opponent_surname = ''
+            gk_opponent_vote = ''
+                
+        else: #LIVE
+            live_votes, live_teams, already_played_teams = LU.get_live_votes(day)
 
-        votes_home = LU.get_votes(lineup, 
-                                  day, 
-                                  live_votes=live_votes, 
-                                  live_teams=live_teams, 
-                                  already_played_teams=already_played_teams, 
-                                  my_teamid=None, 
-                                  home=True, 
-                                  homeAway=None)
-        
-        votes_opponent = LU.get_votes(opponent_lineup, 
-                                  day, 
-                                  live_votes=live_votes, 
-                                  live_teams=live_teams, 
-                                  already_played_teams=already_played_teams,
-                                  my_teamid=None,
-                                  home=False,
-                                  homeAway=None)
-                                
-        gk_opponent_surname, gk_opponent_vote = LU.get_goalkeeper_from_votes(votes_opponent)
+            votes_home = LU.get_votes(lineup, 
+                                    day, 
+                                    live_votes=live_votes, 
+                                    live_teams=live_teams, 
+                                    already_played_teams=already_played_teams, 
+                                    my_teamid=None, 
+                                    home=True, 
+                                    homeAway=None)
+            
+            votes_opponent = LU.get_votes(opponent_lineup, 
+                                    day, 
+                                    live_votes=live_votes, 
+                                    live_teams=live_teams, 
+                                    already_played_teams=already_played_teams,
+                                    my_teamid=None,
+                                    home=False,
+                                    homeAway=None)
+                                    
+            gk_opponent_surname, gk_opponent_vote = LU.get_goalkeeper_from_votes(votes_opponent)
 
-        penalties_results = LU.calculate_penalties_single_team(lineup, gk_opponent_vote, votes_home)
+            penalties_results = LU.calculate_penalties_single_team(lineup, gk_opponent_vote, votes_home)
+            pen_results = penalties_results.get('pen_results', {})
         
         return HttpResponse(json.dumps({''
         'teamname': lineup.Team.Name,
-        'pen_results': penalties_results.get('pen_results', {}),
+        'pen_results': pen_results,
         'gk_opponent_surname': gk_opponent_surname,
         'gk_opponent_vote': gk_opponent_vote
         }))

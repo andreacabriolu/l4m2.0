@@ -287,6 +287,9 @@ def format_votes(mr):
 def get_matches_results(couples):
     return [matches_results.MatchesResults.objects.filter(MatchesCalendar=couple[2]) for couple in couples]
 
+def get_match_result(mc, teamid):
+    return matches_results.MatchesResults.objects.filter(Q(MatchesCalendar=mc) & (Q(Team_id=teamid)))
+
 def get_votes_total(b11_lineup, home=True, homeAway=False):
     votes_tit = []
     votes_ris = []
@@ -672,6 +675,13 @@ def get_couples_from_calendar(seriesid, day, competition_id=1):
         Q(Series_id=seriesid))
     couples = [(match.HomeTeam.id, match.AwayTeam.id) for match in matches_]
     return couples
+
+def get_match_from_calendar(teamid, day, competition_id=1):
+    match_ = matches_calendar.MatchesCalendar.objects.filter(
+        Q(CompetitionCalendar__Competition_id=competition_id) & 
+        Q(CompetitionCalendar__Day=day) & 
+        (Q(HomeTeam=teamid) | Q(AwayTeam=teamid)))
+    return match_
 
 def get_opponent_from_calendar(teamid, day, competition_id=1):
     matches_ = matches_calendar.MatchesCalendar.objects.filter(
