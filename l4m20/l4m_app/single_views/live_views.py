@@ -32,13 +32,14 @@ class GetPenaltiesView(View):
             if len(_match) <= 0:
                 return HttpResponse(json.dumps({}))
             
-            mr = LU.get_match_result(_match, t.id)
+            mr = LU.get_match_result(_match.first(), t.id)
             if mr is None:
                 return HttpResponse(json.dumps({}))
             
-            pen_results = mr['PenaltyPlayers'] if 'PenaltyPlayers' in mr else {}
-            gk_opponent_surname = ''
-            gk_opponent_vote = ''
+            pen_players = json.loads(mr.first().PenaltyPlayers)
+            pen_results = pen_players['results'] if 'results' in pen_players else {}
+            gk_opponent_surname = pen_players['gk_opponent_surname'] if 'gk_opponent_surname' in pen_players else ''
+            gk_opponent_vote = pen_players['gk_opponent_vote'] if 'gk_opponent_vote' in pen_players else ''
                 
         else: #LIVE
             live_votes, live_teams, already_played_teams = LU.get_live_votes(day)
@@ -80,20 +81,36 @@ class GetExtraTimeView(View):
         competition_id = request.GET['competition']
         lineup = U.get_last_lineup(t, day, comp_id=competition_id)[0]
 
-        live_votes, live_teams, already_played_teams = LU.get_live_votes(day)
-
-        votes_home = LU.get_votes(lineup, 
-                                  day, 
-                                  live_votes=live_votes, 
-                                  live_teams=live_teams, 
-                                  already_played_teams=already_played_teams, 
-                                  my_teamid=None, 
-                                  home=True, 
-                                  homeAway=None)
-
-
-        extra_goals, extra_score, ot_votes_map = LU.calculate_extratime_goals(votes_home, lineup)
+        #QUICK LOAD THE PAST
+        if int(day) < int(U.get_current_day()):
+            _match = LU.get_match_from_calendar(t.id, day, competition_id)
+            if len(_match) <= 0:
+                return HttpResponse(json.dumps({}))
+            
+            mr = LU.get_match_result(_match.first(), t.id)
+            if mr is None:
+                return HttpResponse(json.dumps({}))
+            
+            et_players = json.loads(mr.first().ExtraTimePlayers)
+            extra_goals = et_players.get('ngoals', 0) if et_players is not None else 0
+            extra_score = et_players.get('score', '0-0') if et_players is not None else '0'
+            ot_votes_map = et_players.get('results', {}) if et_players is not None else {}
         
+        else: #LIVE
+            live_votes, live_teams, already_played_teams = LU.get_live_votes(day)
+
+            votes_home = LU.get_votes(lineup, 
+                                    day, 
+                                    live_votes=live_votes, 
+                                    live_teams=live_teams, 
+                                    already_played_teams=already_played_teams, 
+                                    my_teamid=None, 
+                                    home=True, 
+                                    homeAway=None)
+
+
+            extra_goals, extra_score, ot_votes_map = LU.calculate_extratime_goals(votes_home, lineup)
+            
         return HttpResponse(json.dumps({''
         'teamname': lineup.Team.Name,
         'n_et_goals': extra_goals, 

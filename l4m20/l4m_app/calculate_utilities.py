@@ -191,7 +191,6 @@ def calculate_league(competition, day):
     all_league_days = U.get_days(competition.id)
     league_days = sorted([d['Day'] for d in all_league_days if int(day) <= d['Day'] <= int(curr_day)])
     days_to_calculate = league_days if (int(day) < int(curr_day)) else [int(curr_day)]
-    main_league = U.get_competition(name='Campionato')[0] #double fetch, I know
 
     for _day in days_to_calculate:
         if _day not in league_days:
@@ -235,10 +234,18 @@ def calculate_league(competition, day):
                         penalties_results = \
                             LU.calculate_penalties_votes(lineup_couple[0], lineup_couple[1], votes_home, votes_away)
 
-                    votes_home.append({'extratime': {'map': json.dumps(extra_votes_map_home), 
-                                                     'score': extra_score_home}})  #extratime home
-                    votes_away.append({'extratime': {'map': json.dumps(extra_votes_map_away), 
-                                                     'score': extra_score_away}})  #extratime away
+                    votes_home.append({'extratime': 
+                                       {'et_result': json.dumps(
+                                           {'results': extra_votes_map_home,
+                                            'ngoals': extra_goals_home,
+                                            'score': extra_score_home})
+                                            }})  #extratime home
+                    votes_away.append({'extratime': 
+                                       {'et_result': json.dumps(
+                                           {'results': extra_votes_map_away,
+                                            'ngoals': extra_goals_away,
+                                            'score': extra_score_away})
+                                            }})  #extratime away
                     votes_home.append({'penalties': 
                                        {'pen_result': json.dumps(
                                             {'results': penalties_results.get('pen_results_home', {}), 
@@ -321,8 +328,8 @@ def save_results(votes_per_series):
             'version': home_team_items[14],
             'bonus_home': home_team_items[15],
             'pen': 1 if home_team_items[14] < 0 else 0,
-            'fpo': home_team_data[3]['extratime']['score'] if len(home_team_data) > 3 else None,
-            'extratime': home_team_data[3]['extratime']['map'] if len(home_team_data) > 3 else None,
+            'fpo': json.loads(home_team_data[3]['extratime']['et_result'])['score'] if len(home_team_data) > 3 else None,
+            'extratime': home_team_data[3]['extratime']['et_result'] if len(home_team_data) > 3 else None,
             'penalties': home_team_data[4]['penalties']['pen_result'] if len(home_team_data) > 4 else None
         }
 
@@ -347,8 +354,8 @@ def save_results(votes_per_series):
             'version': away_team_items[14],
             'bonus_home': away_team_items[15],
             'pen': 1 if away_team_items[14] < 0 else 0 ,
-            'fpo': away_team_data[3]['extratime']['score'] if len(away_team_data) > 3 else None,
-            'extratime': away_team_data[3]['extratime']['map'] if len(away_team_data) > 3 else None,
+            'fpo': json.loads(away_team_data[3]['extratime']['et_result'])['score'] if len(away_team_data) > 3 else None,
+            'extratime': away_team_data[3]['extratime']['et_result'] if len(away_team_data) > 3 else None,
             'penalties': away_team_data[4]['penalties']['pen_result'] if len(away_team_data) > 4 else None
         }
 

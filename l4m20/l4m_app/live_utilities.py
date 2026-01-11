@@ -765,6 +765,8 @@ def remake_items(mr):
     _items.append(mr.MissingSlots)
     _items.append(mr.Version)
     _items.append(mr.BonusHome)
+    if mr.ExtraTimePlayers is not None:
+        _items.append(True) #flag extra time
 
     return _items
 
