@@ -9,16 +9,42 @@ from django.db.models import Q
 import requests as req
 from itertools import islice, cycle
 
+def calculate_penalties_single_team_total(b11_lineup, gk_opponent_vote=None):
+    if b11_lineup is None:
+        return 0
+    
+    pen_results = {}
+    pen_shooters = b11_lineup['players'][:11] #all tits are penalty shooters
+
+def calculate_extratime_goals_total(b11_lineup):
+    if b11_lineup is None:
+        return 0, 0, {}
+    
+    sorted_ris=\
+        sorted(b11_lineup['players'][11:], key=lambda x: x['player_stats'].Vote if x['player_stats'].Vote is not None else 0, reverse=True)
+    sorted_ris_best_6 = sorted_ris[2:8] #exclude goalkeepers
+
+    ot_votes_map = {}
+    ot_score = sum([int(v['player_stats'].Vote) for v in sorted_ris_best_6 if v['player_stats'].Vote is not None])
+    ot_goals = calculate_n_ot_goals(ot_score)
+
+    for v in sorted_ris_best_6:
+        ot_votes_map[v['player_id']] = [v['player_surname'], v['player_vote']]
+
+    return ot_goals, ot_score, ot_votes_map
+
 def add_extratime_penalties_flag(votes):
     #add extratime flag
     votes[1].append(True) #extratime or penalties played
 
     return votes
 
-def get_goalkeeper_from_votes(votes):
-    votes_tit = votes[0]
-
-    return [votes_tit[0].Player.Surname, votes_tit[0].Vote]
+def get_goalkeeper_from_votes(votes, istotal=False):
+    if not istotal:
+        votes_tit = votes[0]
+        return [votes_tit[0].Player.Surname, votes_tit[0].Vote]
+    else:
+        return [votes['players'][0]['player_surname'], votes['players'][0]['player_vote']] 
 
 def add_extratime_penalties_votes(votes, extra_goals, penalties):
     #add extratime goals
