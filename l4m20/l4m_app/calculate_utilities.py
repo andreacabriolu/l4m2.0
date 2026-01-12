@@ -228,11 +228,23 @@ def calculate_league(competition, day):
                     
                     extra_goals_home, extra_score_home, extra_votes_map_home = LU.calculate_extratime_goals(votes_home, lineup_couple[0])
                     extra_goals_away, extra_score_away, extra_votes_map_away = LU.calculate_extratime_goals(votes_away, lineup_couple[1])
-
                     penalties_results = {}
+
+                    votes_home[1][9] += extra_goals_home #BAD TODO use dict, please
+                    votes_away[1][9] += extra_goals_away #BAD
+                    
                     if extra_goals_home == extra_goals_away:
                         penalties_results = \
                             LU.calculate_penalties_votes(lineup_couple[0], lineup_couple[1], votes_home, votes_away)
+                        
+                        pen_score_home = penalties_results.get('score_home', 0)
+                        pen_score_away = penalties_results.get('score_away', 0)
+
+                        votes_home[1][9] += pen_score_home #BAD TODO use dict, please
+                        votes_away[1][9] += pen_score_away #BAD TODO use dict, please
+
+                        if pen_score_home == pen_score_away:
+                            pass #DRAW EVEN AFTER PENALTIES, CHECK FP IN THE TWO MATCHES (manual at the moment)
 
                     votes_home.append({'extratime': 
                                        {'et_result': json.dumps(
@@ -251,14 +263,14 @@ def calculate_league(competition, day):
                                             {'results': penalties_results.get('pen_results_home', {}), 
                                             'gk_opponent_surname': votes_away[0][0].Player.Surname,
                                             'gk_opponent_vote': votes_away[0][0].Vote}),
-                                        'pen_score': penalties_results.get('pen_score_home', 0),
+                                        'pen_score': penalties_results.get('score_home', 0),
                                                       }})  #penalties home
                     votes_away.append({'penalties': 
                                        {'pen_result': json.dumps(
                                            {'results': penalties_results.get('pen_results_away', {}), 
                                             'gk_opponent_surname': votes_home[0][0].Player.Surname,
                                             'gk_opponent_vote': votes_home[0][0].Vote}),
-                                        'pen_score': penalties_results.get('pen_score_away', 0),
+                                        'pen_score': penalties_results.get('score_away', 0),
                                                       }})  #penalties away
                 
                 all_votes.append( [[lineup_couple[0].Team.id, votes_home], [lineup_couple[1].Team.id, votes_away], lineup_couple[2]] )

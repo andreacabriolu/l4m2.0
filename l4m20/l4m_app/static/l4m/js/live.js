@@ -215,6 +215,8 @@ function renderPenaltyModal(data) {
 function renderPenalty(penalties, opponentGkVote) {
   html = '';
 
+  $('#penalty-gk-vote').text(opponentGkVote !== null ? opponentGkVote : '—');
+
   Object.entries(penalties).map(([pname, p_exit], index) => {
     isGoal = p_exit[1];
     pvote = p_exit[0];
@@ -223,7 +225,6 @@ function renderPenalty(penalties, opponentGkVote) {
         <div class="shot">${index + 1}</div>
         <div class="name">${pname}</div>
         <div class="vote">${pvote}</div>
-        <div class="gk">${opponentGkVote}</div>
         <div>
           <span class="badge ${isGoal ? 'badge-goal' : 'badge-miss'}">
             ${isGoal ? 'GOAL' : 'PARATO'}
