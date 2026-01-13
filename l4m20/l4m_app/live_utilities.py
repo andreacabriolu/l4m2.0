@@ -15,6 +15,12 @@ def calculate_penalties_single_team_total(b11_lineup, gk_opponent_vote=None):
     
     pen_results = {}
     pen_shooters = b11_lineup['players'][:11] #all tits are penalty shooters
+    
+    for p in pen_shooters:
+        pen_results[p['player_surname']] = [p['player_vote'], True] if p['player_vote'] >= gk_opponent_vote else [p['player_vote'], False]
+
+    return {'pen_results': pen_results}
+
 
 def calculate_extratime_goals_total(b11_lineup):
     if b11_lineup is None:

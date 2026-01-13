@@ -15,7 +15,7 @@ from ..models import *
 class GetPenaltiesView(View):
     def get(self, request):
         t = U.get_team_by_name(request.GET['tname'])
-        day = request.GET['day']
+        day = int(request.GET['day'])
         current_day = U.get_current_day()
         competition_id = request.GET['competition']
 
