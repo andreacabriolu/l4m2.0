@@ -139,6 +139,14 @@ def get_all_live_active_competitions():
 def get_all_lineup_active_competitions():
     return competition.Competition.objects.filter(Q(Active=True) & Q(Lineup=True))
 
+def get_my_competitions_from_calendar(teamid, day):
+    return competition.Competition.objects.filter(
+        id__in=matches_calendar.MatchesCalendar.objects.filter(
+            (Q(HomeTeam=teamid) | Q(AwayTeam=teamid)) &
+            Q(CompetitionCalendar__Day=day)
+        ).values_list('CompetitionCalendar__Competition', flat=True).distinct()
+    )
+
 def get_my_lineup_active_competitions(my_series, day):
     return competition.Competition.objects.filter(Q(Active=True) & \
                                                   Q(Lineup=True) & \

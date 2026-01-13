@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('l4m_app', '0071_vote_totvote'),
+        ('l4m_app', '0072_competitioncalendar_suspended'),
     ]
 
     operations = [
