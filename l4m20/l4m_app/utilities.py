@@ -20,7 +20,7 @@ def is_round_trip_match(cc):
     return (cc.HomeAway & cc.Overtime) if cc is not None else False
 
 def is_single_match_knockout(cc):
-    return (cc.HomeAway == False & cc.Overtime) if cc is not None else False
+    return (Q(cc.HomeAway == False) & Q(cc.Overtime)) if cc is not None else False
 
 def check_competition_overtime(competition_id, day):
     cc = competition_calendar.CompetitionCalendar.objects.filter(Q(Competition=competition_id) & Q(Day=day)).values('Overtime')
