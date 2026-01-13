@@ -114,18 +114,31 @@ function removeAlreadyPlayedPlayerFromOtherDropdowns(item) {
                     $(this).hide();
                 }
             });
-            // $(this).children(`[data-id="${currentid}"]`).each(function () {
-            //     $(this).parent().val('');
-            //     $(this).prop('selected', false);
-            // });
         }
     });
 }
 
-function adjustOtherDropdowns(current) {
+function deleteItemFromDropdowns(current, allSelects) {
     var currentid = current.children('option:selected').data().id;
 
-    $('#l_ups select').each(function (i) {
+    allSelects.each(function (i) {
+
+        if (!($(this).is(current))) {
+            $(this).children('option').each(function () {
+                if ($(this).data().id == currentid) {
+                    $(this).hide();
+                }
+            });
+        }
+
+    });
+}
+
+function adjustOtherDropdowns(current, allSelects, hideOption = false) {
+    var currentid = current.children('option:selected').data().id;
+
+    // $('#l_ups select').each(function (i) {
+    allSelects.each(function (i) {
 
         /* 1. Removing player selected in other options */
         if (!($(this).is(current))) {
@@ -135,11 +148,18 @@ function adjustOtherDropdowns(current) {
                     $(this).prop('selected', false);
                 });
             }
+
+            /* 2. Hide options */
+            if (hideOption) {
+                $(this).children('option').each(function () {
+                    if ($(this).data().id == currentid) {
+                        $(this).hide();
+                    }
+                });
+            }
         }
 
     });
-
-
 }
 
 function adjust_captain(reset = true) {
@@ -163,6 +183,14 @@ function adjust_captain(reset = true) {
 
 }
 
+function load_overtime_lineup(lineup_ot) {
+    lineup_ot.forEach((el, idx) => {
+        $(`#overtime_${idx + 1}_pl`).children(`option[data-id=${el}]`);
+
+    });
+
+}
+
 function load_options(lineup) {
     var hideLineup = lineup[2];
     var modNoGk = lineup[3];
@@ -174,6 +202,20 @@ function load_options(lineup) {
 function load_lineup(lineup) {
     for (item in lineup) {
         if (item == "mod") { continue; }
+
+        if (item == 'ot') {
+            lineup[item].forEach((el) => {
+                selected_overtime_players.add(el);
+            });
+            continue;
+        }
+
+        if (item == 'penalties') {
+            lineup[item].forEach(el => {
+                penalties_order.push(el);
+            });
+            continue;
+        }
 
         pl = $(`#${item}`).children(`option[data-id=${lineup[item]}]`);
         if (pl.length <= 0) { continue; }
@@ -235,9 +277,25 @@ function freeze_who_played() {
     });
 }
 
+function updateOrder() {
+    document.querySelectorAll(".player").forEach((el, i) => {
+        el.querySelector(".order").textContent = i + 1;
+    });
+}
+
+function savePenaltiesOrder() {
+    penalties_order = [...document.querySelectorAll(".name")].map(n => n.dataset.id);
+    $('#penaltiesModal').modal('hide');
+}
+
+
+var selected_overtime_players = new Set(); //TODO: so BAD global variable!!
+var penalties_order = []; //TODO: so BAD global variable again!!
+
 window.addEventListener('DOMContentLoaded', event => {
 
     const token = Cookies.get('csrftoken');
+    let overtimeWarning = false;
 
     var comp_id = $('#competition_id').val();
     var comp_to_sel = $('#select_comp').children(`option[data-id=${comp_id}]`);
@@ -246,6 +304,20 @@ window.addEventListener('DOMContentLoaded', event => {
 
     load_last_lineup(comp_id);
     reset_captain();
+
+    // $('#secondary_lineup').children('div').each(function () {
+    //     $(this).on('click', function () {savePenaltiesOrder
+    //         $(this).children('select').toggleClass('bg-overtime-subtle');
+    //     });
+    // });
+
+    const penList = document.getElementById("penaltyList");
+
+    new Sortable(penList, {
+        animation: 150,
+        ghostClass: "sortable-ghost",
+        onEnd: updateOrder
+    });
 
     $('#select_comp').on('change', function () {
         var data = {
@@ -269,7 +341,7 @@ window.addEventListener('DOMContentLoaded', event => {
     });
 
     $('#l_ups select').on('change', (function () {
-        adjustOtherDropdowns($(this));
+        adjustOtherDropdowns($(this), $('#l_ups select'));
         if ($('#captain').val() != null &&
             $(this).children('option:selected').data().id == $('#captain').children('option:selected').data().id) {
             adjust_captain();
@@ -279,11 +351,58 @@ window.addEventListener('DOMContentLoaded', event => {
         }
     }));
 
+    $('#secondary_lineup select').on('change', (function () {
+        var changedPl = $(this).children('option:selected').data().id;
+        if (selected_overtime_players.has(changedPl)) {
+            selected_overtime_players.delete(changedPl);
+            overtimeWarning = true;
+        }
+    }));
+
+    $('#main_lineup select').on('change', (function () {
+        if (overtime) {
+            var changedPl = ($(this).children('option:selected').data().id) + "";
+
+            if (selected_overtime_players.has(parseInt(changedPl))) {
+                selected_overtime_players.delete(parseInt(changedPl));
+                overtimeWarning = true;
+            }
+
+            //TODO: insert new player in penalties order if not already present, removing the old one
+            if (penalties_order.length > 0) {
+                if (!penalties_order.includes(changedPl)) {
+                    //check old one
+                    var currentTits = $('#main_lineup').children('div:visible').find('option:selected').map(function () {
+                        return $(this).data().id + "";
+                    }).get();
+                    var oldPl = penalties_order.filter(value => !currentTits.includes(value));
+                    if (oldPl.length == 1) {
+                        //remove the old one
+                        var index = penalties_order.indexOf(oldPl[0]);
+                        if (index > -1) {
+                            penalties_order.splice(index, 1);
+                        }
+                    }
+
+                    //add new one at the end
+                    penalties_order.push(changedPl);
+                }
+            }
+        }
+    }));
+
     $('#btnSaveLineup').on('click', function () {
         $(this).prop('disabled', true);
         var allFilled = true;
         var playerSlots = {};
         var options = {};
+        var overtime = $('#overtime').val();
+
+        if (overtime && selected_overtime_players.size == 0 && !overtimeWarning) {
+            showPopupErrorAlert('ATTENZIONE: NON HAI SELEZIONATO I GIOCATORI PER I TEMPI SUPPLEMENTARI');
+            $('#btnSaveLineup').prop('disabled', false);
+            return false;
+        }
 
         playerSlots = {
             mod: $("#mods").val()
@@ -298,6 +417,7 @@ window.addEventListener('DOMContentLoaded', event => {
 
             if (!allFilled) {
                 showPopupErrorAlert('RIEMPI TUTTI GLI SLOT TITOLARI PRIMA DI CONFERMARE');
+                $('#btnSaveLineup').prop('disabled', false);
                 return false;
             }
 
@@ -318,7 +438,32 @@ window.addEventListener('DOMContentLoaded', event => {
             playerSlots["captain"] = $('#captain').children('option:selected').data().id;
         }
 
+        if (selected_overtime_players.size > 0) {
+            playerSlots['ot'] = [];
+        }
+
+        selected_overtime_players.forEach(function (item, index) {
+            playerSlots['ot'].push(item);
+        });
+
+        if (penalties_order.length > 0) {
+            playerSlots['penalties'] = [];
+        }
+
+        penalties_order.forEach(function (item, index) {
+            playerSlots['penalties'].push(item);
+        });
+
         if (allFilled) {
+
+            if (overtime) {
+                window.confirmation = confirm("HAI RICONTROLLATO I GIOCATORI PER I TEMPI SUPPLEMENTARI E PER I TIRI DI RIGORE?");
+                if (!window.confirmation) {
+                    $('#btnSaveLineup').prop('disabled', false);
+                    return false;
+                }
+            }
+
             options = {
                 hideLineup: $('#hideLineupSwitch').is(':checked'),
                 modNoGk: $('#modNoportSwitch').is(':checked'),
@@ -332,7 +477,7 @@ window.addEventListener('DOMContentLoaded', event => {
 
             if (allComp) {
                 all_comp_ids = [];
-                $('#select_comp').children('option').each(function(){ all_comp_ids.push($(this).data().id) });
+                $('#select_comp').children('option').each(function () { all_comp_ids.push($(this).data().id) });
                 var data = { 'tits': jsonPlayers, 'all_comp_ids': JSON.stringify(all_comp_ids), 'options': jsonOpts, 'csrfmiddlewaretoken': token };
 
                 $.post("/l4m/lineup/saveMultiple/", data, function (response) {
@@ -344,11 +489,13 @@ window.addEventListener('DOMContentLoaded', event => {
                         $('#btnSaveLineup').prop('disabled', false);
                     }
                 });
-                
+
             }
             else {
-                var data = { 'tits': jsonPlayers, 'comp_id': comp_id, 'late_edit': late_edit,
-                    'options': jsonOpts, 'csrfmiddlewaretoken': token };
+                var data = {
+                    'tits': jsonPlayers, 'comp_id': comp_id, 'late_edit': late_edit,
+                    'options': jsonOpts, 'csrfmiddlewaretoken': token
+                };
 
                 $.post("/l4m/lineup/save/", data, function (response) {
                     if (response.startsWith('error')) {
@@ -382,6 +529,94 @@ window.addEventListener('DOMContentLoaded', event => {
         });
 
         reset_captain();
+    });
+
+    $('#penaltiesModal').on('show.bs.modal', function (e) {
+
+        $('#penaltyList').empty();
+
+        // Load saved order if any
+        if (penalties_order.length > 0 && penalties_order.length == 11) {
+            penalties_order.forEach(function (item, index) {
+                var pl = $(`#main_lineup`).children('div:visible').find(`option:selected[data-id=${item}]`);
+                if (pl.length > 0 && pl.data().id != undefined) {
+                    var playerDiv = `<div class="player"><span class="order">${index + 1}</span>
+                    <span class="name" data-id="${pl.data().id}">${pl.text()}</span>
+                    <i class="fas fa-grip-lines drag"></i></div>`;
+
+                    $('#penaltyList').append(playerDiv);
+                }
+            });
+            return;
+        }
+
+        // Otherwise, load from current lineup
+        $('#main_lineup').children('div:visible').each(function (idx) {
+            var pl = $(this).children().children('option:selected');
+            if (pl.length > 0 && pl.data().id != undefined) {
+                var playerDiv = `<div class="player"><span class="order">${idx + 1}</span>
+                <span class="name" data-id="${pl.data().id}">${pl.text()}</span>
+                <i class="fas fa-grip-lines drag"></i></div>`;
+                $('#penaltyList').append(playerDiv);
+            }
+        });
+
+    });
+
+    $('#overtimeModal').on('show.bs.modal', function (e) {
+
+        var overtime_players = [];
+        // Collect players from secondary lineup, excluding goalkeepers
+        $('#secondary_lineup').children(':not([id^=gk])').each(function () {
+            var sec_pl = $(this).children().children('option:selected');
+            if (sec_pl.length > 0 && sec_pl.data().id != undefined) {
+                overtime_players.push(sec_pl);
+            }
+        });
+
+        $('#overtimeModal').find('.player-select').each(function (index) {
+            $(`#overtime_${index + 1}_pl`).prop('disabled', false);
+
+            if ($(this).children('option:selected').val() == '') {
+                $(this).children('option:not(:first)').remove();
+                $.each(overtime_players, function (index, o_player) {
+                    $(this).append(o_player.clone());
+                }.bind(this));
+            }
+        });
+
+        Array.from(selected_overtime_players).forEach(function (item, index) {
+            pl = $(`#overtime_${index + 1}_pl`).children(`option[data-id=${item}]`);
+            if (pl.length <= 0) { return; }
+            $(`#overtime_${index + 1}_pl`).val(pl[0].value);
+            $(`#overtime_${index + 1}_pl`).prop('disabled', true);
+        });
+
+        $('#overtimeModal').find('.player-select').each(function (index) {
+            if ($(this).children('option:selected').val() != '') {
+                adjustOtherDropdowns($(this), $('#overtimeModal').find('.player-select'), hideOption = true);
+            }
+        });
+
+        $('#overtimeModal').find('.player-select').on('change', function () {
+            adjustOtherDropdowns($(this), $('#overtimeModal').find('.player-select'), true);
+            $(this).off('change');
+            $(this).prop('disabled', true);
+            selected_overtime_players.add($(this).children('option:selected').data().id);
+        });
+
+        $('#btnResetOvertime').on('click', function () {
+            $('#overtimeModal').find('.player-select').each(function () {
+                $(this).val('');
+                $(this).prop('disabled', false);
+                selected_overtime_players = new Set();
+            });
+        });
+
+        $('#btnConfirmOvertime').on('click', function () {
+            $('#overtimeModal').modal('hide');
+        });
+
     });
 
 })

@@ -7,6 +7,291 @@ import statistics
 from . import utilities as U
 from django.db.models import Q
 import requests as req
+from itertools import islice, cycle
+
+def calculate_penalties_single_team_total(b11_lineup, gk_opponent_vote=None):
+    if b11_lineup is None:
+        return 0
+    
+    pen_results = {}
+    pen_shooters = b11_lineup['players'][:11] #all tits are penalty shooters
+    
+    for p in pen_shooters:
+        pen_results[p['player_surname']] = [p['player_vote'], True] if p['player_vote'] >= gk_opponent_vote else [p['player_vote'], False]
+
+    return {'pen_results': pen_results}
+
+
+def calculate_extratime_goals_total(b11_lineup):
+    if b11_lineup is None:
+        return 0, 0, {}
+    
+    sorted_ris=\
+        sorted(b11_lineup['players'][11:], key=lambda x: x['player_stats'].Vote if x['player_stats'].Vote is not None else 0, reverse=True)
+    sorted_ris_best_6 = sorted_ris[2:8] #exclude goalkeepers
+
+    ot_votes_map = {}
+    ot_score = sum([int(v['player_stats'].Vote) for v in sorted_ris_best_6 if v['player_stats'].Vote is not None])
+    ot_goals = calculate_n_ot_goals(ot_score)
+
+    for v in sorted_ris_best_6:
+        ot_votes_map[v['player_id']] = [v['player_surname'], v['player_vote']]
+
+    return ot_goals, ot_score, ot_votes_map
+
+def add_extratime_penalties_flag(votes):
+    #add extratime flag
+    votes[1].append(True) #extratime or penalties played
+
+    return votes
+
+def get_goalkeeper_from_votes(votes, istotal=False):
+    if not istotal:
+        votes_tit = votes[0]
+        return [votes_tit[0].Player.Surname, votes_tit[0].Vote]
+    else:
+        return [votes['players'][0]['player_surname'], votes['players'][0]['player_vote']] 
+
+def add_extratime_penalties_votes(votes, extra_goals, penalties):
+    #add extratime goals
+    votes[1][9] += extra_goals #NGoals, BAD!
+
+    if penalties is None or len(penalties) == 0:
+        votes[1].append(1) #only extratime
+        return votes
+
+    votes[1].append(2) #extratime + penalties
+    #add penalties goals
+    pen_points = sum([1 for v in penalties.values() if (v)]) #count how many made at least one point
+
+    #add to votes items
+    votes[1][9] += pen_points #NGoals
+
+    return votes
+
+def extract_votes_for_penalties(pen_players, votes):
+    votes_tit = votes[0]
+    tit_players = [int(v.Player.id) for v in votes_tit]
+    pen_players = [int(p) for p in pen_players]
+
+    pen_votes = {}
+
+    for p in pen_players:
+        if p in tit_players:
+            matching_vote = next(((v.Player.Surname, v.Vote) for v in votes_tit if int(v.Player.id) == p), None)
+            pen_votes[p] = matching_vote
+    
+    #complete the list if needed
+    diff = set(tit_players) - set(pen_players)
+    for d in diff:
+        pen_votes[d] = next(((v.Player.Surname, v.Vote) for v in votes_tit if int(v.Player.id) == d), None)
+
+    return pen_votes
+
+def calculate_penalties_single_team(lineup, gk_opponent_vote, votes):
+    if lineup is None:
+        return 0
+    
+    pen_results = {}
+
+    line_home = json.loads(U.cleanJSON(lineup.Line))
+    pen_players_home = line_home['penalties'] if 'penalties' in line_home else []
+
+    pen_home_votes = extract_votes_for_penalties(pen_players_home, votes)
+
+    #match the gk vote with opponent's players votes. If equal, player makes a point.
+    #round the list until 11 times
+    
+    #remove None from list
+    pen_home_votes = {k: v for k, v in pen_home_votes.items() if v[1] is not None}
+
+    pen_home_votes_list = list(pen_home_votes.items())
+
+    for _,(p_surname, p_vote) in pen_home_votes_list:
+        pen_results[p_surname] = [p_vote, True] if p_vote >= gk_opponent_vote else [p_vote, False]
+
+    return {'pen_results': pen_results}
+
+def calculate_penalties_votes_total(b11_lineup_home, b11_lineup_away):
+    if b11_lineup_home is None or b11_lineup_away is None:
+        return 0,0
+    
+    pen_results_home = {}
+    pen_results_away = {}
+
+    pen_players_home = b11_lineup_home['players'][:11]
+    pen_players_away = b11_lineup_away['players'][:11]
+
+    gk_home_vote = b11_lineup_home['players'][0]['player_vote'] #home goalkeeper pure vote
+    gk_away_vote = b11_lineup_away['players'][0]['player_vote'] #away goalkeeper pure vote
+    
+    for p in pen_players_home:
+        pen_results_home[p['player_surname']] = [p['player_vote'], True] if p['player_vote'] >= gk_away_vote else [p['player_vote'], False]
+
+    for p in pen_players_away:
+        pen_results_away[p['player_surname']] = [p['player_vote'], True] if p['player_vote'] >= gk_home_vote else [p['player_vote'], False]
+
+    #take first 5 penalties
+    first_5_home = dict(islice(pen_results_home.items(), 5))
+    first_5_away =  dict(islice(pen_results_away.items(), 5))
+    scores_home = [1 if v[1] else 0 for v in first_5_home.values()]
+    scores_away = [1 if v[1] else 0 for v in first_5_away.values()]
+    
+    if sum(scores_home) == sum(scores_away):
+        #sudden death
+        for i in range(5,11):
+            home_item = list(pen_results_home.items())[i] #WARNING: TODO cycle
+            away_item = list(pen_results_away.items())[i]
+            home_score = 1 if home_item[1] else 0
+            away_score = 1 if away_item[1] else 0
+
+            scores_home.append(home_score)
+            scores_away.append(away_score)
+            if sum(scores_home) != sum(scores_away):
+                break
+    else:
+        pen_results_home = first_5_home
+        pen_results_away = first_5_away
+
+    return {'pen_results_home': pen_results_home, 'score_home': sum(scores_home), 
+            'pen_results_away': pen_results_away, 'score_away': sum(scores_away)}
+
+def calculate_penalties_votes(lineup_home, lineup_away, votes_home, votes_away):
+    if lineup_home is None or lineup_away is None:
+        return 0,0
+    
+    pen_results_home = {}
+    pen_results_away = {}
+
+    line_home = json.loads(U.cleanJSON(lineup_home.Line))
+    pen_players_home = line_home['penalties'] if 'penalties' in line_home else []
+    votes_tit_home = votes_home[0]
+
+    line_away = json.loads(U.cleanJSON(lineup_away.Line))
+    pen_players_away = line_away['penalties'] if 'penalties' in line_away else []
+    votes_tit_away = votes_away[0]
+
+    gk_home_vote = votes_tit_home[0].Vote #home goalkeeper pure vote
+    gk_away_vote = votes_tit_away[0].Vote #away goalkeeper pure vote
+
+    pen_home_votes = extract_votes_for_penalties(pen_players_home, votes_home)
+    pen_away_votes = extract_votes_for_penalties(pen_players_away, votes_away)
+
+    #match the gk vote with opponent's players votes. If equal, player makes a point.
+    #round the list until 11 times
+    
+    #remove None from list
+    pen_home_votes = {k: v for k, v in pen_home_votes.items() if v[1] is not None}
+    pen_away_votes = {k: v for k, v in pen_away_votes.items() if v[1] is not None}
+
+    pen_home_votes_list = list(pen_home_votes.items())
+    phv_size = len(pen_home_votes_list)
+    pen_away_votes_list = list(pen_away_votes.items())
+    pav_size = len(pen_away_votes_list)
+
+    for _,(p_surname, p_vote) in pen_home_votes_list:
+        pen_results_home[p_surname] = [p_vote, True] if p_vote >= gk_away_vote else [p_vote, False]
+
+    for _,(p_surname, p_vote) in pen_away_votes_list:
+        pen_results_away[p_surname] = [p_vote, True] if p_vote >= gk_home_vote else [p_vote, False]
+
+    #take first 5 penalties
+    first_5_home = dict(islice(pen_results_home.items(), 5))
+    first_5_away =  dict(islice(pen_results_away.items(), 5))
+    scores_home = [1 if v[1] else 0 for v in first_5_home.values()]
+    scores_away = [1 if v[1] else 0 for v in first_5_away.values()]
+    
+    if sum(scores_home) == sum(scores_away):
+        #sudden death
+        for i in range(5,11):
+            home_item = list(pen_results_home.items())[i] #WARNING: TODO cycle
+            away_item = list(pen_results_away.items())[i]
+            home_score = 1 if home_item[1] else 0
+            away_score = 1 if away_item[1] else 0
+
+            scores_home.append(home_score)
+            scores_away.append(away_score)
+            if sum(scores_home) != sum(scores_away):
+                break
+    else:
+        pen_results_home = first_5_home
+        pen_results_away = first_5_away
+
+    return {'pen_results_home': pen_results_home, 'score_home': sum(scores_home), 
+            'pen_results_away': pen_results_away, 'score_away': sum(scores_away)}
+
+def calculate_n_ot_goals(ot_score):
+    diff = ot_score - C.Various.OT_BASE_SCORE
+    if (diff < 0):
+        return 0
+    
+    return int(diff / C.Various.OT_THRESHOLD_GOL) + 1
+
+def calculate_extratime_goals(votes, lineup):
+    if lineup is None:
+        return 0
+    
+    line = json.loads(U.cleanJSON(lineup.Line))
+    ot_players = line['ot'] if 'ot' in line else []
+    votes_ris = votes[2]
+
+    ot_votes_map = {}
+    ot_score = sum([v.TotVote for v in votes_ris if v.TotVote is not None and v.Player.id in ot_players])
+    ot_goals = calculate_n_ot_goals(ot_score)
+
+    for v in votes_ris:
+        if v.Player.id in ot_players and v.TotVote is not None:
+            ot_votes_map[v.Player.id] = [v.Player.Surname, v.TotVote]
+
+    return ot_goals, ot_score, ot_votes_map
+
+def check_match_for_extratime(home_team_id, away_team_id, votes_home, votes_away, day, comp_id, seriesid):
+    is_round_trip = U.is_round_trip_match(day, comp_id)
+    if is_round_trip:
+        first_leg_results = (
+            matches_results.MatchesResults.objects
+            .select_related(
+                "MatchesCalendar",
+                "MatchesCalendar__CompetitionCalendar"
+            )
+            .filter(
+                MatchesCalendar__CompetitionCalendar__Competition_id=comp_id,
+                MatchesCalendar__CompetitionCalendar__Day__lt=day,
+                MatchesCalendar__CompetitionCalendar__HomeAway=True,
+                MatchesCalendar__Series_id=seriesid,
+                MatchesCalendar__HomeTeam_id=away_team_id,
+                MatchesCalendar__AwayTeam_id=home_team_id
+            )
+            .order_by("-MatchesCalendar__CompetitionCalendar__Day")
+        )
+
+        if first_leg_results:
+            home_goals_first_leg = first_leg_results.filter(Home=True).first().NGoals
+            away_goals_first_leg = first_leg_results.filter(Home=False).first().NGoals
+
+            #current leg result
+            if votes_home is None or votes_away is None:
+                return False
+            home_goals_current_leg = votes_home[1][9] #BAD! change to dict!
+            away_goals_current_leg = votes_away[1][9] #BAD!
+            
+            #aggregate score
+            home_agg = home_goals_first_leg + away_goals_current_leg
+            away_agg = away_goals_first_leg + home_goals_current_leg
+
+            if home_agg == away_agg:
+                return True #match went to extratime
+            
+    else:
+        #single match knockout
+        if votes_home is None or votes_away is None:
+            return False
+        home_goals = votes_home[1][9] #BAD! change to dict!
+        away_goals = votes_away[1][9] #BAD!
+        if home_goals == away_goals:
+            return True #match went to extratime
+        
+    return False
 
 def create_live_ranking(all_scores, last_ranking):
     results_map = {}
@@ -76,6 +361,9 @@ def format_votes(mr):
 
 def get_matches_results(couples):
     return [matches_results.MatchesResults.objects.filter(MatchesCalendar=couple[2]) for couple in couples]
+
+def get_match_result(mc, teamid):
+    return matches_results.MatchesResults.objects.filter(Q(MatchesCalendar=mc) & (Q(Team_id=teamid)))
 
 def get_votes_total(b11_lineup, home=True, homeAway=False):
     votes_tit = []
@@ -463,6 +751,26 @@ def get_couples_from_calendar(seriesid, day, competition_id=1):
     couples = [(match.HomeTeam.id, match.AwayTeam.id) for match in matches_]
     return couples
 
+def get_match_from_calendar(teamid, day, competition_id=1):
+    match_ = matches_calendar.MatchesCalendar.objects.filter(
+        Q(CompetitionCalendar__Competition_id=competition_id) & 
+        Q(CompetitionCalendar__Day=day) & 
+        (Q(HomeTeam=teamid) | Q(AwayTeam=teamid)))
+    return match_
+
+def get_opponent_from_calendar(teamid, day, competition_id=1):
+    matches_ = matches_calendar.MatchesCalendar.objects.filter(
+        Q(CompetitionCalendar__Competition_id=competition_id) & 
+        Q(CompetitionCalendar__Day=day) & 
+        (Q(HomeTeam=teamid) | Q(AwayTeam=teamid)))
+    opponents = []
+    for match in matches_:
+        if match.HomeTeam.id == teamid:
+            opponents.append(match.AwayTeam.id)
+        else:
+            opponents.append(match.HomeTeam.id)
+    return opponents
+
 def make_null_vote_obj(pl_id, cap_id=None):
     v_obj = vote.Vote.Vote_Obj()
     pl = player.Player.objects.get(pk=pl_id)
@@ -532,6 +840,8 @@ def remake_items(mr):
     _items.append(mr.MissingSlots)
     _items.append(mr.Version)
     _items.append(mr.BonusHome)
+    if mr.ExtraTimePlayers is not None:
+        _items.append(True) #flag extra time
 
     return _items
 
@@ -778,7 +1088,7 @@ def get_votes(lineup, current_day, live_votes, live_teams, already_played_teams=
     cap_vote = 6
 
     for l in line.items(): #loop players in lineup
-        if l[0] == 'captain':
+        if l[0] in ['captain', 'ot', 'penalties']:
             continue
         if(l[0] == 'mod'):  
             module = l[1].replace('-','')

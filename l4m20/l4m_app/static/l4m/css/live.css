@@ -310,3 +310,288 @@ table .w-30 {
   --bs--btn-hover-bg: whitesmoke;
   --bs-link-hover-color: whitesmoke;
 }
+
+.extra-time-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  background: linear-gradient(180deg, #6b7a90, #8090af);
+  color: #e8eaed;
+
+  border: 1px solid #3a404c;
+  border-radius: 999px;
+
+  padding: 12px 18px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+
+  transition: all 0.25s ease;
+  margin-left: 0.5em;
+}
+
+/* Icon */
+.extra-time-btn i {
+  color: #4da3ff;
+  font-size: 16px;
+}
+
+/* +minutes badge */
+.extra-time-btn small {
+  background: #4da3ff;
+  color: #0b1b2e;
+  font-weight: 700;
+  font-size: 12px;
+
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+
+/* Hover */
+.extra-time-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 25px rgba(77,163,255,0.25);
+  border-color: #4da3ff;
+}
+
+/* Active */
+.extra-time-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(0,0,0,.4);
+}
+
+/* Subtle pulse (stadium clock feeling) */
+.extra-time-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(77,163,255,0.15), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.extra-time-btn:hover::after {
+  opacity: 1;
+}
+
+.penalty-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  background: linear-gradient(180deg, #587667, #57796a);
+  color: #e8eaed;
+
+  border: 1px solid #3a404c;
+  border-radius: 999px;
+
+  padding: 12px 18px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+
+  transition: all 0.25s ease;
+  margin-left: 0.5em;
+}
+
+/* Football icon */
+.penalty-btn i {
+  color: #4da3ff;
+  font-size: 16px;
+}
+
+/* PK badge */
+.penalty-btn small {
+  background: #4da3ff;
+  color: #0b1b2e;
+  font-weight: 700;
+  font-size: 12px;
+
+  padding: 4px 8px;
+  border-radius: 8px;
+  letter-spacing: 0.5px;
+}
+
+/* Hover effect */
+.penalty-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 25px rgba(77,163,255,0.25);
+  border-color: #4da3ff;
+}
+
+/* Active */
+.penalty-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(0,0,0,.4);
+}
+
+/* Soft blue glow */
+.penalty-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(77,163,255,0.15), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.penalty-btn:hover::after {
+  opacity: 1;
+}
+
+.extra-time-modal {
+  background: linear-gradient(135deg, #1f2633, #1a1f2b);
+  color: #e5e7eb;
+  border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+}
+
+.extra-time-modal .modal-title {
+  font-weight: 600;
+  color: #60a5fa;
+}
+
+.team-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #93c5fd;
+}
+
+.extra-time-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 14px;
+}
+
+.player-name {
+  opacity: 0.95;
+}
+
+.vote {
+  font-weight: 600;
+  color: #fbbf24;
+}
+
+.total-box-single {
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  padding-top: 15px;
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 10px;
+}
+
+.total-label {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.total-score {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.total-score.votes {
+  color: #4ade80; /* green */
+}
+
+.total-score.goals {
+  color: #fbbf24; /* golden */
+}
+
+
+.modal-footer .btn-outline-primary {
+  border-color: #60a5fa;
+  color: #60a5fa;
+}
+
+.modal-footer .btn-outline-primary:hover {
+  background-color: #60a5fa;
+  color: #0f172a;
+}
+
+.penalty-modal {
+  background: linear-gradient(180deg, #1f2933, #111827);
+  color: #e5e7eb;
+  border-radius: 16px;
+}
+
+.penalty-modal .modal-header {
+  border-bottom: 1px solid #334155;
+}
+
+.penalty-row {
+  display: grid;
+  grid-template-columns: 40px 1fr 80px 80px 90px;
+  gap: 10px;
+  align-items: center;
+  padding: 12px 10px;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  background: #1e293b;
+}
+
+.penalty-row.first-five {
+  border-left: 4px solid #3b82f6;
+}
+
+.penalty-row .shot {
+  font-weight: bold;
+  text-align: center;
+}
+
+.penalty-row .vote,
+.penalty-row .gk {
+  text-align: center;
+}
+
+.badge-goal {
+  background: #16a34a;
+}
+
+.badge-miss {
+  background: #dc2626;
+}
+
+.penalty-total strong {
+  font-size: 36px;
+  color: #3b82f6;
+}
+
+.penalty-gk-row {
+    font-size: 1.1rem;
+    padding: 8px;
+    background: rgba(13, 110, 253, 0.1);
+    border-radius: 8px;
+}
+
+.penalty-header {
+    font-weight: 600;
+    border-bottom: 2px solid rgba(255,255,255,0.2);
+    padding-bottom: 6px;
+    margin-bottom: 4px;
+}
+
+.penalty-footer {
+    background: rgba(0, 0, 0, 0.25);
+    border-top: 1px solid rgba(255,255,255,0.15);
+}
+
+.penalty-footer .badge {
+    min-width: 50px;
+    text-align: center;
+}

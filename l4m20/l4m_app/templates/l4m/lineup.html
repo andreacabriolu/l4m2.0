@@ -6,11 +6,12 @@
 {% block links %}
 <link href="{% static 'l4m/css/lineup.css' %}" rel="stylesheet">
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 {% endblock %}
 
 {% block scripts %}
 <script type="text/javascript" src="{% static 'l4m/js/lineup.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 
 {% endblock %}
 
@@ -27,6 +28,70 @@
 
     <input type="hidden" value="{{competition_id}}" id="competition_id">
     <input type="hidden" value="{{day_already_started}}" id="day_already_started">
+    <input type="hidden" value="{{overtime}}" id="overtime">
+
+    <div class="modal fade" id="overtimeModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content modal-dark">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Selezionati per i supplementari</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <form id="playersForm">
+                <div class="row g-3">
+
+                    {% for i in "123456" %}
+                    <div class="col-md-6">
+                    <label class="form-label">Giocatore {{ forloop.counter }}</label>
+                    <select class="form-select player-select" id="overtime_{{ forloop.counter }}_pl">
+                        <option value="">Seleziona giocatore</option>
+                    </select>
+                    </div>
+                    {% endfor %}
+
+                </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" id="btnResetOvertime">RESET</button>
+                <button class="btn btn-primary" type="button" id="btnConfirmOvertime">CONFERMA</button>
+            </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="penaltiesModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content modal-dark">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Tiri di rigore</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="container">
+                    <div class="hint">Trascina i giocatori nell'ordine desiderato</div>
+            
+                    <div class="list" id="penaltyList">
+                        <!-- Items will be dynamically added here -->
+                    </div>
+                </div>
+            
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="button" id="btnConfirmPenalties" onclick="savePenaltiesOrder()">CONFERMA</button>
+            </div>
+
+            </div>
+        </div>
+    </div>
 
     <div class="bg-body-tertiary main-div p-5" id="lineupDiv">
         <label for="select_comp" class="comp-label">COMPETIZIONE</label>
@@ -79,20 +144,42 @@
                 </div>
             </div>
 
-            <div class="alert-panel" id="alert_panel">
-                {% if not day_already_started %}
-                <img src="{% static 'l4m/images/green.png' %}">
-                <span class="alert-limit">FORMAZIONE SCHIERABILE FINO A {{day_time_limit}}</span>
-                {% elif day_already_started and late_lineup %}
-                <img src="{% static 'l4m/images/red.png' %}">
-                <span class="alert-limit">FORMAZIONE NON SCHIERATA PER QUESTA COMPETIZIONE, NESSUNA MODIFICA POSSIBILE</span>
-                {% else %}
-                <img src="{% static 'l4m/images/orange.png' %}">
-                <span class="alert-limit">GIORNATA INIZIATA, FORMAZIONE MODIFICABILE AI LIMITI DEL REGOLAMENTO</span>
-                {% endif %}
-            </div>
+            <div class="alerts">
+                <div class="alert-panel" id="alert_panel">
+                    {% if not day_already_started %}
+                    <img src="{% static 'l4m/images/green.png' %}">
+                    <span class="alert-limit">FORMAZIONE SCHIERABILE FINO A {{day_time_limit}}</span>
+                    {% elif day_already_started and late_lineup %}
+                    <img src="{% static 'l4m/images/red.png' %}">
+                    <span class="alert-limit">FORMAZIONE NON SCHIERATA PER QUESTA COMPETIZIONE, NESSUNA MODIFICA POSSIBILE</span>
+                    {% else %}
+                    <img src="{% static 'l4m/images/orange.png' %}">
+                    <span class="alert-limit">GIORNATA INIZIATA, FORMAZIONE MODIFICABILE AI LIMITI DEL REGOLAMENTO</span>
+                    {% endif %}
+                </div>
             
+                <div class="overtime-panel" id="overtime_panel" {% if not overtime %} hidden {% endif %}>
+                    <img src="{% static 'l4m/images/orange.png' %}">
+                    <span class="overtime-info">POSSIBILI SUPPLEMENTARI E RIGORI, SELEZIONARE I GIOCATORI E I RIGORISTI</span>
+                </div>
+            </div>
         </div>
+
+        {% if overtime %}
+        <div class="overtime-buttons">
+            <button type="button" data-bs-toggle="modal" data-bs-target="#overtimeModal" 
+            class="btn btn-warning top-panel-btn" id="btnOvertime" {% if day_already_started %} disabled
+                {% endif %}>
+                SELEZIONE SUPPLEMENTARI
+            </button>
+            <button type="button" data-bs-toggle="modal" data-bs-target="#penaltiesModal" 
+            class="btn btn-success top-panel-btn" id="btnPenaltyShootout" {% if day_already_started %}
+                disabled {% endif %}>
+                SCELTA RIGORISTI
+            </button>
+        </div>
+        {% endif %}
+
         <div class="lineups" id="l_ups">
             <div class="form-check form-switch form-floating form-switch-md" hidden>
                     <input class="form-check-input" type="checkbox" id="showVs">
@@ -273,7 +360,7 @@
 
             <div class="secondary-lineup" id="secondary_lineup">
                 
-                <div class="form-floating">
+                <div class="form-floating" id="gk1r">
                     <select class="form-select form-select-lg mb-3 form-select-player" id="gk1_ris">
                         {% for gk in players_gk %}
                         <option value="{{gk}}" data-limit="{{gk.played}}" data-id="{{gk.Player__id}}">[{{gk.Player__Role}}] {{gk.Player__Surname}} ({{gk.Player__RealTeam__Name|upper|slice:":3"}}) | {{gk.vs|upper}}</option>
@@ -283,7 +370,7 @@
                     <label for="gk1_ris">Portiere 1 riserva</label>
                 </div>
 
-                <div class="form-floating">
+                <div class="form-floating" id="gk2r">
                     <select class="form-select form-select-lg mb-3 form-select-player" id="gk2_ris">
                         {% for gk in players_gk %}
                         <option value="{{gk}}" data-limit="{{gk.played}}" data-id="{{gk.Player__id}}">[{{gk.Player__Role}}] {{gk.Player__Surname}} ({{gk.Player__RealTeam__Name|upper|slice:":3"}}) | {{gk.vs|upper}}</option>

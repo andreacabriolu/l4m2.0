@@ -148,6 +148,97 @@ function fillDays(c_id) {
     });
 }
 
+function renderExtraTimeModal(data) {
+    data = JSON.parse(data);
+
+    $('#et-team-name').empty();
+    $('#et-team-name').append(data.teamname);
+    $('#extra-time-body').empty();
+    $('#extra-time-body').append(buildExtraTimeModalBody(data));
+}
+
+function buildExtraTimeModalBody(data) {
+    html = '';
+
+    html+= `
+    <div class="team-box text-center">
+    <h6 class="team-title mb-3">Giocatori schierati</h6>
+    <ul class="list-unstyled extra-time-list">
+
+    ${data.ot_votes_map.length == 0 ? `<li>Nessun giocatore ha ricevuto voto in extra time.</li>` : ''} `;
+
+    Object.entries(data.ot_votes_map).map(([id, p]) => 
+        html+=
+        `
+        <li data-id="${id}">
+          <span class="player-name">${p[0]}</span>
+          <span class="vote">${p[1]}</span>
+        </li>
+      `).join('');
+
+    html+= `
+    </ul>
+    </div>
+
+    <hr>
+
+        <div class="total-box-single mt-4 text-center">
+
+        <div class="total-row">
+            <div class="total-label">
+                <i class="fas fa-star me-1"></i> Punteggio totale
+            </div>
+            <strong class="total-score votes">${data.et_score}</strong>
+        </div>
+
+        <div class="total-row mt-2">
+            <div class="total-label">
+                <i class="fas fa-futbol me-1"></i> Goal segnati
+            </div>
+            <strong class="total-score goals">${data.n_et_goals}</strong>
+        </div>
+
+    </div>
+  `;
+
+  return html;
+}
+
+function renderPenaltyModal(data) {
+    data = JSON.parse(data);
+
+    $('#penalty-team-name').empty();
+    $('#penalty-team-name').append(data.teamname);
+    renderPenalty(data.pen_results, data.gk_opponent_vote);
+}
+
+function renderPenalty(penalties, opponentGkVote) {
+  html = '';
+
+  $('#penalty-gk-vote').text(opponentGkVote !== null ? opponentGkVote : '—');
+  $('#penalty-total-goals').text(Object.values(penalties).filter(p => p[1] === true).length);
+
+  Object.entries(penalties).map(([pname, p_exit], index) => {
+    isGoal = p_exit[1];
+    pvote = p_exit[0];
+
+    html += `<div class="penalty-row ${index < 5 ? 'first-five' : ''}">
+        <div class="shot">${index + 1}</div>
+        <div class="name">${pname}</div>
+        <div class="vote">${pvote}</div>
+        <div>
+          <span class="badge ${isGoal ? 'badge-goal' : 'badge-miss'}">
+            ${isGoal ? 'GOAL' : 'PARATO'}
+          </span>
+        </div>
+      </div>`;
+    }).join('');
+
+
+  document.getElementById('penalty-list').innerHTML = html;
+}
+
+
 window.addEventListener('DOMContentLoaded', event => {
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
@@ -170,6 +261,41 @@ window.addEventListener('DOMContentLoaded', event => {
 
     $('#b11_live_btn').on('click', function () {
         window.location.href = '/l4m/live_b11';
+    });
+
+    $('.penalty-btn').on('click', function () {
+        $('#penalty-list').empty();
+        const teamname = $(this).data('teamname');
+
+        $('#penaltyModal').modal('show');
+        $('#penaltyBody').html('<div class="text-center">Calcolo in corso...</div>');
+
+        $.get('/l4m/get_penalties/', {
+            tname: teamname,
+            day: $('#current_day').val(),
+            competition: $('#current_competition').val(),
+            csrfmiddlewaretoken: token
+        }, function (data) {
+
+            renderPenaltyModal(data);
+        });
+    });
+
+    $('.extra-time-btn').on('click', function () {
+        const teamname = $(this).data('teamname');
+
+        $('#extraTimeModal').modal('show');
+        $('#extraTimeBody').html('<div class="text-center">Calcolo in corso...</div>');
+
+        $.get('/l4m/get_extratime/', {
+            tname: teamname,
+            day: $('#current_day').val(),
+            competition: $('#current_competition').val(),
+            csrfmiddlewaretoken: token
+        }, function (data) {
+
+            renderExtraTimeModal(data);
+        });
     });
 
     $('#view_live_btn').on('click', function () {

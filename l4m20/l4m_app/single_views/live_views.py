@@ -5,11 +5,135 @@ from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 import json
 from django.contrib.auth.decorators import login_required
+from requests import request
 
 
 from .. import utilities as U
 from .. import live_utilities as LU
 from ..models import *
+
+class GetPenaltiesView(View):
+    def get(self, request):
+        t = U.get_team_by_name(request.GET['tname'])
+        day = int(request.GET['day'])
+        current_day = U.get_current_day()
+        competition_id = request.GET['competition']
+
+        opponents = LU.get_opponent_from_calendar(t.id, day, competition_id)
+        if len(opponents) <= 0:
+            return HttpResponse(json.dumps({}))
+        opponent = opponents[0]
+
+        #QUICK LOAD THE PAST
+        if int(day) < int(current_day):
+            _match = LU.get_match_from_calendar(t.id, day, competition_id)
+            if len(_match) <= 0:
+                return HttpResponse(json.dumps({}))
+            
+            mr = LU.get_match_result(_match.first(), t.id)
+            if mr is None:
+                return HttpResponse(json.dumps({}))
+            
+            pen_players = json.loads(mr.first().PenaltyPlayers)
+            pen_results = pen_players['results'] if 'results' in pen_players else {}
+            gk_opponent_surname = pen_players['gk_opponent_surname'] if 'gk_opponent_surname' in pen_players else ''
+            gk_opponent_vote = pen_players['gk_opponent_vote'] if 'gk_opponent_vote' in pen_players else ''
+                
+        else: #LIVE
+            live_votes, live_teams, already_played_teams = LU.get_live_votes(day)
+
+            #VALIDO PER TOTAL LEAGUE
+            total_league = U.get_competition(name='Total League').first()
+            if int(competition_id) == total_league.id:
+                lineup_b11 = LU.get_b11_lineup(t, day, live_votes, live_teams, already_played_teams)
+                opponent_lineup_b11 = LU.get_b11_lineup(opponent, day, live_votes, live_teams, already_played_teams)
+                gk_opponent_surname, gk_opponent_vote = LU.get_goalkeeper_from_votes(opponent_lineup_b11, istotal=True)
+
+                penalties_results = LU.calculate_penalties_single_team_total(lineup_b11, gk_opponent_vote)
+                pen_results = penalties_results.get('pen_results', {})
+
+            else: #VALIDO PER TUTTE LE ALTRE COMPETIZIONI
+                lineup = U.get_last_lineup(t, day, comp_id=competition_id)[0]
+                opponent_lineup = U.get_last_lineup(opponent, day, comp_id=competition_id)[0]
+
+                votes_home = LU.get_votes(lineup, 
+                                        day, 
+                                        live_votes=live_votes, 
+                                        live_teams=live_teams, 
+                                        already_played_teams=already_played_teams, 
+                                        my_teamid=None, 
+                                        home=True, 
+                                        homeAway=None)
+                
+                votes_opponent = LU.get_votes(opponent_lineup, 
+                                        day, 
+                                        live_votes=live_votes, 
+                                        live_teams=live_teams, 
+                                        already_played_teams=already_played_teams,
+                                        my_teamid=None,
+                                        home=False,
+                                        homeAway=None)
+                                        
+                gk_opponent_surname, gk_opponent_vote = LU.get_goalkeeper_from_votes(votes_opponent)
+
+                penalties_results = LU.calculate_penalties_single_team(lineup, gk_opponent_vote, votes_home)
+                pen_results = penalties_results.get('pen_results', {})
+        
+        return HttpResponse(json.dumps({
+        'teamname': request.GET['tname'],
+        'pen_results': pen_results,
+        'gk_opponent_surname': gk_opponent_surname,
+        'gk_opponent_vote': gk_opponent_vote
+        }))
+
+class GetExtraTimeView(View):
+    def get(self, request):
+        t = U.get_team_by_name(request.GET['tname'])
+        day = int(request.GET['day'])
+        competition_id = request.GET['competition']
+
+        #QUICK LOAD THE PAST
+        if int(day) < int(U.get_current_day()):
+            _match = LU.get_match_from_calendar(t.id, day, competition_id)
+            if len(_match) <= 0:
+                return HttpResponse(json.dumps({}))
+            
+            mr = LU.get_match_result(_match.first(), t.id)
+            if mr is None:
+                return HttpResponse(json.dumps({}))
+            
+            et_players = json.loads(mr.first().ExtraTimePlayers)
+            extra_goals = et_players.get('ngoals', 0) if et_players is not None else 0
+            extra_score = et_players.get('score', '0') if et_players is not None else '0'
+            ot_votes_map = et_players.get('results', {}) if et_players is not None else {}
+        
+        else: #LIVE
+            live_votes, live_teams, already_played_teams = LU.get_live_votes(day)
+            
+            #VALIDO PER TOTAL LEAGUE
+            total_league = U.get_competition(name='Total League').first()
+            if int(competition_id) == total_league.id:
+                lineup_b11 = LU.get_b11_lineup(t, day, live_votes, live_teams, already_played_teams)
+                extra_goals, extra_score, ot_votes_map = LU.calculate_extratime_goals_total(lineup_b11)
+
+            else: #VALIDO PER TUTTE LE ALTRE COMPETIZIONI        
+                lineup = U.get_last_lineup(t, day, comp_id=competition_id)[0]
+                votes_home = LU.get_votes(lineup, 
+                                    day, 
+                                    live_votes=live_votes, 
+                                    live_teams=live_teams, 
+                                    already_played_teams=already_played_teams, 
+                                    my_teamid=None, 
+                                    home=True, 
+                                    homeAway=None)
+
+                extra_goals, extra_score, ot_votes_map = LU.calculate_extratime_goals(votes_home, lineup)
+            
+        return HttpResponse(json.dumps({''
+        'teamname': request.GET['tname'],
+        'n_et_goals': extra_goals, 
+        'et_score': extra_score, 
+        'ot_votes_map': ot_votes_map}))
 
 class MyLiveView(LoginRequiredMixin, View):
     template_name = 'l4m/my_live.html'
@@ -128,6 +252,7 @@ def LiveView(request):
     all_series = U.get_all_series(competitionid=competition_id)
     all_my_series_ids = [s.id for s in U.get_all_my_series(teamid)]
     homeAway=U.get_homeaway(competition_id, day)
+    extratime_penalties = U.get_overtime_penalties(competition_id, day)
 
     series_teams = team.Team.objects.filter(Series__id=seriesid)
     last_lineups_d = {}
@@ -176,6 +301,15 @@ def LiveView(request):
             for lineup_couple in lineup_couples:
                 votes_home = LU.get_votes_total(lineup_couple[0], home=True, homeAway=homeAway)
                 votes_away = LU.get_votes_total(lineup_couple[1], home=False, homeAway=homeAway)
+
+                #check here for extratime and penalties for TOTAL LEAGUE
+                if overtime and extratime_penalties: 
+                    if(LU.check_match_for_extratime(lineup_couple[0]['t'].id, lineup_couple[1]['t'].id, 
+                                                 votes_home, votes_away, 
+                                                 day, competition_id, seriesid)):
+                        votes_home = LU.add_extratime_penalties_flag(votes_home)
+                        votes_away = LU.add_extratime_penalties_flag(votes_away)
+
                 all_votes.append( \
                     [votes_home, votes_away]
                 )
@@ -187,7 +321,7 @@ def LiveView(request):
             #COPPA DI SERIE
             for t in series_teams:
                 l = U.get_last_lineup(t, day, comp_id=competition_id)
-                if(len(l) <= 0 and overtime): #overtime
+                if(len(l) <= 0 and overtime): #overtime (day started)
                     last_valid_l = U.get_last_valid_lineup(t)
 
                 lineup_to_show = t.Name #base
@@ -219,6 +353,15 @@ def LiveView(request):
             for lineup_couple in lineup_couples:
                 votes_home = LU.get_votes(lineup_couple[0], day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=teamid, homeAway=homeAway)
                 votes_away = LU.get_votes(lineup_couple[1], day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=teamid, home=False, homeAway=homeAway)
+                
+                #check here for extratime and penalties
+                if overtime and extratime_penalties: 
+                    if(LU.check_match_for_extratime(lineup_couple[0].Team.id, lineup_couple[1].Team.id, 
+                                                 votes_home, votes_away, 
+                                                 day, competition_id, seriesid)):
+                        votes_home = LU.add_extratime_penalties_flag(votes_home)
+                        votes_away = LU.add_extratime_penalties_flag(votes_away)
+
                 all_votes.append( \
                     [votes_home, votes_away]
                 )
@@ -237,7 +380,8 @@ def LiveView(request):
         'all_my_series_ids' : all_my_series_ids,
         'homeAway': homeAway,
         'is_live_day': is_live_day,
-        'today_competitions_ids': today_competitions_ids
+        'today_competitions_ids': today_competitions_ids,
+        'extratime_penalties': extratime_penalties,
         }
     
     return render(request, template_name, params)
