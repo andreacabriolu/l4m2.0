@@ -112,6 +112,49 @@ def calculate_penalties_single_team(lineup, gk_opponent_vote, votes):
 
     return {'pen_results': pen_results}
 
+def calculate_penalties_votes_total(b11_lineup_home, b11_lineup_away):
+    if b11_lineup_home is None or b11_lineup_away is None:
+        return 0,0
+    
+    pen_results_home = {}
+    pen_results_away = {}
+
+    pen_players_home = b11_lineup_home['players'][:11]
+    pen_players_away = b11_lineup_away['players'][:11]
+
+    gk_home_vote = b11_lineup_home['players'][0]['player_vote'] #home goalkeeper pure vote
+    gk_away_vote = b11_lineup_away['players'][0]['player_vote'] #away goalkeeper pure vote
+    
+    for p in pen_players_home:
+        pen_results_home[p['player_surname']] = [p['player_vote'], True] if p['player_vote'] >= gk_away_vote else [p['player_vote'], False]
+
+    for p in pen_players_away:
+        pen_results_away[p['player_surname']] = [p['player_vote'], True] if p['player_vote'] >= gk_home_vote else [p['player_vote'], False]
+
+    #take first 5 penalties
+    first_5_home = dict(islice(pen_results_home.items(), 5))
+    first_5_away =  dict(islice(pen_results_away.items(), 5))
+    scores_home = [1 if v[1] else 0 for v in first_5_home.values()]
+    scores_away = [1 if v[1] else 0 for v in first_5_away.values()]
+    
+    if sum(scores_home) == sum(scores_away):
+        #sudden death
+        for i in range(5,11):
+            home_item = list(pen_results_home.items())[i] #WARNING: TODO cycle
+            away_item = list(pen_results_away.items())[i]
+            home_score = 1 if home_item[1] else 0
+            away_score = 1 if away_item[1] else 0
+
+            scores_home.append(home_score)
+            scores_away.append(away_score)
+            if sum(scores_home) != sum(scores_away):
+                break
+    else:
+        pen_results_home = first_5_home
+        pen_results_away = first_5_away
+
+    return {'pen_results_home': pen_results_home, 'score_home': sum(scores_home), 
+            'pen_results_away': pen_results_away, 'score_away': sum(scores_away)}
 
 def calculate_penalties_votes(lineup_home, lineup_away, votes_home, votes_away):
     if lineup_home is None or lineup_away is None:

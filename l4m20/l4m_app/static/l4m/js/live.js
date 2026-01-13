@@ -216,6 +216,7 @@ function renderPenalty(penalties, opponentGkVote) {
   html = '';
 
   $('#penalty-gk-vote').text(opponentGkVote !== null ? opponentGkVote : '—');
+  $('#penalty-total-goals').text(Object.values(penalties).filter(p => p[1] === true).length);
 
   Object.entries(penalties).map(([pname, p_exit], index) => {
     isGoal = p_exit[1];

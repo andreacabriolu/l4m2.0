@@ -104,7 +104,7 @@ class GetExtraTimeView(View):
             
             et_players = json.loads(mr.first().ExtraTimePlayers)
             extra_goals = et_players.get('ngoals', 0) if et_players is not None else 0
-            extra_score = et_players.get('score', '0-0') if et_players is not None else '0'
+            extra_score = et_players.get('score', '0') if et_players is not None else '0'
             ot_votes_map = et_players.get('results', {}) if et_players is not None else {}
         
         else: #LIVE

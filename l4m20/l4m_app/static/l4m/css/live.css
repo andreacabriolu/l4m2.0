@@ -585,3 +585,13 @@ table .w-30 {
     padding-bottom: 6px;
     margin-bottom: 4px;
 }
+
+.penalty-footer {
+    background: rgba(0, 0, 0, 0.25);
+    border-top: 1px solid rgba(255,255,255,0.15);
+}
+
+.penalty-footer .badge {
+    min-width: 50px;
+    text-align: center;
+}
