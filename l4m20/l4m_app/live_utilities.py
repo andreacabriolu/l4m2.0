@@ -246,7 +246,8 @@ def calculate_extratime_goals(votes, lineup):
     return ot_goals, ot_score, ot_votes_map
 
 def check_match_for_extratime(home_team_id, away_team_id, votes_home, votes_away, day, comp_id, seriesid):
-    is_round_trip = U.is_round_trip_match(day, comp_id)
+    cc = U.get_competition_calendar_entry(comp_id, day)
+    is_round_trip = U.is_round_trip_match(cc)
     if is_round_trip:
         first_leg_results = (
             matches_results.MatchesResults.objects
@@ -282,7 +283,7 @@ def check_match_for_extratime(home_team_id, away_team_id, votes_home, votes_away
             if home_agg == away_agg:
                 return True #match went to extratime
             
-    else:
+    elif U.is_single_match_knockout(cc):
         #single match knockout
         if votes_home is None or votes_away is None:
             return False

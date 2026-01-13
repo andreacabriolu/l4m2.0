@@ -12,9 +12,15 @@ def check_day_suspended(day):
     suspended = competition_calendar.CompetitionCalendar.objects.filter(Q(Day=day)&Q(Suspended=True)).values('Day')
     return len(suspended) > 0
 
-def is_round_trip_match(day, competition_id):
-    cc = competition_calendar.CompetitionCalendar.objects.filter(Q(Competition=competition_id) & Q(Day=day)).values('id','HomeAway','Overtime')
-    return (cc.first()['HomeAway'] & cc.first()['Overtime']) if len(cc) > 0 else False
+def get_competition_calendar_entry(competition_id, day):
+    cc = competition_calendar.CompetitionCalendar.objects.filter(Q(Competition=competition_id) & Q(Day=day))
+    return cc.first() if len(cc) > 0 else None
+
+def is_round_trip_match(cc):
+    return (cc.HomeAway & cc.Overtime) if cc is not None else False
+
+def is_single_match_knockout(cc):
+    return (cc.HomeAway == False & cc.Overtime) if cc is not None else False
 
 def check_competition_overtime(competition_id, day):
     cc = competition_calendar.CompetitionCalendar.objects.filter(Q(Competition=competition_id) & Q(Day=day)).values('Overtime')
@@ -178,14 +184,28 @@ def get_homeaway(competitionid, day):
     cc= competition_calendar.CompetitionCalendar.objects.filter(Q(Competition=competitionid)&Q(Day=day)).values('HomeAway')
     return cc.first()['HomeAway'] if len(cc)>0 else False
 
+def get_all_series_from_calendar(competitionid, day):
+    return series.Series.objects.filter(
+        id__in=matches_calendar.MatchesCalendar.objects.filter(
+            Q(CompetitionCalendar__Competition=competitionid) &
+            Q(CompetitionCalendar__Day=day)
+        ).values_list('Series', flat=True).distinct()
+    )
+
 def get_unica_series(competitionid):
     return series.Series.objects.filter(Q(Name='Unica') & Q(Competition_id=competitionid))
 
 def get_my_series(teamid, competitionid=1):
     return series.Series.objects.filter(Q(team=teamid) & Q(Competition=competitionid))
 
+def get_my_active_series(teamid, competitionid=1):
+    return series.Series.objects.filter(Q(team=teamid) & Q(Competition=competitionid) & Q(Active=True))
+
 def get_all_my_series(teamid):
     return series.Series.objects.filter(Q(team=teamid))
+
+def get_all_active_series_by_day(competitionid, day):
+    return series.Series.objects.filter(Q(Competition_id=competitionid) & Q(Active=True) & Q(competitioncalendar__Day=day))
 
 def get_all_series(competitionid):
     return series.Series.objects.filter(Competition_id=competitionid)

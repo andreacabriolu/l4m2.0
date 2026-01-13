@@ -238,7 +238,7 @@ def calculate_b11_league(competition, day):
 
 def calculate_league(competition, day):
     all_votes_per_series = {}
-    comp_series = U.get_all_series(competition.id)
+    comp_series = U.get_all_series_from_calendar(competition.id, int(day))
     curr_day = U.get_current_day() 
     all_league_days = U.get_days(competition.id)
     league_days = sorted([d['Day'] for d in all_league_days if int(day) <= d['Day'] <= int(curr_day)])

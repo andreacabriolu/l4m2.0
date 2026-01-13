@@ -249,7 +249,7 @@ def LiveView(request):
         day = int(current_day)
         seriesid = my_seriesid_mainleague
 
-    all_series = U.get_all_series(competitionid=competition_id)
+    all_series = U.get_all_series_from_calendar(competitionid=competition_id, day=day)
     all_my_series_ids = [s.id for s in U.get_all_my_series(teamid)]
     homeAway=U.get_homeaway(competition_id, day)
     extratime_penalties = U.get_overtime_penalties(competition_id, day)

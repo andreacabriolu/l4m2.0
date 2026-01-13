@@ -133,7 +133,7 @@ class SaveMultipleLineupView(View):
                     "team": teamid,
                     "version": last_version + 1,
                     "timestamp": datetime.now(),
-                    "series": U.get_my_series(teamid, competitionid=single_comp_id)[0],
+                    "series": U.get_my_active_series(teamid, competitionid=single_comp_id)[0],
                     "hideLineup": options['hideLineup'],
                     "modNoGk": options['modNoGk'],
                     "late_edit": False
@@ -173,7 +173,7 @@ class SaveLineupView(View):
             "team": teamid,
             "version": last_version + 1,
             "timestamp": datetime.now(),
-            "series": U.get_my_series(teamid, competitionid=comp_id)[0],
+            "series": U.get_my_active_series(teamid, competitionid=comp_id)[0],
             "hideLineup": options['hideLineup'],
             "modNoGk": options['modNoGk'],
             "late_edit": late_edit,
