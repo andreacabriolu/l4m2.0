@@ -346,11 +346,14 @@ def LiveView(request):
 
             couples = LU.get_couples_from_calendar(seriesid, day, competition_id=competition_id)
             couples = [couples.pop(couples.index(i)) for i in couples if (i[0]==teamid or i[1]==teamid)]+couples #get user match as first
-            lineup_couples = [ (last_lineups_d[c[0]], last_lineups_d[c[1]]) for c in couples ]
+            lineup_couples = [ (last_lineups_d[c[0]], last_lineups_d[c[1]]) if c[0] in last_lineups_d and c[1] in last_lineups_d else (None, None) for c in couples ]
 
             all_votes = []
 
             for lineup_couple in lineup_couples:
+                if lineup_couple[0] is None or lineup_couple[1] is None:
+                    continue
+                
                 votes_home = LU.get_votes(lineup_couple[0], day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=teamid, homeAway=homeAway)
                 votes_away = LU.get_votes(lineup_couple[1], day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=teamid, home=False, homeAway=homeAway)
                 

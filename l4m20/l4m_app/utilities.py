@@ -20,7 +20,7 @@ def is_round_trip_match(cc):
     return (cc.HomeAway & cc.Overtime) if cc is not None else False
 
 def is_single_match_knockout(cc):
-    return (Q(cc.HomeAway == False) & Q(cc.Overtime)) if cc is not None else False
+    return (cc.HomeAway == False) & (cc.Overtime == True) if cc is not None else False
 
 def check_competition_overtime(competition_id, day):
     cc = competition_calendar.CompetitionCalendar.objects.filter(Q(Competition=competition_id) & Q(Day=day)).values('Overtime')
@@ -511,13 +511,13 @@ def get_all_lineups(teamid, day, seriesid):
     return lineup.Lineup.objects.filter(Team=teamid, Day=day, Series=seriesid).order_by('Version')
 
 def get_last_valid_lineup(teamid, comp_id=1):
-    my_series = get_my_series(teamid, comp_id)[0]
-    all_lups = lineup.Lineup.objects.filter(Team=teamid, Series=my_series.id).order_by('-Version').order_by('-Day')
+    my_series = get_my_series(teamid, comp_id)
+    all_lups = lineup.Lineup.objects.filter(Team=teamid, Series__in=my_series).order_by('-Version').order_by('-Day')
     return list(all_lups)[0]
 
 def get_last_lineup(teamid, day, comp_id=1):
-    my_series = get_my_series(teamid, comp_id)[0]
-    return lineup.Lineup.objects.filter(Team=teamid, Day=day, Series=my_series.id).order_by('-Version')[:1]
+    my_series = get_my_series(teamid, comp_id)
+    return lineup.Lineup.objects.filter(Team=teamid, Day=day, Series__in=my_series).order_by('-Version')[:1]
 
 def save_last_valid_lineup(_lineup, day, seriesid):
     last_lineup_late = lineup.Lineup(
