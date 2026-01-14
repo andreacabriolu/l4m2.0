@@ -396,7 +396,7 @@ window.addEventListener('DOMContentLoaded', event => {
         var allFilled = true;
         var playerSlots = {};
         var options = {};
-        var overtime = $('#overtime').val();
+        var overtime = $('#overtime').val().toLowerCase() == 'true';
 
         if (overtime && selected_overtime_players.size == 0 && !overtimeWarning) {
             showPopupErrorAlert('ATTENZIONE: NON HAI SELEZIONATO I GIOCATORI PER I TEMPI SUPPLEMENTARI');
