@@ -321,7 +321,7 @@ def insert_votes(conn:DB_Connector, votes):
     
 def get_players_realteam(conn:DB_Connector):
     try:
-        return conn.select(table="l4m_app_player", cols='\"id\",\"RealTeam_id\"', conditions='"Status"=%s', data='A')
+        return conn.select_all(table="l4m_app_player", cols='\"id\",\"RealTeam_id\"')
     except Exception as e:
         raise e
 
@@ -339,7 +339,7 @@ def get_all_players(conn:DB_Connector):
 
 def get_players(conn:DB_Connector):
     try:
-        return conn.select(table="l4m_app_player", cols='\"Surname\",\"id\"', conditions='"Status"=%s', data='A')
+        return conn.select_all(table="l4m_app_player", cols='\"Surname\",\"id\"')
     except Exception as e:
         raise e
     
