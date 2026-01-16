@@ -108,7 +108,7 @@ class GetMissingLineupsView(View):
         day = request.GET['day']
 
         my_lups = U.get_my_lineups_competitions_by_day(t_id, day)
-        my_active_comps = U.get_my_active_competitions_filtered(t_id, day)
+        my_active_comps = U.get_my_competitions_from_calendar(t_id, day)
 
         my_lup_ids = [v['Series_id__Competition_id'] for v in my_lups.distinct()]
         my_comp_ids = [v.id for v in my_active_comps]

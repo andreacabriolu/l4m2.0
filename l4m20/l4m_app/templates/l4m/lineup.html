@@ -168,13 +168,11 @@
         {% if overtime %}
         <div class="overtime-buttons">
             <button type="button" data-bs-toggle="modal" data-bs-target="#overtimeModal" 
-            class="btn btn-warning top-panel-btn" id="btnOvertime" {% if day_already_started %} disabled
-                {% endif %}>
+            class="btn btn-warning top-panel-btn" id="btnOvertime">
                 SELEZIONE SUPPLEMENTARI
             </button>
             <button type="button" data-bs-toggle="modal" data-bs-target="#penaltiesModal" 
-            class="btn btn-success top-panel-btn" id="btnPenaltyShootout" {% if day_already_started %}
-                disabled {% endif %}>
+            class="btn btn-success top-panel-btn" id="btnPenaltyShootout">
                 SCELTA RIGORISTI
             </button>
         </div>

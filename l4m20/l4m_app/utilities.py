@@ -40,7 +40,7 @@ def get_day_comps_lineups(day):
 
     for t in teams:
         t_nlineups = get_my_lineups_by_day_distinct(t['id'], day)
-        t_comps = get_my_active_competitions_filtered(t['id'], day)
+        t_comps = get_my_competitions_from_calendar(t['id'], day)
         
         team_lups_comps[t['id']] = { 'tname':t['Name'], 'nlineups': t_nlineups['nlin'], 'ncomps': len(t_comps), \
                                     'full': t_nlineups['nlin'] - len(t_comps) == 0}

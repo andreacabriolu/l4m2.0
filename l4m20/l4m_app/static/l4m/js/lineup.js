@@ -566,8 +566,18 @@ window.addEventListener('DOMContentLoaded', event => {
     $('#overtimeModal').on('show.bs.modal', function (e) {
 
         var overtime_players = [];
-        // Collect players from secondary lineup, excluding goalkeepers
-        $('#secondary_lineup').children(':not([id^=gk])').each(function () {
+
+        const secondary_valid_players = $('#secondary_lineup > div').filter(function () {
+            const idOk = !this.id.startsWith('gk');
+            const select = $(this).children('select').first();
+            const notPlayed = !select.hasClass('played');
+
+            return idOk && notPlayed;
+            });
+
+
+        // Collect players from secondary lineup, excluding goalkeepers (and (tentatively) already played)
+        secondary_valid_players.each(function () {
             var sec_pl = $(this).children().children('option:selected');
             if (sec_pl.length > 0 && sec_pl.data().id != undefined) {
                 overtime_players.push(sec_pl);
