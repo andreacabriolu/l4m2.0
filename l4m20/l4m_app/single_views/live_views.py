@@ -241,7 +241,7 @@ def LiveView(request):
         my_series = U.get_my_series(teamid, competitionid=competition_id)
         if len(my_series) <= 0:
             teamid = None
-        elif(seriesid != my_series[0].id):
+        elif(seriesid not in [ s.id for s in my_series ]):
             teamid = None
         day = int(data['day'])
     else:
