@@ -16,6 +16,9 @@ class Bet_History(models.Model):
     Svincolo = models.BooleanField(default=False)
     Session_svincolo = models.ForeignKey(on_delete=models.CASCADE, to=C.Constant_Strings.session, null=True, related_name="session_svincolo")
 
+    def __str__(self):
+        return f"bet_history_{self.Team.Name}_{self.Player.Surname}_{self.Market.Name}"
+
 class Bet_History_Obj():
     Name=str
     Time=str

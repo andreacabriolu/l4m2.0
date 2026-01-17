@@ -8,6 +8,22 @@ from zoneinfo import ZoneInfo
 from l4m20 import constants as C
 import requests as req
 
+def get_svincoli_current_day(day_time_boundaries, teamid):
+    svincoli = bet_history.Bet_History.objects.filter(
+        Q(Svincolo=True) &
+        Q(Team=teamid) &
+        Q(Time__gte=day_time_boundaries[0]) &
+        Q(Time__lte=day_time_boundaries[1])
+    ).values('Player_id')
+    
+    return [s['Player_id'] for s in svincoli]
+
+def get_current_day_boundaries(current_day):
+    today_matches = real_calendar.Real_calendar.objects.filter(Day=current_day).values('Date').order_by('Date')
+    day_time_start = today_matches.first()['Date'].astimezone(ZoneInfo(key='Europe/Rome')) if len(today_matches) > 0 else None
+    day_time_end = today_matches.last()['Date'].astimezone(ZoneInfo(key='Europe/Rome')) if len(today_matches) > 0 else None
+    return (day_time_start, day_time_end)
+
 def check_day_suspended(day):
     suspended = competition_calendar.CompetitionCalendar.objects.filter(Q(Day=day)&Q(Suspended=True)).values('Day')
     return len(suspended) > 0
@@ -229,6 +245,14 @@ def get_players_by_lups(l_ups):
     pl_ids = list(set().union(*_lups))
 
     return player.Player.objects.filter(id__in=pl_ids).values('id','Surname','Role')
+
+def is_any_market_active():
+    nowtime = datetime.datetime.now(ZoneInfo('Europe/Rome'))
+
+    session_ = session.Session.objects.filter(Q(Begin__lte=nowtime) &
+                                           Q(End__gte=nowtime))
+    
+    return len(session_) > 0
 
 def get_current_session(marketid):
     nowtime = datetime.datetime.now(ZoneInfo('Europe/Rome'))

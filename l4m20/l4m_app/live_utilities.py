@@ -409,6 +409,14 @@ def enrich_and_sort_players_live(teamid, current_day, live_votes, live_teams, al
 
     mysquads = U.get_squads(teamid)
     players = U.get_players_by_squad(mysquads)
+    
+    if U.is_any_market_active(): #consider svincoli for b11/total calculation
+        current_day_boundaries = U.get_current_day_boundaries(current_day)
+        svincoli_current_day = U.get_svincoli_current_day(current_day_boundaries, teamid)
+        if len(svincoli_current_day) > 0:
+            additional_players = player.Player.objects.filter(id__in=svincoli_current_day)\
+                .values('id','Surname','Role','RealTeam')
+            players = players.union(additional_players)
 
     enriched_players = []
     cap_id = -1 #not used for b11
