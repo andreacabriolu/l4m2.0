@@ -235,7 +235,8 @@ function renderPenalty(penalties, opponentGkVote) {
     }).join('');
 
 
-  document.getElementById('penalty-list').innerHTML = html;
+  $('#penalty-list').empty();
+  $('#penalty-list').append(html);
 }
 
 

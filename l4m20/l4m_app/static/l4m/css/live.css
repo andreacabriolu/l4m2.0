@@ -595,3 +595,7 @@ table .w-30 {
     min-width: 50px;
     text-align: center;
 }
+
+#penalty-modal .modal-dialog {
+    height: auto !important;
+}
