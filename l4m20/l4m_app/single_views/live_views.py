@@ -304,11 +304,11 @@ def LiveView(request):
 
                 #check here for extratime and penalties for TOTAL LEAGUE
                 if overtime and extratime_penalties: 
-                    if(LU.check_match_for_extratime(lineup_couple[0]['t'].id, lineup_couple[1]['t'].id, 
-                                                 votes_home, votes_away, 
-                                                 day, competition_id, seriesid)):
-                        votes_home = LU.add_extratime_penalties_flag(votes_home)
-                        votes_away = LU.add_extratime_penalties_flag(votes_away)
+                    # if(LU.check_match_for_extratime(lineup_couple[0]['t'].id, lineup_couple[1]['t'].id, 
+                    #                              votes_home, votes_away, 
+                    #                              day, competition_id, seriesid)):
+                    votes_home = LU.add_extratime_penalties_flag(votes_home)
+                    votes_away = LU.add_extratime_penalties_flag(votes_away)
 
                 all_votes.append( \
                     [votes_home, votes_away]
@@ -359,11 +359,11 @@ def LiveView(request):
                 
                 #check here for extratime and penalties
                 if overtime and extratime_penalties: 
-                    if(LU.check_match_for_extratime(lineup_couple[0].Team.id, lineup_couple[1].Team.id, 
-                                                 votes_home, votes_away, 
-                                                 day, competition_id, seriesid)):
-                        votes_home = LU.add_extratime_penalties_flag(votes_home)
-                        votes_away = LU.add_extratime_penalties_flag(votes_away)
+                    # if(LU.check_match_for_extratime(lineup_couple[0].Team.id, lineup_couple[1].Team.id, 
+                    #                              votes_home, votes_away, 
+                    #                              day, competition_id, seriesid)):
+                    votes_home = LU.add_extratime_penalties_flag(votes_home)
+                    votes_away = LU.add_extratime_penalties_flag(votes_away)
 
                 all_votes.append( \
                     [votes_home, votes_away]
