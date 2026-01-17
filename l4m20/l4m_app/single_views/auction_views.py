@@ -60,6 +60,7 @@ class AuctionView(LoginRequiredMixin, View):
                 'max_svincoli' : C.MAX_SVINCOLI,
                 'n_svincoli' : n_svincoli,
                 'free_players' : free_players,
+                'is_live_day': U.is_live_day()
 
             }
         except Exception as e:

@@ -8,6 +8,11 @@ from zoneinfo import ZoneInfo
 from l4m20 import constants as C
 import requests as req
 
+def is_live_day():
+    now = datetime.datetime.now(ZoneInfo('Europe/Rome'))
+    current_day_boundaries = get_current_day_boundaries(get_current_day())
+    return current_day_boundaries[0] <= now <= current_day_boundaries[1]
+
 def get_svincoli_current_day(day_time_boundaries, teamid):
     svincoli = bet_history.Bet_History.objects.filter(
         Q(Svincolo=True) &

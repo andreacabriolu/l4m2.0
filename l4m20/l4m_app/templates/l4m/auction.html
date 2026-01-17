@@ -136,7 +136,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">DOPO</button>
                         <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
-                            onclick="finalizeBet()">OK</button>
+                            onclick="finalizeBet()" {% if is_live_day %} disabled {% endif %}>OK</button>
                     </div>
                 </div>
             </div>
