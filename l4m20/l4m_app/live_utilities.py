@@ -240,8 +240,8 @@ def calculate_extratime_goals(votes, lineup):
     ot_goals = calculate_n_ot_goals(ot_score)
 
     for v in votes_ris:
-        if v.Player.id in ot_players and v.TotVote is not None:
-            ot_votes_map[v.Player.id] = [v.Player.Surname, v.TotVote]
+        if v.Player.id in ot_players:# and v.TotVote is not None:
+            ot_votes_map[v.Player.id] = [v.Player.Surname, 0 if v.TotVote is None else v.TotVote]
 
     return ot_goals, ot_score, ot_votes_map
 
