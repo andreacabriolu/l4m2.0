@@ -485,7 +485,11 @@ window.addEventListener('DOMContentLoaded', event => {
                         showErrorAlert(response);
                     }
                     else {
-                        showPopupErrorAlert("FORMAZIONE SCHIERATA CORRETTAMENTE PER TUTTE LE COMPETIZIONI!");
+                        if (response === "overtime") {
+                            showPopupErrorAlert("FORMAZIONE SCHIERATA CORRETTAMENTE PER TUTTE LE COMPETIZIONI! ATTENZIONE: VERIFICARE TEMPI SUPPLEMENTARI E RIGORI");
+                        } else {
+                            showPopupErrorAlert("FORMAZIONE SCHIERATA CORRETTAMENTE PER TUTTE LE COMPETIZIONI!");
+                        }
                         $('#btnSaveLineup').prop('disabled', false);
                     }
                 });

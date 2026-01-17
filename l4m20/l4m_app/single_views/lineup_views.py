@@ -119,9 +119,11 @@ class SaveMultipleLineupView(View):
             options = json.loads(options)
             day = U.get_current_day()
             teamid = U.get_user_team(request.user.id)['id']
+            overtimes = []
 
             for single_comp_id in all_comp_ids:
                 last_version = 0
+                overtimes.append(U.check_competition_overtime(single_comp_id, day))
                 last_lineup = U.get_last_lineup(teamid, day, single_comp_id)
 
                 if(last_lineup):
@@ -141,7 +143,8 @@ class SaveMultipleLineupView(View):
 
                 U.save_lineup(lineup_info)
 
-            return HttpResponse("success")
+            response = "success" if not any(overtimes) else "overtime"
+            return HttpResponse(response)
 
         except Exception as e:
                 return HttpResponse(f'error saving lineup: {e}') 
