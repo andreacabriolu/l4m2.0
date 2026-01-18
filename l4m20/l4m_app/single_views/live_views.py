@@ -153,6 +153,7 @@ class MyLiveView(LoginRequiredMixin, View):
             comp_id = c.CompetitionCalendar.Competition_id
             comp = U.get_competition_by_id(comp_id)
             homeAway=U.get_homeaway(comp_id, current_day)
+            extratime_penalties = U.get_overtime_penalties(comp_id, current_day)
 
             if comp_id == total_league.id:
                 h_lineup_to_show = LU.get_b11_lineup(c.HomeTeam, current_day, live_votes, live_teams, already_played_teams)
@@ -179,6 +180,10 @@ class MyLiveView(LoginRequiredMixin, View):
                 votes_home = LU.get_votes(lineup_couple[0], current_day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=myteam['id'], homeAway=_homeaway)
                 votes_away = LU.get_votes(lineup_couple[1], current_day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=myteam['id'], home=False, homeAway=_homeaway)
             
+                if overtime and extratime_penalties: 
+                    votes_home = LU.add_extratime_penalties_flag(votes_home)
+                    votes_away = LU.add_extratime_penalties_flag(votes_away)
+
             all_votes.append( \
                 [votes_home, votes_away]
             )

@@ -33,6 +33,70 @@
 
     <input type="hidden" value="{{current_day}}" id="current_day">
 
+    <div class="modal fade" id="penaltyModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down">
+            <div class="modal-content penalty-modal">
+    
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-futbol me-2"></i>Tiri di rigore – <span id="penalty-team-name"></span>
+                    </h5>
+                    <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+    
+                <div class="modal-body" id="penalty-body">
+                    <div class="penalty-gk-row text-center mb-2">
+                        <strong>Voto Portiere Avversario:</strong>
+                        <span id="penalty-gk-vote" class="ms-2 badge bg-primary">—</span>
+                    </div>
+                    <div class="penalty-row penalty-header">
+                        <span>#</span>
+                        <span class="penalty-shooter">Tiratore</span>
+                        <span class="penalty-result">Voto</span>
+                        <span></span>
+                    </div>
+                    <div id="penalty-list">
+                    </div>
+    
+                    <div class="modal-footer justify-content-between penalty-footer">
+                        <span class="fw-semibold">
+                            Goal segnati:
+                        </span>
+                        <span id="penalty-total-goals" class="badge bg-success fs-5">
+                            0
+                        </span>
+                    </div>
+                </div>
+    
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="extraTimeModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered">
+            <div class="modal-content extra-time-modal">
+    
+                <div class="modal-header border-0">
+                    <h5 class="modal-title">
+                        <i class="fas fa-stopwatch me-2"></i> Tempi Supplementari – <span id="et-team-name"></span>
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+    
+                <div class="modal-body" id="extra-time-body">
+                </div>
+    
+                <div class="modal-footer border-0 justify-content-center">
+                    <button class="btn btn-outline-primary" data-bs-dismiss="modal">
+                        OK
+                    </button>
+                </div>
+    
+            </div>
+        </div>
+    </div>
+
+
     <div class="modal fade" id="playerStatsModal" tabindex="-1" role="dialog" aria-labelledby="playerStatsModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-xl modal-full-mobile" role="document">
@@ -146,6 +210,18 @@
                                 {% else %} FORMAZIONE NON SCHIERATA
                                 {% endif %}
                             </button>
+                                {% if team_votes.1.16 %}
+                                    <button class="extra-time-btn" data-teamname="{{team_votes.1.1}}" data-comp="{{comp.id}}">
+                                        <i class="fas fa-stopwatch"></i>
+                                        <span>VEDI SUPPLEMENTARI</span>
+                                        <small>+1</small>
+                                    </button>
+
+                                    <button class="penalty-btn" data-teamname="{{team_votes.1.1}}" data-comp="{{comp.id}}">
+                                        <i class="fas fa-futbol"></i>
+                                        <span>VEDI RIGORI</span>
+                                    </button>
+                                {% endif %}
                             {% endif %}
                         </th>
                     </tr>
