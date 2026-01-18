@@ -9,6 +9,13 @@ from django.db.models import Q
 import requests as req
 from itertools import islice, cycle
 
+def add_first_leg_goals(votes, goals):
+    #add first leg goals
+    current_ngoals = votes[1][9] #NGoals
+    votes[1].append(current_ngoals + goals) #NGoals first leg
+
+    return votes
+
 def calculate_penalties_single_team_total(b11_lineup, gk_opponent_vote=None):
     if b11_lineup is None:
         return 0
@@ -245,28 +252,42 @@ def calculate_extratime_goals(votes, lineup):
 
     return ot_goals, ot_score, ot_votes_map
 
-def check_match_for_extratime(home_team_id, away_team_id, votes_home, votes_away, day, comp_id, seriesid):
+def get_first_leg_results(comp_id, day, home_team_id, away_team_id):
+    first_leg_results = (
+        matches_results.MatchesResults.objects
+        .select_related(
+            "MatchesCalendar",
+            "MatchesCalendar__CompetitionCalendar"
+        )
+        .filter(
+            MatchesCalendar__CompetitionCalendar__Competition_id=comp_id,
+            MatchesCalendar__CompetitionCalendar__Day__lt=day,
+            MatchesCalendar__CompetitionCalendar__HomeAway=True,
+            # MatchesCalendar__Series_id=seriesid,
+            MatchesCalendar__HomeTeam_id=away_team_id,
+            MatchesCalendar__AwayTeam_id=home_team_id
+        )
+        .order_by("-MatchesCalendar__CompetitionCalendar__Day")
+    )
+
+    return first_leg_results
+
+def check_and_get_first_leg_results(comp_id, day, home_team_id, away_team_id):
+    cc = U.get_competition_calendar_entry(comp_id, day)
+    if U.is_round_trip_match(cc):      
+        first_leg_results = get_first_leg_results(comp_id, day, home_team_id, away_team_id)
+    else:
+        first_leg_results = None
+
+    return first_leg_results
+
+def check_match_for_extratime(home_team_id, away_team_id, votes_home, votes_away, day, comp_id):
     cc = U.get_competition_calendar_entry(comp_id, day)
     is_round_trip = U.is_round_trip_match(cc)
     if is_round_trip:
-        first_leg_results = (
-            matches_results.MatchesResults.objects
-            .select_related(
-                "MatchesCalendar",
-                "MatchesCalendar__CompetitionCalendar"
-            )
-            .filter(
-                MatchesCalendar__CompetitionCalendar__Competition_id=comp_id,
-                MatchesCalendar__CompetitionCalendar__Day__lt=day,
-                MatchesCalendar__CompetitionCalendar__HomeAway=True,
-                MatchesCalendar__Series_id=seriesid,
-                MatchesCalendar__HomeTeam_id=away_team_id,
-                MatchesCalendar__AwayTeam_id=home_team_id
-            )
-            .order_by("-MatchesCalendar__CompetitionCalendar__Day")
-        )
+        first_leg_results = get_first_leg_results(comp_id, day, home_team_id, away_team_id)
 
-        if first_leg_results:
+        if first_leg_results is not None:
             home_goals_first_leg = first_leg_results.filter(Home=True).first().NGoals
             away_goals_first_leg = first_leg_results.filter(Home=False).first().NGoals
 

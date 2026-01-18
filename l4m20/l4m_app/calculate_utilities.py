@@ -163,7 +163,7 @@ def calculate_total_league(competition, day):
 
                 if(LU.check_match_for_extratime(lineup_couple[0]['t'].id, lineup_couple[1]['t'].id, 
                                                  votes_home, votes_away, 
-                                                 day, competition.id, series.id)):
+                                                 day, competition.id)):
                     extra_goals_home, extra_score_home, extra_votes_map_home = \
                         LU.calculate_extratime_goals_total(lineup_couple[0])
                     extra_goals_away, extra_score_away, extra_votes_map_away = \
@@ -276,7 +276,7 @@ def calculate_league(competition, day):
                 
                 if(LU.check_match_for_extratime(lineup_couple[0].Team.id, lineup_couple[1].Team.id, 
                                                  votes_home, votes_away, 
-                                                 day, competition.id, series.id)):
+                                                 day, competition.id)):
                     
                     extra_goals_home, extra_score_home, extra_votes_map_home = \
                         LU.calculate_extratime_goals(votes_home, lineup_couple[0])

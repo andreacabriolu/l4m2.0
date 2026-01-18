@@ -180,9 +180,19 @@ class MyLiveView(LoginRequiredMixin, View):
                 votes_home = LU.get_votes(lineup_couple[0], current_day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=myteam['id'], homeAway=_homeaway)
                 votes_away = LU.get_votes(lineup_couple[1], current_day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=myteam['id'], home=False, homeAway=_homeaway)
             
-                if overtime and extratime_penalties: 
-                    votes_home = LU.add_extratime_penalties_flag(votes_home)
-                    votes_away = LU.add_extratime_penalties_flag(votes_away)
+            if overtime and extratime_penalties: 
+                votes_home = LU.add_extratime_penalties_flag(votes_home)
+                votes_away = LU.add_extratime_penalties_flag(votes_away)
+
+                first_leg = LU.check_and_get_first_leg_results(
+                        comp_id, 
+                        current_day, 
+                        lineup_couple[0].Team.id, 
+                        lineup_couple[1].Team.id)
+
+                if first_leg is not None and len(first_leg) == 2:
+                    votes_home = LU.add_first_leg_goals(votes_home, first_leg[1].NGoals)
+                    votes_away = LU.add_first_leg_goals(votes_away, first_leg[0].NGoals)
 
             all_votes.append( \
                 [votes_home, votes_away]
@@ -312,6 +322,16 @@ def LiveView(request):
                     votes_home = LU.add_extratime_penalties_flag(votes_home)
                     votes_away = LU.add_extratime_penalties_flag(votes_away)
 
+                    first_leg = LU.check_and_get_first_leg_results(
+                        competition_id, 
+                        day, 
+                        lineup_couple[0].Team.id, 
+                        lineup_couple[1].Team.id)
+
+                    if first_leg is not None and len(first_leg) == 2:
+                        votes_home = LU.add_first_leg_goals(votes_home, first_leg[1].NGoals)
+                        votes_away = LU.add_first_leg_goals(votes_away, first_leg[0].NGoals)
+
                 all_votes.append( \
                     [votes_home, votes_away]
                 )
@@ -363,6 +383,16 @@ def LiveView(request):
                 if overtime and extratime_penalties: 
                     votes_home = LU.add_extratime_penalties_flag(votes_home)
                     votes_away = LU.add_extratime_penalties_flag(votes_away)
+                    
+                    first_leg = LU.check_and_get_first_leg_results(
+                        competition_id, 
+                        day, 
+                        lineup_couple[0].Team.id, 
+                        lineup_couple[1].Team.id)
+
+                    if first_leg is not None and len(first_leg) == 2:
+                        votes_home = LU.add_first_leg_goals(votes_home, first_leg[1].NGoals)
+                        votes_away = LU.add_first_leg_goals(votes_away, first_leg[0].NGoals)
 
                 all_votes.append( \
                     [votes_home, votes_away]

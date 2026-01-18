@@ -263,7 +263,9 @@
                         </th>
                     </tr>
                     <tr>
-                        <th colspan="6" class="team-score mozilla-headline-teamname display-6">{{team_votes.1.9}}</th>
+                        <th colspan="6" class="team-score mozilla-headline-teamname display-6">{{team_votes.1.9}}
+                            {% if team_votes.1.17 %} ({{team_votes.1.17}}) {% endif %}
+                        </th>
                     </tr> 
                     <tr>
                         <th colspan="6">
