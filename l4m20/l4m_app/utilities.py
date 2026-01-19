@@ -8,6 +8,16 @@ from zoneinfo import ZoneInfo
 from l4m20 import constants as C
 import requests as req
 
+def get_official_current_day(day_time_boundaries, teamid):
+    official = bet.Bet.objects.filter(
+        Q(Team=teamid) &
+        Q(IsOfficial=True) &
+        Q(Expiration_Date__gte=day_time_boundaries[0]) &
+        Q(Expiration_Date__lte=day_time_boundaries[1])
+    ).values('Player_id')
+    
+    return [o['Player_id'] for o in official]
+
 def is_live_day():
     now = datetime.datetime.now(ZoneInfo('Europe/Rome'))
     current_day_boundaries = get_current_day_boundaries(get_current_day())
@@ -251,11 +261,12 @@ def get_players_by_lups(l_ups):
 
     return player.Player.objects.filter(id__in=pl_ids).values('id','Surname','Role')
 
-def is_any_market_active():
-    nowtime = datetime.datetime.now(ZoneInfo('Europe/Rome'))
+def is_any_market_active(current_day_boundaries=None):
+    _time = datetime.datetime.now(ZoneInfo('Europe/Rome')) if current_day_boundaries is None else \
+        current_day_boundaries[0] #start of the day
 
-    session_ = session.Session.objects.filter(Q(Begin__lte=nowtime) &
-                                           Q(End__gte=nowtime))
+    session_ = session.Session.objects.filter(Q(Begin__lte=_time) &
+                                           Q(End__gte=_time))
     
     return len(session_) > 0
 
