@@ -595,3 +595,9 @@ table .w-30 {
     min-width: 50px;
     text-align: center;
 }
+
+#competitionTabs {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+
