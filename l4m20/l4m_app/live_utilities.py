@@ -315,7 +315,7 @@ def check_match_for_extratime(home_team_id, away_team_id, votes_home, votes_away
             away_agg = away_goals_first_leg + home_goals_current_leg
 
             if home_agg == away_agg:
-                return True #match went to extratime
+                return True, (home_agg, away_agg) #match went to extratime
             
     elif U.is_single_match_knockout(cc):
         #single match knockout
@@ -324,9 +324,9 @@ def check_match_for_extratime(home_team_id, away_team_id, votes_home, votes_away
         home_goals = votes_home[1][9] #BAD! change to dict!
         away_goals = votes_away[1][9] #BAD!
         if home_goals == away_goals:
-            return True #match went to extratime
+            return True, (None, None) #match went to extratime
         
-    return False
+    return False, (home_agg, away_agg)
 
 def create_live_ranking(all_scores, last_ranking):
     results_map = {}
@@ -890,8 +890,8 @@ def remake_items(mr):
     _items.append(mr.MissingSlots)
     _items.append(mr.Version)
     _items.append(mr.BonusHome)
-    if mr.ExtraTimePlayers is not None:
-        _items.append(True) #flag extra time
+    _items.append(True) if mr.ExtraTimePlayers is not None else _items.append(False)  #flag extra time
+    _items.append(mr.AggregateScore)  #aggregate score for round trip matches
 
     return _items
 

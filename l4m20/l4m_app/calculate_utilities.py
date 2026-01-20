@@ -161,9 +161,11 @@ def calculate_total_league(competition, day):
                 votes_home = LU.get_votes_total(lineup_couple[0], home=True, homeAway=homeAway)
                 votes_away = LU.get_votes_total(lineup_couple[1], home=False, homeAway=homeAway)
 
-                if(LU.check_match_for_extratime(lineup_couple[0]['t'].id, lineup_couple[1]['t'].id, 
+                is_et, (home_agg, away_agg) = LU.check_match_for_extratime(lineup_couple[0]['t'].id, lineup_couple[1]['t'].id, 
                                                  votes_home, votes_away, 
-                                                 day, competition.id)):
+                                                 day, competition.id)
+                
+                if(is_et): #extratime needed
                     extra_goals_home, extra_score_home, extra_votes_map_home = \
                         LU.calculate_extratime_goals_total(lineup_couple[0])
                     extra_goals_away, extra_score_away, extra_votes_map_away = \
@@ -215,7 +217,8 @@ def calculate_total_league(competition, day):
 
                 all_votes.append( [[lineup_couple[0]['t'].id, votes_home], 
                                    [lineup_couple[1]['t'].id, votes_away], 
-                                   lineup_couple[2]] )
+                                   lineup_couple[2],
+                                   (home_agg, away_agg)] )
         
             all_votes_per_series[series.id] = all_votes
 
@@ -274,10 +277,11 @@ def calculate_league(competition, day):
                 votes_home = LU.get_votes(lineup_couple[0], _day, live_votes=[], live_teams=[], get_for_calculation=True, homeAway=homeAway)
                 votes_away = LU.get_votes(lineup_couple[1], _day, live_votes=[], live_teams=[], get_for_calculation=True, homeAway=homeAway, home=False if homeAway else None)
                 
-                if(LU.check_match_for_extratime(lineup_couple[0].Team.id, lineup_couple[1].Team.id, 
+                is_et, (home_agg, away_agg) = LU.check_match_for_extratime(lineup_couple[0].Team.id, lineup_couple[1].Team.id, 
                                                  votes_home, votes_away, 
-                                                 day, competition.id)):
-                    
+                                                 day, competition.id)
+
+                if(is_et): #extratime needed
                     extra_goals_home, extra_score_home, extra_votes_map_home = \
                         LU.calculate_extratime_goals(votes_home, lineup_couple[0])
                     extra_goals_away, extra_score_away, extra_votes_map_away = \
@@ -328,7 +332,7 @@ def calculate_league(competition, day):
                                         'pen_score': penalties_results.get('score_away', 0),
                                                       }})  #penalties away
                 
-                all_votes.append( [[lineup_couple[0].Team.id, votes_home], [lineup_couple[1].Team.id, votes_away], lineup_couple[2]] )
+                all_votes.append( [[lineup_couple[0].Team.id, votes_home], [lineup_couple[1].Team.id, votes_away], lineup_couple[2], (home_agg, away_agg)])
 
             all_votes_per_series[series.id] = all_votes
         
@@ -360,6 +364,7 @@ def save_results(votes_per_series):
         mc = matches_calendar.MatchesCalendar.objects.get(pk=_votes[2])
         if mc is None:
             continue
+        agg_scores = _votes[3] if len(_votes) > 3 else (None, None)
         home_team_id = home_results[0]
         away_team_id = away_results[0]
         t1 = team.Team.objects.get(pk=home_team_id)
@@ -397,7 +402,7 @@ def save_results(votes_per_series):
             'pen': 1 if home_team_items[14] < 0 else 0,
             'fpo': json.loads(home_team_data[3]['extratime']['et_result'])['score'] if len(home_team_data) > 3 else None,
             'extratime': home_team_data[3]['extratime']['et_result'] if len(home_team_data) > 3 else None,
-            'penalties': home_team_data[4]['penalties']['pen_result'] if len(home_team_data) > 4 else None
+            'penalties': home_team_data[4]['penalties']['pen_result'] if len(home_team_data) > 4 else None,
         }
 
         away_team_data = away_results[1]
@@ -423,7 +428,7 @@ def save_results(votes_per_series):
             'pen': 1 if away_team_items[14] < 0 else 0 ,
             'fpo': json.loads(away_team_data[3]['extratime']['et_result'])['score'] if len(away_team_data) > 3 else None,
             'extratime': away_team_data[3]['extratime']['et_result'] if len(away_team_data) > 3 else None,
-            'penalties': away_team_data[4]['penalties']['pen_result'] if len(away_team_data) > 4 else None
+            'penalties': away_team_data[4]['penalties']['pen_result'] if len(away_team_data) > 4 else None,
         }
 
         mr_home = matches_results.MatchesResults(Team = t1, 
@@ -448,6 +453,7 @@ def save_results(votes_per_series):
                                               FpO = home_data['fpo'],
                                               ExtraTimePlayers = home_data['extratime'],
                                               PenaltyPlayers = home_data['penalties'],
+                                              AggregateScore = agg_scores[0] if agg_scores else None,
                                               MatchesCalendar = mc)
 
         mr_away = matches_results.MatchesResults(Team = t2, 
@@ -472,6 +478,7 @@ def save_results(votes_per_series):
                                                 FpO = away_data['fpo'],
                                                 ExtraTimePlayers = away_data['extratime'],
                                                 PenaltyPlayers = away_data['penalties'],
+                                                AggregateScore = agg_scores[1] if agg_scores else None,
                                                 MatchesCalendar = mc)
         
         mr_home.save()
