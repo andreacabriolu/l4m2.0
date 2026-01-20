@@ -313,7 +313,7 @@ def check_match_for_extratime(home_team_id, away_team_id, votes_home, votes_away
 
             #current leg result
             if votes_home is None or votes_away is None:
-                return False
+                return False, (None, None)
             home_goals_current_leg = votes_home[1][9] #BAD! change to dict!
             away_goals_current_leg = votes_away[1][9] #BAD!
             
@@ -333,7 +333,7 @@ def check_match_for_extratime(home_team_id, away_team_id, votes_home, votes_away
         if home_goals == away_goals:
             return True, (None, None) #match went to extratime
         
-    return False, (home_agg, away_agg)
+    return False, (None, None)
 
 def create_live_ranking(all_scores, last_ranking):
     results_map = {}

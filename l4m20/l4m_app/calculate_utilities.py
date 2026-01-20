@@ -453,7 +453,7 @@ def save_results(votes_per_series):
                                               FpO = home_data['fpo'],
                                               ExtraTimePlayers = home_data['extratime'],
                                               PenaltyPlayers = home_data['penalties'],
-                                              AggregateScore = agg_scores[0] if agg_scores else None,
+                                              AggregateScore = agg_scores[0],
                                               MatchesCalendar = mc)
 
         mr_away = matches_results.MatchesResults(Team = t2, 
@@ -478,7 +478,7 @@ def save_results(votes_per_series):
                                                 FpO = away_data['fpo'],
                                                 ExtraTimePlayers = away_data['extratime'],
                                                 PenaltyPlayers = away_data['penalties'],
-                                                AggregateScore = agg_scores[1] if agg_scores else None,
+                                                AggregateScore = agg_scores[1],
                                                 MatchesCalendar = mc)
         
         mr_home.save()
