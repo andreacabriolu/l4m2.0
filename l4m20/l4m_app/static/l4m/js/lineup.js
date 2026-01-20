@@ -283,16 +283,18 @@ function updateOrder() {
     });
 }
 
+const selected_overtime_players = new Set(); //module scope
+const penalties_order = []; //module scope
+
 function savePenaltiesOrder() {
-    penalties_order = [...document.querySelectorAll(".name")].map(n => n.dataset.id);
+    penalties_order.length = 0;
+    [...document.querySelectorAll(".name")].map(n => n.dataset.id).forEach(id => {
+        penalties_order.push(id);
+    });
     $('#penaltiesModal').modal('hide');
 }
 
-
-var selected_overtime_players = new Set(); //TODO: so BAD global variable!!
-var penalties_order = []; //TODO: so BAD global variable again!!
-
-window.addEventListener('DOMContentLoaded', event => {
+document.addEventListener('DOMContentLoaded', event => {
 
     const token = Cookies.get('csrftoken');
     let overtimeWarning = false;
@@ -317,6 +319,10 @@ window.addEventListener('DOMContentLoaded', event => {
         animation: 150,
         ghostClass: "sortable-ghost",
         onEnd: updateOrder
+    });
+
+    $('#btnConfirmPenalties').on('click', function () {
+        savePenaltiesOrder();
     });
 
     $('#select_comp').on('change', function () {
@@ -375,18 +381,21 @@ window.addEventListener('DOMContentLoaded', event => {
                     var currentTits = $('#main_lineup').children('div:visible').find('option:selected').map(function () {
                         return $(this).data().id + "";
                     }).get();
-                    var oldPl = penalties_order.filter(value => !currentTits.includes(value));
+                    
+                    var oldPl = penalties_order.filter((value, idx) => !currentTits.includes(value));
                     if (oldPl.length == 1) {
-                        //remove the old one
+                        //remove the old one and saving its index
                         var index = penalties_order.indexOf(oldPl[0]);
                         if (index > -1) {
                             penalties_order.splice(index, 1);
                         }
                     }
 
-                    //add new one at the end
-                    penalties_order.push(changedPl);
+                    //add new one in the same index of the old one
+                    penalties_order.splice(index, 0, changedPl);
                 }
+
+                // updateOrder();
             }
         }
     }));
@@ -623,7 +632,7 @@ window.addEventListener('DOMContentLoaded', event => {
             $('#overtimeModal').find('.player-select').each(function () {
                 $(this).val('');
                 $(this).prop('disabled', false);
-                selected_overtime_players = new Set();
+                selected_overtime_players.clear();
             });
         });
 

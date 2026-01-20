@@ -71,7 +71,7 @@ def get_day_comps_lineups(day):
 
     for t in teams:
         t_nlineups = get_my_lineups_by_day_distinct(t['id'], day)
-        t_comps = get_my_competitions_from_calendar(t['id'], day)
+        t_comps = get_my_lineup_competitions_from_calendar(t['id'], day)
         
         team_lups_comps[t['id']] = { 'tname':t['Name'], 'nlineups': t_nlineups['nlin'], 'ncomps': len(t_comps), \
                                     'full': t_nlineups['nlin'] - len(t_comps) == 0}
@@ -182,6 +182,15 @@ def get_my_competitions_from_calendar(teamid, day):
             (Q(HomeTeam=teamid) | Q(AwayTeam=teamid)) &
             Q(CompetitionCalendar__Day=day)
         ).values_list('CompetitionCalendar__Competition', flat=True).distinct()
+    )
+
+def get_my_lineup_competitions_from_calendar(teamid, day):
+    return competition.Competition.objects.filter(Q(Lineup=True) & \
+        Q(id__in=matches_calendar.MatchesCalendar.objects.filter(
+            (Q(HomeTeam=teamid) | Q(AwayTeam=teamid)) &
+            Q(CompetitionCalendar__Day=day)
+        ).values_list('CompetitionCalendar__Competition', flat=True).distinct()
+        )
     )
 
 def get_my_lineup_active_competitions(my_series, day):

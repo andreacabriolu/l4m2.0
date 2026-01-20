@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block scripts %}
-<script type="text/javascript" src="{% static 'l4m/js/lineup.js' %}"></script>
+<script type="text/javascript" type="module" src="{% static 'l4m/js/lineup.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 
 {% endblock %}
@@ -86,7 +86,7 @@
             </div>
 
             <div class="modal-footer">
-                <button class="btn btn-primary" type="button" id="btnConfirmPenalties" onclick="savePenaltiesOrder()">CONFERMA</button>
+                <button class="btn btn-primary" type="button" id="btnConfirmPenalties">CONFERMA</button>
             </div>
 
             </div>

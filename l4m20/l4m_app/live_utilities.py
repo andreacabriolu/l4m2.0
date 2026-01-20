@@ -104,6 +104,10 @@ def calculate_penalties_single_team(lineup, gk_opponent_vote, votes):
     line_home = json.loads(U.cleanJSON(lineup.Line))
     pen_players_home = line_home['penalties'] if 'penalties' in line_home else []
 
+    #no penalty player -> 0 (lost game)
+    if len(pen_players_home) == 0:
+        return {'pen_results': {}}
+
     pen_home_votes = extract_votes_for_penalties(pen_players_home, votes)
 
     #match the gk vote with opponent's players votes. If equal, player makes a point.
@@ -177,6 +181,15 @@ def calculate_penalties_votes(lineup_home, lineup_away, votes_home, votes_away):
     line_away = json.loads(U.cleanJSON(lineup_away.Line))
     pen_players_away = line_away['penalties'] if 'penalties' in line_away else []
     votes_tit_away = votes_away[0]
+
+    if len(pen_players_home) == 0 and len(pen_players_away) > 0:
+        return {'pen_results_home': {}, 'score_home': 0, 'pen_results_away': {}, 'score_away': 1} #sudden death
+    
+    if len(pen_players_away) == 0 and len(pen_players_home) > 0:
+        return {'pen_results_home': {}, 'score_home': 1, 'pen_results_away': {}, 'score_away': 0} #sudden death
+
+    if len(pen_players_home) == 0 and len(pen_players_away) == 0:
+        return {'pen_results_home': {}, 'score_home': 0, 'pen_results_away': {}, 'score_away': 0} #sudden draw (RARE)
 
     gk_home_vote = votes_tit_home[0].Vote #home goalkeeper pure vote
     gk_away_vote = votes_tit_away[0].Vote #away goalkeeper pure vote
