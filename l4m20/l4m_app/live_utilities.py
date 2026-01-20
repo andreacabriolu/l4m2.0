@@ -78,6 +78,7 @@ def add_extratime_penalties_votes(votes, extra_goals, penalties):
 
 def extract_votes_for_penalties(pen_players, votes):
     votes_tit = votes[0]
+    votes_ris = votes[2]
     tit_players = [int(v.Player.id) for v in votes_tit]
     pen_players = [int(p) for p in pen_players]
 
@@ -87,11 +88,15 @@ def extract_votes_for_penalties(pen_players, votes):
         if p in tit_players:
             matching_vote = next(((v.Player.Surname, v.Vote) for v in votes_tit if int(v.Player.id) == p), None)
             pen_votes[p] = matching_vote
+        else: #changed, search the sub among the titolars to keep the order
+            sub_name = next(((v.ChangedOut) for v in votes_ris if int(v.Player.id) == p), None)
+            sub_id, sub_vote = next(((v.Player.id,(v.Player.Surname, v.Vote)) for v in votes_tit if v.Player.Surname == sub_name), None)
+            pen_votes[p] = sub_vote
     
-    #complete the list if needed
-    diff = set(tit_players) - set(pen_players)
-    for d in diff:
-        pen_votes[d] = next(((v.Player.Surname, v.Vote) for v in votes_tit if int(v.Player.id) == d), None)
+    # #complete the list if needed
+    # diff = set(tit_players) - set(pen_players)
+    # for d in diff:
+    #     pen_votes[d] = next(((v.Player.Surname, v.Vote) for v in votes_tit if int(v.Player.id) == d), None)
 
     return pen_votes
 
@@ -147,25 +152,26 @@ def calculate_penalties_votes_total(b11_lineup_home, b11_lineup_away):
     first_5_away =  dict(islice(pen_results_away.items(), 5))
     scores_home = [1 if v[1] else 0 for v in first_5_home.values()]
     scores_away = [1 if v[1] else 0 for v in first_5_away.values()]
+    pen_results_home_total = first_5_home
+    pen_results_away_total = first_5_away
     
     if sum(scores_home) == sum(scores_away):
         #sudden death
         for i in range(5,11):
             home_item = list(pen_results_home.items())[i] #WARNING: TODO cycle
             away_item = list(pen_results_away.items())[i]
-            home_score = 1 if home_item[1] else 0
-            away_score = 1 if away_item[1] else 0
+            home_score = 1 if home_item[1][1] else 0
+            away_score = 1 if away_item[1][1] else 0
 
+            pen_results_home_total[home_item[0]] = home_item[1]
+            pen_results_away_total[away_item[0]] = away_item[1]
             scores_home.append(home_score)
             scores_away.append(away_score)
             if sum(scores_home) != sum(scores_away):
                 break
-    else:
-        pen_results_home = first_5_home
-        pen_results_away = first_5_away
 
-    return {'pen_results_home': pen_results_home, 'score_home': sum(scores_home), 
-            'pen_results_away': pen_results_away, 'score_away': sum(scores_away)}
+    return {'pen_results_home': pen_results_home_total, 'score_home': sum(scores_home), 
+            'pen_results_away': pen_results_away_total, 'score_away': sum(scores_away)}
 
 def calculate_penalties_votes(lineup_home, lineup_away, votes_home, votes_away):
     if lineup_home is None or lineup_away is None:
@@ -220,25 +226,26 @@ def calculate_penalties_votes(lineup_home, lineup_away, votes_home, votes_away):
     first_5_away =  dict(islice(pen_results_away.items(), 5))
     scores_home = [1 if v[1] else 0 for v in first_5_home.values()]
     scores_away = [1 if v[1] else 0 for v in first_5_away.values()]
-    
+    pen_results_home_total = first_5_home
+    pen_results_away_total = first_5_away
+
     if sum(scores_home) == sum(scores_away):
         #sudden death
         for i in range(5,11):
             home_item = list(pen_results_home.items())[i] #WARNING: TODO cycle
             away_item = list(pen_results_away.items())[i]
-            home_score = 1 if home_item[1] else 0
-            away_score = 1 if away_item[1] else 0
+            home_score = 1 if home_item[1][1] else 0
+            away_score = 1 if away_item[1][1] else 0
 
+            pen_results_home_total[home_item[0]] = home_item[1]
+            pen_results_away_total[away_item[0]] = away_item[1]
             scores_home.append(home_score)
             scores_away.append(away_score)
             if sum(scores_home) != sum(scores_away):
                 break
-    else:
-        pen_results_home = first_5_home
-        pen_results_away = first_5_away
 
-    return {'pen_results_home': pen_results_home, 'score_home': sum(scores_home), 
-            'pen_results_away': pen_results_away, 'score_away': sum(scores_away)}
+    return {'pen_results_home': pen_results_home_total, 'score_home': sum(scores_home), 
+            'pen_results_away': pen_results_away_total, 'score_away': sum(scores_away)}
 
 def calculate_n_ot_goals(ot_score):
     diff = ot_score - C.Various.OT_BASE_SCORE

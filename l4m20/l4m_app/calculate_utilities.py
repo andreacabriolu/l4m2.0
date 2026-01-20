@@ -183,8 +183,8 @@ def calculate_total_league(competition, day):
                         pen_score_home = penalties_results.get('score_home', 0)
                         pen_score_away = penalties_results.get('score_away', 0)
 
-                        votes_home[1][9] += pen_score_home #BAD TODO use dict, please
-                        votes_away[1][9] += pen_score_away #BAD TODO use dict, please
+                        # votes_home[1][9] += pen_score_home #BAD TODO use dict, please
+                        # votes_away[1][9] += pen_score_away #BAD TODO use dict, please
                         if pen_score_home == pen_score_away:
                             pass #DRAW EVEN AFTER PENALTIES, CHECK FP IN THE TWO MATCHES (manual at the moment)
 
@@ -299,8 +299,8 @@ def calculate_league(competition, day):
                         pen_score_home = penalties_results.get('score_home', 0)
                         pen_score_away = penalties_results.get('score_away', 0)
 
-                        votes_home[1][9] += pen_score_home #BAD TODO use dict, please
-                        votes_away[1][9] += pen_score_away #BAD TODO use dict, please
+                        # votes_home[1][9] += pen_score_home #BAD TODO use dict, please
+                        # votes_away[1][9] += pen_score_away #BAD TODO use dict, please
 
                         if pen_score_home == pen_score_away:
                             pass #DRAW EVEN AFTER PENALTIES, CHECK FP IN THE TWO MATCHES (manual at the moment)
