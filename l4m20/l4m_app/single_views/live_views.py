@@ -328,8 +328,8 @@ def LiveView(request):
                     first_leg = LU.check_and_get_first_leg_results(
                         competition_id, 
                         day, 
-                        lineup_couple[0].Team.id, 
-                        lineup_couple[1].Team.id)
+                        lineup_couple[0]['t'].id, 
+                        lineup_couple[1]['t'].id)
 
                     if first_leg is not None and len(first_leg) == 2:
                         votes_home = LU.add_first_leg_goals(votes_home, first_leg[1].NGoals)
