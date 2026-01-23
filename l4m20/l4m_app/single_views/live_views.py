@@ -319,6 +319,9 @@ def LiveView(request):
 
                 #check here for extratime and penalties for TOTAL LEAGUE
                 if extratime_penalties: 
+                    if isinstance(lineup_couple[0], str) or isinstance(lineup_couple[1], str):
+                        continue    
+                    
                     votes_home = LU.add_extratime_penalties_flag(votes_home)
                     votes_away = LU.add_extratime_penalties_flag(votes_away)
 
@@ -381,6 +384,9 @@ def LiveView(request):
                 
                 #check here for extratime and penalties
                 if extratime_penalties: 
+                    if isinstance(lineup_couple[0], str) or isinstance(lineup_couple[1], str):
+                        continue    
+                    
                     votes_home = LU.add_extratime_penalties_flag(votes_home)
                     votes_away = LU.add_extratime_penalties_flag(votes_away)
                     
