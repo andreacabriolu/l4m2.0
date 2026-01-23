@@ -21,8 +21,9 @@ def calculate_penalties_single_team_total(b11_lineup, gk_opponent_vote=None):
         return 0
     
     pen_results = {}
-    pen_shooters = b11_lineup['players'][:11] #all tits are penalty shooters
-    
+    pen_shooters = b11_lineup['players'][:11] #all tits are penalty shooters, sorted by pure vote
+    pen_shooters.sort(key=lambda x: x['player_vote'], reverse=True)
+
     for p in pen_shooters:
         pen_results[p['player_surname']] = [p['player_vote'], True] if p['player_vote'] >= gk_opponent_vote else [p['player_vote'], False]
 

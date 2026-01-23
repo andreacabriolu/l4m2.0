@@ -331,7 +331,7 @@ def LiveView(request):
                         lineup_couple[0]['t'].id, 
                         lineup_couple[1]['t'].id)
 
-                    if first_leg is not None and len(first_leg) == 2:
+                    if first_leg is not None:
                         votes_home = LU.add_first_leg_goals(votes_home, first_leg[1].NGoals)
                         votes_away = LU.add_first_leg_goals(votes_away, first_leg[0].NGoals)
 
