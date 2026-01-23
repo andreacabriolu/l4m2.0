@@ -318,7 +318,7 @@ def LiveView(request):
                 votes_away = LU.get_votes_total(lineup_couple[1], home=False, homeAway=homeAway)
 
                 #check here for extratime and penalties for TOTAL LEAGUE
-                if overtime and extratime_penalties: 
+                if extratime_penalties: 
                     votes_home = LU.add_extratime_penalties_flag(votes_home)
                     votes_away = LU.add_extratime_penalties_flag(votes_away)
 
@@ -380,7 +380,7 @@ def LiveView(request):
                 votes_away = LU.get_votes(lineup_couple[1], day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=teamid, home=False, homeAway=homeAway)
                 
                 #check here for extratime and penalties
-                if overtime and extratime_penalties: 
+                if extratime_penalties: 
                     votes_home = LU.add_extratime_penalties_flag(votes_home)
                     votes_away = LU.add_extratime_penalties_flag(votes_away)
                     
