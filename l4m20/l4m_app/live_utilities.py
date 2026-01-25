@@ -39,6 +39,7 @@ def calculate_extratime_goals_total(b11_lineup):
     
     sorted_ris=\
         sorted(ris_except_gk, key=lambda x: x['player_totvote'] if x['player_totvote'] is not None else 0, reverse=True)
+        sorted(ris_except_gk, key=lambda x: x['player_totvote'] if x['player_totvote'] is not None else 0, reverse=True)
     sorted_ris_best_6 = sorted_ris[:6]
 
     ot_votes_map = {}
@@ -266,13 +267,14 @@ def calculate_extratime_goals(votes, lineup):
     ot_players = line['ot'] if 'ot' in line else []
     votes_ris = votes[2]
 
-    ot_votes_map = {}
+    ot_votes_map = []
     ot_score = sum([v.TotVote for v in votes_ris if v.TotVote is not None and v.Player.id in ot_players])
     ot_goals = calculate_n_ot_goals(ot_score)
 
     for v in votes_ris:
         if v.Player.id in ot_players:# and v.TotVote is not None:
-            ot_votes_map[v.Player.id] = [v.Player.Surname, 0 if v.TotVote is None else v.TotVote]
+            ot_votes_map.append({'id': v.Player.id, 'info': [v.Player.Surname, 0 if v.TotVote is None else v.TotVote]})
+            # ot_votes_map[v.Player.id] = [v.Player.Surname, 0 if v.TotVote is None else v.TotVote]
 
     return ot_goals, ot_score, ot_votes_map
 
