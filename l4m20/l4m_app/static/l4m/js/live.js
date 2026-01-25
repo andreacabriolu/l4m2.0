@@ -167,14 +167,15 @@ function buildExtraTimeModalBody(data) {
 
     ${data.ot_votes_map.length == 0 ? `<li>Nessun giocatore ha ricevuto voto in extra time.</li>` : ''} `;
 
-    Object.entries(data.ot_votes_map).map(([id, p]) => 
+    data.ot_votes_map.forEach(p=>
         html+=
         `
-        <li data-id="${id}">
-          <span class="player-name">${p[0]}</span>
-          <span class="vote">${p[1]}</span>
+        <li data-id="${p.id}">
+          <span class="player-name">${p.info[0]}</span>
+          <span class="vote">${p.info[1]}</span>
         </li>
-      `).join('');
+      ` );
+
 
     html+= `
     </ul>

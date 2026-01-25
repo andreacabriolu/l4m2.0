@@ -130,10 +130,10 @@ class GetExtraTimeView(View):
                 extra_goals, extra_score, ot_votes_map = LU.calculate_extratime_goals(votes_home, lineup)
             
         return HttpResponse(json.dumps({''
-        'teamname': request.GET['tname'],
-        'n_et_goals': extra_goals, 
-        'et_score': extra_score, 
-        'ot_votes_map': ot_votes_map}))
+            'teamname': request.GET['tname'],
+            'n_et_goals': extra_goals, 
+            'et_score': extra_score, 
+            'ot_votes_map': ot_votes_map}))
 
 class MyLiveView(LoginRequiredMixin, View):
     template_name = 'l4m/my_live.html'
