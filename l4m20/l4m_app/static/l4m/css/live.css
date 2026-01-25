@@ -598,6 +598,19 @@ table .w-30 {
 
 #competitionTabs {
   flex-wrap: nowrap;
-  overflow-x: auto;
 }
 
+.card {
+  border-radius: 0.75rem;
+}
+
+.nav-tabs .nav-link {
+  font-weight: 500;
+  background-color: #212529 !important;
+  color: whitesmoke !important;
+}
+
+.day-selector .btn.active {
+  background: var(--bs-primary);
+  color: #fff;
+}

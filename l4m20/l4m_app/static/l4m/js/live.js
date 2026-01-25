@@ -160,15 +160,15 @@ function renderExtraTimeModal(data) {
 function buildExtraTimeModalBody(data) {
     html = '';
 
-    html+= `
+    html += `
     <div class="team-box text-center">
     <h6 class="team-title mb-3">Giocatori schierati</h6>
     <ul class="list-unstyled extra-time-list">
 
     ${data.ot_votes_map.length == 0 ? `<li>Nessun giocatore ha ricevuto voto in extra time.</li>` : ''} `;
 
-    Object.entries(data.ot_votes_map).map(([id, p]) => 
-        html+=
+    Object.entries(data.ot_votes_map).map(([id, p]) =>
+        html +=
         `
         <li data-id="${id}">
           <span class="player-name">${p[0]}</span>
@@ -176,7 +176,7 @@ function buildExtraTimeModalBody(data) {
         </li>
       `).join('');
 
-    html+= `
+    html += `
     </ul>
     </div>
 
@@ -201,7 +201,7 @@ function buildExtraTimeModalBody(data) {
     </div>
   `;
 
-  return html;
+    return html;
 }
 
 function renderPenaltyModal(data) {
@@ -213,16 +213,16 @@ function renderPenaltyModal(data) {
 }
 
 function renderPenalty(penalties, opponentGkVote) {
-  html = '';
+    html = '';
 
-  $('#penalty-gk-vote').text(opponentGkVote !== null ? opponentGkVote : '—');
-  $('#penalty-total-goals').text(Object.values(penalties).filter(p => p[1] === true).length);
+    $('#penalty-gk-vote').text(opponentGkVote !== null ? opponentGkVote : '—');
+    $('#penalty-total-goals').text(Object.values(penalties).filter(p => p[1] === true).length);
 
-  Object.entries(penalties).map(([pname, p_exit], index) => {
-    isGoal = p_exit[1];
-    pvote = p_exit[0];
+    Object.entries(penalties).map(([pname, p_exit], index) => {
+        isGoal = p_exit[1];
+        pvote = p_exit[0];
 
-    html += `<div class="penalty-row ${index < 5 ? 'first-five' : ''}">
+        html += `<div class="penalty-row ${index < 5 ? 'first-five' : ''}">
         <div class="shot">${index + 1}</div>
         <div class="name">${pname}</div>
         <div class="vote">${pvote}</div>
@@ -235,9 +235,8 @@ function renderPenalty(penalties, opponentGkVote) {
     }).join('');
 
 
-  document.getElementById('penalty-list').innerHTML = html;
+    document.getElementById('penalty-list').innerHTML = html;
 }
-
 
 window.addEventListener('DOMContentLoaded', event => {
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
@@ -245,19 +244,152 @@ window.addEventListener('DOMContentLoaded', event => {
     const token = Cookies.get('csrftoken');
 
     var cur_comp = $('#current_competition').val();
-    var comp_to_sel = $('#select_comp').children(`option[data-id=${cur_comp}]`);
-    if (comp_to_sel.length <= 0) { return; }
-    $('#select_comp').val(comp_to_sel[0].value);
+    // var comp_to_sel = $('#select_comp').children(`option[data-id=${cur_comp}]`);
+    // if (comp_to_sel.length <= 0) { return; }
+    // $('#select_comp').val(comp_to_sel[0].value);
 
     var cur_ser = $('#current_series').val();
-    var series_to_sel = $('#select_series').children(`option[data-id=${cur_ser}]`);
-    if (series_to_sel.length <= 0) { return; }
-    $('#select_series').val(series_to_sel[0].value);
+    // var series_to_sel = $('#select_series').children(`option[data-id=${cur_ser}]`);
+    // if (series_to_sel.length <= 0) { return; }
+    // $('#select_series').val(series_to_sel[0].value);
 
     var cur_day = $('#current_day').val();
-    var day_to_sel = $('#select_day').children(`option[value=${cur_day}]`);
-    if (day_to_sel.length <= 0) { return; }
-    $('#select_day').val(day_to_sel[0].value);
+    // var day_to_sel = $('#select_day').children(`option[value=${cur_day}]`);
+    // if (day_to_sel.length <= 0) { return; }
+    // $('#select_day').val(day_to_sel[0].value);
+
+    ////////NEW LIVE BUTTONS////////
+
+    // const data = JSON.parse(
+    //     // document.getElementById('competition-data').textContent
+
+    // );
+    $(function () {
+        const data = {
+            'comp': cur_comp,
+            'ser': cur_ser,
+            'day': cur_day
+        };
+
+        let currentCompetition = null;
+        let currentStage = null;
+        let currentDay = null;
+
+        /* -------------------------
+            Competition click
+        --------------------------*/
+        $('.competition-tabs .nav-link').on('click', function () {
+            $('.competition-tabs .nav-link').removeClass('active');
+            $(this).addClass('active');
+            console.log('Competition clicked:', $(this).data('comp'));
+
+            currentCompetition = $(this).data('comp');
+            buildStages(currentCompetition);
+        });
+
+        /* -------------------------
+            Build stage buttons
+        --------------------------*/
+        function buildStages(comp) {
+            const stages = data[comp].stages;
+            const container = $('.stage-selector');
+
+            container.empty();
+
+            Object.keys(stages).forEach((stage, idx) => {
+                const btn = $(`
+            <button class="btn btn-outline-primary ${idx === 0 ? 'active' : ''}"
+                    data-stage="${stage}">
+            ${stage}
+            </button>
+        `);
+
+                container.append(btn);
+            });
+
+            currentStage = Object.keys(stages)[0];
+            buildDays(comp, currentStage);
+        }
+
+        /* -------------------------
+            Stage click
+        --------------------------*/
+        $(document).on('click', '.stage-selector button', function () {
+            $('.stage-selector button').removeClass('active');
+            $(this).addClass('active');
+
+            currentStage = $(this).data('stage');
+            buildDays(currentCompetition, currentStage);
+        });
+
+        /* -------------------------
+            Build day timeline
+        --------------------------*/
+        function buildDays(comp, stage) {
+            const days = data[comp].stages[stage];
+            const container = $('.day-selector .d-flex');
+
+            container.empty();
+
+            days.forEach((day, idx) => {
+                const btn = $(`
+            <button class="btn btn-sm btn-secondary ${idx === 0 ? 'active' : ''}"
+                    data-day="${day}">
+            ${day}
+            </button>
+        `);
+                container.append(btn);
+            });
+
+            currentDay = days[0];
+            loadResults();
+        }
+
+        /* -------------------------
+            Day click
+        --------------------------*/
+        $(document).on('click', '.day-selector button', function () {
+            $('.day-selector button').removeClass('active');
+            $(this).addClass('active');
+
+            currentDay = $(this).data('day');
+            loadResults();
+        });
+
+        /* -------------------------
+            Load results
+        --------------------------*/
+        function loadResults() {
+            console.log(
+                'Load results:',
+                currentCompetition,
+                currentStage,
+                currentDay
+            );
+
+            // OPTION A: server-rendered navigation
+            // window.location.href = `/results/${currentCompetition}/${currentStage}/${currentDay}/`;
+
+            // OPTION B: AJAX
+            /*
+            $.get('/results/api/', {
+            competition: currentCompetition,
+            stage: currentStage,
+            day: currentDay
+            }, function (html) {
+            $('#results-container').html(html);
+            });
+            */
+        }
+
+        /* -------------------------
+            Init (first competition)
+        --------------------------*/
+        $('.competition-tabs .nav-link.active').trigger('click');
+
+
+
+    });
 
     $('#b11_live_btn').on('click', function () {
         window.location.href = '/l4m/live_b11';
@@ -364,7 +496,7 @@ window.addEventListener('DOMContentLoaded', event => {
                     $('#modal_div_goals').attr('hidden', false);
                     $('#modal_div_assists').attr('hidden', false);
                 }
-                
+
                 $('#full_pl_stats_href').attr('href', `/l4m/player_statistics/${player_id}`);
                 $('#full_pl_stats_href').text('VEDI STATISTICHE COMPLETE');
 
@@ -440,7 +572,7 @@ window.addEventListener('DOMContentLoaded', event => {
 
         var allScores = $('#all_scores').val();
 
-        if (allScores=='[]') {
+        if (allScores == '[]') {
             var _tdata = `<tr class="lup-row"><td>ANCORA NESSUN RISULTATO LIVE DISPONIBILE</td></tr>`;
             $('#live_ranking_tbody').append(_tdata);
             return;

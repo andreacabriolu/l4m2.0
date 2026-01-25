@@ -205,33 +205,49 @@
 
     <div class="bg-body-tertiary main-div p-5 live-tables bg-success bg-opacity-50" id="liveMainDiv">
         <div class="tabs-div mb-4">
-        
-            <ul class="nav nav-tabs justify-content-center" id="competitionTabs">
+    
+            <ul class="nav nav-tabs justify-content-center competition-tabs" id="competitionTabs">
                 {% for comp in all_competitions %}
                 <li class="nav-item">
-                    <button class="nav-link active" data-bs-target="#{{comp.Name}}" data-bs-toggle="tab" type="button" role="tab">
-                        {{comp.Name}} 
+                    <button class="nav-link active" data-comp="{{comp}}" data-bs-target="#{{comp.Name}}" data-bs-toggle="tab" type="button"
+                        role="tab">
+                        {{comp.Name}}
                         {% if comp.id in today_competitions_ids %} [LIVE] {% endif %}
                     </button>
                 </li>
                 {% endfor %}
             </ul>
-
-
-                    <div class="d-flex justify-content-center my-3">
-                        <ul class="nav nav-pills gap-2">
-                            <li class="nav-item">
-                                <button class="nav-link active">Girone</button>
-                            </li>
-                            <li class="nav-item">
-                                <button class="nav-link">Semifinali</button>
-                            </li>
-                            <li class="nav-item">
-                                <button class="nav-link">Finale</button>
-                            </li>
-                        </ul>
-                    </div>
-            
+    
+    
+            <div class="d-flex justify-content-center my-3">
+                <ul class="nav nav-pills gap-2">
+                    <li class="nav-item">
+                        <button class="nav-link active">Girone</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link">Semifinali</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link">Finale</button>
+                    </li>
+                </ul>
+            </div>
+    
+            <div class="day-selector d-flex align-items-center gap-2 px-2">
+                <button class="btn btn-sm btn-outline-secondary">‹</button>
+    
+                <div class="days d-flex gap-2 overflow-auto">
+                    <button class="btn btn-sm btn-outline-primary active">10</button>
+                    <button class="btn btn-sm btn-outline-primary">11</button>
+                    <button class="btn btn-sm btn-outline-primary">12</button>
+                    <button class="btn btn-sm btn-outline-primary">13</button>
+                    <button class="btn btn-sm btn-outline-primary">14</button>
+                </div>
+    
+                <button class="btn btn-sm btn-outline-secondary">›</button>
+            </div>
+    
+    
         </div>
 
 
