@@ -34,12 +34,15 @@ def calculate_extratime_goals_total(b11_lineup):
     if b11_lineup is None:
         return 0, 0, {}
     
+    ris = b11_lineup['players'][11:]
+    ris_except_gk = ris[2:]
+    
     sorted_ris=\
-        sorted(b11_lineup['players'][11:], key=lambda x: x['player_stats'].Vote if x['player_stats'].Vote is not None else 0, reverse=True)
-    sorted_ris_best_6 = sorted_ris[2:8] #exclude goalkeepers
+        sorted(b11_lineup['players'][11:], key=lambda x: x['player_stats'].TotVote if x['player_stats'].TotVote is not None else 0, reverse=True)
+    sorted_ris_best_6 = sorted_ris[:6]
 
     ot_votes_map = {}
-    ot_score = sum([int(v['player_stats'].Vote) for v in sorted_ris_best_6 if v['player_stats'].Vote is not None])
+    ot_score = sum([int(v['player_stats'].TotVote) for v in sorted_ris_best_6 if v['player_stats'].TotVote is not None])
     ot_goals = calculate_n_ot_goals(ot_score)
 
     for v in sorted_ris_best_6:
