@@ -39,7 +39,6 @@ def calculate_extratime_goals_total(b11_lineup):
     
     sorted_ris=\
         sorted(ris_except_gk, key=lambda x: x['player_totvote'] if x['player_totvote'] is not None else 0, reverse=True)
-        sorted(ris_except_gk, key=lambda x: x['player_totvote'] if x['player_totvote'] is not None else 0, reverse=True)
     sorted_ris_best_6 = sorted_ris[:6]
 
     ot_votes_map = {}
