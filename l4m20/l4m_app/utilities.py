@@ -8,6 +8,31 @@ from zoneinfo import ZoneInfo
 from l4m20 import constants as C
 import requests as req
 
+def get_competition_series_stages_days_mapping():
+    mapping = {}
+    all_cc = competition_calendar.CompetitionCalendar.objects.all().select_related('competition')\
+        .values('Competition_id','Day','Stage','Competition_id__Name').order_by('Day')
+
+    for cc in all_cc:
+        comp_name = cc['Competition_id__Name']
+        _series = get_all_series_girone(cc['Competition_id']) if cc['Stage']=='Girone' else []
+        day = cc['Day']
+        stage = cc['Stage']
+        if comp_name not in mapping:
+            mapping[comp_name] = {}
+        if stage != "Girone":
+            if stage not in mapping[comp_name]:
+                mapping[comp_name][stage] = []
+            mapping[comp_name][stage].append(day)
+        else: #girone
+            for _s in _series:
+                stage = _s.Name
+                if stage not in mapping[comp_name]:
+                    mapping[comp_name][stage] = []
+                mapping[comp_name][stage].append(day)
+
+    return mapping
+
 def check_day_suspended(day):
     suspended = competition_calendar.CompetitionCalendar.objects.filter(Q(Day=day)&Q(Suspended=True)).values('Day')
     return len(suspended) > 0
@@ -209,6 +234,9 @@ def get_all_active_series_by_day(competitionid, day):
 
 def get_all_series(competitionid):
     return series.Series.objects.filter(Competition_id=competitionid)
+
+def get_all_series_girone(competitionid):
+    return series.Series.objects.filter(Q(Competition_id=competitionid) & Q(IsGirone=True))
 
 def get_my_markets(seriesid):
     return market.Market.objects.filter(Series_id=seriesid)

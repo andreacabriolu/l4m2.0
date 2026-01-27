@@ -600,11 +600,7 @@ table .w-30 {
   flex-wrap: nowrap;
 }
 
-.card {
-  border-radius: 0.75rem;
-}
-
-.nav-tabs .nav-link {
+/* .nav-tabs .nav-link {
   font-weight: 500;
   background-color: #212529 !important;
   color: whitesmoke !important;
@@ -613,4 +609,86 @@ table .w-30 {
 .day-selector .btn.active {
   background: var(--bs-primary);
   color: #fff;
+} */
+
+.competition-tabs .nav-link {
+  position: relative;
+  color: #aeb6c2;
+  background: #3c82ff !important ;
+  border-radius: 999px;
+  padding: 0.45rem 0.9rem;
+  margin: 0 0.15rem;
+
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
+}
+
+/* Hover */
+.competition-tabs .nav-link:hover {
+  color: #e6ecf5;
+  background-color: rgba(60, 130, 255, 0.12);
+  box-shadow: 0 0 0 1px rgba(60, 130, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+/* Active */
+.competition-tabs .nav-link.active {
+  color: #ffffff;
+  background-color: rgba(60, 130, 255, 0.25);
+  box-shadow:
+    0 0 0 1px rgba(60, 130, 255, 0.45),
+    0 4px 12px rgba(60, 130, 255, 0.25);
+  transform: none;
+}
+
+/* Click feedback */
+.competition-tabs .nav-link:active {
+  transform: scale(0.97);
+}
+
+.competition-tabs .nav-link::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 4px;
+  width: 0;
+  height: 2px;
+  background-color: #3c82ff;
+  border-radius: 2px;
+  transform: translateX(-50%);
+  transition: width 0.2s ease;
+}
+
+/* Hover underline */
+.competition-tabs .nav-link:hover::after {
+  width: 60%;
+}
+
+/* Active underline */
+.competition-tabs .nav-link.active::after {
+  width: 80%;
+}
+
+.day-selector {
+  place-content: center;
+}
+
+.days {
+  flex-wrap: wrap;
+}
+
+@media (max-width: 800px) {
+  .competition-tabs .nav-link:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+@media (max-width: 800px) {
+  .tabs-div {
+    place-content: center !important;
+  }
 }

@@ -260,16 +260,12 @@ window.addEventListener('DOMContentLoaded', event => {
 
     ////////NEW LIVE BUTTONS////////
 
-    // const data = JSON.parse(
-    //     // document.getElementById('competition-data').textContent
 
-    // );
     $(function () {
-        const data = {
-            'comp': cur_comp,
-            'ser': cur_ser,
-            'day': cur_day
-        };
+
+        const data = JSON.parse(
+            document.getElementById('comp-data').textContent
+        );
 
         let currentCompetition = null;
         let currentStage = null;
@@ -291,17 +287,19 @@ window.addEventListener('DOMContentLoaded', event => {
             Build stage buttons
         --------------------------*/
         function buildStages(comp) {
-            const stages = data[comp].stages;
+            const stages = data[comp];
             const container = $('.stage-selector');
 
             container.empty();
 
             Object.keys(stages).forEach((stage, idx) => {
                 const btn = $(`
+            <li class="nav-item">
             <button class="btn btn-outline-primary ${idx === 0 ? 'active' : ''}"
                     data-stage="${stage}">
             ${stage}
             </button>
+            </li>
         `);
 
                 container.append(btn);
@@ -326,14 +324,14 @@ window.addEventListener('DOMContentLoaded', event => {
             Build day timeline
         --------------------------*/
         function buildDays(comp, stage) {
-            const days = data[comp].stages[stage];
+            const days = data[comp][stage];
             const container = $('.day-selector .d-flex');
 
             container.empty();
 
             days.forEach((day, idx) => {
                 const btn = $(`
-            <button class="btn btn-sm btn-secondary ${idx === 0 ? 'active' : ''}"
+            <button class="btn btn-sm btn-primary ${idx === 0 ? 'active' : ''}"
                     data-day="${day}">
             ${day}
             </button>
