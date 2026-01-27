@@ -141,6 +141,8 @@ def calculate_penalties_votes_total(b11_lineup_home, b11_lineup_away):
 
     pen_players_home = b11_lineup_home['players'][:11]
     pen_players_away = b11_lineup_away['players'][:11]
+    pen_players_home.sort(key=lambda x: x['player_vote'], reverse=True)
+    pen_players_away.sort(key=lambda x: x['player_vote'], reverse=True)
 
     gk_home_vote = b11_lineup_home['players'][0]['player_vote'] #home goalkeeper pure vote
     gk_away_vote = b11_lineup_away['players'][0]['player_vote'] #away goalkeeper pure vote
@@ -328,6 +330,8 @@ def check_match_for_extratime(home_team_id, away_team_id, votes_home, votes_away
 
             if home_agg == away_agg:
                 return True, (home_agg, away_agg) #match went to extratime
+            else:
+                return False, (home_agg, away_agg)
             
     elif U.is_single_match_knockout(cc):
         #single match knockout
