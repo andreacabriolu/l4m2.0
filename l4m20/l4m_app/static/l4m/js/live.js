@@ -277,7 +277,6 @@ window.addEventListener('DOMContentLoaded', event => {
         $('.competition-tabs .nav-link').on('click', function () {
             $('.competition-tabs .nav-link').removeClass('active');
             $(this).addClass('active');
-            console.log('Competition clicked:', $(this).data('comp'));
 
             currentCompetition = $(this).data('comp');
             buildStages(currentCompetition);
@@ -295,7 +294,7 @@ window.addEventListener('DOMContentLoaded', event => {
             Object.keys(stages).forEach((stage, idx) => {
                 const btn = $(`
             <li class="nav-item">
-            <button class="btn btn-outline-primary ${idx === 0 ? 'active' : ''}"
+            <button class="nav-link-stage active btn ${idx === 0 ? 'active' : ''}"
                     data-stage="${stage}">
             ${stage}
             </button>
