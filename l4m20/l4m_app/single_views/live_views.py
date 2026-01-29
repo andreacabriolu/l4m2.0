@@ -1,5 +1,5 @@
 from django.core import serializers
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.views import View
 from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -11,6 +11,25 @@ from requests import request
 from .. import utilities as U
 from .. import live_utilities as LU
 from ..models import *
+
+@login_required
+def LiveDefaultView(request):
+    current_day = U.get_current_day()
+    teamid = U.get_user_team(request.user.id)['id']
+    my_series_mainleague = U.get_my_series(teamid, competitionid=1) #default campionato
+    my_seriesid_mainleague = my_series_mainleague[0].id
+
+    params = {
+        'current_competition': 1, #default campionato
+        'current_series' : my_seriesid_mainleague,
+        'current_day': current_day,
+    }
+
+    return redirect('/l4m/live/{}/{}/{}/'.format(
+        params['current_competition'],
+        params['current_series'],
+        params['current_day']
+    ))
 
 class GetPenaltiesView(View):
     def get(self, request):
@@ -219,7 +238,7 @@ class LiveB11View(LoginRequiredMixin, View):
         return render(request, self.template_name, params)
 
 @login_required
-def LiveView(request):
+def LiveView(request, competition_id, series_id, day):
     template_name = 'l4m/live.html'
 
     teamid = U.get_user_team(request.user.id)['id']
@@ -227,44 +246,45 @@ def LiveView(request):
     current_day = U.get_current_day()
     all_days = range(1, int(current_day) + 1) #default campionato
 
-    my_series_mainleague = U.get_my_series(teamid, competitionid=1) #default campionato
-    my_seriesid_mainleague = my_series_mainleague[0].id
+    # my_series_mainleague = U.get_my_series(teamid, competitionid=1) #default campionato
+    # my_seriesid_mainleague = my_series_mainleague[0].id
 
     all_competitions = U.get_all_live_active_competitions()
     today_competitions = U.get_all_today_competitions(current_day)
     today_competitions_ids = [tc.id for tc in today_competitions]
     competition_series_stages_days_mapping = U.get_competition_series_stages_days_mapping()
 
-    if(len(request.POST) > 0 and 'jsonData' in request.POST):
-        data = json.loads(request.POST['jsonData'])
-        competition_id = data['competition']
-        seriesid = data['series']
-        my_series = U.get_my_series(teamid, competitionid=competition_id)
-        if len(my_series) <= 0:
-            teamid = None
-        elif(seriesid not in [ s.id for s in my_series ]):
-            teamid = None
-        day = int(data['day'])
-    else:
-        competition_id = 1 #default campionato
-        day = int(current_day)
-        seriesid = my_seriesid_mainleague
+    # if(len(request.POST) > 0 and 'jsonData' in request.POST):
+    #     data = json.loads(request.POST['jsonData'])
+    #     competition_id = data['competition']
+    #     seriesid = data['series']
+    #     my_series = U.get_my_series(teamid, competitionid=competition_id)
+    #     if len(my_series) <= 0:
+    #         teamid = None
+    #     elif(seriesid not in [ s.id for s in my_series ]):
+    #         teamid = None
+    #     day = int(data['day'])
+    # else:
+
+    _competition_id = competition_id #default campionato
+    _day = day
+    _series_id = series_id
 
     all_series = U.get_all_series_from_calendar(competitionid=competition_id, day=day)
     all_my_series_ids = [s.id for s in U.get_all_my_series(teamid)]
     homeAway=U.get_homeaway(competition_id, day)
-    extratime_penalties = U.get_overtime_penalties(competition_id, day)
+    extratime_penalties = U.get_overtime_penalties(_competition_id, _day)
 
-    series_teams = team.Team.objects.filter(Series__id=seriesid)
+    series_teams = team.Team.objects.filter(Series__id=_series_id)
     last_lineups_d = {}
-    overtime, _ = U.check_day_already_started(day)
+    overtime, _ = U.check_day_already_started(_day)
     is_live_day = True
     already_played_teams = []
-    is_suspended_day = U.check_day_suspended(day)
+    is_suspended_day = U.check_day_suspended(_day)
 
     #QUICK LOAD THE PAST
     if int(day) < int(current_day) and not is_suspended_day:
-        couples = LU.get_couples_and_matches_from_calendar(seriesid, day, competition_id=competition_id)
+        couples = LU.get_couples_and_matches_from_calendar(_series_id, _day, competition_id=_competition_id)
         couples = [couples.pop(couples.index(i)) for i in couples if (i[0]==teamid or i[1]==teamid)]+couples #get user match as first
         
         all_votes = []
@@ -282,18 +302,18 @@ def LiveView(request):
 
     else:
         #get all live players
-        live_votes, live_teams, already_played_teams = LU.get_live_votes(day)
+        live_votes, live_teams, already_played_teams = LU.get_live_votes(_day)
 
         #VALIDO PER:
         # TOTAL LEAGUE
         total_league = all_competitions.get(Name='Total League')
-        if competition_id == total_league.id:
+        if _competition_id == total_league.id:
             for t in series_teams:
-                lineup_to_show = LU.get_b11_lineup(t, day, live_votes, live_teams, already_played_teams)
+                lineup_to_show = LU.get_b11_lineup(t, _day, live_votes, live_teams, already_played_teams)
                 lineup_to_show['t']=t
                 last_lineups_d[t.id] = lineup_to_show
 
-            couples = LU.get_couples_from_calendar(seriesid, day, competition_id=competition_id)
+            couples = LU.get_couples_from_calendar(_series_id, _day, competition_id=_competition_id)
             couples = [couples.pop(couples.index(i)) for i in couples if (i[0]==teamid or i[1]==teamid)]+couples #get user match as first
             lineup_couples = [ (last_lineups_d[c[0]], last_lineups_d[c[1]]) for c in couples ]
 
@@ -307,7 +327,7 @@ def LiveView(request):
                 if overtime and extratime_penalties: 
                     if(LU.check_match_for_extratime(lineup_couple[0]['t'].id, lineup_couple[1]['t'].id, 
                                                  votes_home, votes_away, 
-                                                 day, competition_id, seriesid)):
+                                                 _day, _competition_id, _series_id)):
                         votes_home = LU.add_extratime_penalties_flag(votes_home)
                         votes_away = LU.add_extratime_penalties_flag(votes_away)
 
@@ -321,7 +341,7 @@ def LiveView(request):
             #COPPA DI LEGA
             #COPPA DI SERIE
             for t in series_teams:
-                l = U.get_last_lineup(t, day, comp_id=competition_id)
+                l = U.get_last_lineup(t, _day, comp_id=_competition_id)
                 if(len(l) <= 0 and overtime): #overtime (day started)
                     last_valid_l = U.get_last_valid_lineup(t)
 
@@ -338,14 +358,14 @@ def LiveView(request):
                         lineup_to_show = l[0]
                     else:
                         lineup_to_show = last_valid_l
-                        U.save_last_valid_lineup(last_valid_l, day, seriesid)
+                        U.save_last_valid_lineup(last_valid_l, _day, _series_id)
                         
                 else:  #filter for historical data
                     lineup_to_show = l[0] if len(l)> 0 else t.Name #always valued because we SHOULD save the lineup
 
                 last_lineups_d[t.id] = lineup_to_show
 
-            couples = LU.get_couples_from_calendar(seriesid, day, competition_id=competition_id)
+            couples = LU.get_couples_from_calendar(_series_id, _day, competition_id=_competition_id)
             couples = [couples.pop(couples.index(i)) for i in couples if (i[0]==teamid or i[1]==teamid)]+couples #get user match as first
             lineup_couples = [ (last_lineups_d[c[0]], last_lineups_d[c[1]]) if c[0] in last_lineups_d and c[1] in last_lineups_d else (None, None) for c in couples ]
 
@@ -355,14 +375,14 @@ def LiveView(request):
                 if lineup_couple[0] is None or lineup_couple[1] is None:
                     continue
                 
-                votes_home = LU.get_votes(lineup_couple[0], day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=teamid, homeAway=homeAway)
-                votes_away = LU.get_votes(lineup_couple[1], day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=teamid, home=False, homeAway=homeAway)
+                votes_home = LU.get_votes(lineup_couple[0], _day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=teamid, homeAway=homeAway)
+                votes_away = LU.get_votes(lineup_couple[1], _day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=teamid, home=False, homeAway=homeAway)
                 
                 #check here for extratime and penalties
                 if overtime and extratime_penalties: 
                     if(LU.check_match_for_extratime(lineup_couple[0].Team.id, lineup_couple[1].Team.id, 
                                                  votes_home, votes_away, 
-                                                 day, competition_id, seriesid)):
+                                                 _day, _competition_id, _series_id)):
                         votes_home = LU.add_extratime_penalties_flag(votes_home)
                         votes_away = LU.add_extratime_penalties_flag(votes_away)
 
@@ -376,10 +396,10 @@ def LiveView(request):
         'all_votes' : all_votes, 
         'all_scores' : all_scores,
         'all_series' : all_series,
-        'current_competition': competition_id,
-        'current_series' : seriesid,
+        'current_competition': _competition_id,
+        'current_series' : _series_id,
         'all_days' : all_days,
-        'current_day': day,
+        'current_day': _day,
         'all_competitions' : all_competitions,
         'all_my_series_ids' : all_my_series_ids,
         'homeAway': homeAway,

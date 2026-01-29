@@ -339,7 +339,6 @@ window.addEventListener('DOMContentLoaded', event => {
             });
 
             currentDay = days[0];
-            loadResults();
         }
 
         /* -------------------------
@@ -357,15 +356,8 @@ window.addEventListener('DOMContentLoaded', event => {
             Load results
         --------------------------*/
         function loadResults() {
-            console.log(
-                'Load results:',
-                currentCompetition,
-                currentStage,
-                currentDay
-            );
 
-            // OPTION A: server-rendered navigation
-            // window.location.href = `/results/${currentCompetition}/${currentStage}/${currentDay}/`;
+            window.location.href = `/l4m/live/${currentCompetition}/${currentStage}/${currentDay}/`;
 
             // OPTION B: AJAX
             /*
@@ -383,8 +375,6 @@ window.addEventListener('DOMContentLoaded', event => {
             Init (first competition)
         --------------------------*/
         $('.competition-tabs .nav-link.active').trigger('click');
-
-
 
     });
 
