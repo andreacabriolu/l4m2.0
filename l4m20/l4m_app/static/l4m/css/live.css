@@ -596,6 +596,127 @@ table .w-30 {
     text-align: center;
 }
 
+#competitionTabs {
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
+.competition-tabs .nav-link {
+  position: relative;
+  color: #c9d6e9;
+  background: #3c82ff !important ;
+  border-radius: 999px;
+  padding: 0.45rem 0.9rem;
+  margin: 0 0.15rem;
+
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
+}
+
+/* Hover */
+.competition-tabs .nav-link:hover {
+  color: #e6ecf5;
+  background-color: rgba(60, 130, 255, 0.12);
+  box-shadow: 0 0 0 1px rgba(60, 130, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+/* Active */
+.competition-tabs .nav-link.active {
+  color: #ffffff;
+  font-weight: bold;
+  background-color: rgba(60, 130, 255, 0.25);
+  box-shadow:
+    0 0 0 1px rgba(60, 130, 255, 0.45),
+    0 4px 12px rgba(60, 130, 255, 0.25);
+  transform: none;
+}
+
+/* Click feedback */
+.competition-tabs .nav-link:active {
+  transform: scale(0.97);
+}
+
+.nav-link-stage.active {
+  background-color: #5dac59 !important;
+  color: #fff !important;
+  font-weight: bold;
+}
+
+.nav-link-stage {
+  position: relative;
+  color: #c9d6e9;
+  background: #5dac59 !important ;
+  border-radius: 999px;
+  padding: 0.45rem 0.9rem;
+  margin: 0 0.15rem;
+
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
+}
+
+.nav-link-stage:hover {
+  color: #e6ecf5;
+  background-color: rgba(93, 172, 89, 0.12);
+  box-shadow: 0 0 0 1px rgba(93, 172, 89, 0.25);
+  transform: translateY(-1px);
+}
+
+.nav-link-stage:active {
+  transform: scale(0.97);
+}
+
+.competition-tabs .nav-link::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 4px;
+  width: 0;
+  height: 2px;
+  background-color: #3c82ff;
+  border-radius: 2px;
+  transform: translateX(-50%);
+  transition: width 0.2s ease;
+}
+
+/* Hover underline */
+.competition-tabs .nav-link:hover::after {
+  width: 60%;
+}
+
+/* Active underline */
+.competition-tabs .nav-link.active::after {
+  width: 80%;
+}
+
+.day-selector {
+  place-content: center;
+}
+
+.days {
+  flex-wrap: wrap;
+  margin-bottom: 1em;
+}
+
+@media (max-width: 800px) {
+  .competition-tabs .nav-link:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+@media (max-width: 800px) {
+  .tabs-div {
+    place-content: center !important;
+  }
+}
+
 #penalty-modal .modal-dialog {
     height: auto !important;
 }

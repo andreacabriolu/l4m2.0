@@ -205,40 +205,46 @@
     {% endif %}
 
     <div class="bg-body-tertiary main-div p-5 live-tables bg-success bg-opacity-50" id="liveMainDiv">
-        <div class="selectors-div">
-            <div>
-            <label for="select_comp" class="series-label">COMPETIZIONE</label>
-            <select class="form-select form-select-lg mb-3 form-select-selectors" id="select_comp">
+        <div class="tabs-div mb-4">
+    
+            <ul class="nav nav-pills justify-content-center competition-tabs" id="competitionTabs">
                 {% for comp in all_competitions %}
-                <option value="{{comp}}" data-id="{{comp.id}}">{{comp.Name}} 
-                    {% if comp.id in today_competitions_ids %} [LIVE] {% endif %}
-                </option>
+                <li class="nav-item">
+                    <button class="nav-link active" data-comp="{{comp}}" data-comp-id="{{comp.id}}" data-bs-target="#{{comp.Name}}" data-bs-toggle="tab" type="button"
+                        role="tab">
+                        {{comp.Name}}
+                        {% if comp.id in today_competitions_ids %} [LIVE] {% endif %}
+                    </button>
+                </li>
                 {% endfor %}
-            </select>
-            </div>
+            </ul>
+    
+    {{ comp_data|json_script:"comp-data" }}
 
-            <div>
-            <label for="select_day" class="series-label">GIORNATA</label>
-            <select class="form-select form-select-lg mb-3 form-select-selectors" id="select_day">
-                {% for day in all_days %}
-                <option value="{{day}}">{{day}}</option>
-                {% endfor %}
-            </select>
-            </div>
+    <div class="d-flex justify-content-center my-3">
+        <ul class="nav nav-pills gap-2 stage-selector">
+            <!-- STAGE BUTTONS WILL BE DYNAMICALLY ADDED HERE -->
+        </ul>
+    </div>
 
-            <div>
-            <label for="select_series" class="series-label">SERIE</label>
-            <select class="form-select form-select-lg mb-3 form-select-series" id="select_series">
-                {% for series in all_series %}
-                <option value="{{series}}" data-id="{{series.id}}">{{series.Name}}</option>
-                {% endfor %}
-            </select>
-            </div>
+    <div class="day-selector d-flex align-items-center gap-2 px-2">
+        <!-- <button class="btn btn-sm btn-outline-secondary">‹</button> -->
 
-            <div>
+        <div class="days d-flex gap-2 overflow-auto">
+            <!-- DAY BUTTONS WILL BE DYNAMICALLY ADDED HERE -->
+        </div>
+
+        <!-- <button class="btn btn-sm btn-outline-secondary">›</button> -->
+    </div>
+    
+    
+        <!-- </div> -->
+
+            <!-- <div>
                 <button type="button" class="btn btn-primary view-live-btn" id="view_live_btn">VISUALIZZA</button>
-            </div>
+            </div> -->
 
+            <div class="d-flex justify-content-center gap-3 mb-4">
             {% if is_live_day %}
             <div>
                 <button type="button" class="btn btn-success b11-live-btn" id="b11_live_btn">BEST 11 LIVE</button>
@@ -251,8 +257,8 @@
                 data-bs-toggle="modal" data-bs-target="#showLiveRankingModal">CLASSIFICA LIVE</button>
             </div>
             {% endif %}
-
         </div>
+
 
         {% for match_votes in all_votes %}
         <div class="match-div">

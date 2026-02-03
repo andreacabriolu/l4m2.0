@@ -8,6 +8,36 @@ from zoneinfo import ZoneInfo
 from l4m20 import constants as C
 import requests as req
 
+def get_competition_series_stages_days_mapping():
+    mapping = {}
+    all_cc = competition_calendar.CompetitionCalendar.objects.all().select_related('competition')\
+        .values('Competition_id','Day','Stage','Competition_id__Name').order_by('Day')
+
+    for cc in all_cc:
+        comp_name = cc['Competition_id__Name']
+        comp_id = cc['Competition_id']
+        _series = get_all_series_girone(comp_id) if cc['Stage']=='Girone' else []
+        _finalSeries = get_all_final_series(comp_id)
+        day = cc['Day']
+        stage = cc['Stage']
+        if comp_id not in mapping:
+            mapping[comp_id] = {"id": comp_id, "name": comp_name, "stages": {}}
+        if stage != "Girone":
+            _stage = _finalSeries.filter(Name=stage).first()
+            if _stage is None:
+                continue
+            if _stage.id not in mapping[comp_id]["stages"]:
+                mapping[comp_id]["stages"][_stage.id] = {"name": stage, "days": []}
+            mapping[comp_id]["stages"][_stage.id]["days"].append(day)
+        else: #girone
+            for _s in _series:
+                stage_name = _s.Name
+                if _s.id not in mapping[comp_id]["stages"]:
+                    mapping[comp_id]["stages"][_s.id] = {"name": stage_name, "days": []}
+                mapping[comp_id]["stages"][_s.id]["days"].append(day)
+
+    return mapping
+
 def get_official_current_day(day_time_boundaries, teamid):
     official = bet.Bet.objects.filter(
         Q(Team=teamid) &
@@ -249,6 +279,12 @@ def get_all_active_series_by_day(competitionid, day):
 
 def get_all_series(competitionid):
     return series.Series.objects.filter(Competition_id=competitionid)
+
+def get_all_final_series(competitionid):
+    return series.Series.objects.filter(Q(Competition_id=competitionid) & Q(IsGirone=False))
+
+def get_all_series_girone(competitionid):
+    return series.Series.objects.filter(Q(Competition_id=competitionid) & Q(IsGirone=True))
 
 def get_my_markets(seriesid):
     return market.Market.objects.filter(Series_id=seriesid)
