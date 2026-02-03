@@ -10,4 +10,4 @@ class Series(models.Model):
     IsGirone = models.BooleanField(default=True)
     
     def __str__(self):
-        return " ".join([self.Name])
+        return " ".join([self.Name, str(self.Competition)])

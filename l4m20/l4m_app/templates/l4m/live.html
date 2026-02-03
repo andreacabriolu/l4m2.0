@@ -209,7 +209,7 @@
             <ul class="nav nav-pills justify-content-center competition-tabs" id="competitionTabs">
                 {% for comp in all_competitions %}
                 <li class="nav-item">
-                    <button class="nav-link active" data-comp="{{comp}}" data-bs-target="#{{comp.Name}}" data-bs-toggle="tab" type="button"
+                    <button class="nav-link active" data-comp="{{comp}}" data-comp-id="{{comp.id}}" data-bs-target="#{{comp.Name}}" data-bs-toggle="tab" type="button"
                         role="tab">
                         {{comp.Name}}
                         {% if comp.id in today_competitions_ids %} [LIVE] {% endif %}

@@ -598,6 +598,7 @@ table .w-30 {
 
 #competitionTabs {
   flex-wrap: nowrap;
+  white-space: nowrap;
 }
 
 .competition-tabs .nav-link {
@@ -700,6 +701,7 @@ table .w-30 {
 
 .days {
   flex-wrap: wrap;
+  margin-bottom: 1em;
 }
 
 @media (max-width: 800px) {

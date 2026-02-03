@@ -279,14 +279,15 @@ window.addEventListener('DOMContentLoaded', event => {
             $(this).addClass('active');
 
             currentCompetition = $(this).data('comp');
-            buildStages(currentCompetition);
+            curr_comp_id = $(this).data('comp-id');
+            buildStages(curr_comp_id);
         });
 
         /* -------------------------
             Build stage buttons
         --------------------------*/
         function buildStages(comp) {
-            const stages = data[comp];
+            const stages = data[comp].stages;
             const container = $('.stage-selector');
 
             container.empty();
@@ -295,17 +296,17 @@ window.addEventListener('DOMContentLoaded', event => {
                 const btn = $(`
             <li class="nav-item">
             <button class="nav-link-stage active btn ${idx === 0 ? 'active' : ''}"
-                    data-stage="${stage}">
-            ${stage}
+                    data-stage="${stages[stage].name}" data-stage-id="${stage}">
+            ${stages[stage].name}
             </button>
             </li>
-        `);
+            `);
 
-                container.append(btn);
+            container.append(btn);
             });
 
-            currentStage = Object.keys(stages)[0];
-            buildDays(comp, currentStage);
+            // currentStage = stages[Object.keys(stages)[0]].id;
+            // buildDays(comp, currentStage);
         }
 
         /* -------------------------
@@ -315,15 +316,15 @@ window.addEventListener('DOMContentLoaded', event => {
             $('.stage-selector button').removeClass('active');
             $(this).addClass('active');
 
-            currentStage = $(this).data('stage');
-            buildDays(currentCompetition, currentStage);
+            curr_stage_id = $(this).data('stage-id');
+            buildDays(curr_comp_id, curr_stage_id);
         });
 
         /* -------------------------
             Build day timeline
         --------------------------*/
         function buildDays(comp, stage) {
-            const days = data[comp][stage];
+            const days = data[comp].stages[stage].days;
             const container = $('.day-selector .d-flex');
 
             container.empty();
@@ -338,7 +339,7 @@ window.addEventListener('DOMContentLoaded', event => {
                 container.append(btn);
             });
 
-            currentDay = days[0];
+            // currentDay = days[0];
         }
 
         /* -------------------------
@@ -348,7 +349,7 @@ window.addEventListener('DOMContentLoaded', event => {
             $('.day-selector button').removeClass('active');
             $(this).addClass('active');
 
-            currentDay = $(this).data('day');
+            cur_day = $(this).data().day;
             loadResults();
         });
 
@@ -357,7 +358,7 @@ window.addEventListener('DOMContentLoaded', event => {
         --------------------------*/
         function loadResults() {
 
-            window.location.href = `/l4m/live/${currentCompetition}/${currentStage}/${currentDay}/`;
+            window.location.href = `/l4m/live/${curr_comp_id}/${curr_stage_id}/${cur_day}/`;
 
             // OPTION B: AJAX
             /*
@@ -374,7 +375,7 @@ window.addEventListener('DOMContentLoaded', event => {
         /* -------------------------
             Init (first competition)
         --------------------------*/
-        $('.competition-tabs .nav-link.active').trigger('click');
+        // $('.competition-tabs .nav-link.active').trigger('click');
 
     });
 
