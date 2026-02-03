@@ -51,6 +51,8 @@ def get_official_current_day(day_time_boundaries, teamid):
 def is_live_day():
     now = datetime.datetime.now(ZoneInfo('Europe/Rome'))
     current_day_boundaries = get_current_day_boundaries(get_current_day())
+    if current_day_boundaries[0] is None or current_day_boundaries[1] is None:
+        return False
     return current_day_boundaries[0] <= now <= current_day_boundaries[1]
 
 def get_svincoli_current_day(day_time_boundaries, teamid):
@@ -65,6 +67,8 @@ def get_svincoli_current_day(day_time_boundaries, teamid):
 
 def get_current_day_boundaries(current_day):
     today_matches = real_calendar.Real_calendar.objects.filter(Day=current_day).values('Date').order_by('Date')
+    if len(today_matches) == 0:
+        return (None, None)
     day_time_start = today_matches.first()['Date'].astimezone(ZoneInfo(key='Europe/Rome')) if len(today_matches) > 0 else None
     day_time_end = today_matches.last()['Date'].astimezone(ZoneInfo(key='Europe/Rome')) if len(today_matches) > 0 else None
     return (day_time_start, day_time_end)
@@ -307,6 +311,9 @@ def get_players_by_lups(l_ups):
     return player.Player.objects.filter(id__in=pl_ids).values('id','Surname','Role')
 
 def is_any_market_active(current_day_boundaries=None):
+    if current_day_boundaries is None:
+        return False
+    
     _time = datetime.datetime.now(ZoneInfo('Europe/Rome')) if current_day_boundaries is None else \
         current_day_boundaries[0] #start of the day
 
