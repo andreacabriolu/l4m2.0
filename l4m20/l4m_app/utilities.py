@@ -8,6 +8,10 @@ from zoneinfo import ZoneInfo
 from l4m20 import constants as C
 import requests as req
 
+def is_series_girone(series_id):
+    s = series.Series.objects.get(pk=series_id)
+    return s.IsGirone if s is not None else False
+
 def get_competition_series_stages_days_mapping():
     mapping = {}
     all_cc = competition_calendar.CompetitionCalendar.objects.all().select_related('competition')\

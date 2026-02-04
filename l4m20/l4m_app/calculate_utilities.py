@@ -130,7 +130,7 @@ def write_b11_ranking(all_best, competition_id, seriesid, day):
 
 def calculate_total_league(competition, day):
     all_votes_per_series = {}
-    comp_series = U.get_all_series(competition.id)
+    comp_series  = U.get_all_series_from_calendar(competition.id, int(day))
     curr_day = U.get_current_day() 
     all_league_days = U.get_days(competition.id)
     league_days = sorted([d['Day'] for d in all_league_days if int(day) <= d['Day'] <= int(curr_day)])
@@ -224,7 +224,11 @@ def calculate_total_league(competition, day):
 
         for k, vote_per_series in all_votes_per_series.items():
             save_results(vote_per_series) 
-            write_league_rankings(vote_per_series, competition.id, _day, seriesid=k, noLineup=True)
+            if U.is_series_girone(k):
+                write_league_rankings(vote_per_series, competition.id, _day, seriesid=k, noLineup=True)
+            else:
+                # update_tournament_bracket(competition.id, k, _day)
+                pass #TODO bracket
 
 def calculate_b11_league(competition, day):
     b11_series = U.get_unica_series(competition)
@@ -339,7 +343,11 @@ def calculate_league(competition, day):
         if not all_votes_per_series: continue
         for k, vote_per_series in all_votes_per_series.items():
             save_results(vote_per_series) 
-            write_league_rankings(vote_per_series, competition.id, _day, seriesid=k)
+            if U.is_series_girone(k):
+                write_league_rankings(vote_per_series, competition.id, _day, seriesid=k)
+            else:
+                # update_tournament_bracket(competition.id, k, _day)
+                pass #TODO bracket
 
 def save_b11_results(all_best, day):
     for best in all_best:
