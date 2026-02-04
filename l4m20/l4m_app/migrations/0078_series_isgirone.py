@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('l4m_app', '0075_series_active'),
+        ('l4m_app', '0077_alter_matchesresults_aggregatescore'),
     ]
 
     operations = [
