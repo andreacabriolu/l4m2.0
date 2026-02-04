@@ -244,23 +244,12 @@ window.addEventListener('DOMContentLoaded', event => {
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
     const token = Cookies.get('csrftoken');
 
-    var cur_comp = $('#current_competition').val();
-    // var comp_to_sel = $('#select_comp').children(`option[data-id=${cur_comp}]`);
-    // if (comp_to_sel.length <= 0) { return; }
-    // $('#select_comp').val(comp_to_sel[0].value);
-
-    var cur_ser = $('#current_series').val();
-    // var series_to_sel = $('#select_series').children(`option[data-id=${cur_ser}]`);
-    // if (series_to_sel.length <= 0) { return; }
-    // $('#select_series').val(series_to_sel[0].value);
-
-    var cur_day = $('#current_day').val();
-    // var day_to_sel = $('#select_day').children(`option[value=${cur_day}]`);
-    // if (day_to_sel.length <= 0) { return; }
-    // $('#select_day').val(day_to_sel[0].value);
+    // var cur_comp = $('#current_competition').val();
+    // var cur_ser = $('#current_series').val();
+    var current_day = $('#current_day').val();
+    var real_current_day = $('#real_current_day').val();
 
     ////////NEW LIVE BUTTONS////////
-
 
     $(function () {
 
@@ -270,7 +259,6 @@ window.addEventListener('DOMContentLoaded', event => {
 
         let currentCompetition = null;
         let currentStage = null;
-        let currentDay = null;
 
         /* -------------------------
             Competition click
@@ -332,23 +320,23 @@ window.addEventListener('DOMContentLoaded', event => {
 
             days.forEach((day, idx) => {
                 const btn = $(`
-            <button class="btn btn-sm btn-primary ${idx === 0 ? 'active' : ''}"
+            <button class="btn btn-sm btn-primary ${day == current_day ? 'day-current' : ''}"
                     data-day="${day}">
-            ${day}
+            ${day} ${day == real_current_day ? '[LIVE]' : ''}
             </button>
         `);
                 container.append(btn);
             });
 
-            // currentDay = days[0];
+            // cur_day = days[0];
         }
 
         /* -------------------------
             Day click
         --------------------------*/
         $(document).on('click', '.day-selector button', function () {
-            $('.day-selector button').removeClass('active');
-            $(this).addClass('active');
+            $('.day-selector button').removeClass('day-current');
+            $(this).addClass('day-current');
 
             cur_day = $(this).data().day;
             loadResults();
@@ -360,17 +348,6 @@ window.addEventListener('DOMContentLoaded', event => {
         function loadResults() {
 
             window.location.href = `/l4m/live/${curr_comp_id}/${curr_stage_id}/${cur_day}/`;
-
-            // OPTION B: AJAX
-            /*
-            $.get('/results/api/', {
-            competition: currentCompetition,
-            stage: currentStage,
-            day: currentDay
-            }, function (html) {
-            $('#results-container').html(html);
-            });
-            */
         }
 
         /* -------------------------

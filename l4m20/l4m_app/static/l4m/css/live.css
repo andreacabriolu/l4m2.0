@@ -720,3 +720,9 @@ table .w-30 {
 #penalty-modal .modal-dialog {
     height: auto !important;
 }
+
+.day-current {
+    background-color: sienna !important;
+    color: #fff !important;
+    font-weight: bold;
+}

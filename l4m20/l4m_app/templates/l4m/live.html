@@ -35,6 +35,7 @@
     <input type="hidden" value="{{current_competition}}" id="current_competition">
     <input type="hidden" value="{{current_series}}" id="current_series">
     <input type="hidden" value="{{current_day}}" id="current_day">
+    <input type="hidden" value="{{real_current_day}}" id="real_current_day">
     <input type="hidden" value="{{my_competitions}}" id="my_competitions">
     <input type="hidden" value="{{all_my_series_ids}}" id="all_my_series_ids">
     <input type="hidden" value="{{all_scores}}" id="all_scores">
@@ -236,27 +237,20 @@
 
         <!-- <button class="btn btn-sm btn-outline-secondary">›</button> -->
     </div>
-    
-    
-        <!-- </div> -->
 
-            <!-- <div>
-                <button type="button" class="btn btn-primary view-live-btn" id="view_live_btn">VISUALIZZA</button>
-            </div> -->
+        <div class="d-flex justify-content-center gap-3 mb-4">
+        {% if is_live_day %}
+        <div>
+            <button type="button" class="btn btn-success b11-live-btn" id="b11_live_btn">BEST 11 LIVE</button>
+        </div>
+        {% endif %}
 
-            <div class="d-flex justify-content-center gap-3 mb-4">
-            {% if is_live_day %}
-            <div>
-                <button type="button" class="btn btn-success b11-live-btn" id="b11_live_btn">BEST 11 LIVE</button>
-            </div>
-            {% endif %}
-
-            {% if is_live_day %}
-            <div>
-                <button type="button" class="btn btn-warning ranking-live-btn" id="ranking_live_btn" 
-                data-bs-toggle="modal" data-bs-target="#showLiveRankingModal">CLASSIFICA LIVE</button>
-            </div>
-            {% endif %}
+        {% if is_live_day %}
+        <div>
+            <button type="button" class="btn btn-warning ranking-live-btn" id="ranking_live_btn" 
+            data-bs-toggle="modal" data-bs-target="#showLiveRankingModal">CLASSIFICA LIVE</button>
+        </div>
+        {% endif %}
         </div>
 
 

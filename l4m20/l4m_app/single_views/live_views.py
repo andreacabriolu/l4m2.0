@@ -265,6 +265,7 @@ def LiveView(request, competition_id, series_id, day):
     # my_seriesid_mainleague = my_series_mainleague[0].id
 
     all_competitions = U.get_all_live_active_competitions()
+    all_competitions = all_competitions.order_by('id') #quite a workaround to get main league as first
     today_competitions = U.get_all_today_competitions(current_day)
     today_competitions_ids = [tc.id for tc in today_competitions]
     competition_series_stages_days_mapping = U.get_competition_series_stages_days_mapping()
@@ -442,6 +443,7 @@ def LiveView(request, competition_id, series_id, day):
         'today_competitions_ids': today_competitions_ids,
         'extratime_penalties': extratime_penalties,
         'comp_data': competition_series_stages_days_mapping,
+        'real_current_day': current_day,
         }
     
     return render(request, template_name, params)
