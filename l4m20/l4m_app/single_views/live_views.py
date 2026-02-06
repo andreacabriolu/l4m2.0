@@ -209,7 +209,7 @@ class MyLiveView(LoginRequiredMixin, View):
                         lineup_couple[0].Team.id, 
                         lineup_couple[1].Team.id)
 
-                if first_leg is not None and len(first_leg) == 2:
+                if first_leg is not None:
                     votes_home = LU.add_first_leg_goals(votes_home, first_leg[1].NGoals)
                     votes_away = LU.add_first_leg_goals(votes_away, first_leg[0].NGoals)
 
@@ -270,18 +270,6 @@ def LiveView(request, competition_id, series_id, day):
     today_competitions_ids = [tc.id for tc in today_competitions]
     competition_series_stages_days_mapping = U.get_competition_series_stages_days_mapping()
 
-    # if(len(request.POST) > 0 and 'jsonData' in request.POST):
-    #     data = json.loads(request.POST['jsonData'])
-    #     competition_id = data['competition']
-    #     seriesid = data['series']
-    #     my_series = U.get_my_series(teamid, competitionid=competition_id)
-    #     if len(my_series) <= 0:
-    #         teamid = None
-    #     elif(seriesid not in [ s.id for s in my_series ]):
-    #         teamid = None
-    #     day = int(data['day'])
-    # else:
-
     _competition_id = competition_id #default campionato
     _day = day
     _series_id = series_id
@@ -326,16 +314,25 @@ def LiveView(request, competition_id, series_id, day):
         if _competition_id == total_league.id:
             for t in series_teams:
                 lineup_to_show = LU.get_b11_lineup(t, _day, live_votes, live_teams, already_played_teams)
+                if lineup_to_show is None:
+                    continue
                 lineup_to_show['t']=t
                 last_lineups_d[t.id] = lineup_to_show
 
             couples = LU.get_couples_from_calendar(_series_id, _day, competition_id=_competition_id)
             couples = [couples.pop(couples.index(i)) for i in couples if (i[0]==teamid or i[1]==teamid)]+couples #get user match as first
-            lineup_couples = [ (last_lineups_d[c[0]], last_lineups_d[c[1]]) for c in couples ]
+            lineup_couples = []
+            for c in couples:
+                h_lineup_to_show = last_lineups_d[c[0]] if c[0] in last_lineups_d else None
+                a_lineup_to_show = last_lineups_d[c[1]] if c[1] in last_lineups_d else None
+                lineup_couples.append((h_lineup_to_show, a_lineup_to_show))
 
             all_votes = []
 
             for lineup_couple in lineup_couples:
+                if lineup_couple[0] is None or lineup_couple[1] is None:
+                    continue
+
                 votes_home = LU.get_votes_total(lineup_couple[0], home=True, homeAway=homeAway)
                 votes_away = LU.get_votes_total(lineup_couple[1], home=False, homeAway=homeAway)
 
@@ -416,7 +413,7 @@ def LiveView(request, competition_id, series_id, day):
                             lineup_couple[0].Team.id, 
                             lineup_couple[1].Team.id)
 
-                        if first_leg is not None and len(first_leg) == 2:
+                        if first_leg is not None:
                             votes_home = LU.add_first_leg_goals(votes_home, first_leg[1].NGoals)
                             votes_away = LU.add_first_leg_goals(votes_away, first_leg[0].NGoals)
 

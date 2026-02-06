@@ -315,7 +315,7 @@ def get_players_by_lups(l_ups):
     return player.Player.objects.filter(id__in=pl_ids).values('id','Surname','Role')
 
 def is_any_market_active(current_day_boundaries=None):
-    if current_day_boundaries is None:
+    if current_day_boundaries == (None,None):
         return False
     
     _time = datetime.datetime.now(ZoneInfo('Europe/Rome')) if current_day_boundaries is None else \
