@@ -273,6 +273,16 @@ def get_all_series_from_calendar(competitionid, day):
 def get_unica_series(competitionid):
     return series.Series.objects.filter(Q(Name='Unica') & Q(Competition_id=competitionid))
 
+def get_my_series_from_calendar(teamid, competitionid, day):
+    return series.Series.objects.filter(
+        Q(team=teamid) &
+        Q(Competition=competitionid) &
+        Q(id__in=matches_calendar.MatchesCalendar.objects.filter(
+            (Q(HomeTeam=teamid) | Q(AwayTeam=teamid)) &
+            Q(CompetitionCalendar__Day=day)
+        ).values_list('Series', flat=True).distinct())
+    )
+
 def get_my_series(teamid, competitionid=1):
     return series.Series.objects.filter(Q(team=teamid) & Q(Competition=competitionid))
 
