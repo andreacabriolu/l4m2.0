@@ -405,7 +405,7 @@ def LiveView(request, competition_id, series_id, day):
                 votes_away = LU.get_votes(lineup_couple[1], _day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=teamid, home=False, homeAway=homeAway)
                 
                 #check here for extratime and penalties
-                if extratime_penalties: 
+                if extratime_penalties and overtime: 
                     if not(isinstance(lineup_couple[0], str) or isinstance(lineup_couple[1], str)):                    
                         votes_home = LU.add_extratime_penalties_flag(votes_home)
                         votes_away = LU.add_extratime_penalties_flag(votes_away)
