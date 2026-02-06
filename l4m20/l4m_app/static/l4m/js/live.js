@@ -171,8 +171,8 @@ function buildExtraTimeModalBody(data) {
         html +=
         `
         <li data-id="${id}">
-          <span class="player-name">${p[0]}</span>
-          <span class="vote">${p[1]}</span>
+          <span class="player-name">${p.info[0]}</span>
+          <span class="vote">${p.info[1]}</span>
         </li>
       `).join('');
 
