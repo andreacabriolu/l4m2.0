@@ -1,0 +1,38 @@
+    <div class="modal fade force-fullscreen" id="penaltyModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content penalty-modal">
+    
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-futbol me-2"></i>Tiri di rigore – <span id="penalty-team-name"></span>
+                    </h5>
+                    <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+    
+                <div class="modal-body" id="penalty-body">
+                    <div class="penalty-gk-row text-center mb-2">
+                        <strong>Voto Portiere Avversario:</strong>
+                        <span id="penalty-gk-vote" class="ms-2 badge bg-primary">—</span>
+                    </div>
+                    <div class="penalty-row penalty-header">
+                        <span>#</span>
+                        <span class="penalty-shooter">Tiratore</span>
+                        <span class="penalty-result">Voto</span>
+                        <span></span>
+                    </div>
+                    <div id="penalty-list">
+                    </div>
+    
+                    <div class="modal-footer justify-content-between penalty-footer">
+                        <span class="fw-semibold">
+                            Goal segnati:
+                        </span>
+                        <span id="penalty-total-goals" class="badge bg-success fs-5">
+                            0
+                        </span>
+                    </div>
+                </div>
+    
+            </div>
+        </div>
+    </div>
