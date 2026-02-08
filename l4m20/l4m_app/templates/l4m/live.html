@@ -23,6 +23,15 @@
 
 {% endblock %}
 
+{% block modals %}
+{% include "l4m/modals/player_stats_modal.html" %}
+{% include "l4m/modals/lineup_history_modal.html" %}
+{% include "l4m/modals/live_ranking_modal.html" %}
+{% include "l4m/modals/penalty_modal.html" %}
+{% include "l4m/modals/extratime_modal.html" %}
+
+{% endblock %}
+
 {% block content %}
 <div id="layoutSidenav_content" class="custom-layout">
 
@@ -39,171 +48,6 @@
     <input type="hidden" value="{{my_competitions}}" id="my_competitions">
     <input type="hidden" value="{{all_my_series_ids}}" id="all_my_series_ids">
     <input type="hidden" value="{{all_scores}}" id="all_scores">
-
-    <div class="modal fade" id="playerStatsModal" tabindex="-1" role="dialog" aria-labelledby="playerStatsModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-full-mobile" role="document">
-            <div class="modal-content modal-dark">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="playerStatsModalLabel">STATISTICHE GIOCATORE</h4>
-                    <span class="close" data-bs-dismiss="modal"><img src="{% static 'l4m/images/close-blue.png' %}"></span>
-                </div>
-                <div class="modal-body">
-                    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
-                        <div><i class="fas fa-users me-2"></i><strong id="modal_stats_team"></strong></div>
-                        <div><i class="fas fa-user-tag me-2"></i><strong id="modal_stats_role"></strong></div>
-                        <div><i class="fas fa-calendar-check me-2"></i><strong id="modal_stats_games_played"></strong></div>
-                    </div>
-    
-                    <div class="row g-4 text-center mb-4">
-                        <div class="col-6 col-md-3">
-                            <i class="fas fa-star fa-lg mb-2"></i>
-                            <div>Voto</div>
-                            <strong id="modal_stats_rating"></strong>
-                        </div>
-                        <div class="col-6 col-md-3">
-                            <i class="fas fa-trophy fa-lg mb-2"></i>
-                            <div>Fantamedia</div>
-                            <strong id="modal_stats_fantamedia"></strong>
-                        </div>
-                        <div class="col-6 col-md-3" id="modal_div_goals">
-                            <i class="fas fa-futbol fa-lg mb-2"></i>
-                            <div>Goal</div>
-                            <strong id="modal_stats_goals"></strong>
-                        </div>
-                        <div class="col-6 col-md-3" id="modal_div_assists">
-                            <i class="fas fa-hands-helping fa-lg mb-2"></i>
-                            <div>Assist</div>
-                            <strong id="modal_stats_assists"></strong>
-                        </div>
-                        <div class="col-6 col-md-3" id="modal_div_goals_taken" hidden>
-                            <i class="fas fa-futbol fa-lg mb-2"></i>
-                            <div>Goal subiti</div>
-                            <strong id="modal_stats_goals_taken"></strong>
-                        </div>
-                        <div class="col-6 col-md-3" id="modal_div_penalty_saved" hidden>
-                            <i class="fas fa-hands-helping fa-lg mb-2"></i>
-                            <div>Rigori parati</div>
-                            <strong id="modal_stats_penalty_saved"></strong>
-                        </div>
-
-                    </div>
-    
-                    <div class="text-center">
-                        <button class="btn btn-primary btn-lg" id="view_full_player_stats_btn">
-                            <a id="full_pl_stats_href" class="modal-href">VEDI STATISTICHE COMPLETE</a>
-                        </button>
-                    </div>
-                </div>
-    
-            </div>
-    
-        </div>
-    </div>
-
-    <div class="modal fade" id="showLineupHistoryModal" tabindex="-1" role="dialog" aria-labelledby="showLineupHistoryModalLabel">
-        <div class="modal-dialog modal-full-mobile" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title lup-hist-title" id="showLineupHistoryModalLabel">STORICO FORMAZIONI</h4>
-                    <span class="close" id="closeGk" data-bs-dismiss="modal"><img
-                            src="{% static 'l4m/images/close-blue.png' %}"></span>
-                </div>
-    
-                <div id="lineups">
-                    
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="showLiveRankingModal" tabindex="-1" role="dialog" aria-labelledby="showLiveRankingModalLabel">
-        <div class="modal-dialog modal-full-mobile" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title lup-hist-title" id="showLiveRankingModalLabel">CLASSIFICA LIVE</h4>
-                    <span class="close" id="closeGk" data-bs-dismiss="modal"><img
-                            src="{% static 'l4m/images/close-blue.png' %}"></span>
-                </div>
-                <div id="live-ranking">
-                    <table class="table table-striped-columns table-dark 
-                    table-liveranking rounded-3 table-bordered rounded-pill">
-                        <tbody class="table-group-divider" id="live_ranking_tbody">
-
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {% if extratime_penalties %}
-    <div class="modal fade mobile-fullscreen" id="penaltyModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content penalty-modal">
-    
-                <div class="modal-header">
-                    <h5 class="modal-title">
-                        <i class="fas fa-futbol me-2"></i>Tiri di rigore – <span id="penalty-team-name"></span>
-                    </h5>
-                    <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-    
-                <div class="modal-body" id="penalty-body">
-                    <div class="penalty-gk-row text-center mb-2">
-                        <strong>Voto Portiere Avversario:</strong>
-                        <span id="penalty-gk-vote" class="ms-2 badge bg-primary">—</span>
-                    </div>
-                    <div class="penalty-row penalty-header">
-                        <span>#</span>
-                        <span class="penalty-shooter">Tiratore</span>
-                        <span class="penalty-result">Voto</span>
-                        <span></span>
-                    </div>
-                    <div id="penalty-list">
-                    </div>
-    
-                    <div class="modal-footer justify-content-between penalty-footer">
-                        <span class="fw-semibold">
-                            Goal segnati:
-                        </span>
-                        <span id="penalty-total-goals" class="badge bg-success fs-5">
-                            0
-                        </span>
-                    </div>
-                </div>
-    
-            </div>
-        </div>
-    </div>
-    {% endif %}
-
-    {% if extratime_penalties %}
-    <div class="modal fade mobile-fullscreen" id="extraTimeModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content extra-time-modal">
-    
-                <div class="modal-header border-0">
-                    <h5 class="modal-title">
-                        <i class="fas fa-stopwatch me-2"></i> Tempi Supplementari – <span id="et-team-name"></span>
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-    
-                <div class="modal-body" id="extra-time-body">
-                </div>
-    
-                <div class="modal-footer border-0 justify-content-center">
-                    <button class="btn btn-outline-primary" data-bs-dismiss="modal">
-                        OK
-                    </button>
-                </div>
-    
-            </div>
-        </div>
-    </div>
-
-    {% endif %}
 
     <div class="bg-body-tertiary main-div p-5 live-tables bg-success bg-opacity-50" id="liveMainDiv">
         <div class="tabs-div mb-4">
