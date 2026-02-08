@@ -10,8 +10,11 @@ import requests as req
 from itertools import islice, cycle
 
 def add_first_leg_goals(votes, goals):
+    if votes[1][2] == 'hidden': #PLEASE, change it to dict!
+        return votes
+    
     #add first leg goals
-    current_ngoals = votes[1][9] #NGoals
+    current_ngoals = votes[1][9] #NGoals 
     votes[1].append(current_ngoals + goals) #NGoals first leg
 
     return votes
@@ -57,6 +60,9 @@ def add_extratime_penalties_flag(votes):
     return votes
 
 def get_goalkeeper_from_votes(votes, istotal=False):
+    if votes[1][2] == 'hidden': #PLEASE, change it to dict!
+        return ['',6] #default vote for hidden lineups, should not be used for penalties calculation but just in case
+
     if not istotal:
         votes_tit = votes[0]
         return [votes_tit[0].Player.Surname, votes_tit[0].Vote]
