@@ -225,31 +225,6 @@ table .w-30 {
   }
 }
 
-
-@media (max-width: 800px) {
-  /* .modal.mobile-fullscreen .modal-dialog {
-    margin: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    max-width: 100% !important;
-  }
-
-  .modal.mobile-fullscreen .modal-content {
-    height: 100vh !important;
-    border-radius: 0 !important;
-  } */
-
-  /* .modal.mobile-fullscreen .modal-body {
-    overflow-y: auto !important;
-  } */
-}
-
-
-/* .modal-dialog {
-  top: 10vh;
-  right: 5vw;
-} */
-
 .selectors-div button {
   margin-left: .5em;
 }
