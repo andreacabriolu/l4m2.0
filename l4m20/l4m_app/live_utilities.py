@@ -782,13 +782,18 @@ def get_live_votes(day, comp=1):
         
         d_start = datetime.datetime.strptime(score['rawdate'], '%Y-%m-%d %H:%M').replace(tzinfo=ZoneInfo('Europe/Rome'))
         delta_start = datetime.timedelta(minutes=5) #start live 5 minutes before the match
-        delta_end = datetime.timedelta(minutes=135) #stop live 135 minutes after the match
+        # delta_end = datetime.timedelta(minutes=135) #stop live 135 minutes after the match
 
-        isLive = d_start - delta_start < datetime.datetime.now(ZoneInfo('Europe/Rome')) < d_start + delta_end
-
-        if(not isLive and d_start < datetime.datetime.now(ZoneInfo('Europe/Rome'))):
+        #check if match has been set as over by the batch
+        real_match = real_calendar.Real_calendar.objects.filter(
+            Q(Day=current_day) & \
+            (Q(RealTeamHome_id=U.get_real_team_by_name(score['home_name'])) & Q(RealTeamAway_id=U.get_real_team_by_name(score['away_name']))))
+        if real_match and real_match[0].FT:
+            isLive = False
             already_played_teams.append(score['home_name'])
             already_played_teams.append(score['away_name'])
+        else:
+            isLive = d_start - delta_start < datetime.datetime.now(ZoneInfo('Europe/Rome'))            
 
         if (not isLive):
             continue 
