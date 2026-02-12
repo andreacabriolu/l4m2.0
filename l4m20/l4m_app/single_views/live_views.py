@@ -73,19 +73,13 @@ class GetPenaltiesView(View):
 
             else: #VALIDO PER TUTTE LE ALTRE COMPETIZIONI
                 lineup = U.get_last_lineup(t, day, comp_id=competition_id)[0]
-                opponent_lineup = U.get_last_lineup(opponent, day, comp_id=competition_id)[0]
+                is_opponent_lineup = U.check_lineup_exists(opponent, day, comp_id=competition_id)
 
-                if opponent_lineup is None:
+                if not is_opponent_lineup:
                     gk_opponent_surname, gk_opponent_vote = '', 6 #default gk vote if no lineup
                 else:
-                    votes_home = LU.get_votes(lineup, 
-                                            day, 
-                                            live_votes=live_votes, 
-                                            live_teams=live_teams, 
-                                            already_played_teams=already_played_teams, 
-                                            my_teamid=None, 
-                                            home=True, 
-                                            homeAway=None)
+                    opponent_lineup = U.get_last_lineup(opponent, day, comp_id=competition_id)[0]
+                    
                     
                     votes_opponent = LU.get_votes(opponent_lineup, 
                                             day, 
@@ -98,6 +92,15 @@ class GetPenaltiesView(View):
                                             
                     gk_opponent_surname, gk_opponent_vote = LU.get_goalkeeper_from_votes(votes_opponent)
 
+                votes_home = LU.get_votes(lineup, 
+                                        day, 
+                                        live_votes=live_votes, 
+                                        live_teams=live_teams, 
+                                        already_played_teams=already_played_teams, 
+                                        my_teamid=None, 
+                                        home=True, 
+                                        homeAway=None)
+                
                 penalties_results = LU.calculate_penalties_single_team(lineup, gk_opponent_vote, votes_home)
                 pen_results = penalties_results.get('pen_results', {})
         

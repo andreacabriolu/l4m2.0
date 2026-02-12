@@ -8,6 +8,11 @@ from zoneinfo import ZoneInfo
 from l4m20 import constants as C
 import requests as req
 
+def check_lineup_exists(teamid, day, comp_id=1):
+    my_series = get_my_series(teamid, comp_id)
+    lineup_exists = lineup.Lineup.objects.filter(Team=teamid, Day=day, Series__in=my_series).exists()
+    return lineup_exists
+
 def is_series_girone(series_id):
     s = series.Series.objects.get(pk=series_id)
     return s.IsGirone if s is not None else False
