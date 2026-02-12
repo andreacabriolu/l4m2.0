@@ -75,25 +75,28 @@ class GetPenaltiesView(View):
                 lineup = U.get_last_lineup(t, day, comp_id=competition_id)[0]
                 opponent_lineup = U.get_last_lineup(opponent, day, comp_id=competition_id)[0]
 
-                votes_home = LU.get_votes(lineup, 
-                                        day, 
-                                        live_votes=live_votes, 
-                                        live_teams=live_teams, 
-                                        already_played_teams=already_played_teams, 
-                                        my_teamid=None, 
-                                        home=True, 
-                                        homeAway=None)
-                
-                votes_opponent = LU.get_votes(opponent_lineup, 
-                                        day, 
-                                        live_votes=live_votes, 
-                                        live_teams=live_teams, 
-                                        already_played_teams=already_played_teams,
-                                        my_teamid=None,
-                                        home=False,
-                                        homeAway=None)
-                                        
-                gk_opponent_surname, gk_opponent_vote = LU.get_goalkeeper_from_votes(votes_opponent)
+                if opponent_lineup is None:
+                    gk_opponent_surname, gk_opponent_vote = '', 6 #default gk vote if no lineup
+                else:
+                    votes_home = LU.get_votes(lineup, 
+                                            day, 
+                                            live_votes=live_votes, 
+                                            live_teams=live_teams, 
+                                            already_played_teams=already_played_teams, 
+                                            my_teamid=None, 
+                                            home=True, 
+                                            homeAway=None)
+                    
+                    votes_opponent = LU.get_votes(opponent_lineup, 
+                                            day, 
+                                            live_votes=live_votes, 
+                                            live_teams=live_teams, 
+                                            already_played_teams=already_played_teams,
+                                            my_teamid=None,
+                                            home=False,
+                                            homeAway=None)
+                                            
+                    gk_opponent_surname, gk_opponent_vote = LU.get_goalkeeper_from_votes(votes_opponent)
 
                 penalties_results = LU.calculate_penalties_single_team(lineup, gk_opponent_vote, votes_home)
                 pen_results = penalties_results.get('pen_results', {})
@@ -403,10 +406,13 @@ def LiveView(request, competition_id, series_id, day):
                 
                 #check here for extratime and penalties
                 if extratime_penalties: 
-                    if not(isinstance(lineup_couple[0], str) or isinstance(lineup_couple[1], str)):                    
+                    if not isinstance(lineup_couple[0], str):
                         votes_home = LU.add_extratime_penalties_flag(votes_home)
+                            
+                    if not isinstance(lineup_couple[1], str):                    
                         votes_away = LU.add_extratime_penalties_flag(votes_away)
-                        
+
+                    if not isinstance(lineup_couple[0], str) and not isinstance(lineup_couple[1], str):    
                         first_leg = LU.check_and_get_first_leg_results(
                             competition_id, 
                             day, 
