@@ -8,9 +8,9 @@ import utilities as U
 import logging
 logger = logging.getLogger("live_scraper")
 
-logging.basicConfig(filename='log/scarper.log', level=logging.INFO)
+logging.basicConfig(filename='live_parser/log/scarper.log', level=logging.INFO)
 
-TEST = False
+TEST = True
 
 if(not TEST):
     url = "https://publicapi.fantamaster.it/livescores/?tcache=1756165942189"
@@ -37,6 +37,7 @@ try:
 
     players = dict(U.get_players(conn))
     players_realteam = dict(U.get_players_realteam(conn))
+    real_teams = dict(U.get_realteams(conn))
 
     votes = {}
 
@@ -70,6 +71,8 @@ try:
         isLive = score['time'] != C.Events.END_MATCH
         if (isLive): 
             U.set_live(score, votes, players)
+        else:
+            U.set_final(conn, score, real_teams, current_day)
         match_events = score['events']
         U.fill_with_events(match_events, players, votes, players_realteam)
 
