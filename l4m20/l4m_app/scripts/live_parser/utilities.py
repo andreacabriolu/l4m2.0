@@ -3,6 +3,19 @@ import constants as C
 from db_connector import *
 from vote_live import *
 
+def set_final(conn:DB_Connector, score, real_teams, current_day):
+    if score['time'] == C.Events.END_MATCH:
+        team_home = real_teams[score['home_name']]
+        team_away = real_teams[score['away_name']]
+        if team_home is None or team_away is None:
+            # logger.error(f"Error in set_final: team_home or team_away is None for score {score}")
+            return
+        
+        conn.update(table="l4m_app_real_calendar", set='"FT"=true', 
+                    conditions='"Day"=%s AND "RealTeamHome_id"=%s AND "RealTeamAway_id"=%s', 
+                    data=(current_day, team_home, team_away))
+        pass
+
 def report_old_players_missing_from_csv(players_db, players_csv):
     missing_players = []
     for player_name_db in players_db:
@@ -27,7 +40,6 @@ def calculate_totvote(v):
     (v.Yel * C.Scores.YELLOW)  
 
     return sum
-
 
 def report_players_name_alignment(players_csv, players_db):
     report = {

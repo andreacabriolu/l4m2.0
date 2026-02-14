@@ -13,6 +13,9 @@ def check_lineup_exists(teamid, day, comp_id=1):
     lineup_exists = lineup.Lineup.objects.filter(Team=teamid, Day=day, Series__in=my_series).exists()
     return lineup_exists
 
+def get_real_team_by_name(name):
+    return real_team.RealTeam.objects.filter(Name=name).first()
+
 def is_series_girone(series_id):
     s = series.Series.objects.get(pk=series_id)
     return s.IsGirone if s is not None else False
