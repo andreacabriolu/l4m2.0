@@ -18,17 +18,13 @@ function showInfoAlert(response) {
 window.addEventListener('DOMContentLoaded', event => {
     let rankingDataTable;
     const token = Cookies.get('csrftoken');
-    // const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-    // const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
 
     var comp_id = $('#comp').val();
-    // var my_main_league_series = $('#my_main_league_series').val();
-    // fillSeries(main_league);
 
-    $('#select_series').on('change', function () {
-        rankingDataTable.ajax.reload();
-        calendarDataTable.ajax.reload();
-    });
+    // $('#select_series').on('change', function () {
+    //     rankingDataTable.ajax.reload();
+    //     calendarDataTable.ajax.reload();
+    // });
 
     $(function () {
         rankingDataTable = $('#rankingDataTable').DataTable(

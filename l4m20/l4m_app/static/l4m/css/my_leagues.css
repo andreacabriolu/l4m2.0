@@ -1,3 +1,6 @@
+.main-div {
+  height: 100%;
+}
 
 .main-content-card {
   place-self: center;
@@ -117,7 +120,14 @@
 }
 
 .main-league-div {
-  background-color: #161817;
+    padding: 1.5rem;
+    background: #0f172a;
+}
+
+@media (max-width:800px) {
+.main-league-div {
+    padding: 0.5rem;
+  }
 }
 
 
@@ -220,4 +230,153 @@ tr.group:hover {
 :root.dark tr.group:hover {
     background-color: lightgray !important;
     font-weight: bolder;
+}
+
+
+
+.nav-link-stage.active {
+  background-color: #5dac59 !important;
+  color: #fff !important;
+  font-weight: bold;
+}
+
+.nav-link-stage {
+  position: relative;
+  color: #c9d6e9;
+  background: #5dac59 !important ;
+  border-radius: 999px;
+  padding: 0.45rem 0.9rem;
+  margin: 0 0.15rem;
+
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
+}
+
+.nav-link-stage:hover {
+  color: #e6ecf5;
+  background-color: rgba(93, 172, 89, 0.12);
+  box-shadow: 0 0 0 1px rgba(93, 172, 89, 0.25);
+  transform: translateY(-1px);
+}
+
+.nav-link-stage:active {
+  transform: scale(0.97);
+}
+
+.competition-hero {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    border-radius: 20px;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+/* subtle glow accent */
+.competition-hero::after {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: 50%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(59,130,246,0.25) 0%, transparent 70%);
+    transform: translateX(-50%);
+    pointer-events: none;
+}
+
+.competition-logo img {
+    width: 90px;
+    height: 90px;
+    object-fit: contain;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.05);
+    padding: 14px;
+}
+
+.competition-title {
+    font-weight: 800;
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: #f8fafc;
+    letter-spacing: 1px;
+}
+
+.competition-subtitle {
+    color: #94a3b8;
+    font-size: 0.95rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+
+.stage-pill {
+    border: none;
+    background: rgba(255,255,255,0.05);
+    color: #cbd5e1;
+    padding: 10px 22px;
+    border-radius: 50px;
+    font-weight: 500;
+    transition: all 0.25s ease;
+}
+
+.stage-pill:hover {
+    background: rgba(59,130,246,0.2);
+    color: #fff;
+}
+
+.stage-pill.active {
+    background: #3b82f6;
+    color: white;
+    box-shadow: 0 4px 14px rgba(59,130,246,0.4);
+}
+
+.stage-scroll-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 8px;
+}
+
+.stage-selector {
+    display: flex;
+    gap: 10px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.stage-selector button {
+    background: #1e293b;
+    border: 1px solid #334155;
+    color: #cbd5e1;
+    padding: 8px 16px;
+    border-radius: 12px;
+    white-space: nowrap;
+    transition: 0.2s;
+}
+
+.stage-selector button.active {
+    background: #2563eb;
+    color: white;
+    border-color: #2563eb;
+}
+
+.glow-divider {
+    position: relative;
+    height: 1px;
+    margin: 2rem 0;
+    background: rgba(148,163,184,0.15);
+}
+
+.glow-divider::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 3px;
+    border-radius: 3px;
+    background: #3b82f6;
+    box-shadow: 0 0 12px rgba(59,130,246,0.6);
 }
