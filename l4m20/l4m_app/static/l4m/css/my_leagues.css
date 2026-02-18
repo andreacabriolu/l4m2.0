@@ -380,3 +380,147 @@ tr.group:hover {
     background: #3b82f6;
     box-shadow: 0 0 12px rgba(59,130,246,0.6);
 }
+
+.stage-panel {
+    transition: opacity 0.25s ease;
+}
+
+.stage-panel.d-none {
+    opacity: 0;
+}
+
+
+.bracket {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(220px, 1fr);
+  gap: 3rem;
+  align-items: start;
+  padding: 1.5rem 0;
+  overflow-x: auto;
+}
+
+.bracket-round {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.bracket-round-title {
+  text-align: center;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: #cfd6e6;
+  opacity: 0.85;
+}
+
+.bracket-match {
+  position: relative;
+  background: linear-gradient(
+    180deg,
+    #1c2330,
+    #161b26
+  );
+  border-radius: 14px;
+  padding: 0.75rem 0.9rem;
+  min-height: 64px;
+
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 6px 16px rgba(0, 0, 0, 0.4);
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.bracket-match:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 0 1px rgba(90, 160, 255, 0.35),
+    0 10px 24px rgba(0, 0, 0, 0.6);
+}
+
+.bracket-team {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  line-height: 1.2;
+  color: #dce2ef;
+}
+
+.bracket-team + .bracket-team {
+  margin-top: 0.35rem;
+}
+
+.bracket-score {
+  font-weight: 600;
+  color: #9fb7ff;
+  min-width: 3rem;
+  text-align: right;
+}
+
+.bracket-team.winner {
+  color: #ffffff;
+}
+
+.bracket-team.winner .bracket-score {
+  color: #5cff9d;
+}
+
+.bracket-match::after {
+  content: "";
+  position: absolute;
+  right: -1.5rem;
+  top: 50%;
+  width: 1.5rem;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    rgba(90,160,255,0.8),
+    rgba(90,160,255,0.2)
+  );
+}
+
+.bracket-round.final .bracket-match::after {
+  display: none;
+}
+
+.bracket-match.final {
+  padding: 1.2rem;
+  text-align: center;
+  background: linear-gradient(
+    180deg,
+    #1f2a3d,
+    #151b28
+  );
+}
+
+.bracket-champion {
+  margin-top: 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #5ab0ff;
+  letter-spacing: 0.05em;
+}
+
+.bracket-trophy {
+  font-size: 1.8rem;
+  margin-bottom: 0.3rem;
+}
+
+@media (max-width: 576px) {
+  .bracket {
+    gap: 2rem;
+  }
+
+  .bracket-match:hover {
+    transform: none;
+  }
+
+  .bracket-match::after {
+    opacity: 0.4;
+  }
+}
+

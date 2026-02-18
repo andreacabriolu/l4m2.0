@@ -26,6 +26,98 @@ window.addEventListener('DOMContentLoaded', event => {
     //     calendarDataTable.ajax.reload();
     // });
 
+    const gironiPanel = document.getElementById("gironi-content");
+    const finalPanel = document.getElementById("final-content");
+
+    const stageButtons = document.querySelectorAll(".stage-pill");
+
+    let rankingTable = null;
+    let calendarTable = null;
+    let bracketInitialized = false;
+
+    stageButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+            const stage = btn.dataset.stage;
+
+            // toggle active button
+            stageButtons.forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+
+            if (stage === "girone") {
+                showGironi();
+            } else {
+                showFinal();
+            }
+        });
+    });
+
+    function showGironi() {
+        finalPanel.classList.add("d-none");
+        gironiPanel.classList.remove("d-none");
+
+        if (!rankingTable) {
+            initializeGironiTables();
+        } else {
+            rankingTable.columns.adjust();
+            calendarTable.columns.adjust();
+        }
+    }
+
+    function showFinal() {
+        gironiPanel.classList.add("d-none");
+        finalPanel.classList.remove("d-none");
+
+        if (!bracketInitialized) {
+            initializeBracket();
+            bracketInitialized = true;
+        }
+    }
+
+    function initializeGironiTables() {
+    rankingTable = $("#rankingTable").DataTable({
+        responsive: true,
+        autoWidth: false
+    });
+
+    calendarTable = $("#calendarTable").DataTable({
+        responsive: true,
+        autoWidth: false
+    });
+    }
+
+    function initializeBracket() {
+    const container = document.getElementById("bracketContainer");
+
+    container.innerHTML = `
+        <div class="bracket">
+  <div class="bracket-round">
+    <div class="bracket-round-title">Quarterfinals</div>
+
+    <div class="bracket-match">
+      <div class="bracket-team winner">
+        Team A <span class="bracket-score">2</span>
+      </div>
+      <div class="bracket-team">
+        Team B <span class="bracket-score">1</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="bracket-round final">
+    <div class="bracket-round-title">Final</div>
+
+    <div class="bracket-match final">
+      <div class="bracket-trophy">🏆</div>
+      <div class="bracket-champion">TEAM A</div>
+    </div>
+  </div>
+</div>
+
+    `;
+}
+
+
+
     $(function () {
         rankingDataTable = $('#rankingDataTable').DataTable(
             {
