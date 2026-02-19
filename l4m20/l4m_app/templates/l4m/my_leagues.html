@@ -32,51 +32,22 @@
 
     <div class="main-div main-league-div" id="myLeaguesDiv">
 
-        <div class="competition-hero text-center py-5 px-3">
-
-            <div class="competition-logo mb-3">
-                {% if logo_path %}
-                {% static 'l4m/images/comp_logos/' as comp_logos_path %}
-                <img src="{{comp_logos_path}}{{logo_path}}" loading="lazy">
-                {% else %}
-                <img src="{% static 'l4m/images/logo.jpeg' %}" loading="lazy">
-                {% endif %}
-            </div>
-
-            <h1 class="competition-title mb-2">
-                {{comp.Name}}
-            </h1>
-
-        </div>
+        {% include "l4m/competitions/hero.html" %}
 
         <div class="competition-divider glow-divider"></div>
 
-        <div class="top-table">
-            <div class="tabs-div mb-4">
-                <div class="stage-tabs-wrapper mb-4">
-                    <ul class="nav nav-pills justify-content-center stage-tabs gap-2">
-                        <li class="nav-item">
-                            <button class="stage-pill active" data-stage="girone" data-bs-target="#girone"
-                                data-bs-toggle="tab" type="button">
-                                GIRONI
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button class="stage-pill" data-stage="fase_finale" data-bs-target="#fase_finale"
-                                data-bs-toggle="tab" type="button">
-                                FASE FINALE
-                            </button>
-                        </li>
-                    </ul>
-                </div>
 
-            </div>
+
+        <div class="top-table">
+            
+            {% include "l4m/competitions/stage_tabs.html" %}
 
             <!-- {{ comp_data|json_script:"comp-data" }} -->
 
             <div class="d-flex justify-content-center my-3">
                 <div class="stage-scroll-container">
                     <ul class="stage-selector">
+
                         <div class="stage-content-wrapper">
 
                             <!-- GIRONI CONTENT -->

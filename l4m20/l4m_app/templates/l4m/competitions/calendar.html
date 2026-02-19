@@ -1,0 +1,15 @@
+{% for day in group.matchdays %}
+    <div class="matchday-block">
+        <div class="matchday-header">
+            Giornata {{ day.number }}
+        </div>
+
+        {% for match in day.matches %}
+            <div class="match-card">
+                <div class="team home">{{ match.home }}</div>
+                <div class="score">{{ match.score }}</div>
+                <div class="team away">{{ match.away }}</div>
+            </div>
+        {% endfor %}
+    </div>
+{% endfor %}

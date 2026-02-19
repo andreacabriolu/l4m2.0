@@ -8,6 +8,38 @@ from zoneinfo import ZoneInfo
 from l4m20 import constants as C
 import requests as req
 
+def get_bracket_data_for_competition(competition_id):
+    bracket_data = []
+    final_series = get_all_final_series(competition_id)
+
+    for s in final_series:
+        matches = matches_calendar.MatchesCalendar.objects.filter(Series_id=s.id).select_related('HomeTeam','AwayTeam','CompetitionCalendar').values('id','HomeTeam__Name','AwayTeam__Name','CompetitionCalendar__Day')
+        results = matches_results.MatchesResults.objects.filter(MatchesCalendar__Series_id=s.id).values('MatchesCalendar_id','Team_id','NGoals')
+        bracket_data.append({
+            'series_name': s.Name,
+            'matches': list(matches),
+            'results': list(results)
+        })
+
+    return bracket_data
+
+def get_groups_data_for_competition(competition_id):
+    groups_data = []
+    series_girone = get_all_series_girone(competition_id)
+
+    for s in series_girone:
+        group_teams = team.Team.objects.filter(Series__id=s.id).values('id','Name')
+        group_matches = matches_calendar.MatchesCalendar.objects.filter(Series_id=s.id).select_related('HomeTeam','AwayTeam','CompetitionCalendar').values('id','HomeTeam__Name','AwayTeam__Name','CompetitionCalendar__Day')
+        group_results = matches_results.MatchesResults.objects.filter(MatchesCalendar__Series_id=s.id).values('MatchesCalendar_id','Team_id','NGoals')
+        groups_data.append({
+            'group_name': s.Name,
+            'teams': list(group_teams),
+            'matches': list(group_matches),
+            'results': list(group_results)
+        })
+
+    return groups_data
+
 def check_lineup_exists(teamid, day, comp_id=1):
     my_series = get_my_series(teamid, comp_id)
     lineup_exists = lineup.Lineup.objects.filter(Team=teamid, Day=day, Series__in=my_series).exists()

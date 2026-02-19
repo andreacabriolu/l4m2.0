@@ -22,12 +22,16 @@ class MyLeaguesView(LoginRequiredMixin, View):
         logo_path = comp.LogoPath
         day = U.get_current_day()
 
+
+
         params = {
             'comp' : comp,
-            'my_series' : my_series.first() if my_series.exists() else None,
-            'all_series' : all_series,
+            # 'my_series' : my_series.first() if my_series.exists() else None,
+            # 'all_series' : all_series,
             'logo_path': logo_path,
-            'day': day,
+            # 'day': day,
+            'groups-data': U.get_groups_data_for_competition(competition_id),
+            'bracket-data': U.get_bracket_data_for_competition(competition_id),
         }
         
         return render(request, self.template_name, params)

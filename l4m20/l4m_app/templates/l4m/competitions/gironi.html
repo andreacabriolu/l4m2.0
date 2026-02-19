@@ -1,0 +1,11 @@
+<div id="gironi-panel" class="{% if current_stage != 'girone' %}d-none{% endif %}">
+
+    <!-- {% include "competition/group_selector.html" %} -->
+
+    <div id="group-content">
+        {% for group in groups %}
+            {% include "competition/group_block.html" %}
+        {% endfor %}
+    </div>
+
+</div>

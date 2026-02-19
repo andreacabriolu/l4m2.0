@@ -1,0 +1,11 @@
+<div id="fase-finale-panel" class="{% if current_stage != 'fase-finale' %}d-none{% endif %}">
+
+    <!-- {% include "competition/_group_selector.html" %} -->
+
+    <div id="group-content">
+        {% for group in groups %}
+            {% include "competition/group_block.html" %}
+        {% endfor %}
+    </div>
+
+</div>

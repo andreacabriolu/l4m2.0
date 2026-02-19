@@ -26,9 +26,8 @@ window.addEventListener('DOMContentLoaded', event => {
     //     calendarDataTable.ajax.reload();
     // });
 
-    const gironiPanel = document.getElementById("gironi-content");
-    const finalPanel = document.getElementById("final-content");
-
+    const gironiPanel = document.getElementById("gironi-panel");
+    const finalPanel = document.getElementById("fase-finale-panel");
     const stageButtons = document.querySelectorAll(".stage-pill");
 
     let rankingTable = null;
@@ -37,58 +36,67 @@ window.addEventListener('DOMContentLoaded', event => {
 
     stageButtons.forEach(btn => {
         btn.addEventListener("click", () => {
-            const stage = btn.dataset.stage;
+            gironiPanel
+                .classList.toggle("d-none", btn.dataset.stage !== "girone");
 
-            // toggle active button
-            stageButtons.forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-
-            if (stage === "girone") {
-                showGironi();
-            } else {
-                showFinal();
-            }
+            finalPanel
+                .classList.toggle("d-none", btn.dataset.stage !== "fase-finale");
         });
     });
 
-    function showGironi() {
-        finalPanel.classList.add("d-none");
-        gironiPanel.classList.remove("d-none");
+    // stageButtons.forEach(btn => {
+    //     btn.addEventListener("click", () => {
+    //         const stage = btn.dataset.stage;
 
-        if (!rankingTable) {
-            initializeGironiTables();
-        } else {
-            rankingTable.columns.adjust();
-            calendarTable.columns.adjust();
-        }
-    }
+    //         stageButtons.forEach(b => b.classList.remove("active"));
+    //         btn.classList.add("active");
 
-    function showFinal() {
-        gironiPanel.classList.add("d-none");
-        finalPanel.classList.remove("d-none");
+    //         if (stage === "girone") {
+    //             showGironi();
+    //         } else {
+    //             showFinal();
+    //         }
+    //     });
+    // });
 
-        if (!bracketInitialized) {
-            initializeBracket();
-            bracketInitialized = true;
-        }
-    }
+    // function showGironi() {
+    //     finalPanel.classList.add("d-none");
+    //     gironiPanel.classList.remove("d-none");
+
+    //     if (!rankingTable) {
+    //         initializeGironiTables();
+    //     } else {
+    //         rankingTable.columns.adjust();
+    //         calendarTable.columns.adjust();
+    //     }
+    // }
+
+    // function showFinal() {
+    //     gironiPanel.classList.add("d-none");
+    //     finalPanel.classList.remove("d-none");
+
+    //     if (!bracketInitialized) {
+    //         initializeBracket();
+    //         bracketInitialized = true;
+    //     }
+    // }
 
     function initializeGironiTables() {
-    rankingTable = $("#rankingTable").DataTable({
-        responsive: true,
-        autoWidth: false
-    });
+        rankingTable = $("#rankingTable").DataTable({
+            responsive: true,
+            autoWidth: false
+        });
 
-    calendarTable = $("#calendarTable").DataTable({
-        responsive: true,
-        autoWidth: false
-    });
+        calendarTable = $("#calendarTable").DataTable({
+            responsive: true,
+            autoWidth: false
+        });
     }
 
     function initializeBracket() {
-    const container = document.getElementById("bracketContainer");
+        const container = document.getElementById("bracketContainer");
 
-    container.innerHTML = `
+        container.innerHTML = `
         <div class="bracket">
   <div class="bracket-round">
     <div class="bracket-round-title">Quarterfinals</div>
@@ -114,7 +122,7 @@ window.addEventListener('DOMContentLoaded', event => {
 </div>
 
     `;
-}
+    }
 
 
 
@@ -192,8 +200,8 @@ window.addEventListener('DOMContentLoaded', event => {
                     data:
                         function (d) {
                             d.s_id = $('#select_series').children('option:selected').data().id,
-                            d.day = $('#day').val(),
-                            d.csrfmiddlewaretoken = token
+                                d.day = $('#day').val(),
+                                d.csrfmiddlewaretoken = token
                         },
                     dataSrc: "calendarlines",
                 },
@@ -201,7 +209,7 @@ window.addEventListener('DOMContentLoaded', event => {
                     { visible: false, targets: groupColumn },
                     { className: "dt-teamname-home-calendar", targets: [1] },
                     { className: "dt-teamname-away-calendar", targets: [4] },
-                    { className: "dt-teampt-calendar", targets: [2,3] },
+                    { className: "dt-teampt-calendar", targets: [2, 3] },
                 ],
                 initComplete: function (settings, json) {
                     // $('#team_h_camp').removeClass('dt-teamname');
