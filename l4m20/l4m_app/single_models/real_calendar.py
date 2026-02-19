@@ -12,4 +12,4 @@ class Real_calendar(models.Model):
     FT = models.BooleanField(default=False) #full time flag, to know if the match has been played or not
     
     def __str__(self):
-       return f"{self.RealTeamHome.Name} vs {self.RealTeamAway.Name}"
+       return f"Day {self.Day}:{self.RealTeamHome.Name} vs {self.RealTeamAway.Name}"
