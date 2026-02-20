@@ -1,10 +1,24 @@
 <div id="gironi-panel" class="{% if current_stage != 'girone' %}d-none{% endif %}">
 
-    <!-- {% include "competition/group_selector.html" %} -->
+    <div class="group-selector-wrapper mb-4">
+        <ul class="group-selector nav nav-pills justify-content-center">
+            {% for group in groups_data %}
+                <li class="nav-item">
+                    <button
+                        class="group-pill {% if forloop.first %}active{% endif %}"
+                        data-group="group-{{ forloop.counter }}"
+                        type="button">
+                        {{ group.name }}
+                    </button>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
 
     <div id="group-content">
-        {% for group in groups %}
-            {% include "competition/group_block.html" %}
+        {% for group in groups_data %}
+            {% include "l4m/competitions/group_block.html" with group=group %}
         {% endfor %}
     </div>
 

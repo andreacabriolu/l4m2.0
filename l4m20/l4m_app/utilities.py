@@ -32,7 +32,7 @@ def get_groups_data_for_competition(competition_id):
         group_matches = matches_calendar.MatchesCalendar.objects.filter(Series_id=s.id).select_related('HomeTeam','AwayTeam','CompetitionCalendar').values('id','HomeTeam__Name','AwayTeam__Name','CompetitionCalendar__Day')
         group_results = matches_results.MatchesResults.objects.filter(MatchesCalendar__Series_id=s.id).values('MatchesCalendar_id','Team_id','NGoals')
         groups_data.append({
-            'group_name': s.Name,
+            'name': s.Name,
             'teams': list(group_teams),
             'matches': list(group_matches),
             'results': list(group_results)

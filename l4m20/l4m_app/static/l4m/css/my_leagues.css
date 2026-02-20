@@ -524,3 +524,32 @@ tr.group:hover {
   }
 }
 
+.group-selector {
+    gap: 10px;
+}
+
+.group-pill {
+    border: none;
+    background: rgba(255,255,255,0.05);
+    color: #cbd5e1;
+    padding: 8px 18px;
+    border-radius: 50px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.group-pill:hover {
+    background: rgba(59,130,246,0.2);
+    color: white;
+}
+
+.group-pill.active {
+    background: #2563eb;
+    color: white;
+    box-shadow: 0 4px 12px rgba(37,99,235,0.4);
+}
+
+.group-selector-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}

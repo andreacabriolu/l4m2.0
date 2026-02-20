@@ -1,7 +1,7 @@
 {% extends "./base.html" %}
 {% load static %}
 
-{% block title %} L4M2.0 - IL MIO CAMPIONATO {% endblock %}
+{% block title %} L4M2.0 - COMPETIZIONI {% endblock %}
 
 {% block links %}
 <link href="{% static 'l4m/css/my_leagues.css' %}" rel="stylesheet">
@@ -31,31 +31,33 @@
     </div>
 
     <div class="main-div main-league-div" id="myLeaguesDiv">
+        <!-- {{ comp_data|json_script:"comp-data" }} -->
 
         {% include "l4m/competitions/hero.html" %}
 
         <div class="competition-divider glow-divider"></div>
 
-
-
         <div class="top-table">
             
             {% include "l4m/competitions/stage_tabs.html" %}
 
-            <!-- {{ comp_data|json_script:"comp-data" }} -->
+            <div class="stage-content">
 
-            <div class="d-flex justify-content-center my-3">
+                {% include "l4m/competitions/gironi.html" %}
+                {% include "l4m/competitions/fase_finale.html" %}
+            
+            </div>
+            
+            <!-- <div class="d-flex justify-content-center my-3">
                 <div class="stage-scroll-container">
                     <ul class="stage-selector">
 
                         <div class="stage-content-wrapper">
 
-                            <!-- GIRONI CONTENT -->
                             <div id="gironi-content" class="stage-panel">
 
                                 <div class="groups-subpills mb-3">
                                     <ul class="nav nav-pills group-selector">
-                                        <!-- dynamically injected group buttons -->
                                     </ul>
                                 </div>
 
@@ -69,18 +71,16 @@
 
                             </div>
 
-                            <!-- FINAL STAGE CONTENT -->
                             <div id="final-content" class="stage-panel d-none">
                                 <div id="bracketContainer"></div>
                             </div>
 
                         </div>
 
-                        <!-- dynamic buttons -->
                     </ul>
                 </div>
 
-            </div>
+            </div> -->
         </div>
 
 

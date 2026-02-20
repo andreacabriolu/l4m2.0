@@ -30,8 +30,8 @@ class MyLeaguesView(LoginRequiredMixin, View):
             # 'all_series' : all_series,
             'logo_path': logo_path,
             # 'day': day,
-            'groups-data': U.get_groups_data_for_competition(competition_id),
-            'bracket-data': U.get_bracket_data_for_competition(competition_id),
+            'groups_data': U.get_groups_data_for_competition(competition_id),
+            'bracket_data': U.get_bracket_data_for_competition(competition_id),
         }
         
         return render(request, self.template_name, params)
