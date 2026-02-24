@@ -8,6 +8,29 @@ from zoneinfo import ZoneInfo
 from l4m20 import constants as C
 import requests as req
 
+def parse_ranking_line(ranking_line):
+    json_l = json.loads(ranking_line)
+    lines = []
+    
+    for l in json_l:
+        line = {}
+        for k,v in l.items():
+            line['team'] = team.Team.objects.get(pk=k).Name.upper()
+            for _k,_v in v.items():
+                line[_k] = int(_v)
+
+        lines.append(line)
+    
+    #sort by pt and then by fpt
+    lines.sort(key=lambda x: (x.get('pt', 0), x.get('fpt', 0)), reverse=True)
+
+    return lines
+
+def get_current_stage(competition_id):
+    current_day = get_current_day(competition_id)
+    cc = competition_calendar.CompetitionCalendar.objects.filter(Q(Competition=competition_id) & Q(Day=current_day)).values('Stage')
+    return cc.first()['Stage'] if len(cc) > 0 else None
+
 def get_bracket_data_for_competition(competition_id):
     bracket_data = []
     final_series = get_all_final_series(competition_id)
@@ -23,6 +46,37 @@ def get_bracket_data_for_competition(competition_id):
 
     return bracket_data
 
+def get_matchdays_info(series):
+    matchdays_info = {}
+
+    matchdays = matches_calendar.MatchesCalendar.objects.filter(Series_id=series.id).\
+        select_related('CompetitionCalendar').values('CompetitionCalendar__Day').distinct()
+
+    for md in matchdays:
+        if 'matchdays' not in matchdays_info:
+            day = md['CompetitionCalendar__Day']
+
+            results = list(matches_results.MatchesResults.objects.\
+                    filter(MatchesCalendar__Series_id=series.id, MatchesCalendar__CompetitionCalendar__Day=day).\
+                    values('MatchesCalendar_id','Team_id','NGoals'))
+            
+            match_results = {}
+
+            for result in results:
+                mc_id = result['MatchesCalendar_id']
+                if mc_id not in match_results:
+                    match_results[mc_id] = []
+                match_results[mc_id].append({
+                    'Team_id': result['Team_id'],
+                    'NGoals': result['NGoals']
+                })
+
+            
+            matchdays_info[day] = match_results  
+
+    return matchdays_info
+
+
 def get_groups_data_for_competition(competition_id):
     groups_data = []
     series_girone = get_all_series_girone(competition_id)
@@ -31,11 +85,16 @@ def get_groups_data_for_competition(competition_id):
         group_teams = team.Team.objects.filter(Series__id=s.id).values('id','Name')
         group_matches = matches_calendar.MatchesCalendar.objects.filter(Series_id=s.id).select_related('HomeTeam','AwayTeam','CompetitionCalendar').values('id','HomeTeam__Name','AwayTeam__Name','CompetitionCalendar__Day')
         group_results = matches_results.MatchesResults.objects.filter(MatchesCalendar__Series_id=s.id).values('MatchesCalendar_id','Team_id','NGoals')
+        group_matchdays = get_matchdays_info(s)
+        group_ranking = parse_ranking_line(ranking.Ranking.objects.filter(Q(Series_id=s.id)).values_list('RankingLine', flat=True).order_by('-Day').first())
+
         groups_data.append({
+            'id': s.id,
             'name': s.Name,
             'teams': list(group_teams),
-            'matches': list(group_matches),
-            'results': list(group_results)
+            'matchdays': list(group_matchdays),
+            # 'results': list(group_results),
+            'ranking': list(group_ranking)
         })
 
     return groups_data

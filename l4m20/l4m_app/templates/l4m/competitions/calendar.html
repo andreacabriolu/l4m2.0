@@ -1,15 +1,41 @@
 {% for day in group.matchdays %}
-    <div class="matchday-block">
-        <div class="matchday-header">
-            Giornata {{ day.number }}
-        </div>
+<div class="matchday-block">
+
+    <div class="matchday-header">
+        <span class="matchday-title">Giornata {{ day.number }}</span>
+        {% if day.is_live %}
+            <span class="live-badge">LIVE</span>
+        {% endif %}
+    </div>
+
+    <div class="matchday-matches">
 
         {% for match in day.matches %}
-            <div class="match-card">
-                <div class="team home">{{ match.home }}</div>
-                <div class="score">{{ match.score }}</div>
-                <div class="team away">{{ match.away }}</div>
+        <div class="match-card {% if match.is_live %}live{% endif %}">
+
+            <div class="team team-home">
+                <span class="team-name">{{ match.home }}</span>
             </div>
+
+            <div class="match-center">
+                {% if match.played %}
+                    <div class="score">
+                        {{ match.home_score }} - {{ match.away_score }}
+                    </div>
+                {% else %}
+                    <div class="kickoff">
+                        {{ match.kickoff_time }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="team team-away">
+                <span class="team-name">{{ match.away }}</span>
+            </div>
+
+        </div>
         {% endfor %}
+
     </div>
+</div>
 {% endfor %}

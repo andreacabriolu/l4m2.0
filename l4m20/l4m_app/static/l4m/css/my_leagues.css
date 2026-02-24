@@ -1,3 +1,7 @@
+.custom-layout {
+  background-color: #0f172a;
+}
+
 .main-div {
   height: 100%;
 }
@@ -553,3 +557,92 @@ tr.group:hover {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
 }
+
+.ranking-table {
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #111827;
+    border-radius: 16px;
+    overflow: hidden;
+    font-size: 0.9rem;
+}
+
+.ranking-table thead {
+    background: #1f2937;
+}
+
+.ranking-table th {
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    color: #94a3b8;
+    padding: 12px 8px;
+    text-align: center;
+}
+
+.ranking-table th.col-team {
+    text-align: left;
+    padding-left: 16px;
+}
+
+.ranking-table td {
+    padding: 12px 8px;
+    text-align: center;
+    color: #e5e7eb;
+    border-top: 1px solid rgba(255,255,255,0.04);
+}
+
+.ranking-table td.col-team {
+    text-align: left;
+    padding-left: 16px;
+}
+
+.ranking-table tbody tr {
+    transition: background 0.2s ease;
+}
+
+.ranking-table tbody tr:hover {
+    background: rgba(59,130,246,0.08);
+}
+
+.ranking-table .col-pts {
+    font-weight: 700;
+    font-size: 1rem;
+    color: #3b82f6;
+}
+
+.ranking-table .col-pos {
+    font-weight: 600;
+    color: #9ca3af;
+}
+
+.ranking-table .col-pos {
+    width: 36px;
+}
+
+.ranking-table .col-pos span {
+    display: inline-block;
+    width: 26px;
+    height: 26px;
+    line-height: 26px;
+    border-radius: 50%;
+    background: #1f2937;
+}
+
+.ranking-table tr.qualified {
+    border-left: 4px solid #22c55e;
+}
+
+.ranking-table tr.relegated {
+    border-left: 4px solid #ef4444;
+}
+
+@media (max-width: 768px) {
+
+    .ranking-table th:nth-child(n+6),
+    .ranking-table td:nth-child(n+6) {
+        display: none;
+    }
+
+}
+

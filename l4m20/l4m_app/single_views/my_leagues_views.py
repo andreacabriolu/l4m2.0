@@ -30,6 +30,7 @@ class MyLeaguesView(LoginRequiredMixin, View):
             # 'all_series' : all_series,
             'logo_path': logo_path,
             # 'day': day,
+            'current_stage': 'Girone', #TODO restore U.get_current_stage(competition_id),
             'groups_data': U.get_groups_data_for_competition(competition_id),
             'bracket_data': U.get_bracket_data_for_competition(competition_id),
         }
