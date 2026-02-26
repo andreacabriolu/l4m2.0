@@ -47,7 +47,7 @@ def get_bracket_data_for_competition(competition_id):
     return bracket_data
 
 def get_matchdays_info(series):
-    matchdays_info = {}
+    matchdays_info = []
 
     matchdays = matches_calendar.MatchesCalendar.objects.filter(Series_id=series.id).\
         select_related('CompetitionCalendar').values('CompetitionCalendar__Day').distinct()
@@ -56,23 +56,38 @@ def get_matchdays_info(series):
         if 'matchdays' not in matchdays_info:
             day = md['CompetitionCalendar__Day']
 
-            results = list(matches_results.MatchesResults.objects.\
+        results = list(matches_results.MatchesResults.objects.\
                     filter(MatchesCalendar__Series_id=series.id, MatchesCalendar__CompetitionCalendar__Day=day).\
-                    values('MatchesCalendar_id','Team_id','NGoals'))
+                    values('MatchesCalendar_id','Team_id','NGoals','MatchesCalendar__HomeTeam_id','MatchesCalendar__AwayTeam_id'))
             
-            match_results = {}
+        match_results = {}
+        for result in results:
+            mc_id = result['MatchesCalendar_id']
+            if mc_id not in match_results:
+                match_results[mc_id] = {
+                    'home': None,
+                    'away': None,
+                    'home_score': 0,
+                    'away_score': 0,
+                    'played': False
+                }
 
-            for result in results:
-                mc_id = result['MatchesCalendar_id']
-                if mc_id not in match_results:
-                    match_results[mc_id] = []
-                match_results[mc_id].append({
-                    'Team_id': result['Team_id'],
-                    'NGoals': result['NGoals']
-                })
+            match_results[mc_id].update({
+                'home': get_team_name_by_id(result['MatchesCalendar__HomeTeam_id']) if result['MatchesCalendar__HomeTeam_id'] == result['Team_id'] else match_results[mc_id]['home'],
+                'away': get_team_name_by_id(result['MatchesCalendar__AwayTeam_id']) if result['MatchesCalendar__AwayTeam_id'] == result['Team_id'] else match_results[mc_id]['away'],
+                'home_score': result['NGoals'] if result['MatchesCalendar__HomeTeam_id'] == result['Team_id'] else match_results[mc_id]['home_score'],
+                'away_score': result['NGoals'] if result['MatchesCalendar__AwayTeam_id'] == result['Team_id'] else match_results[mc_id]['away_score'],
+                'played': True
+            })
 
             
-            matchdays_info[day] = match_results  
+        matchdays_info.append({
+                'number': day,
+                'is_live': False,
+                'matches': list(match_results.values())
+            })
+        
+        matchdays_info.sort(key=lambda x: x['number'])
 
     return matchdays_info
 
@@ -83,8 +98,6 @@ def get_groups_data_for_competition(competition_id):
 
     for s in series_girone:
         group_teams = team.Team.objects.filter(Series__id=s.id).values('id','Name')
-        group_matches = matches_calendar.MatchesCalendar.objects.filter(Series_id=s.id).select_related('HomeTeam','AwayTeam','CompetitionCalendar').values('id','HomeTeam__Name','AwayTeam__Name','CompetitionCalendar__Day')
-        group_results = matches_results.MatchesResults.objects.filter(MatchesCalendar__Series_id=s.id).values('MatchesCalendar_id','Team_id','NGoals')
         group_matchdays = get_matchdays_info(s)
         group_ranking = parse_ranking_line(ranking.Ranking.objects.filter(Q(Series_id=s.id)).values_list('RankingLine', flat=True).order_by('-Day').first())
 
@@ -92,8 +105,7 @@ def get_groups_data_for_competition(competition_id):
             'id': s.id,
             'name': s.Name,
             'teams': list(group_teams),
-            'matchdays': list(group_matchdays),
-            # 'results': list(group_results),
+            'matchdays': group_matchdays,
             'ranking': list(group_ranking)
         })
 
@@ -708,6 +720,9 @@ def complete_list(l, num_max, role):
 def get_current_day(competition_id=""):
     day = config.Config.objects.filter(Name="CurrentDay").first()
     return day.Value
+
+def get_team_name_by_id(teamid):
+    return team.Team.objects.filter(id=teamid).values('Name')[0]['Name']
 
 def get_team_by_name(tname):
     return team.Team.objects.get(Name=tname)

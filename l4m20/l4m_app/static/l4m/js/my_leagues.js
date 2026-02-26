@@ -187,73 +187,73 @@ window.addEventListener('DOMContentLoaded', event => {
         //     }
         // );
 
-        var groupColumn = 0;
-        calendarDataTable = $('#calendarDataTable').DataTable(
-            {
-                paging: false,
-                searching: false,
-                ordering: false,
-                layout: {
-                    topStart: null,
-                    bottomStart: null,
-                },
-                order: [
-                    [groupColumn, 'asc'],
-                ],
-                drawCallback: function (settings) {
-                    var api = this.api();
-                    var rows = api.rows({ page: 'current' }).nodes();
-                    var last = null;
+        // var groupColumn = 0;
+        // calendarDataTable = $('#calendarDataTable').DataTable(
+        //     {
+        //         paging: false,
+        //         searching: false,
+        //         ordering: false,
+        //         layout: {
+        //             topStart: null,
+        //             bottomStart: null,
+        //         },
+        //         order: [
+        //             [groupColumn, 'asc'],
+        //         ],
+        //         drawCallback: function (settings) {
+        //             var api = this.api();
+        //             var rows = api.rows({ page: 'current' }).nodes();
+        //             var last = null;
 
-                    api.column(groupColumn, { page: 'current' })
-                        .data()
-                        .each(function (group, i) {
-                            if (last !== group) {
-                                $(rows)
-                                    .eq(i)
-                                    .before(
-                                        '<tr class="group"><td colspan="4">' +
-                                        group +
-                                        '</td></tr>'
-                                    );
+        //             api.column(groupColumn, { page: 'current' })
+        //                 .data()
+        //                 .each(function (group, i) {
+        //                     if (last !== group) {
+        //                         $(rows)
+        //                             .eq(i)
+        //                             .before(
+        //                                 '<tr class="group"><td colspan="4">' +
+        //                                 group +
+        //                                 '</td></tr>'
+        //                             );
 
-                                last = group;
-                            }
-                        });
-                },
-                ajax: {
-                    url: "/l4m/retrieveCalendarInfo/",
-                    type: 'GET',
-                    data:
-                        function (d) {
-                            d.s_id = $('#select_series').children('option:selected').data().id,
-                                d.day = $('#day').val(),
-                                d.csrfmiddlewaretoken = token
-                        },
-                    dataSrc: "calendarlines",
-                },
-                columnDefs: [
-                    { visible: false, targets: groupColumn },
-                    { className: "dt-teamname-home-calendar", targets: [1] },
-                    { className: "dt-teamname-away-calendar", targets: [4] },
-                    { className: "dt-teampt-calendar", targets: [2, 3] },
-                ],
-                initComplete: function (settings, json) {
-                    // $('#team_h_camp').removeClass('dt-teamname');
-                    // $('#team_fp_h_camp').removeClass('dt-teampt');
-                },
-            }
-        );
+        //                         last = group;
+        //                     }
+        //                 });
+        //         },
+        //         ajax: {
+        //             url: "/l4m/retrieveCalendarInfo/",
+        //             type: 'GET',
+        //             data:
+        //                 function (d) {
+        //                     d.s_id = $('#select_series').children('option:selected').data().id,
+        //                         d.day = $('#day').val(),
+        //                         d.csrfmiddlewaretoken = token
+        //                 },
+        //             dataSrc: "calendarlines",
+        //         },
+        //         columnDefs: [
+        //             { visible: false, targets: groupColumn },
+        //             { className: "dt-teamname-home-calendar", targets: [1] },
+        //             { className: "dt-teamname-away-calendar", targets: [4] },
+        //             { className: "dt-teampt-calendar", targets: [2, 3] },
+        //         ],
+        //         initComplete: function (settings, json) {
+        //             // $('#team_h_camp').removeClass('dt-teamname');
+        //             // $('#team_fp_h_camp').removeClass('dt-teampt');
+        //         },
+        //     }
+        // );
 
-        $('#calendarDataTable tbody').on('click', 'tr.group', function () {
-            var currentOrder = table.order()[0];
-            if (currentOrder[0] === groupColumn && currentOrder[1] === 'asc') {
-                table.order([[groupColumn, 'desc']]).draw();
-            }
-            else {
-                table.order([[groupColumn, 'asc']]).draw();
-            }
-        });
+        // $('#calendarDataTable tbody').on('click', 'tr.group', function () {
+        //     var currentOrder = table.order()[0];
+        //     if (currentOrder[0] === groupColumn && currentOrder[1] === 'asc') {
+        //         table.order([[groupColumn, 'desc']]).draw();
+        //     }
+        //     else {
+        //         table.order([[groupColumn, 'asc']]).draw();
+        //     }
+        // });
 
     });
 });
