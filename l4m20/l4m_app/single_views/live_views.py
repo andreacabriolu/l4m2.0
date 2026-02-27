@@ -208,12 +208,14 @@ class MyLiveView(LoginRequiredMixin, View):
             if extratime_penalties: 
                 votes_home = LU.add_extratime_penalties_flag(votes_home)
                 votes_away = LU.add_extratime_penalties_flag(votes_away)
+                team_home = lineup_couple[0]['t'].id if _lineup_comp.id == total_league.id else lineup_couple[0].Team.id
+                team_away = lineup_couple[1]['t'].id if _lineup_comp.id == total_league.id else lineup_couple[1].Team.id
 
                 first_leg = LU.check_and_get_first_leg_results(
                         _lineup_comp.id, 
                         current_day, 
-                        lineup_couple[0].Team.id, 
-                        lineup_couple[1].Team.id)
+                        team_home,
+                        team_away)
 
                 if first_leg is not None:
                     votes_home = LU.add_first_leg_goals(votes_home, first_leg[1].NGoals)
