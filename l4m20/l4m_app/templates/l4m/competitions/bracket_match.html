@@ -1,0 +1,17 @@
+<div class="match-box">
+
+    <div class="match-row">
+        <span class="team-name">{{ match.home }}</span>
+        {% if match.played %}
+            <span class="score">{{ match.home_score }}</span>
+        {% endif %}
+    </div>
+
+    <div class="match-row">
+        <span class="team-name">{{ match.away }}</span>
+        {% if match.played %}
+            <span class="score">{{ match.away_score }}</span>
+        {% endif %}
+    </div>
+
+</div>

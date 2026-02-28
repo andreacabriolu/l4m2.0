@@ -31,19 +31,65 @@ def get_current_stage(competition_id):
     cc = competition_calendar.CompetitionCalendar.objects.filter(Q(Competition=competition_id) & Q(Day=current_day)).values('Stage')
     return cc.first()['Stage'] if len(cc) > 0 else None
 
+def get_layer_name_by_matches_count(matches_count):
+    match matches_count:
+        case 32:
+            return 'trentaduesimi'
+        case 16:
+            return 'sedicesimi'
+        case 8:
+            return 'ottavi'
+        case 4:
+            return 'quarti'
+        case 2:
+            return 'semifinali'
+        case 1:
+            return 'finale'
+        case _:
+            return f'round_of_{matches_count*2}'
+
+def get_all_final_stages(competition_id):
+    return competition_calendar.CompetitionCalendar.objects.filter(Q(Competition=competition_id) &\
+                                                                    ~Q(Stage='Girone')).values('Stage','id').distinct()
+
 def get_bracket_data_for_competition(competition_id):
     bracket_data = []
-    final_series = get_all_final_series(competition_id)
+    final_calendars = get_all_final_stages(competition_id)
 
-    for s in final_series:
-        matches = matches_calendar.MatchesCalendar.objects.filter(Series_id=s.id).select_related('HomeTeam','AwayTeam','CompetitionCalendar').values('id','HomeTeam__Name','AwayTeam__Name','CompetitionCalendar__Day')
-        results = matches_results.MatchesResults.objects.filter(MatchesCalendar__Series_id=s.id).values('MatchesCalendar_id','Team_id','NGoals')
+    for fc in final_calendars:
+        matches = matches_calendar.MatchesCalendar.objects.filter(CompetitionCalendar_id=fc['id']).select_related('HomeTeam','AwayTeam','CompetitionCalendar').values('id','HomeTeam__Name','AwayTeam__Name','CompetitionCalendar__Day')
+
+        results = list(matches_results.MatchesResults.objects.\
+                    filter(MatchesCalendar__CompetitionCalendar_id=fc['id']).\
+                    values('MatchesCalendar_id','Team_id','NGoals','MatchesCalendar__HomeTeam_id','MatchesCalendar__AwayTeam_id'))
+                
+        match_results = {}
+        for result in results:
+            mc_id = result['MatchesCalendar_id']
+            if mc_id not in match_results:
+                match_results[mc_id] = {
+                    'home': None,
+                    'away': None,
+                    'home_score': 0,
+                    'away_score': 0,
+                    'played': False
+                }
+
+            match_results[mc_id].update({
+                'home': get_team_name_by_id(result['MatchesCalendar__HomeTeam_id']) if result['MatchesCalendar__HomeTeam_id'] == result['Team_id'] else match_results[mc_id]['home'],
+                'away': get_team_name_by_id(result['MatchesCalendar__AwayTeam_id']) if result['MatchesCalendar__AwayTeam_id'] == result['Team_id'] else match_results[mc_id]['away'],
+                'home_score': result['NGoals'] if result['MatchesCalendar__HomeTeam_id'] == result['Team_id'] else match_results[mc_id]['home_score'],
+                'away_score': result['NGoals'] if result['MatchesCalendar__AwayTeam_id'] == result['Team_id'] else match_results[mc_id]['away_score'],
+                'played': True
+            })
+
+        layer_name = get_layer_name_by_matches_count(len(matches))
+        
         bracket_data.append({
-            'series_name': s.Name,
-            'matches': list(matches),
-            'results': list(results)
+            'stage': layer_name,
+            'matches': list(match_results.values()),
         })
-
+        
     return bracket_data
 
 def get_matchdays_info(series):
