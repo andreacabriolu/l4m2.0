@@ -34,35 +34,33 @@ def get_current_stage(competition_id):
 def get_layer_name_by_matches_count(matches_count):
     match matches_count:
         case 32:
-            return 'trentaduesimi'
+            return 'Trentaduesimi'
         case 16:
-            return 'sedicesimi'
+            return 'Sedicesimi'
         case 8:
-            return 'ottavi'
+            return 'Ottavi'
         case 4:
-            return 'quarti'
+            return 'Quarti'
         case 2:
-            return 'semifinali'
+            return 'Semifinali'
         case 1:
-            return 'finale'
+            return 'Finale'
         case _:
             return f'round_of_{matches_count*2}'
 
 def get_all_final_stages(competition_id):
     return competition_calendar.CompetitionCalendar.objects.filter(Q(Competition=competition_id) &\
-                                                                    ~Q(Stage='Girone')).values('Stage','id','Overtime').distinct()
+                ~Q(Stage='Girone')).values('Stage','id','Overtime','Num_Matches').distinct()
 
 def get_bracket_data_for_competition(competition_id):
     bracket_data = []
-    final_calendars = get_all_final_stages(competition_id)
+    final_calendars = list(get_all_final_stages(competition_id).order_by('Num_Matches').reverse())
 
     layer_results = {}
 
     for fc in final_calendars:
 
-        matches = matches_calendar.MatchesCalendar.objects.filter(CompetitionCalendar_id=fc['id']).select_related('HomeTeam','AwayTeam','CompetitionCalendar').values('id','HomeTeam__Name','AwayTeam__Name','CompetitionCalendar__Day')
-
-        layer_name = get_layer_name_by_matches_count(len(matches))
+        layer_name = get_layer_name_by_matches_count(fc['Num_Matches'])
         if layer_name not in layer_results:
                 layer_results[layer_name] = {}
 
@@ -73,16 +71,17 @@ def get_bracket_data_for_competition(competition_id):
                            'NGoals',
                            'ExtraTimePlayers',
                            'AggregateScore',
-                        #    'Winner',
+                           'ET_Winner',
+                           'Pen_Winner',
+                           'Winner',
                            'MatchesCalendar__HomeTeam_id',
                            'MatchesCalendar__AwayTeam_id',
                            'MatchesCalendar__CompetitionCalendar__Overtime'))
-                
-        for result in results:
-            # mc_id = result['MatchesCalendar_id']
+        
+        for result in results: #results available for this stage, we can process them
             key_tuple = (result['MatchesCalendar__HomeTeam_id'], result['MatchesCalendar__AwayTeam_id'])
 
-            if layer_name != 'finale': # round trip knockout
+            if layer_name != 'Finale': # round trip knockout
                 if result['MatchesCalendar__CompetitionCalendar__Overtime'] == False: #first leg
                     if key_tuple not in layer_results[layer_name]: #first result for this match, we can initialize the match result
                         layer_results[layer_name][key_tuple] = {
@@ -98,16 +97,17 @@ def get_bracket_data_for_competition(competition_id):
                                 {                    
                                     'home_score': 0,
                                     'away_score': 0,
-                                    'played': True,
+                                    'played': False,
                                     "et": False,
+                                    "pen": False,
                                     "penalties": {
                                         "home_penalties": 0,
                                         "away_penalties": 0
                                     }
                                 },
                             ], 
-                            "aggregate_home": 0,
-                            "aggregate_away": 0,
+                            "aggregate_home": result['NGoals'] if result['NGoals'] is not None and result['MatchesCalendar__HomeTeam_id'] == result['Team_id'] else 0,
+                            "aggregate_away": result['NGoals'] if result['NGoals'] is not None and result['MatchesCalendar__AwayTeam_id'] == result['Team_id'] else 0,
                             "winner": None
                         }
                     else: #second result for this match, we can update the match result
@@ -123,13 +123,16 @@ def get_bracket_data_for_competition(competition_id):
                                     'away_score': 0,
                                     'played': True,
                                     "et": False,
+                                    "pen": False,
                                     "penalties": {
                                         "home_penalties": 0,
                                         "away_penalties": 0
                                     }
                                 }
-                            ]
-                            
+                            ],
+                            "aggregate_home": result['NGoals'] if result['NGoals'] is not None and result['MatchesCalendar__HomeTeam_id'] == result['Team_id'] else layer_results[layer_name][key_tuple]['aggregate_home'] if key_tuple in layer_results[layer_name] else 0,
+                            "aggregate_away": result['NGoals'] if result['NGoals'] is not None and result['MatchesCalendar__AwayTeam_id'] == result['Team_id'] else layer_results[layer_name][key_tuple]['aggregate_away'] if key_tuple in layer_results[layer_name] else 0,
+                            "winner": None
                         })
                 else: #second leg
                     key_tuple_reversed = (result['MatchesCalendar__AwayTeam_id'], result['MatchesCalendar__HomeTeam_id'])
@@ -147,39 +150,17 @@ def get_bracket_data_for_competition(competition_id):
                                     'away_score': result['NGoals'] if result['MatchesCalendar__AwayTeam_id'] == result['Team_id'] else layer_results[layer_name][key_tuple]['legs'][1]['away_score'],
                                     'played': True,
                                     "et": True if result['ExtraTimePlayers'] else False,
+                                    "pen": True if result['Pen_Winner'] else False,
                                     "penalties": {
                                         "home_penalties": 0 if result['MatchesCalendar__HomeTeam_id'] == result['Team_id'] else layer_results[layer_name][key_tuple]['legs'][1]['penalties']['home_penalties'],
                                         "away_penalties": 0 if result['MatchesCalendar__AwayTeam_id'] == result['Team_id'] else layer_results[layer_name][key_tuple]['legs'][1]['penalties']['away_penalties']
                                     }
                                 },
                             ],
-                            "aggregate_home": layer_results[layer_name][key_tuple]['aggregate_home'] + (result['NGoals'] if result['MatchesCalendar__HomeTeam_id'] == result['Team_id'] else 0),
-                            "aggregate_away": layer_results[layer_name][key_tuple]['aggregate_away'] + (result['NGoals'] if result['MatchesCalendar__AwayTeam_id'] == result['Team_id'] else 0),
+                            "aggregate_home": layer_results[layer_name][key_tuple]['aggregate_home'] + (result['NGoals'] if result['MatchesCalendar__AwayTeam_id'] == result['Team_id'] else 0),
+                            "aggregate_away": layer_results[layer_name][key_tuple]['aggregate_away'] + (result['NGoals'] if result['MatchesCalendar__HomeTeam_id'] == result['Team_id'] else 0),
                             "winner": None,#get_team_name_by_id(result['winner']) if result['winner'] else None
                         })
-                    # else: #second result for this match, we can update the match result
-                    #     layer_results[layer_name][key_tuple].update({
-                    #         "legs": [
-                    #             {
-                    #                 'home_score': layer_results[layer_name][key_tuple]['legs'][0]['home_score'],
-                    #                 'away_score': layer_results[layer_name][key_tuple]['legs'][0]['away_score'],
-                    #                 'played': True
-                    #             },
-                    #             {
-                    #                 'home_score': result['NGoals'] if result['MatchesCalendar__HomeTeam_id'] == result['Team_id'] else layer_results[layer_name][key_tuple]['legs'][1]['home_score'],
-                    #                 'away_score': result['NGoals'] if result['MatchesCalendar__AwayTeam_id'] == result['Team_id'] else layer_results[layer_name][key_tuple]['legs'][1]['away_score'],
-                    #                 'played': True,
-                    #                 "et": True if result['ExtraTimePlayers'] else False,
-                    #                 "penalties": {
-                    #                     "home_penalties": 0 if result['MatchesCalendar__HomeTeam_id'] == result['Team_id'] else layer_results[layer_name][key_tuple]['legs'][1]['penalties']['home_penalties'],
-                    #                     "away_penalties": 0 if result['MatchesCalendar__AwayTeam_id'] == result['Team_id'] else layer_results[layer_name][key_tuple]['legs'][1]['penalties']['away_penalties']
-                    #                 }
-                    #             },
-                    #         ],
-                    #         "aggregate_home": layer_results[layer_name][key_tuple]['aggregate_home'] + (result['NGoals'] if result['MatchesCalendar__HomeTeam_id'] == result['Team_id'] else 0),
-                    #         "aggregate_away": result['AggregateScore'] if result['MatchesCalendar__AwayTeam_id'] == result['Team_id'] else layer_results[layer_name][key_tuple]['aggregate_away'],
-                    #         "winner": None,#get_team_name_by_id(result['winner']) if result['winner'] else None
-                    #     })
             elif layer_name == 'finale': #final, we can directly set the final result
                 if key_tuple not in layer_results[layer_name]: #first result for this match, we can initialize the match result
                     layer_results[layer_name][key_tuple] = {
@@ -188,7 +169,8 @@ def get_bracket_data_for_competition(competition_id):
                         "is_final": True,
                         "home_score": result['NGoals'] if result['MatchesCalendar__HomeTeam_id'] == result['Team_id'] else 0,
                         "away_score": result['NGoals'] if result['MatchesCalendar__AwayTeam_id'] == result['Team_id'] else 0,
-                        "et": False,
+                        "et": True if result['ET_Winner'] else False,
+                        "pen": True if result['Pen_Winner'] else False,
                         "penalties": {
                             "home_penalties": 0,
                             "away_penalties": 0
@@ -199,14 +181,34 @@ def get_bracket_data_for_competition(competition_id):
                     layer_results[layer_name][key_tuple].update({
                         "home_score": result['NGoals'] if result['MatchesCalendar__HomeTeam_id'] == result['Team_id'] else layer_results[layer_name][key_tuple]['home_score'],
                         "away_score": result['NGoals'] if result['MatchesCalendar__AwayTeam_id'] == result['Team_id'] else layer_results[layer_name][key_tuple]['away_score'],
-                        "et": True if result['ExtraTimePlayers'] else False,
+                        "et": True if result['ET_Winner'] else False,
+                        "pen": True if result['Pen_Winner'] else False,
                         "penalties": {
                             "home_penalties": 0 if result['MatchesCalendar__HomeTeam_id'] == result['Team_id'] else layer_results[layer_name][key_tuple]['penalties']['home_penalties'],
                             "away_penalties": 0 if result['MatchesCalendar__AwayTeam_id'] == result['Team_id'] else layer_results[layer_name][key_tuple]['penalties']['away_penalties']
                         },
                         "winner": None #get_team_name_by_id(result['winner']) if result['winner'] else None
                     })
-        
+
+        if len(results) == 0: #yet to play
+            for i in range(fc['Num_Matches']):
+                key_tuple = ('empty_home_'+str(i), 'empty_away_'+str(i))
+                layer_results[layer_name][key_tuple] = {
+                    'home': "-",
+                    'away': "-",
+                    "is_final": layer_name == 'finale',
+                    "home_score": 0,
+                    "away_score": 0,
+                    "et": False,
+                    "pen": False,
+                    "penalties": {
+                        "home_penalties": 0,
+                        "away_penalties": 0
+                    },
+                    "winner": None
+                }
+
+    for layer_name in layer_results:
         bracket_data.append({
             'stage': layer_name,
             'matches': list(layer_results[layer_name].values()),

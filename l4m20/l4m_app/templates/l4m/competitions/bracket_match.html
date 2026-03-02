@@ -1,17 +1,63 @@
-<div class="match-box">
+<div class="match-box {% if match.winner == 'home' %}home-wins{% elif match.winner == 'away' %}away-wins{% endif %}">
 
-    <div class="match-row">
-        <span class="team-name">{{ match.home }}</span>
-        {% if match.played %}
-            <span class="score">{{ match.home_score }}</span>
-        {% endif %}
-    </div>
+    {% if not match.is_final %}
 
-    <div class="match-row">
-        <span class="team-name">{{ match.away }}</span>
-        {% if match.played %}
-            <span class="score">{{ match.away_score }}</span>
+        <div class="team-row">
+            <span class="br-team-name">{{ match.home }}</span>
+            <span class="aggregate">
+                {{ match.aggregate_home }}
+            </span>
+        </div>
+
+        <div class="team-row">
+            <span class="br-team-name">{{ match.away }}</span>
+            <span class="aggregate">
+                {{ match.aggregate_away }}
+            </span>
+        </div>
+
+        <div class="legs-detail">
+            {% for leg in match.legs %}
+                <span class="leg">
+                    {{ leg.home_score }}-{{ leg.away_score }}
+                    {% if leg.et %}
+                        <span class="status-badge et">SUP</span>
+                    {% endif %}
+                    {% if leg.pen %}
+                        <span class="status-badge penalties">
+                            RIG {{ leg.penalties.home }}-{{ leg.penalties.away }}
+                        </span>
+                    {% endif %}
+                </span>
+            {% endfor %}
+        </div>
+
+    {% else %}
+
+        <div class="team-row">
+            <span class="br-team-name">{{ match.home }}</span>
+            <span class="final-score">{{ match.home_score }}</span>
+        </div>
+
+        <div class="team-row">
+            <span class="br-team-name">{{ match.away }}</span>
+            <span class="final-score">{{ match.away_score }}</span>
+        </div>
+
+        {% if match.et or match.pen %}
+        <div class="match-status">
+            {% if match.et %}
+                <span class="status-badge et">SUP</span>
+            {% endif %}
+
+            {% if match.pen %}
+                <span class="status-badge penalties">
+                    RIG {{ match.penalties.home }}-{{ match.penalties.away }}
+                </span>
+            {% endif %}
+        </div>
         {% endif %}
-    </div>
+
+    {% endif %}
 
 </div>

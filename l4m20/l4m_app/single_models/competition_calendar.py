@@ -12,6 +12,7 @@ class CompetitionCalendar(models.Model):
     Overtime = models.BooleanField(default=False)
     Penalties = models.BooleanField(default=False)
     Suspended = models.BooleanField(default=False)
+    Num_Matches = models.IntegerField(default=None, null=True)
 
     def __str__(self):
         return f"{self.Competition} - Giornata {self.Day})"

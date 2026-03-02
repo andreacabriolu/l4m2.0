@@ -409,7 +409,7 @@ tr.group:hover {
   gap: 3rem;
   align-items: start;
   padding: 1.5rem 0;
-  overflow-x: auto;
+  overflow-x: hidden;
 }
 
 .bracket-round {
@@ -436,6 +436,7 @@ tr.group:hover {
   border-radius: 14px;
   padding: 0.75rem 0.9rem;
   min-height: 64px;
+  margin-bottom: 1em;
 
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.06),
@@ -772,16 +773,6 @@ tr.group:hover {
     padding-bottom: 1rem;
 }
 
-/* .bracket {
-    display: grid;
-    grid-template-columns:
-        minmax(220px, 1fr)
-        minmax(220px, 1fr)
-        minmax(260px, 1fr);
-    gap: 3rem;
-    min-width: 750px;
-} */
-
 .bracket {
     display: grid;
     grid-template-columns: repeat(var(--rounds), minmax(220px, 1fr));
@@ -820,11 +811,18 @@ tr.group:hover {
 .match-box {
     background: #111827;
     border-radius: 12px;
-    padding: 10px 14px;
-    margin-bottom: 2rem;
+    padding: 14px 16px;
+    margin: 1.8rem 0;
     border: 1px solid rgba(255,255,255,0.05);
     transition: 0.2s ease;
 }
+
+.team-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+}
+
 
 .match-box:hover {
     background: #1f2937;
@@ -836,7 +834,7 @@ tr.group:hover {
     padding: 4px 0;
 }
 
-.team-name {
+.br-team-name {
     font-size: 0.85rem;
     color: #e5e7eb;
 }
@@ -875,3 +873,75 @@ tr.group:hover {
         padding: 8px 10px;
     }
 }
+
+.status-badge {
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 2px 6px;
+    margin-left: 4px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.08);
+    color: #cbd5e1;
+    letter-spacing: 0.5px;
+}
+
+.status-badge.penalties {
+    background: rgba(59,130,246,0.15);
+    color: #60a5fa;
+}
+
+.status-badge.et {
+    background: rgba(239,68,68,0.15);
+    color: #f87171;
+}
+
+.status-badge.penalties {
+    background: rgba(59,130,246,0.15);
+    color: #60a5fa;
+}
+
+.match-status {
+    margin-top: 6px;
+    display: flex;
+    gap: 6px;
+}
+
+.aggregate {
+    font-weight: 700;
+    font-size: 1rem;
+    color: #3b82f6;
+}
+
+.legs-detail {
+    margin-top: 6px;
+    display: flex;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: #94a3b8;
+}
+
+.leg {
+    background: rgba(255,255,255,0.05);
+    padding: 2px 6px;
+    border-radius: 6px;
+}
+
+.final-score {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #3b82f6;
+}
+
+.home-wins .team-row:first-child .team-name,
+.away-wins .team-row:last-child .team-name {
+    font-weight: 700;
+    color: #22c55e;
+}
+
+.final-column .match-box {
+    background: #1e293b;
+    border: 1px solid rgba(59,130,246,0.5);
+    box-shadow: 0 0 18px rgba(59,130,246,0.2);
+}
+
+

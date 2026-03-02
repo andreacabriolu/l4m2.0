@@ -22,7 +22,7 @@ class MyLeaguesView(LoginRequiredMixin, View):
         params = {
             'comp' : comp,
             'logo_path': logo_path,
-            'current_stage': 'fase_finale', #TODO restore U.get_current_stage(competition_id),
+            'current_stage': 'Girone', #TODO restore U.get_current_stage(competition_id),
             'groups_data': U.get_groups_data_for_competition(competition_id),
             'bracket_data': U.get_bracket_data_for_competition(competition_id),
         }

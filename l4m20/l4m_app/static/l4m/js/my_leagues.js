@@ -17,21 +17,9 @@ function showInfoAlert(response) {
 
 window.addEventListener('DOMContentLoaded', event => {
     const token = Cookies.get('csrftoken');
-
-    var comp_id = $('#comp').val();
-
-    // $('#select_series').on('change', function () {
-    //     rankingDataTable.ajax.reload();
-    //     calendarDataTable.ajax.reload();
-    // });
-
     const gironiPanel = document.getElementById("gironi-panel");
     const finalPanel = document.getElementById("fase-finale-panel");
     const stageButtons = document.querySelectorAll(".stage-pill");
-
-    let rankingTable = null;
-    let calendarTable = null;
-    let bracketInitialized = false;
 
     stageButtons.forEach(btn => {
         btn.addEventListener("click", () => {
@@ -66,39 +54,5 @@ window.addEventListener('DOMContentLoaded', event => {
         });
 
     });
-
-
-    function initializeBracket() {
-        const container = document.getElementById("bracketContainer");
-
-        container.innerHTML = `
-        <div class="bracket">
-  <div class="bracket-round">
-    <div class="bracket-round-title">Quarterfinals</div>
-
-    <div class="bracket-match">
-      <div class="bracket-team winner">
-        Team A <span class="bracket-score">2</span>
-      </div>
-      <div class="bracket-team">
-        Team B <span class="bracket-score">1</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="bracket-round final">
-    <div class="bracket-round-title">Final</div>
-
-    <div class="bracket-match final">
-      <div class="bracket-trophy">🏆</div>
-      <div class="bracket-champion">TEAM A</div>
-    </div>
-  </div>
-</div>
-
-    `;
-    }
-
-
 
 });
