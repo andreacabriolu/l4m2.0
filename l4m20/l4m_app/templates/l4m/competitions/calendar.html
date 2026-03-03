@@ -4,7 +4,7 @@
     <div class="matchday-header">
         <span class="matchday-title">Giornata {{ day.number }}</span>
         {% if day.is_live %}
-            <span class="live-badge">LIVE</span>
+        <span class="live-badge">LIVE</span>
         {% endif %}
     </div>
 
@@ -18,15 +18,9 @@
             </div>
 
             <div class="match-center">
-                {% if match.played %}
-                    <div class="score">
-                        {{ match.home_score }} - {{ match.away_score }}
-                    </div>
-                {% else %}
-                    <div class="kickoff">
-                        {{ match.kickoff_time }}
-                    </div>
-                {% endif %}
+                <div class="score">
+                    {{ match.home_score }} - {{ match.away_score }}
+                </div>
             </div>
 
             <div class="team team-away">

@@ -226,11 +226,24 @@ def get_matchdays_info(series):
         if 'matchdays' not in matchdays_info:
             day = md['CompetitionCalendar__Day']
 
+        match_results = {}
         results = list(matches_results.MatchesResults.objects.\
                     filter(MatchesCalendar__Series_id=series.id, MatchesCalendar__CompetitionCalendar__Day=day).\
                     values('MatchesCalendar_id','Team_id','NGoals','MatchesCalendar__HomeTeam_id','MatchesCalendar__AwayTeam_id'))
             
-        match_results = {}
+        if len(results) == 0: # match yet to be played
+            empty_results = matches_calendar.MatchesCalendar.objects.filter(Series_id=series.id, CompetitionCalendar__Day=day)\
+                .values('id','HomeTeam_id','AwayTeam_id')
+
+            for empty_result in empty_results:
+                match_results[empty_result['id']] = {
+                    'home': get_team_name_by_id(empty_result['HomeTeam_id']),
+                    'away': get_team_name_by_id(empty_result['AwayTeam_id']),
+                    'home_score': '',
+                    'away_score': '',
+                    'played': False
+            }
+
         for result in results:
             mc_id = result['MatchesCalendar_id']
             if mc_id not in match_results:
