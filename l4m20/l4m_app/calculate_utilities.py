@@ -471,11 +471,11 @@ def save_results(votes_per_series):
             'bonus_home': home_team_items[15],
             'penalizations': 1 if home_team_items[14] < 0 else 0,
             'fpo': json.loads(home_team_data[3]['extratime']['et_result'])['score'] if len(home_team_data) > 3 else None,
-            'pen': json.loads(home_team_data[4]['penalties']['pen_result'])['pen_score'] if len(home_team_data) > 4 else None,
+            'pen': home_team_data[4]['penalties']['pen_score'] if len(home_team_data) > 4 else None,
             'extratime': home_team_data[3]['extratime']['et_result'] if len(home_team_data) > 3 else None,
-            'penalties': home_team_data[4]['penalties']['pen_result'] if len(home_team_data) > 4 else None,
+            'penalties': home_team_data[4]['penalties'] if len(home_team_data) > 4 else None,
             'et_winner': json.loads(home_team_data[3]['extratime']['et_result'])['winner'] if len(home_team_data) > 3 else None,
-            'pen_winner': home_team_data[4]['penalties']['winner'] if len(home_team_data) > 4 else None,
+            'pen_winner': json.loads(home_team_data[4]['penalties']['pen_result'])['winner'] if len(home_team_data) > 4 else None,
         }
 
         away_team_data = away_results[1]
@@ -500,11 +500,11 @@ def save_results(votes_per_series):
             'bonus_home': away_team_items[15],
             'penalizations': 1 if away_team_items[14] < 0 else 0 ,
             'fpo': json.loads(away_team_data[3]['extratime']['et_result'])['score'] if len(away_team_data) > 3 else None,
-            'pen': json.loads(away_team_data[4]['penalties']['pen_result'])['pen_score'] if len(away_team_data) > 4 else None,
+            'pen': away_team_data[4]['penalties']['pen_score'] if len(away_team_data) > 4 else None,
             'extratime': away_team_data[3]['extratime']['et_result'] if len(away_team_data) > 3 else None,
-            'penalties': away_team_data[4]['penalties']['pen_result'] if len(away_team_data) > 4 else None,
+            'penalties': away_team_data[4]['penalties'] if len(away_team_data) > 4 else None,
             'et_winner': json.loads(away_team_data[3]['extratime']['et_result'])['winner'] if len(away_team_data) > 3 else None,
-            'pen_winner': away_team_data[4]['penalties']['winner'] if len(away_team_data) > 4 else None,
+            'pen_winner': json.loads(away_team_data[4]['penalties']['pen_result'])['winner'] if len(away_team_data) > 4 else None,
         }
 
         mr_home = matches_results.MatchesResults(Team = t1, 

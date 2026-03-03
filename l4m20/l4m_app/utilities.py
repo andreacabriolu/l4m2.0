@@ -190,7 +190,7 @@ def get_bracket_data_for_competition(competition_id):
                         "winner": None #get_team_name_by_id(result['winner']) if result['winner'] else None
                     })
 
-        if len(results) == 0: #yet to play
+        if len(results) == 0 and layer_name not in layer_results: #yet to play
             for i in range(fc['Num_Matches']):
                 key_tuple = ('empty_home_'+str(i), 'empty_away_'+str(i))
                 layer_results[layer_name][key_tuple] = {
