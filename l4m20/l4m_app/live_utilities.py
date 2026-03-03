@@ -9,6 +9,19 @@ from django.db.models import Q
 import requests as req
 from itertools import islice, cycle
 
+def check_fp_first_leg(home_team_id, away_team_id, day, comp_id):
+    cc = U.get_competition_calendar_entry(comp_id, day)
+    if U.is_round_trip_match(cc):
+        first_leg_results = get_first_leg_results(comp_id, day, home_team_id, away_team_id)
+
+        if first_leg_results is not None:
+            fp_home_first_leg = first_leg_results.filter(Home=True).first().Fp
+            fp_away_first_leg = first_leg_results.filter(Home=False).first().Fp
+
+            return fp_home_first_leg, fp_away_first_leg
+            
+    return None, None
+
 def add_first_leg_goals(votes, goals):
     if votes[1][2] == 'hidden': #PLEASE, change it to dict!
         return votes
