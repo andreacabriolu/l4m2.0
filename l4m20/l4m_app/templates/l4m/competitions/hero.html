@@ -1,0 +1,18 @@
+{% load static %}
+
+<div class="competition-hero text-center py-5 px-3">
+
+            <div class="competition-logo mb-3">
+                {% if logo_path %}
+                {% static 'l4m/images/comp_logos/' as comp_logos_path %}
+                <img src="{{comp_logos_path}}{{logo_path}}" loading="lazy">
+                {% else %}
+                <img src="{% static 'l4m/images/logo.jpeg' %}" loading="lazy">
+                {% endif %}
+            </div>
+
+            <h1 class="competition-title mb-2">
+                {{comp.Name}}
+            </h1>
+
+        </div>

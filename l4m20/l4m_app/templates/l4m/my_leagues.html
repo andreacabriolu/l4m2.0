@@ -1,20 +1,22 @@
 {% extends "./base.html" %}
 {% load static %}
 
-{% block title %} L4M2.0 - IL MIO CAMPIONATO {% endblock %}
+{% block title %} L4M2.0 - COMPETIZIONI {% endblock %}
 
 {% block links %}
 <link href="{% static 'l4m/css/my_leagues.css' %}" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/rowgroup/1.6.0/css/rowGroup.dataTables.min.css" />
 {% endblock %}
 
 {% block scripts %}
 <script type="text/javascript" src="{% static 'l4m/js/my_leagues.js' %}"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/rowgroup/1.6.0/js/dataTables.rowGroup.min.js"></script>
 {% endblock %}
 
 {% block content %}
+<input type="hidden" id="day" value="{{day}}">
+<input type="hidden" id="comp" value="{{comp.id}}">
+
+
 <div id="layoutSidenav_content" class="custom-layout">
 
     <div class="alert alert-danger" role="alert" id="error-alert" hidden>
@@ -25,38 +27,29 @@
         <span id="span-info-alert"></span>
     </div>
 
-    <div class="bg-body-tertiary main-div main-league-div" id="myLeaguesDiv">
-        <div class="row featurette">
-            <div class="col-md-5 team-logo">
-                {% if logo_path %}
-                {% static 'l4m/images/comp_logos/' as comp_logos_path %}
-                <img src="{{comp_logos_path}}{{logo_path}}" loading="lazy" class="featurette-image">
-                {% else %}
-                <img src="{% static 'l4m/images/logo.jpeg' %}" loading="lazy" class="featurette-image">
-                {% endif %}
-            </div>
+    <div class="main-div main-league-div" id="myLeaguesDiv">
 
-            <div class="col-md-7 team-name-dash">
-                <h1 class="featurette-heading fw-normal lh-1 display-1">
-                    {{comp.Name}}
-                </h1>
-            </div>
+        {% include "l4m/competitions/hero.html" %}
 
+        <div class="competition-divider glow-divider"></div>
+
+        <div class="top-table">
+            
+            {% include "l4m/competitions/stage_tabs.html" %}
+
+            <div class="stage-content">
+
+                {% include "l4m/competitions/gironi.html" %}
+                {% include "l4m/competitions/fase_finale.html" %}
+            
+            </div>
+            
         </div>
 
-        <section id="rankings" class="content-section bg-dark rankings">
-            <input type="hidden" id="day" value="{{day}}">
-            <input type="hidden" id="comp" value="{{comp.id}}">
-            <div class="top-table">
-                <select class="form-select form-select-lg mb-3 form-select-series" id="select_series">
-                    {% for s in all_series %}
-                    <option value="{{s}}" data-id="{{s.id}}" {% if s.id == my_series.id %} selected {% endif %}>{{s.Name}}
-                    </option>
-                    {% endfor %}
-                </select>
-            </div>
 
-            <!-- <hr class="featurette-divider" /> -->
+        {%if False %}
+        <section id="rankings" class="content-section bg-dark rankings">
+
 
             <span class="rankings-title">CLASSIFICA</span>
             <div class="card mb-4 main-content-card">
@@ -97,15 +90,14 @@
                     <div class="card shadow mb-4">
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-bordered stripe" id="calendarDataTable"
-                                    cellspacing="0">
+                                <table class="table table-bordered stripe" id="calendarDataTable" cellspacing="0">
                                     <thead class="calendarDt-thead">
                                         <tr>
-                                            <th/>
-                                            <th/>
-                                            <th/>
-                                            <th/>
-                                            <th/>
+                                            <th />
+                                            <th />
+                                            <th />
+                                            <th />
+                                            <th />
                                         </tr>
                                     </thead>
                                     <tbody class="calendar-body">
@@ -119,10 +111,7 @@
 
 
         </section>
-
-        <section id="calendar">
-
-        </section>
+        {% endif %}
 
     </div>
 </div>

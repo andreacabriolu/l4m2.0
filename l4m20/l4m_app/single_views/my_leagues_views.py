@@ -17,17 +17,14 @@ class MyLeaguesView(LoginRequiredMixin, View):
     def get(self,request, competition_id=None):
         my_team = U.get_user_team(request.user.id)
         comp = competition.Competition.objects.get(id=competition_id)
-        my_series = U.get_my_series(my_team['id'], competition_id)
-        all_series = U.get_all_series(competition_id)
         logo_path = comp.LogoPath
-        day = U.get_current_day()
 
         params = {
             'comp' : comp,
-            'my_series' : my_series.first() if my_series.exists() else None,
-            'all_series' : all_series,
             'logo_path': logo_path,
-            'day': day,
+            'current_stage': 'Girone', #TODO restore U.get_current_stage(competition_id),
+            'groups_data': U.get_groups_data_for_competition(competition_id),
+            'bracket_data': U.get_bracket_data_for_competition(competition_id),
         }
         
         return render(request, self.template_name, params)

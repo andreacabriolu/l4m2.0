@@ -1,0 +1,26 @@
+<div id="fase-finale-panel" class="{% if current_stage != 'fase_finale' %}d-none{% endif %}">
+
+    <div class="bracket-wrapper">
+        <div class="bracket" style="--rounds: {{ bracket_data|length }}">
+
+            {% for bracket in bracket_data %}
+            <div class="bracket-column {% if forloop.last %}final-column{% endif %}">
+
+                <div class="round-title">
+                    {{ bracket.stage }}
+                </div>
+
+                {% for match in bracket.matches %}
+                <div class="bracket-match">
+                    {% include "l4m/competitions/bracket_match.html" with match=match %}
+                </div>
+                {% endfor %}
+
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+
+
+</div>

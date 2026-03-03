@@ -30,6 +30,10 @@ class MatchesResults(models.Model):
     ExtraTimePlayers = models.CharField(null=True)
     PenaltyPlayers = models.CharField(null=True)
     AggregateScore = models.IntegerField(null=True)
+    ET_Winner = models.BooleanField(default=False, null=True)
+    Pen_Winner = models.BooleanField(default=False, null=True)
+    Winner = models.IntegerField(null=True)
+    Penalizations = models.IntegerField(null=True)
 
     def __str__(self):
         return f"{self.MatchesCalendar} | {self.Team} {self.Fp}"

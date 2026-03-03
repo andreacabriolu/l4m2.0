@@ -45,20 +45,10 @@
 
     <div class="bg-body-tertiary main-div p-5 live-tables bg-success bg-opacity-50" id="liveMainDiv">
 
-        {% for match_votes, comp in all_votes_comps %}
-        <div class="comp-div small-logo">
-            <div>
-                {% if comp.LogoPath %}
-                {% static 'l4m/images/comp_logos/' as comp_logos_path %}
-                <img src="{{comp_logos_path}}{{comp.LogoPath}}" loading="lazy">
-                {% else %}
-                <img src="{% static 'l4m/images/logo.jpeg' %}" loading="lazy">
-                {% endif %}
-            </div>
-            <div>
-                <h2 class="comp-title">{{comp.Name|upper}}</h2>
-            </div>
-        </div>
+    {% for match_votes, comp in all_votes_comps %}
+        
+        {% include "l4m/competitions/hero.html" with logo_path=comp.LogoPath%}
+
         <div class="match-div">
             {% for team_votes in match_votes %}
             <table class="table table-striped-columns table-dark table-match rounded-3 table-bordered rounded-pill">

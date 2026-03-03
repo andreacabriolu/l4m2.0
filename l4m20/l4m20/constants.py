@@ -21,6 +21,15 @@ class Constant_Dicts:
 class Constant_Lists:
     Modules = ['3-5-2','3-4-3','4-4-2','4-3-3','4-5-1','5-3-2','5-4-1']
 
+class Stages_sorting:
+    stages = {
+        'Girone': 0,
+        'Ottavi': 1,
+        'Quarti': 2,
+        'Semifinale': 3,
+        'Finale': 4
+    }
+
 NUM_GK = 3
 NUM_DEF = 8
 NUM_CC = 8
@@ -148,7 +157,7 @@ class Modules:
                 },
         _442: 
                 {
-                    ('D','C'):_451, 
+                    ('D','C'):_352, 
                     ('D','A'):_343, 
                     ('C','D'):_532, 
                     ('C','A'):_433, 
