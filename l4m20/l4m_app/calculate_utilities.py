@@ -387,7 +387,7 @@ def calculate_league(competition, day):
                                             {'results': penalties_results.get('pen_results_home', {}), 
                                             'gk_opponent_surname': votes_away[0][0].Player.Surname,
                                             'gk_opponent_vote': votes_away[0][0].Vote,
-                                            'winner': pen_winner[0]
+                                            'winner': pen_winner[0] if et_winner == (False, False) else False #if there is already an extratime winner, no need to check pen winner
                                             }),
                                         'pen_score': penalties_results.get('score_home', 0),
                                                       }})  #penalties home
@@ -396,7 +396,7 @@ def calculate_league(competition, day):
                                            {'results': penalties_results.get('pen_results_away', {}), 
                                             'gk_opponent_surname': votes_home[0][0].Player.Surname,
                                             'gk_opponent_vote': votes_home[0][0].Vote,
-                                            'winner': pen_winner[1]
+                                            'winner': pen_winner[1] if et_winner == (False, False) else False #if there is already an extratime winner, no need to check pen winner
                                             }),
                                         'pen_score': penalties_results.get('score_away', 0),
                                                       }})  #penalties away
