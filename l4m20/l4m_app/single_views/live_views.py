@@ -53,8 +53,8 @@ class GetPenaltiesView(View):
             if mr is None:
                 return HttpResponse(json.dumps({}))
             
-            pen_players = json.loads(mr.first().PenaltyPlayers)
-            pen_results = pen_players['results'] if 'results' in pen_players else {}
+            pen_players = json.loads(U.cleanJSON(mr.first().PenaltyPlayers))
+            pen_results = pen_players['pen_result']['results'] if 'pen_result' in pen_players else {}
             gk_opponent_surname = pen_players['gk_opponent_surname'] if 'gk_opponent_surname' in pen_players else ''
             gk_opponent_vote = pen_players['gk_opponent_vote'] if 'gk_opponent_vote' in pen_players else ''
                 
