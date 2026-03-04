@@ -1028,7 +1028,7 @@ tr.group:hover {
 
 /* Extra time */
 .decision-badge.et {
-    color: #8ab4ff;
+    color: greenyellow;
     border-color: rgba(138,180,255,.3);
     background: rgba(138,180,255,.08);
 }
