@@ -1040,3 +1040,12 @@ tr.group:hover {
     background: rgba(255,209,102,.08);
 }
 
+.leg-final {
+    display: flex;
+    justify-content: center;
+    font-weight: 600;
+    color: chartreuse;
+    margin-top: 0.5rem;
+    font-size: large;
+}
+

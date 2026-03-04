@@ -196,8 +196,8 @@ def fill_with_events(events, players, votes, players_realteam):
             continue
         if 'out' in event and clean_name(event['out']) not in players:
             continue
-        if 'details' in event and event['details'] != '' and clean_name(event['details']) not in players:
-            continue
+        # if 'details' in event and event['details'] != '' and clean_name(event['details']) not in players:
+        #     continue
         
         _type = event['type']
         match _type:
@@ -239,7 +239,7 @@ def fill_with_events(events, players, votes, players_realteam):
                 pl_id = players[clean_name(event['player'])]
                 if pl_id is None:
                     continue
-                if event['details'] != '':
+                if 'details' in event and event['details'] != '' and clean_name(event['details']) in players:
                     pl_assist_id = players[clean_name(event['details'])]
                     vote = votes[pl_assist_id]
                     vote.AssS = vote.AssS + 1

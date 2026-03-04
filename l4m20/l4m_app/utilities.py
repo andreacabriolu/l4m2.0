@@ -181,11 +181,11 @@ def get_bracket_data_for_competition(competition_id):
                             "aggregate_away": layer_results[layer_name][key_tuple]['aggregate_away'] + (result['NGoals'] if result['MatchesCalendar__HomeTeam_id'] == result['Team_id'] else 0),
                             "winner": None,
                         })
-            elif layer_name == 'finale': #final, we can directly set the final result
+            elif layer_name == 'Finale': #final, we can directly set the final result
                 if key_tuple not in layer_results[layer_name]: #first result for this match, we can initialize the match result
                     layer_results[layer_name][key_tuple] = {
-                        'home': get_team_name_by_id(result['MatchesCalendar__HomeTeam_id']) if result['MatchesCalendar__HomeTeam_id'] == result['Team_id'] else None,
-                        'away': get_team_name_by_id(result['MatchesCalendar__AwayTeam_id']) if result['MatchesCalendar__AwayTeam_id'] == result['Team_id'] else None,
+                        'home': get_team_name_by_id(result['MatchesCalendar__HomeTeam_id']),
+                        'away': get_team_name_by_id(result['MatchesCalendar__AwayTeam_id']),
                         "is_final": True,
                         "home_score": result['NGoals'] if result['MatchesCalendar__HomeTeam_id'] == result['Team_id'] else 0,
                         "away_score": result['NGoals'] if result['MatchesCalendar__AwayTeam_id'] == result['Team_id'] else 0,
