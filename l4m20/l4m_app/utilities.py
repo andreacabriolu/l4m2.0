@@ -1051,7 +1051,7 @@ def get_scores(t_id):
     return fps
 
 def count_non_schierate(t_id):
-    non_schierate = matches_results.MatchesResults.objects.filter(Q(Pen=1)&Q(Team=t_id)).aggregate(num=Count("MatchesCalendar__CompetitionCalendar__Day"))
+    non_schierate = matches_results.MatchesResults.objects.filter(Q(Penalizations__gt=0)&Q(Team=t_id)).aggregate(num=Count("MatchesCalendar__CompetitionCalendar__Day"))
     return non_schierate['num']
 
 def check_penalties(t_id, day, comp_id):
