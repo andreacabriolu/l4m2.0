@@ -133,18 +133,19 @@ def get_bracket_data_for_competition(competition_id):
                     grouped_results_second_leg[mc_id] = []
                 grouped_results_second_leg[mc_id].append(result)
             
-            results_coupled_by_legs = []
-            for results_list_first_leg in grouped_results_first_leg.values(): #results available for first leg
-                team_home = results_list_first_leg[0]['MatchesCalendar__HomeTeam_id']
-                team_away = results_list_first_leg[0]['MatchesCalendar__AwayTeam_id']
-                for results_list_second_leg in grouped_results_second_leg.values(): #results available for second leg
-                    if (team_home == results_list_second_leg[0]['MatchesCalendar__AwayTeam_id'] and \
-                        team_away == results_list_second_leg[0]['MatchesCalendar__HomeTeam_id']):
-                        results_coupled_by_legs.append((results_list_first_leg, results_list_second_leg))
-                    else:
-                        results_coupled_by_legs.append((results_list_first_leg, None))
-                
-            for leg_result in results_coupled_by_legs:
+            results_coupled_by_legs = {}
+            for results_first_leg in grouped_results_first_leg.values(): #results available for first leg
+                team_home = results_first_leg[0]['MatchesCalendar__HomeTeam_id']
+                team_away = results_first_leg[0]['MatchesCalendar__AwayTeam_id']
+                results_coupled_by_legs[(team_home, team_away)] = (results_first_leg, None) #initialize with first leg results and None for second leg
+
+            for results_second_leg in grouped_results_second_leg.values(): #results available for second leg
+                team_home = results_second_leg[0]['MatchesCalendar__HomeTeam_id']
+                team_away = results_second_leg[0]['MatchesCalendar__AwayTeam_id']
+                if (team_away, team_home) in results_coupled_by_legs: #check if the second leg teams are the opposite of the first leg teams
+                    results_coupled_by_legs[(team_away, team_home)] = (results_coupled_by_legs[(team_away, team_home)][0], results_second_leg) #update the second leg results
+
+            for leg_result in results_coupled_by_legs.values():
                 result_home_first_leg, result_away_first_leg = leg_result[0][0], leg_result[0][1]
                 result_home_second_leg, result_away_second_leg = leg_result[1][0] if leg_result[1] else None, leg_result[1][1] if leg_result[1] else None
             
@@ -170,8 +171,8 @@ def get_bracket_data_for_competition(competition_id):
                             }
                         },
                     ], 
-                    "aggregate_home": result_home_first_leg['NGoals'] + (result_home_second_leg['NGoals'] if result_home_second_leg is not None else 0),
-                    "aggregate_away": result_away_first_leg['NGoals'] + (result_away_second_leg['NGoals'] if result_away_second_leg is not None else 0),
+                    "aggregate_home": result_home_first_leg['NGoals'] + (result_away_second_leg['NGoals'] if result_away_second_leg is not None else 0),
+                    "aggregate_away": result_away_first_leg['NGoals'] + (result_home_second_leg['NGoals'] if result_home_second_leg is not None else 0),
                     "winner": None
                 })
         else: # FINAL
@@ -202,39 +203,40 @@ def get_bracket_data_for_competition(competition_id):
                     })
             
     #update winners
-    for match_result in layer_results[layer_name]:
-        if match_result['is_final']:
-            if match_result['home_score'] > match_result['away_score']:
-                match_result['winner'] = 'home'
-            elif match_result['away_score'] > match_result['home_score']:
-                match_result['winner'] = 'away'
-            elif match_result['home_score'] == match_result['away_score']:
-                if match_result['et'] and not match_result['pen']:
-                    if match_result['home_score'] > match_result['away_score']:
-                        match_result['winner'] = 'home'
-                    elif match_result['away_score'] > match_result['home_score']:
-                        match_result['winner'] = 'away'
-                elif match_result['pen']:
-                    if match_result['penalties']['home_penalties'] > match_result['penalties']['away_penalties']:
-                        match_result['winner'] = 'home'
-                    elif match_result['penalties']['away_penalties'] > match_result['penalties']['home_penalties']:
-                        match_result['winner'] = 'away'
-        else:
-            if match_result.get('aggregate_home', 0) > match_result.get('aggregate_away', 0):
-                match_result['winner'] = 'home'
-            elif match_result.get('aggregate_away', 0) > match_result.get('aggregate_home', 0):
-                match_result['winner'] = 'away'
-            elif match_result.get('aggregate_home', 0) == match_result.get('aggregate_away', 0):
-                if any(leg.get('et', False) for leg in match_result.get('legs', [])) and not any(leg.get('pen', False) for leg in match_result.get('legs', [])):
-                    if match_result.get('aggregate_home', 0) > match_result.get('aggregate_away', 0):
-                        match_result['winner'] = 'home'
-                    elif match_result.get('aggregate_away', 0) > match_result.get('aggregate_home', 0):
-                        match_result['winner'] = 'away'
-                elif any(leg.get('pen', False) for leg in match_result.get('legs', [])):
-                    if any(leg.get('penalties', {}).get('home_penalties', 0) > leg.get('penalties', {}).get('away_penalties', 0) for leg in match_result.get('legs', [])):
-                        match_result['winner'] = 'home'
-                    elif any(leg.get('penalties', {}).get('away_penalties', 0) > leg.get('penalties', {}).get('home_penalties', 0) for leg in match_result.get('legs', [])):
-                        match_result['winner'] = 'away'
+    for _,v in layer_results.items():
+        for match_result in v:
+            if match_result['is_final']:
+                if match_result['home_score'] > match_result['away_score']:
+                    match_result['winner'] = 'home'
+                elif match_result['away_score'] > match_result['home_score']:
+                    match_result['winner'] = 'away'
+                elif match_result['home_score'] == match_result['away_score']:
+                    if match_result['et'] and not match_result['pen']:
+                        if match_result['home_score'] > match_result['away_score']:
+                            match_result['winner'] = 'home'
+                        elif match_result['away_score'] > match_result['home_score']:
+                            match_result['winner'] = 'away'
+                    elif match_result['pen']:
+                        if match_result['penalties']['home_penalties'] > match_result['penalties']['away_penalties']:
+                            match_result['winner'] = 'home'
+                        elif match_result['penalties']['away_penalties'] > match_result['penalties']['home_penalties']:
+                            match_result['winner'] = 'away'
+            else:
+                if match_result.get('aggregate_home', 0) > match_result.get('aggregate_away', 0):
+                    match_result['winner'] = 'home'
+                elif match_result.get('aggregate_away', 0) > match_result.get('aggregate_home', 0):
+                    match_result['winner'] = 'away'
+                elif match_result.get('aggregate_home', 0) == match_result.get('aggregate_away', 0):
+                    if any(leg.get('et', False) for leg in match_result.get('legs', [])) and not any(leg.get('pen', False) for leg in match_result.get('legs', [])):
+                        if match_result.get('aggregate_home', 0) > match_result.get('aggregate_away', 0):
+                            match_result['winner'] = 'home'
+                        elif match_result.get('aggregate_away', 0) > match_result.get('aggregate_home', 0):
+                            match_result['winner'] = 'away'
+                    elif any(leg.get('pen', False) for leg in match_result.get('legs', [])):
+                        if any(leg.get('penalties', {}).get('home_penalties', 0) > leg.get('penalties', {}).get('away_penalties', 0) for leg in match_result.get('legs', [])):
+                            match_result['winner'] = 'home'
+                        elif any(leg.get('penalties', {}).get('away_penalties', 0) > leg.get('penalties', {}).get('home_penalties', 0) for leg in match_result.get('legs', [])):
+                            match_result['winner'] = 'away'
 
     for layer_name in layer_results:
         bracket_data.append({
