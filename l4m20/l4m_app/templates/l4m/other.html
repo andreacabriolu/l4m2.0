@@ -1,0 +1,41 @@
+{% extends "./base.html" %}
+{% load static %}
+
+{% block title %} L4M2.0 - ALTRE COMPETIZIONI {% endblock %}
+
+{% block links %}
+<link href="{% static 'l4m/css/other.css' %}" rel="stylesheet">
+<link href="{% static 'l4m/css/generic.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="{% static 'l4m/js/other.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+{% endblock %}
+
+{% block content %}
+
+<div id="layoutSidenav_content" class="custom-layout">
+
+    <div class="alert alert-danger" role="alert" id="error-alert" hidden>
+        <span id="span-error-alert"></span>
+    </div>
+
+    <div class="alert alert-success" role="alert" id="info-alert" hidden>
+        <span id="span-info-alert"></span>
+    </div>
+
+    <div class="main-div" id="otherDiv">
+
+        {% include "l4m/generic/generic_hero.html" with hero_title=comp.name hero_subtitle=comp.description hero_logo=comp.logo_path %}
+
+        <!-- <div class="competition-divider glow-divider"></div> -->
+
+        <div class="top-table">
+
+
+        </div>
+
+    </div>
+</div>
+{% endblock %}
