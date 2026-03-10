@@ -1,7 +1,7 @@
 {% extends "./base.html" %}
 {% load static %}
 
-{% block title %} L4M2.0 - ALTRE COMPETIZIONI {% endblock %}
+{% block title %} L4M2.0 - ROUTE 66 {% endblock %}
 
 {% block links %}
 <link href="{% static 'l4m/css/other.css' %}" rel="stylesheet">
@@ -27,7 +27,7 @@
 
     <div class="main-div" id="otherDiv">
 
-        {% include "l4m/generic/generic_hero.html" with hero_title=comp.name hero_subtitle=comp.description hero_logo=comp.logo_path %}
+        {% include "l4m/generic/generic_hero.html" with hero_title=comp_info.name hero_subtitle=comp_info.description hero_logo=comp_info.logo_path %}
 
         <!-- <div class="competition-divider glow-divider"></div> -->
 

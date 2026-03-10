@@ -53,7 +53,7 @@ urlpatterns = [
     path("l4m/player_statistics/getBasicStats", statistics_views.GetBasicStatisticsView.as_view(), name="player_basic_statistics"),
     path("l4m/get_extratime/", live_views.GetExtraTimeView.as_view(), name="get_extratime"),
     path("l4m/get_penalties/", live_views.GetPenaltiesView.as_view(), name="get_penalties"),
-    path("l4m/other/<int:other_competition_id>/", other_views.OtherView.as_view(), name="other"),
+    path("l4m/other/route66/", other_views.Route66View.as_view(), name="r66"),
 
 
 ]
