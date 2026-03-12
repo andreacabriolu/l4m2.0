@@ -7,27 +7,25 @@ from django.db.models import Q
 from l4m_app.single_models import matches_results, other_competition, team
 
 def get_route66_data():
-    r66_data = {}
+    r66_data = []
     teams = team.Team.objects.filter(Active=True).values('id','Name')
-    marked_matches = []
 
     for _team in teams:
         team_matches = matches_results.MatchesResults.objects.filter(Q(Team_id=_team['id']) & Q(MatchesCalendar__CompetitionCalendar__Competition__Name="Campionato"))\
             .select_related('MatchesCalendar','CompetitionCalendar').values('MatchesCalendar__CompetitionCalendar__Day', 'Team_id', 'Fp').order_by('MatchesCalendar__CompetitionCalendar__Day')
 
-        marked_matches = [
-            (m['MatchesCalendar__CompetitionCalendar__Day'],
-             m['Fp'],
-             True if m['Fp'] >= 66 else False)
-                for m in team_matches]
-
-        r66_data[_team['id']] = {
+        team_data = {
             'team_name': _team['Name'],
-            'marked_matches': marked_matches,
+            'scores': [m['Fp'] for m in team_matches],
+            'days': [{'score': m['Fp'], 'win': m['Fp'] >= 66} for m in team_matches],
         }
 
-    return r66_data
+        team_data['perfect'] = all(day['win'] for day in team_data['days'])
 
+        r66_data.append(team_data)
+
+    return r66_data
+        
 class Route66View(LoginRequiredMixin, View):
     template_name = "l4m/route66.html"
 
@@ -46,5 +44,7 @@ class Route66View(LoginRequiredMixin, View):
         params = {
             'comp_info': comp_info,
             'r66_data': r66_data,
+            'days': range(1, int(U.get_current_day()))
         }
+
         return render(request, self.template_name, params)

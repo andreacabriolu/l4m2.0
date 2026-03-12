@@ -4,13 +4,12 @@
 {% block title %} L4M2.0 - ROUTE 66 {% endblock %}
 
 {% block links %}
-<link href="{% static 'l4m/css/other.css' %}" rel="stylesheet">
+<link href="{% static 'l4m/css/route66.css' %}" rel="stylesheet">
 <link href="{% static 'l4m/css/generic.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block scripts %}
 <script type="text/javascript" src="{% static 'l4m/js/other.js' %}"></script>
-<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -25,16 +24,47 @@
         <span id="span-info-alert"></span>
     </div>
 
-    <div class="main-div" id="otherDiv">
+    <div class="main-div">
 
         {% include "l4m/generic/generic_hero.html" with hero_title=comp_info.name hero_subtitle=comp_info.description hero_logo=comp_info.logo_path %}
 
         <!-- <div class="competition-divider glow-divider"></div> -->
 
-        <div class="top-table">
+        <div class="route66-container">
 
+            <div class="route-grid-wrapper">
+
+                <div class="route-grid route-grid-header">
+
+                    <div class="team-col {% if team.perfect %}perfect-team{% endif %}">
+                        {{ team.team_name }}
+                    </div>
+
+                    {% for d in days %}
+                    <div class="day-cell">{{ d }}</div>
+                    {% endfor %}
+
+                </div>
+
+                {% for team in r66_data %}
+                <div class="route-grid route-team-row">
+
+                    <div class="team-col">
+                        {{ team.team_name }}
+                    </div>
+
+                    {% for day in team.days %}
+                    <div class="score-cell {% if day.win %}success{% else %}fail{% endif %}"
+                        data-score="{{ day.score }}" title="{{ day.score }}"></div>
+                    {% endfor %}
+
+                </div>
+                {% endfor %}
+
+            </div>
 
         </div>
+
 
     </div>
 </div>

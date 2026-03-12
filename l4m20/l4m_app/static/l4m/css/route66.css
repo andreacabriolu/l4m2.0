@@ -1,0 +1,82 @@
+.main-div {
+    background-color: #0f172a
+}
+
+.custom-layout {
+  background-color: #0f172a;
+}
+
+.route66-container{
+    padding:2rem;
+}
+
+.route-title{
+    text-align:center;
+    font-weight:600;
+}
+
+.route-subtitle{
+    text-align:center;
+    color:#9aa4af;
+    margin-bottom:2rem;
+}
+
+/* wrapper allows horizontal scroll on mobile */
+
+.route-grid-wrapper{
+    overflow-x:auto;
+}
+
+/* grid rows */
+
+.route-grid{
+    display:grid;
+    grid-template-columns: 160px repeat(35, 22px);
+    gap:6px;
+    align-items:center;
+    margin-bottom:6px;
+}
+
+.day-cell{
+    font-size:.85rem;
+    text-align:center;
+    color:#8b949e;
+}
+
+.team-col{
+    font-size:.95rem;
+    font-weight:700;
+    white-space:nowrap;
+}
+
+.score-cell{
+    width:22px;
+    height:22px;
+    border-radius:4px;
+    background:#2f353d;
+    transition:transform .15s ease, box-shadow .15s ease;
+}
+
+/* success >=66 */
+
+.score-cell.success{
+    background:forestgreen;
+}
+
+/* fail */
+
+.score-cell.fail{
+    background:firebrick;
+}
+
+/* hover */
+
+.score-cell:hover{
+    transform:scale(1.15);
+    box-shadow:0 0 0 1px rgba(255,255,255,.15);
+}
+
+.perfect-team{
+    color:#4da3ff;
+    font-weight:600;
+}
