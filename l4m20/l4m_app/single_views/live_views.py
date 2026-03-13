@@ -206,6 +206,9 @@ class MyLiveView(LoginRequiredMixin, View):
                 votes_away = LU.get_votes(lineup_couple[1], current_day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=myteam['id'], home=False, homeAway=_homeaway)
             
             if extratime_penalties: 
+                if isinstance(lineup_couple[0], str) or isinstance(lineup_couple[1], str):
+                    continue
+
                 votes_home = LU.add_extratime_penalties_flag(votes_home)
                 votes_away = LU.add_extratime_penalties_flag(votes_away)
                 team_home = lineup_couple[0]['t'].id if _lineup_comp.id == total_league.id else lineup_couple[0].Team.id
