@@ -108,6 +108,14 @@ def extract_votes_for_penalties(pen_players, votes):
 
     pen_votes = {}
 
+    day_already_started, _ = U.check_day_already_started(U.get_current_day())
+    if not day_already_started:
+        for p in pen_players:
+            pl = player.Player.objects.filter(id=p).first()
+            pen_votes[p] = [pl.Surname, 6] #default vote for not started days
+
+        return pen_votes
+
     for p in pen_players:
         if p in tit_players:
             matching_vote = next(((v.Player.Surname, v.Vote) for v in votes_tit if int(v.Player.id) == p), None)
@@ -117,11 +125,6 @@ def extract_votes_for_penalties(pen_players, votes):
             sub_id, sub_vote = next(((v.Player.id,(v.Player.Surname, v.Vote)) for v in votes_tit if v.Player.Surname == sub_name), None)
             pen_votes[p] = sub_vote
     
-    # #complete the list if needed
-    # diff = set(tit_players) - set(pen_players)
-    # for d in diff:
-    #     pen_votes[d] = next(((v.Player.Surname, v.Vote) for v in votes_tit if int(v.Player.id) == d), None)
-
     return pen_votes
 
 def calculate_penalties_single_team(lineup, gk_opponent_vote, votes):
@@ -293,8 +296,13 @@ def calculate_extratime_goals(votes, lineup):
     ot_goals = calculate_n_ot_goals(ot_score)
 
     for v in votes_ris:
-        if v.Player.id in ot_players:# and v.TotVote is not None:
+        if v.Player.id in ot_players:
             ot_votes_map.append({'id': v.Player.id, 'info': [v.Player.Surname, 0 if v.TotVote is None else v.TotVote]})
+
+    if len(votes_ris) == 0: #day not started yet
+        for p in ot_players:
+            pl = player.Player.objects.filter(id=p).first()
+            ot_votes_map.append({'id': pl.id, 'info': [pl.Surname, 6]})
 
     return ot_goals, ot_score, ot_votes_map
 
