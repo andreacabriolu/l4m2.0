@@ -6,6 +6,32 @@ from django.db.models import Q
 
 from l4m_app.single_models import matches_results, other_competition, team
 
+class AngelButcherView(LoginRequiredMixin, View):
+    template_name = "l4m/angel_butcher.html"
+
+    def get(self, request):
+
+        angel_comp = other_competition.OtherCompetition.objects.filter(Name="Angelo e Macellaio").first()
+
+        if angel_comp is not None:
+            comp_info = {
+                'logo_path': angel_comp.LogoPath,
+                'name': angel_comp.Name,
+                'description': angel_comp.Description,
+            }
+        else:
+            comp_info = {
+                'logo_path': '',
+                'name': 'Angelo e Macellaio',
+                'description': 'Descrizione Angelo e Macellaio.'
+            }
+
+        params = {
+            'comp_info': comp_info,
+        }
+
+        return render(request, self.template_name, params)
+
 def get_route66_data():
     r66_data = []
     teams = team.Team.objects.filter(Active=True).values('id','Name')

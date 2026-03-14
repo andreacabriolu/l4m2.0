@@ -1,0 +1,68 @@
+{% extends "./base.html" %}
+{% load static %}
+
+{% block title %} L4M2.0 - ANGELO E MACELLAIO {% endblock %}
+
+{% block links %}
+<link href="{% static 'l4m/css/angel.css' %}" rel="stylesheet">
+<link href="{% static 'l4m/css/generic.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="{% static 'l4m/js/other.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+
+<div id="layoutSidenav_content" class="custom-layout">
+
+    <div class="main-div">
+
+        {% include "l4m/generic/generic_hero.html" with hero_title=comp_info.name hero_subtitle=comp_info.description
+        hero_logo=comp_info.logo_path %}
+
+        <div class="discipline-table">
+
+            {% for team in teams %}
+
+            <div class="discipline-row">
+
+                <div class="rank">
+                    {{ forloop.counter }}
+                </div>
+
+                <div class="team">
+                    {% if forloop.first %}
+                    🔪
+                    {% elif forloop.last %}
+                    👼
+                    {% endif %}
+                    {{ team.name }}
+                </div>
+
+                <div class="card-stack">
+
+                    {% for i in team.yellow_cards %}
+                    <span class="card yellow"></span>
+                    {% endfor %}
+
+                    {% for i in team.red_cards %}
+                    <span class="card red"></span>
+                    {% endfor %}
+
+                </div>
+
+                <div class="total">
+                    {{ team.total }}
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+
+    </div>
+</div>
+{% endblock %}
