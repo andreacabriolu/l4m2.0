@@ -272,9 +272,6 @@ def LiveView(request, competition_id, series_id, day):
     current_day = U.get_current_day()
     all_days = range(1, int(current_day) + 1) #default campionato
 
-    # my_series_mainleague = U.get_my_series(teamid, competitionid=1) #default campionato
-    # my_seriesid_mainleague = my_series_mainleague[0].id
-
     all_competitions = U.get_all_live_active_competitions()
     all_competitions = all_competitions.order_by('id') #quite a workaround to get main league as first
     today_competitions = U.get_all_today_competitions(current_day)
@@ -306,6 +303,7 @@ def LiveView(request, competition_id, series_id, day):
         mrs = LU.get_matches_results(couples)
 
         for mr in mrs:
+            mr = mr.order_by('-Home') #home team first
             votes_home = LU.format_votes(mr[0]) #format votes_tit, items, votes_ris
             votes_away = LU.format_votes(mr[1]) #format votes_tit, items, votes_ris
 
@@ -428,8 +426,8 @@ def LiveView(request, competition_id, series_id, day):
                             lineup_couple[1].Team.id)
 
                         if first_leg is not None:
-                            votes_home = LU.add_first_leg_goals(votes_home, first_leg[1].NGoals)
-                            votes_away = LU.add_first_leg_goals(votes_away, first_leg[0].NGoals)
+                            votes_home = LU.add_first_leg_goals(votes_home, first_leg[0].NGoals)
+                            votes_away = LU.add_first_leg_goals(votes_away, first_leg[1].NGoals)
 
                 all_votes.append( \
                     [votes_home, votes_away]
