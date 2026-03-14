@@ -38,6 +38,12 @@ class Route66View(LoginRequiredMixin, View):
                 'name': r66_comp.Name,
                 'description': r66_comp.Description,
             }
+        else:
+            comp_info = {
+                'logo_path': '',
+                'name': 'Route 66',
+                'description': 'Descrizione R66.'
+            }
 
         r66_data = get_route66_data()
 
