@@ -145,6 +145,31 @@ def get_bracket_data_for_competition(competition_id):
                 if (team_away, team_home) in results_coupled_by_legs: #check if the second leg teams are the opposite of the first leg teams
                     results_coupled_by_legs[(team_away, team_home)] = (results_coupled_by_legs[(team_away, team_home)][0], results_second_leg) #update the second leg results
 
+            if len(results_coupled_by_legs) == 0: #no results available for both legs
+                for i in range(gc[0]['Num_Matches']): #initialize empty results for the number of matches in the layer
+                    layer_results[layer_name].append({
+                        'home': '-',
+                        'away': '-',
+                        "is_final": False,
+                        "legs" : [
+                            {                    
+                                'home_score': '-' ,
+                                'away_score': '-' ,
+                                'played': False
+                            },
+                            {                    
+                                'home_score': '-' ,
+                                'away_score': '-' ,
+                                'played': False
+                            },
+                        ], 
+                        "aggregate_home": '-',
+                        "aggregate_away": '-',
+                        "winner": None
+                    })
+
+                continue
+
             for leg_result in results_coupled_by_legs.values():
                 result_home_first_leg, result_away_first_leg = leg_result[0][0], leg_result[0][1]
                 result_home_second_leg, result_away_second_leg = leg_result[1][0] if leg_result[1] else None, leg_result[1][1] if leg_result[1] else None
@@ -184,6 +209,8 @@ def get_bracket_data_for_competition(competition_id):
                     grouped_results_final[mc_id] = []
                 grouped_results_final[mc_id].append(result)
 
+            result_home = None
+            result_away = None
             for results in grouped_results_final.values():
                 result_home, result_away = results[0], results[1]
 

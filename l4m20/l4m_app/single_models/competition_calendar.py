@@ -15,7 +15,7 @@ class CompetitionCalendar(models.Model):
     Num_Matches = models.IntegerField(default=None, null=True)
 
     def __str__(self):
-        return f"{self.Competition} - Giornata {self.Day} - {self.Stage})"
+        return f"{self.Competition} - Giornata {self.Day} - {self.Stage}"
 
 
     class Meta:
