@@ -1,5 +1,7 @@
 from django.urls import path
 
+from l4m_app.single_views import other_views
+
 from .single_views import login_views, auction_views, lineup_views, squad_views, \
 allauction_views, live_views, rules_views, dashboard_views, admin_views, my_leagues_views, \
 statistics_views
@@ -51,6 +53,8 @@ urlpatterns = [
     path("l4m/player_statistics/getBasicStats", statistics_views.GetBasicStatisticsView.as_view(), name="player_basic_statistics"),
     path("l4m/get_extratime/", live_views.GetExtraTimeView.as_view(), name="get_extratime"),
     path("l4m/get_penalties/", live_views.GetPenaltiesView.as_view(), name="get_penalties"),
+    path("l4m/other/route66/", other_views.Route66View.as_view(), name="r66"),
+    path("l4m/other/angel_butcher/", other_views.AngelButcherView.as_view(), name="angel_butcher"),
 
 
 ]

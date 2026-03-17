@@ -1,0 +1,32 @@
+{% load static %}
+
+<div class="page-hero">
+
+    <div class="page-hero-inner">
+
+        {% if hero_logo %}
+            {% static 'l4m/images/comp_logos/' as comp_logos_path %}
+            <img src="{{comp_logos_path}}{{hero_logo}}" class="hero-logo" loading="lazy">
+            {% else %}
+            <img src="{% static 'l4m/images/logo.jpeg' %}" class="hero-logo" loading="lazy">
+        {% endif %}
+
+        <h1 class="hero-title">
+            {{ hero_title }}
+        </h1>
+
+        {% if hero_subtitle %}
+        <p class="hero-subtitle">
+            {{ hero_subtitle }}
+        </p>
+        {% endif %}
+
+        {% if hero_meta %}
+        <div class="hero-meta">
+            {{ hero_meta }}
+        </div>
+        {% endif %}
+
+    </div>
+
+</div>

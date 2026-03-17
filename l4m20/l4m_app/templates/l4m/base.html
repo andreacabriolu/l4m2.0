@@ -33,7 +33,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
     <link href="{% static 'l4m/css/base.css' %}" rel="stylesheet">
     <link href="{% static 'l4m/css/styles3.css' %}" rel="stylesheet">
-     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous"> -->
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous"> -->
 
 
     <link
@@ -148,9 +148,6 @@
                             <a class="nav-link nav-link-custom" href="/l4m/mylive/">
                                 LE MIE PARTITE IN CORSO
                             </a>
-                            <!-- <a class="nav-link nav-link-custom" href="/l4m/live_b11/">
-                                BEST 11 LIVE!
-                            </a> -->
 
                             <div class="sb-sidenav-menu-heading sidenav-custom">
                                 <a id="comp-dropdown"
@@ -207,6 +204,34 @@
                                     </a>
                                 </nav>
                             </div>
+
+                            <div class="sb-sidenav-menu-heading sidenav-custom">
+                                <a id="other-comp-dropdown"
+                                    class="nav-link collapsed collapse nav-link-custom nav-collapsed-custom" href="#"
+                                    data-bs-toggle="collapse" data-bs-target="#oc_collapseLayouts" aria-expanded="false"
+                                    aria-controls="oc_collapseLayouts">
+                                    <div class="sb-nav-link-icon"><i class="fa-solid fa-trophy"></i></div>
+                                    <span class="nav-span nav-span-collapsed">ALTRE COMPETIZIONI</span>
+                                    <div class="sb-sidenav-collapse-arrow arrow-collapse"><i
+                                            class="fas fa-angle-down"></i></div>
+                                </a>
+                            </div>
+                            <div class="collapse" id="oc_collapseLayouts" aria-labelledby="headingOne"
+                                data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link nav-link-custom" href="/l4m/other/route66" id="r66_link">
+                                        ROUTE 66
+                                    </a>
+                                </nav>
+                                <nav class="sb-sidenav-menu-nested nav">
+
+                                    <a class="nav-link nav-link-custom" href="/l4m/other/angel_butcher" id="angel_butcher_link">
+                                        ANGELO E MACELLAIO
+                                    </a>
+                                </nav>
+                                
+                            </div>
+
                             <div class="sb-sidenav-menu-heading sidenav-custom">
                                 <div class="sb-nav-link-icon rule-icon"><i class="fa-solid fa-scale-balanced"></i></div>
                                 <a class="nav-link nav-link-custom nav-link-rules" href="/l4m/rules/">

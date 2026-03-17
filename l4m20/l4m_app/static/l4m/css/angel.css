@@ -1,0 +1,131 @@
+.main-div {
+    background-color: #0f172a
+}
+
+.custom-layout {
+    background-color: #0f172a;
+}
+
+.hero-logo{
+    border-radius:16px;              /* smooth corners */
+    overflow:hidden;
+
+    box-shadow:
+        0 4px 20px rgba(0,0,0,0.5),  /* depth */
+        0 0 10px rgba(80,160,255,0.15); /* subtle glow */
+    
+        max-width: 20%;
+    height: auto !important;
+    object-fit: contain;
+}
+
+
+.card-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    font-size: 1rem;
+}
+
+.card {
+    width: 10px;
+    height: 14px;
+    border-radius: 2px;
+}
+
+.card.yellow {
+    background: #f5c542;
+}
+
+.card.red {
+    background: #e5533d;
+}
+
+.discipline-row {
+    display: grid;
+    grid-template-columns: 32px 1fr auto 40px;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+
+.discipline-row:first-child {
+    background: rgba(229, 83, 61, 0.08);
+}
+
+.discipline-row:last-child {
+    background: rgba(80, 160, 255, 0.08);
+}
+
+.discipline-table {
+    margin: 1em;
+}
+
+.rank {
+    font-size: 0.85rem;
+    color: #7d8590;
+}
+
+.team {
+    font-weight: 500;
+    color: #e6edf3;
+}
+
+.stats {
+    display: flex;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: #c9d1d9;
+}
+
+.total {
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-align: right;
+}
+
+.yellow {
+    color: #f5c542;
+}
+
+.red {
+    color: #e5533d;
+}
+
+.badge-icon {
+    margin-right: 6px;
+    font-size: 0.9rem;
+}
+
+.macellaio {
+    color: #e5533d;
+}
+
+.angelo {
+    color: #6ea8fe;
+}
+
+@media (max-width:768px) {
+
+    .discipline-row {
+        grid-template-columns: 28px 1fr auto 36px;
+        gap: 6px;
+        padding: 8px;
+    }
+
+    .stats {
+        gap: 6px;
+        font-size: 0.8rem;
+    }
+
+    .total {
+        font-size: 0.85rem;
+    }
+
+}
+
+.discipline-row:last-child {
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+}

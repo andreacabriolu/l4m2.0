@@ -1,0 +1,82 @@
+{% extends "./base.html" %}
+{% load static %}
+
+{% block title %} L4M2.0 - ROUTE 66 {% endblock %}
+
+{% block links %}
+<link href="{% static 'l4m/css/route66.css' %}" rel="stylesheet">
+<link href="{% static 'l4m/css/generic.css' %}" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="{% static 'l4m/js/other.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+
+<div id="layoutSidenav_content" class="custom-layout">
+
+    <div class="alert alert-danger" role="alert" id="error-alert" hidden>
+        <span id="span-error-alert"></span>
+    </div>
+
+    <div class="alert alert-success" role="alert" id="info-alert" hidden>
+        <span id="span-info-alert"></span>
+    </div>
+
+    <div class="main-div">
+
+        {% include "l4m/generic/generic_hero.html" with hero_title=comp_info.name hero_subtitle=comp_info.description hero_logo=comp_info.logo_path %}
+
+        <div class="route66-container">
+
+            <div class="route-grid-wrapper">
+
+                <div class="route-grid route-grid-header">
+                    <div class="team-col">Team</div>
+
+                    {% for d in days %}
+                    <div class="day-cell">{{ d }}</div>
+                    {% endfor %}
+
+                </div>
+
+                {% for team in r66_data %}
+                <div class="route-grid route-team-row">
+
+                    <div class="team-col  {% if team.perfect %}perfect-team{% endif %}">
+                        <span class="route-status-left">
+                            {% if team.perfect %}
+                            <i class="bi bi-check-circle-fill route-ok"></i>
+                            {% else %}
+                            <i class="bi bi-x-circle-fill route-fail"></i>
+                            {% endif %}
+                        </span>
+
+                        {{ team.team_name }}
+                    </div>
+
+                    {% for day in team.days %}
+                    <div class="score-cell {% if day.win %}success{% else %}fail{% endif %}"
+                        data-score="{{ day.score }}" title="{{ day.score }}"></div>
+                    {% endfor %}
+
+                    <span class="route-status-right">
+                        {% if team.perfect %}
+                        <i class="bi bi-check-circle-fill route-ok"></i>
+                        {% else %}
+                        <i class="bi bi-x-circle-fill route-fail"></i>
+                        {% endif %}
+                    </span>
+                </div>
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+{% endblock %}

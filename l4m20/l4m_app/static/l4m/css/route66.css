@@ -1,0 +1,127 @@
+.main-div {
+    background-color: #0f172a
+}
+
+.custom-layout {
+  background-color: #0f172a;
+}
+
+.route66-container{
+    justify-items: center;
+    padding:2rem;
+    width:100%;
+    max-width:100%;
+}
+
+.route-title{
+    text-align:center;
+    font-weight:600;
+}
+
+.route-subtitle{
+    text-align:center;
+    color:#9aa4af;
+    margin-bottom:2rem;
+}
+
+/* wrapper allows horizontal scroll on mobile */
+
+.route-grid-wrapper{
+    width:100%;
+    max-width:100%;
+    overflow-x:auto;
+    overflow-y:hidden;
+}
+
+/* grid rows */
+
+.route-grid{
+    display:grid;
+    grid-template-columns: 160px repeat(35, 22px);
+    gap:6px;
+    align-items:center;
+    margin-bottom:6px;
+    justify-content: center;
+}
+
+.day-cell{
+    font-size:.85rem;
+    text-align:center;
+    color:#8b949e;
+}
+
+.team-col{
+    font-size:.95rem;
+    font-weight:700;
+    white-space:nowrap;
+}
+
+.score-cell{
+    width:22px;
+    height:22px;
+    border-radius:4px;
+    background:#2f353d;
+    transition:transform .15s ease, box-shadow .15s ease;
+}
+
+/* success >=66 */
+
+.score-cell.success{
+    background:forestgreen;
+}
+
+/* fail */
+
+.score-cell.fail{
+    background:firebrick;
+}
+
+/* hover */
+
+.score-cell:hover{
+    transform:scale(1.15);
+    box-shadow:0 0 0 1px rgba(255,255,255,.15);
+}
+
+.perfect-team{
+    color:#4da3ff;
+    font-weight:600;
+}
+
+.route-status-right{
+    font-size:.9rem;
+    margin-left: 1em;
+}
+
+.route-status-left {
+    font-size: .9rem;
+    margin-right: 1em;
+}
+
+.route-ok{
+    color:#3fb950;
+}
+
+.route-fail{
+    color:#e5533d;
+}
+
+@media (max-width: 768px){
+
+.route-grid{
+    grid-template-columns: 120px repeat(35, 20px);
+    gap:4px;
+}
+
+.team-col{
+    font-size:.8rem;
+}
+
+.score-cell{
+    width:20px;
+    height:20px;
+}
+
+}
+
+
