@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.views import View
@@ -5,6 +7,43 @@ from .. import utilities as U
 from django.db.models import Q
 
 from l4m_app.single_models import matches_results, other_competition, team
+
+def get_angel_butcher_data():
+    angel_butcher_data = []
+    teams = team.Team.objects.filter(Active=True).values('id','Name')
+
+    for _team in teams:
+        team_matches = matches_results.MatchesResults.objects.filter(
+            Q(Team_id=_team['id']) & \
+            Q(MatchesCalendar__CompetitionCalendar__Competition__Name="Campionato"))\
+            .select_related('MatchesCalendar','CompetitionCalendar')\
+            .values('Votes_Tit')
+        
+        yel_tot = 0
+        red_tot = 0
+        for m in team_matches:
+            votes_tit = U.cleanJSON(m['Votes_Tit'])
+            votes_tit = votes_tit.replace("\"int\"","")
+            votes_tit = votes_tit.replace("\"str\"","")
+            if votes_tit is not None:
+                v_j = json.loads(votes_tit)
+                #sum the yel and red cards
+                yel_totday = sum (p['yel'] for p in v_j)
+                red_totday = sum (p['red'] for p in v_j)
+                yel_tot += yel_totday
+                red_tot += red_totday
+            
+        angel_butcher_data.append({
+            'team_name': _team['Name'],
+            'yel_tot': yel_tot,
+            'red_tot': red_tot,
+            'total': yel_tot + red_tot
+        })
+
+    #sort by total and then by red cards
+    angel_butcher_data.sort(key=lambda x: (x['total'], x['red_tot']), reverse=True)
+
+    return angel_butcher_data
 
 class AngelButcherView(LoginRequiredMixin, View):
     template_name = "l4m/angel_butcher.html"
@@ -26,8 +65,11 @@ class AngelButcherView(LoginRequiredMixin, View):
                 'description': 'Descrizione Angelo e Macellaio.'
             }
 
+        angel_butcher_data = get_angel_butcher_data()
+
         params = {
             'comp_info': comp_info,
+            'angel_butcher_data': angel_butcher_data,
         }
 
         return render(request, self.template_name, params)

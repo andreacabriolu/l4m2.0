@@ -1,5 +1,6 @@
 {% extends "./base.html" %}
 {% load static %}
+{% load custom_filters %}
 
 {% block title %} L4M2.0 - ANGELO E MACELLAIO {% endblock %}
 
@@ -18,50 +19,41 @@
 
     <div class="main-div">
 
-        {% include "l4m/generic/generic_hero.html" with hero_title=comp_info.name hero_subtitle=comp_info.description
-        hero_logo=comp_info.logo_path %}
+        {% include "l4m/generic/generic_hero.html" with hero_title=comp_info.name hero_subtitle=comp_info.description hero_logo=comp_info.logo_path %}
 
         <div class="discipline-table">
 
-            {% for team in teams %}
+        {% for team in angel_butcher_data %}
 
-            <div class="discipline-row">
+        <div class="discipline-row">
 
-                <div class="rank">
-                    {{ forloop.counter }}
-                </div>
-
-                <div class="team">
-                    {% if forloop.first %}
-                    🔪
-                    {% elif forloop.last %}
-                    👼
-                    {% endif %}
-                    {{ team.name }}
-                </div>
-
-                <div class="card-stack">
-
-                    {% for i in team.yellow_cards %}
-                    <span class="card yellow"></span>
-                    {% endfor %}
-
-                    {% for i in team.red_cards %}
-                    <span class="card red"></span>
-                    {% endfor %}
-
-                </div>
-
-                <div class="total">
-                    {{ team.total }}
-                </div>
-
+            <div class="rank">
+                {{ forloop.counter }}
             </div>
 
-            {% endfor %}
+            <div class="team">
+                {% if forloop.first %}
+                    <span class="badge-icon macellaio">🔪</span>
+                {% elif forloop.last %}
+                    <span class="badge-icon angelo">👼</span>
+                {% endif %}
+                {{ team.team_name }}
+            </div>
+
+            <div class="stats">
+                <span class="yellow">🟨 {{ team.yel_tot }}</span>
+                <span class="red">🟥 {{ team.red_tot }}</span>
+            </div>
+
+            <div class="total">
+                {{ team.total }}
+            </div>
 
         </div>
 
+        {% endfor %}
+
+        </div>
 
     </div>
 </div>
