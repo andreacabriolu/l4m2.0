@@ -109,8 +109,9 @@
 @media (max-width: 768px){
 
 .route-grid{
-    grid-template-columns: 120px repeat(35, 20px);
+    grid-template-columns: 10rem repeat(35, 20px);
     gap:4px;
+    justify-content: normal;
 }
 
 .team-col{

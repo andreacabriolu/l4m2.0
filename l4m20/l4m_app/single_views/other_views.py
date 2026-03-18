@@ -29,7 +29,7 @@ def get_angel_butcher_data():
                 v_j = json.loads(votes_tit)
                 #sum the yel and red cards
                 yel_totday = sum (p['yel'] for p in v_j)
-                red_totday = sum (p['red'] for p in v_j)
+                red_totday = sum (p['red'] + p['yelred'] for p in v_j)
                 yel_tot += yel_totday
                 red_tot += red_totday
             
