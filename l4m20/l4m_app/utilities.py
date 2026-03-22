@@ -132,7 +132,7 @@ def get_bracket_data_for_competition(competition_id):
                 if mc_id not in grouped_results_second_leg:
                     grouped_results_second_leg[mc_id] = []
                 grouped_results_second_leg[mc_id].append(result)
-            
+
             results_coupled_by_legs = {}
             for results_first_leg in grouped_results_first_leg.values(): #results available for first leg
                 team_home = results_first_leg[0]['MatchesCalendar__HomeTeam_id']
@@ -171,6 +171,8 @@ def get_bracket_data_for_competition(competition_id):
                 continue
 
             for leg_result in results_coupled_by_legs.values():
+                leg_result[0].sort(key= lambda x: x['MatchesCalendar__HomeTeam_id'] == x['Team_id'], reverse=True) #sort first leg results to have home team first
+                leg_result[1].sort(key=lambda x: x['MatchesCalendar__HomeTeam_id'] == x['Team_id'], reverse=True) #sort second leg results to have home team first
                 result_home_first_leg, result_away_first_leg = leg_result[0][0], leg_result[0][1]
                 result_home_second_leg, result_away_second_leg = leg_result[1][0] if leg_result[1] else None, leg_result[1][1] if leg_result[1] else None
             
@@ -185,8 +187,8 @@ def get_bracket_data_for_competition(competition_id):
                             'played': True
                         },
                         {                    
-                            'home_score': result_home_second_leg['NGoals'] if result_home_second_leg is not None else '-',
-                            'away_score': result_away_second_leg['NGoals'] if result_away_second_leg is not None else '-',
+                            'home_score': result_away_second_leg['NGoals'] if result_away_second_leg is not None else '-',
+                            'away_score': result_home_second_leg['NGoals'] if result_home_second_leg is not None else '-',
                             'played': True if result_home_second_leg is not None and result_away_second_leg is not None else False,
                             "et": get_et_outcome(result_home_second_leg, result_away_second_leg),
                             "pen": get_pen_outcome(result_home_second_leg, result_away_second_leg),
