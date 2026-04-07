@@ -193,8 +193,8 @@ def get_bracket_data_for_competition(competition_id):
                             "et": get_et_outcome(result_home_second_leg, result_away_second_leg),
                             "pen": get_pen_outcome(result_home_second_leg, result_away_second_leg),
                             "penalties": {
-                                "home_penalties": result_home_second_leg['Pen'] if result_home_second_leg is not None else 0,
-                                "away_penalties": result_away_second_leg['Pen'] if result_away_second_leg is not None else 0
+                                "home_penalties": result_away_second_leg['Pen'] if result_away_second_leg is not None else 0,
+                                "away_penalties": result_home_second_leg['Pen'] if result_home_second_leg is not None else 0
                             }
                         },
                     ], 
