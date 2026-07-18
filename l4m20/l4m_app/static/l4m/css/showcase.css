@@ -1,0 +1,170 @@
+.main-div {
+    background-color: #0f172a
+}
+
+.custom-layout {
+    background-color: #0f172a;
+}
+
+:root {
+    --gold-gradient: linear-gradient(135deg, #ffd700, #ffa500);
+    --silver-gradient: linear-gradient(135deg, #e2e8f0, #64748b);
+    --bronze-gradient: linear-gradient(135deg, #ca8a04, #78350f);
+    
+    /* Colori specifici per il Tema Scuro */
+    --dark-bg-main: #0b0f19;       /* Sfondo pagina profondo */
+    --dark-card-bg: #1e2533;       /* Sfondo delle card */
+    --dark-card-inner: #131924;    /* Sfondo degli elementi interni */
+    --dark-border: rgba(255, 255, 255, 0.08);
+    --text-muted-dark: #94a3b8;
+  }
+
+  /* Rimuovi o adatta questo body se hai già il tuo sfondo scuro globale */
+  body {
+    background-color: var(--dark-bg-main);
+    color: #f8fafc;
+  }
+
+  /* Header della Squadra Premium */
+  .team-header-card {
+    background: linear-gradient(135deg, #1e293b, #111827);
+    color: white;
+    border: 1px solid var(--dark-border);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  }
+
+  .team-logo-wrapper {
+    width: 90px;
+    height: 90px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: #38bdf8; /* Tonalità azzurro neon per dare un tocco tech */
+  }
+
+  /* Contatore Trofei Rapido dell'header */
+  .trophy-counter {
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    padding: 10px 15px;
+    border: 1px solid var(--dark-border);
+  }
+
+  /* Card Vetrina e Storico */
+  .showcase-card {
+    background: var(--dark-card-bg);
+    border: 1px solid var(--dark-border);
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  }
+
+  .trophy-case-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 15px;
+  }
+
+  /* Elemento Singolo Trofeo */
+  .trophy-item {
+    background: var(--dark-card-inner);
+    border: 1px solid var(--dark-border);
+    border-radius: 16px;
+    padding: 15px 10px;
+    text-align: center;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+  
+  .trophy-item:hover {
+    transform: translateY(-3px);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .trophy-icon-circle {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 10px auto;
+    font-size: 1.4rem;
+    color: #0f172a; /* Testo scuro dentro l'icona metallica brillante */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    font-weight: bold;
+  }
+
+  .bg-gold { background: var(--gold-gradient); color: #451a03 !important; }
+  .bg-silver { background: var(--silver-gradient); color: #0f172a !important; }
+  .bg-bronze { background: var(--bronze-gradient); color: #fff !important; }
+
+  /* Timeline Storica del Club (Tema Scuro) */
+  .history-timeline {
+    position: relative;
+    padding-left: 20px;
+  }
+  .history-timeline::before {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 10px;
+    bottom: 10px;
+    width: 2px;
+    background: #334155; /* Grigio scuro per la linea di fondo */
+  }
+
+  .timeline-row {
+    position: relative;
+    padding-bottom: 20px;
+  }
+  
+  /* Pallino della timeline */
+  .timeline-row::before {
+    content: '';
+    position: absolute;
+    left: -19px;
+    top: 7px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #38bdf8;
+    border: 2px solid var(--dark-card-bg);
+    box-shadow: 0 0 0 2px #38bdf8;
+  }
+
+  /* Badges personalizzati per il tema scuro */
+  .badge-dark-custom {
+    background-color: var(--dark-card-inner);
+    border: 1px solid var(--dark-border);
+    color: #f8fafc;
+  }
+
+  /* Ottimizzazioni Mobile */
+  @media (max-width: 576px) {
+    .team-header-card {
+      text-align: center;
+    }
+    .team-header-content {
+      flex-direction: column;
+      align-items: center;
+    }
+    .trophy-case-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .trophy-item {
+      padding: 10px 5px;
+    }
+    .trophy-icon-circle {
+      width: 45px;
+      height: 45px;
+      font-size: 1.1rem;
+    }
+    .trophy-item span {
+      font-size: 0.75rem !important;
+    }
+  }

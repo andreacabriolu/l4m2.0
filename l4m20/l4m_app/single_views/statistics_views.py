@@ -31,3 +31,15 @@ class GetBasicStatisticsView(View):
         basic_stats['n_matches_played'] = n_matches_played
 
         return HttpResponse(json.dumps(basic_stats))
+    
+class ShowcaseView(View):
+    template_name = 'l4m/showcase.html'
+
+    def get(self, request):
+        showcase_items = SU.get_showcase_items()
+        
+        params = {
+            'showcase_items': showcase_items,
+        }   
+
+        return render(request, self.template_name, params)  

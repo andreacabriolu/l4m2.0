@@ -4,6 +4,13 @@ from django.db.models import F, Q, Avg
 from l4m20 import constants as C
 from . import utilities as U
 
+def get_showcase_items():
+    return {
+        'totale_scudetti': 1,
+        'totale_coppe': 2,
+
+    }
+
 def get_real_match_string(day, real_team_id):
     match = real_calendar.Real_calendar.objects.filter(Q(Day=day) & 
                                                (Q(RealTeamAway_id=real_team_id) | Q(RealTeamHome_id=real_team_id)))
