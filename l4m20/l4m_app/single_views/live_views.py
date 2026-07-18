@@ -319,8 +319,8 @@ def LiveView(request, competition_id, series_id, day):
 
         #VALIDO PER:
         # TOTAL LEAGUE
-        total_league = all_competitions.get(Name='Total League')
-        if _competition_id == total_league.id:
+        total_league = next((c for c in all_competitions if c.Name == 'Total League'), None)
+        if total_league is not None and _competition_id == total_league.id:
             for t in series_teams:
                 lineup_to_show = LU.get_b11_lineup(t, _day, live_votes, live_teams, already_played_teams)
                 if lineup_to_show is None:
@@ -374,8 +374,12 @@ def LiveView(request, competition_id, series_id, day):
             #COPPA DI SERIE
             for t in series_teams:
                 l = U.get_last_lineup(t, _day, comp_id=_competition_id)
+                
                 if(len(l) <= 0 and overtime): #overtime (day started)
                     last_valid_l = U.get_last_valid_lineup(t)
+
+                if last_valid_l is None:
+                    continue #TODO: create random lineup?
 
                 lineup_to_show = t.Name #base
 

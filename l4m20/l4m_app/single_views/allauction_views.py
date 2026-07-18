@@ -51,10 +51,14 @@ class AllAuctionsView(LoginRequiredMixin, View):
                 surq = '-'
                 qam = ''
                         
-            lp = list(all_team_players.filter(Q(bet__Team_id=_team.id) & Q(Role=C.Constant_Dicts.RoleChars['POR'])).exclude(Q(id=idq)))
-            ld = list(all_team_players.filter(Q(bet__Team_id=_team.id) & Q(Role=C.Constant_Dicts.RoleChars['DIF'])).exclude(Q(id=idq)))
-            lc = list(all_team_players.filter(Q(bet__Team_id=_team.id) & Q(Role=C.Constant_Dicts.RoleChars['CC'])).exclude(Q(id=idq)))
-            la = list(all_team_players.filter(Q(bet__Team_id=_team.id) & Q(Role=C.Constant_Dicts.RoleChars['ATT'])).exclude(Q(id=idq)))
+            lp = list(all_team_players.filter(Q(bet__Team_id=_team.id) \
+                        & Q(Role=C.Constant_Dicts.RoleChars['POR'])).exclude(Q(id=idq)))
+            ld = list(all_team_players.filter(Q(bet__Team_id=_team.id) \
+                        & Q(Role=C.Constant_Dicts.RoleChars['DIF'])).exclude(Q(id=idq)))
+            lc = list(all_team_players.filter(Q(bet__Team_id=_team.id) \
+                        & Q(Role=C.Constant_Dicts.RoleChars['CC'])).exclude(Q(id=idq)))
+            la = list(all_team_players.filter(Q(bet__Team_id=_team.id) \
+                        & Q(Role=C.Constant_Dicts.RoleChars['ATT'])).exclude(Q(id=idq)))
             
             balances_ = U.get_balance(_team.id)
             if len(balances_) <= 0: 

@@ -344,7 +344,8 @@ def get_groups_data_for_competition(competition_id):
     for s in series_girone:
         group_teams = team.Team.objects.filter(Series__id=s.id).values('id','Name')
         group_matchdays = get_matchdays_info(s)
-        group_ranking = parse_ranking_line(ranking.Ranking.objects.filter(Q(Series_id=s.id)).values_list('RankingLine', flat=True).order_by('-Day').first())
+        ranking_line = ranking.Ranking.objects.filter(Q(Series_id=s.id)).values_list('RankingLine', flat=True).order_by('-Day').first()
+        group_ranking = parse_ranking_line(ranking_line) if ranking_line else []
 
         groups_data.append({
             'id': s.id,
@@ -781,7 +782,8 @@ def check_max_n_bets(teamid, role):
 
 
 def get_current_bets_amount(teamid):
-    sum = bet.Bet.objects.filter(Q(Team_id=teamid) & Q(Market_id=get_my_market(teamid).id)).aggregate(Sum('Amount'))['Amount__sum']
+    sum = bet.Bet.objects.filter(Q(Team_id=teamid) & \
+                                 Q(Market_id=get_my_market(teamid).id)).aggregate(Sum('Amount'))['Amount__sum']
     return sum if sum is not None else 0
 
 def update_balance_latelineup(bal):
@@ -826,11 +828,11 @@ def get_balance_obj(teamid):
 
 def get_balance(teamid):
     return balance.Balance.objects.\
-        filter(Team_id=teamid).\
+        filter(Q(Team_id=teamid) & Q(Season__Active=True)).\
         values('Purchases_amount','Purchases_max','N_carognate','N_svincoli')
 
 def get_all_team_players():
-    return player.Player.objects.\
+    return player.Player.objects.filter(bet__Market__Series__Season__Active=True).\
         values('id','Surname','Name','Role','bet__Team_id','bet__Amount',\
                'bet__IsExpired','bet__Carognata','bet__Expiration_Date')
 
@@ -979,6 +981,9 @@ def get_all_lineups(teamid, day, seriesid):
 def get_last_valid_lineup(teamid, comp_id=1):
     my_series = get_my_series(teamid, comp_id)
     all_lups = lineup.Lineup.objects.filter(Team=teamid, Series__in=my_series).order_by('-Version').order_by('-Day')
+    if len(all_lups) <= 0:
+        return None
+    
     return list(all_lups)[0]
 
 def get_last_lineup(teamid, day, comp_id=1):
