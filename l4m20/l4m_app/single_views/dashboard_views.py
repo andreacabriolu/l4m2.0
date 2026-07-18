@@ -21,7 +21,6 @@ class DashboardView(LoginRequiredMixin, View):
 
         my_team = U.get_user_team(request.user.id)
         my_series = U.get_all_my_series(teamid=my_team['id'])
-        # my_competitions = U.get_my_competitions(my_series)
         all_competitions = U.get_all_live_competitions()
 
         logo_path = my_team['LogoPath']

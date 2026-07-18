@@ -8,6 +8,9 @@ from zoneinfo import ZoneInfo
 from l4m20 import constants as C
 import requests as req
 
+def get_current_season():
+    return season.Season.objects.filter(Active=True).first()
+
 def parse_ranking_line(ranking_line):
     json_l = json.loads(ranking_line)
     lines = []
@@ -637,31 +640,31 @@ def get_my_series_from_calendar(teamid, competitionid, day):
     )
 
 def get_my_series(teamid, competitionid=1):
-    return series.Series.objects.filter(Q(team=teamid) & Q(Competition=competitionid))
+    return series.Series.objects.filter(Q(team=teamid) & Q(Competition=competitionid) & Q(Season__Active=True))
 
 def get_my_active_series(teamid, competitionid=1):
-    return series.Series.objects.filter(Q(team=teamid) & Q(Competition=competitionid) & Q(Active=True))
+    return series.Series.objects.filter(Q(team=teamid) & Q(Competition=competitionid) & Q(Active=True) & Q(Season__Active=True))
 
 def get_all_my_series(teamid):
-    return series.Series.objects.filter(Q(team=teamid))
+    return series.Series.objects.filter(Q(team=teamid) & Q(Season__Active=True))
 
 def get_all_active_series_by_day(competitionid, day):
-    return series.Series.objects.filter(Q(Competition_id=competitionid) & Q(Active=True) & Q(competitioncalendar__Day=day))
+    return series.Series.objects.filter(Q(Competition_id=competitionid) & Q(Active=True) & Q(Season__Active=True) & Q(competitioncalendar__Day=day))
 
 def get_all_series(competitionid):
-    return series.Series.objects.filter(Competition_id=competitionid)
+    return series.Series.objects.filter(Q(Competition_id=competitionid) & Q(Season__Active=True))
 
 def get_all_final_series(competitionid):
-    return series.Series.objects.filter(Q(Competition_id=competitionid) & Q(IsGirone=False))
+    return series.Series.objects.filter(Q(Competition_id=competitionid) & Q(IsGirone=False) & Q(Season__Active=True))
 
 def get_all_series_girone(competitionid):
-    return series.Series.objects.filter(Q(Competition_id=competitionid) & Q(IsGirone=True))
+    return series.Series.objects.filter(Q(Competition_id=competitionid) & Q(IsGirone=True) & Q(Season__Active=True))
 
 def get_my_markets(seriesid):
     return market.Market.objects.filter(Series_id=seriesid)
 
 def get_squads(teamid):
-    return squads.Squads.objects.filter(Q(Team_id=teamid)&Q(Quarantine=False))
+    return squads.Squads.objects.filter(Q(Team_id=teamid) & Q(Quarantine=False) & Q(Season__Active=True))
 
 def get_players_by_squad(_squads):
     pl_ids = [pl.Player_id for pl in _squads]
@@ -949,6 +952,7 @@ def get_my_players_filtered(filter_role, teamid):
         filter(Team_id=teamid).\
         filter(Player__Role=filter_role).\
         filter(Quarantine=False).\
+        filter(Season__Active=True).\
         values('id','Player__id','Player__Surname','Player__RealTeam__Name','Amount','Player__Role', 'Player__RealTeam__id').\
         order_by('Player__Surname')
 

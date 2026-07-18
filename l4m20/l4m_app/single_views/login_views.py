@@ -6,6 +6,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
 from ..single_models import team, balance, config
 from datetime import datetime
+from .. import utilities as U
 
 class LoginView(View):
     template_name= 'l4m/login.html'
@@ -69,12 +70,13 @@ class RegisterView(View):
         _team.save()
 
         _bal = balance.Balance.objects.create(
-            Name=f'newbal_{datetime.now.__str__()}',
+            Name=f'Bilancio_{_team.Name}_{U.get_current_season().Name}',
             Wages_amount = 300,
             Purchases_amount = 300,
             Wages_max = 300,
             Purchases_max = 300,
-            Team = _team
+            Team = _team,
+            Season = U.get_current_season()
             )
         _bal.save()
 

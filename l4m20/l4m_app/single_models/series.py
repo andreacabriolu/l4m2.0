@@ -8,6 +8,7 @@ class Series(models.Model):
     Competition = models.ForeignKey(to=C.Constant_Strings.competition, on_delete=models.CASCADE, null=True)
     Active = models.BooleanField(default=True)
     IsGirone = models.BooleanField(default=True)
+    Season = models.ForeignKey(to=C.Constant_Strings.season, on_delete=models.CASCADE, null=True)
     
     def __str__(self):
-        return " ".join([self.Name, str(self.Competition)])
+        return " ".join([self.Name, str(self.Competition), str(self.Season)])

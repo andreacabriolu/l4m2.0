@@ -4,6 +4,7 @@ class Constant_Strings:
     competition = "Competition"
     market = "Market"
     real_team = "Realteam"
+    season = "Season"
     series = "Series"
     session = "Session"
     team = "Team"

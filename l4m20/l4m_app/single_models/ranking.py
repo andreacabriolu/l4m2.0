@@ -7,8 +7,7 @@ class Ranking(models.Model):
     RankingLine = models.CharField()
     Competition = models.ForeignKey(on_delete=models.CASCADE,to=C.Constant_Strings.competition, null=True)    
     Series = models.ForeignKey(on_delete=models.CASCADE,to=C.Constant_Strings.series, null=True)    
-    Season = models.CharField()
     Day = models.IntegerField(null=True)
 
     def __str__(self):
-        return f"{self.Competition.Name}-{self.Series.Name}-Day {self.Day}"
+        return f"{self.Competition.Name}-{self.Series.Season.Name}-Day {self.Day}"

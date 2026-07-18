@@ -13,6 +13,7 @@ class Balance(models.Model):
     N_carognate = models.IntegerField(null=True, default=0)
     N_svincoli = models.IntegerField(null=True, default=0)
     N_formazioni_non_schierate = models.IntegerField(null=True, default=0)
+    Season = models.ForeignKey(C.Constant_Strings.season, on_delete=models.CASCADE, null=True)
     
     def __str__(self):
         return f"balance_{self.Team.Name}"

@@ -114,3 +114,7 @@
   font-size: 18px;
   color: #ffffff40;
 }
+
+.nav-link-history {
+  color: rgb(235, 106, 66) !important;
+}
