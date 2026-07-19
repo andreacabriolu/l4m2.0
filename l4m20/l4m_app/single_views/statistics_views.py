@@ -36,10 +36,14 @@ class ShowcaseView(View):
     template_name = 'l4m/showcase.html'
 
     def get(self, request):
-        showcase_items = SU.get_showcase_items()
+        user_team = U.get_user_team(request.user.id)
+        teamid = user_team['id']
+        logo_path = user_team['LogoPath']
+        showcase_items = SU.get_showcase_items(teamid)
         
         params = {
             'showcase_items': showcase_items,
+            'logo_path': logo_path,
         }   
 
         return render(request, self.template_name, params)  

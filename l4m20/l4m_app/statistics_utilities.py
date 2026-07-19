@@ -4,11 +4,19 @@ from django.db.models import F, Q, Avg
 from l4m20 import constants as C
 from . import utilities as U
 
-def get_showcase_items():
-    return {
-        'totale_scudetti': 1,
-        'totale_coppe': 2,
+def get_showcase_items(teamid, seasonid=None):
 
+    items = team_competition.Team_Competition.objects.filter(Q(Team_id=teamid))
+
+    if seasonid is not None:
+        items = items.filter(Q(Season_id=seasonid))
+
+    mainleague_wins = items.filter(Q(IsWinner=True) & Q(Competition__Name=C.Constant_Strings.campionato)).count()
+    cups_wins = items.filter(Q(IsWinner=True) & ~Q(Competition__Name=C.Constant_Strings.campionato)).count()
+
+    return {
+        'totale_scudetti': mainleague_wins,
+        'totale_coppe': cups_wins,
     }
 
 def get_real_match_string(day, real_team_id):

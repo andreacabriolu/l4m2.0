@@ -20,31 +20,43 @@
 
                 <div class="container py-4">
 
-                        <!-- HEADER SQUADRA (RESPONSIVE & DARK) -->
+                        <!-- HEADER SQUADRA -->
                         <div class="card team-header-card p-4 mb-4">
                                 <div class="d-flex team-header-content align-items-center gap-4">
 
                                         <!-- Logo Squadra -->
                                         <div class="team-logo-wrapper shadow">
-                                                <i class="fa-solid fa-shield-halved"></i>
+                                                {% if logo_path %}
+            {% static 'l4m/images/logos/' as logos_path %} 
+            <img src="{{logos_path}}{{logo_path}}" loading="lazy" 
+                class="featurette-image" >
+            {% else %}
+            <img src="{% static 'l4m/images/logo.jpeg' %}" loading="lazy" 
+                class="featurette-image" >
+            {% endif %}
+                                                <!-- <i class="fa-solid fa-shield-halved"></i> -->
                                         </div>
 
                                         <!-- Info Squadra -->
                                         <div class="flex-grow-1">
                                                 <h1 class="fw-bold mb-1 fs-2 text-white">{{teamname}}</h1>
+                                                <p class="mb-3 mb-md-0 team-manager-info">
+                                                        <i class="fa-solid fa-user me-1"></i> Manager: <strong
+                                                                class="team-manager-name">{{user}}</strong>
+                                                </p>
                                         </div>
 
                                         <!-- Contatori Rapidi -->
                                         <div class="d-flex gap-2">
                                                 <div class="trophy-counter text-center">
-                                                        <span class="d-block fw-bold text-warning fs-5">{{showcase_items.totale_scudetti}}</span>
-                                                        <small class="d-block"
-                                                                style="color: var(--text-muted-dark); font-size: 0.7rem;">Scudetti</small>
+                                                        <span class="d-block fw-bold text-warning fs-5">{{
+                                                                totale_scudetti }}</span>
+                                                        <small class="d-block trophy-counter-label">Scudetti</small>
                                                 </div>
                                                 <div class="trophy-counter text-center">
-                                                        <span class="d-block fw-bold text-info fs-5">{{showcase_items.totale_coppe}}</span>
-                                                        <small class="d-block"
-                                                                style="color: var(--text-muted-dark); font-size: 0.7rem;">Coppe</small>
+                                                        <span class="d-block fw-bold text-info fs-5">{{ totale_coppe
+                                                                }}</span>
+                                                        <small class="d-block trophy-counter-label">Coppe</small>
                                                 </div>
                                         </div>
 
@@ -64,32 +76,36 @@
                                                 <div class="trophy-case-grid">
 
                                                         <!-- Scudetti -->
+                                                        {% for iscrizione in scudetti_vinti %}
                                                         <div class="trophy-item">
                                                                 <div class="trophy-icon-circle bg-gold">
                                                                         <i class="fa-solid fa-trophy"></i>
                                                                 </div>
-                                                                <span class="d-block fw-bold text-white mb-0"
-                                                                        style="font-size: 0.85rem;">Campione</span>
                                                                 <span
-                                                                        style="color: var(--text-muted-dark); display: block; font-size: 0.75rem;">{{showcase_items.totale_scudetti}}</span>
+                                                                        class="d-block fw-bold text-white mb-0 trophy-label-title">Campione</span>
+                                                                <span class="trophy-label-season">{{
+                                                                        iscrizione.season.name }}</span>
                                                         </div>
+                                                        {% endfor %}
 
                                                         <!-- Coppe -->
+                                                        {% for iscrizione in coppe_vinte %}
                                                         <div class="trophy-item">
                                                                 <div class="trophy-icon-circle bg-silver">
                                                                         <i class="fa-solid fa-award"></i>
                                                                 </div>
-                                                                <span class="d-block fw-bold text-white mb-0"
-                                                                        style="font-size: 0.85rem;">Coppa</span>
                                                                 <span
-                                                                        style="color: var(--text-muted-dark); display: block; font-size: 0.75rem;">{{showcase_items.totale_coppe}}</span>
+                                                                        class="d-block fw-bold text-white mb-0 trophy-label-title">Coppa</span>
+                                                                <span class="trophy-label-season">{{
+                                                                        iscrizione.season.name }}</span>
                                                         </div>
+                                                        {% endfor %}
 
                                                         <!-- Bacheca Vuota -->
-                                                        {% if showcase_items.totale_scudetti == 0 %}
-                                                        <div class="text-center py-4 w-100 text-muted">
+                                                        {% if not scudetti_vinti and not coppe_vinte %}
+                                                        <div class="text-center py-4 w-100 empty-showcase-message">
                                                                 <i
-                                                                        class="fa-solid fa-circle-info fs-3 d-block mb-2 text-secondary"></i>
+                                                                        class="fa-solid fa-circle-info fs-3 d-block mb-2"></i>
                                                                 Bacheca ancora vuota. È ora di iniziare a vincere!
                                                         </div>
                                                         {% endif %}
@@ -109,7 +125,26 @@
 
                                                 <div class="history-timeline">
 
-                                                        
+                                                        {% for iscrizione in storico_iscrizioni %}
+                                                        <div class="timeline-row">
+                                                                <div
+                                                                        class="d-flex justify-content-between align-items-start">
+                                                                        <div>
+                                                                                <span
+                                                                                        class="fw-bold text-white d-block mb-0">{{
+                                                                                        iscrizione.season.name }}</span>
+                                                                                <small
+                                                                                        class="timeline-competition-detail">{{
+                                                                                        iscrizione.competition.name
+                                                                                        }}</small>
+                                                                        </div>
+                                                                        
+                                                                </div>
+                                                        </div>
+                                                        {% empty %}
+                                                        <p class="text-center py-3 empty-showcase-message">Nessun dato
+                                                                storico disponibile.</p>
+                                                        {% endfor %}
 
                                                 </div>
                                         </div>
@@ -117,6 +152,7 @@
 
                         </div>
                 </div>
+
 
         </div>
 </div>

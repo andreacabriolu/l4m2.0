@@ -12,6 +12,7 @@ class Constant_Strings:
     user = "User"
     mark_players = "Mark_Players"
     team_competition = "Team_Competition"
+    campionato = "Campionato"
 
 class Constant_Dicts:
     RoleNames = {'P':'PORTIERE', 'D':'DIFENSORE','C':'CENTROCAMPISTA','A':'ATTACCANTE'}
