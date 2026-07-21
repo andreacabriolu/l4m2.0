@@ -214,3 +214,46 @@ body {
     font-size: 0.75rem !important;
   }
 }
+
+/* Styling del Blocco Stagione nella Timeline */
+.timeline-season-block {
+  margin-bottom: 25px;
+  position: relative;
+}
+
+.season-header {
+  margin-bottom: 12px;
+}
+
+.season-title {
+  background: var(--dark-card-inner);
+  border: 1px solid var(--dark-border);
+  color: var(--neon-accent);
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 4px 12px;
+  border-radius: 20px;
+  display: inline-block;
+  letter-spacing: 0.5px;
+}
+
+.season-events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-left: 5px;
+}
+
+/* Modifica al pallino della timeline: ora punta al blocco stagione */
+.timeline-season-block::before {
+  content: '';
+  position: absolute;
+  left: -19px;
+  top: 6px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--neon-accent);
+  border: 2px solid var(--dark-card-bg);
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+}

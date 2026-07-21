@@ -16,12 +16,27 @@ def get_showcase_items(teamid, seasonid=None):
 
     mainleague_history = items.filter(Q(Competition__Name=C.Constant_Strings.campionato)).order_by('-Season__id')
     cups_history = items.filter(~Q(Competition__Name=C.Constant_Strings.campionato)).order_by('-Season__id')
+    all_history = items.order_by('-Season__id')
+    history_by_season = {}
+    history = []
+
+    for item in all_history:
+        season_name = item.Season.Name
+        if season_name not in history_by_season:
+            history_by_season[season_name] = {'results': [item]}
+        else:
+            history_by_season[season_name]['results'].append(item)
+
+    for k,v in history_by_season.items():
+        history.append({'season': k, 'results': v['results']})
 
     return {
         'totale_scudetti': mainleague_wins,
         'totale_coppe': cups_wins,
         'mainleague_history': mainleague_history,
         'cups_history': cups_history,
+        'all_history': all_history,
+        'history': history
     }
 
 def get_real_match_string(day, real_team_id):

@@ -123,39 +123,48 @@
                                                 </h3>
 
                                                 <div class="history-timeline">
-
-                                                        {% for main_league in showcase_data.mainleague_history %}
-                                                        <div class="timeline-row">
-                                                                <div
-                                                                        class="d-flex justify-content-between align-items-start">
-                                                                        <div>
-                                                                                <span
-                                                                                        class="fw-bold d-block mb-0">{{ main_league.Season.Name }}</span>
-                                                                                <small
-                                                                                        class="timeline-competition-detail">{{ main_league.Competition.Name }} {{ main_league.Series.Name }}</small>
-                                                                        </div>
-
-                                                                        <div class="text-end">
-                                                                                {% if main_league.IsWinner %}
-                                                                                <span
-                                                                                        class="badge bg-warning text-dark fw-bold">1°
-                                                                                        Posto 🏆</span>
-                                                                                {% else %}
-                                                                                <span
-                                                                                        class="badge bg-light text-dark fw-bold">{{ main_league.Position }}°
-                                                                                        Posto 🥈</span>
-                                                                                
-                                                                                {% endif %}
-                                                                        </div>
-                                                                        
+                                                
+                                                        {% for history_item in showcase_data.history %}
+                                                        {% with season=history_item.season season_results=history_item.results %}
+                                                        <div class="timeline-season-block">
+                                                                <div class="season-header">
+                                                                        <span class="fw-bold d-block mb-0">{{ season }}</span>
                                                                 </div>
-                                                        </div>
-                                                        {% empty %}
-                                                        <p class="text-center py-3 empty-showcase-message">Nessun dato
-                                                                storico disponibile.</p>
-                                                        {% endfor %}
 
-                                                </div>
+                                                                {% for result in season_results %}
+
+                                                                <div class="timeline-row">
+                                                                        <div class="d-flex justify-content-between align-items-start">
+                                                                                <div>
+                                                                                        <small class="timeline-competition-detail">{{result.Competition.Name }} {{result.Series.Name }}</small>
+                                                                                </div>
+                                                
+                                                                                <div class="text-end">
+                                                                                        {% if result.IsWinner %}
+                                                                                        <span class="badge bg-warning text-dark fw-bold">1°
+                                                                                                Posto 🏆</span>
+                                                                                        {% else %}
+                                                                                                {% if result.Elimination_Stage %}
+                                                                                                <span class="badge bg-light text-dark fw-bold">Eliminato - {{result.Elimination_Stage}}</span>
+                                                                                                {% else %}
+                                                                                                <span class="badge bg-light text-dark fw-bold">{{result.Position}}°
+                                                                                                        Posto 🥉</span>
+                                                                                                {% endif %}
+                                                                                        {% endif %}
+                                                                                </div>
+                                                
+                                                                        </div>
+                                                                </div>
+                                                                
+                                                                {% endfor %}
+                                                                {% endwith %}
+
+                                                                {% empty %}
+                                                                <p class="text-center py-3 empty-showcase-message">Nessun dato
+                                                                        storico disponibile.</p>
+                                                                {% endfor %}
+                                                
+                                                        </div>
                                         </div>
                                 </div>
 
