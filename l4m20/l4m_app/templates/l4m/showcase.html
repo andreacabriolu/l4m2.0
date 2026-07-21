@@ -27,14 +27,13 @@
                                         <!-- Logo Squadra -->
                                         <div class="team-logo-wrapper shadow">
                                                 {% if logo_path %}
-            {% static 'l4m/images/logos/' as logos_path %} 
-            <img src="{{logos_path}}{{logo_path}}" loading="lazy" 
-                class="featurette-image" >
-            {% else %}
-            <img src="{% static 'l4m/images/logo.jpeg' %}" loading="lazy" 
-                class="featurette-image" >
-            {% endif %}
-                                                <!-- <i class="fa-solid fa-shield-halved"></i> -->
+                                                {% static 'l4m/images/logos/' as logos_path %} 
+                                                <img src="{{logos_path}}{{logo_path}}" loading="lazy" 
+                                                        class="featurette-image" >
+                                                {% else %}
+                                                <img src="{% static 'l4m/images/logo.jpeg' %}" loading="lazy" 
+                                                        class="featurette-image" >
+                                                {% endif %}
                                         </div>
 
                                         <!-- Info Squadra -->
@@ -49,13 +48,11 @@
                                         <!-- Contatori Rapidi -->
                                         <div class="d-flex gap-2">
                                                 <div class="trophy-counter text-center">
-                                                        <span class="d-block fw-bold text-warning fs-5">{{
-                                                                totale_scudetti }}</span>
+                                                        <span class="d-block fw-bold text-warning fs-5">{{showcase_data.totale_scudetti }}</span>
                                                         <small class="d-block trophy-counter-label">Scudetti</small>
                                                 </div>
                                                 <div class="trophy-counter text-center">
-                                                        <span class="d-block fw-bold text-info fs-5">{{ totale_coppe
-                                                                }}</span>
+                                                        <span class="d-block fw-bold text-info fs-5">{{showcase_data.totale_coppe }}</span>
                                                         <small class="d-block trophy-counter-label">Coppe</small>
                                                 </div>
                                         </div>
@@ -68,44 +65,46 @@
                                 <!-- BACHECA TROFEI -->
                                 <div class="col-12 col-lg-7">
                                         <div class="card showcase-card p-4 h-100">
-                                                <h3 class="fw-bold h5 text-white mb-4">
-                                                        <i class="fa-solid fa-vault text-info me-2"></i>La Bacheca dei
+                                                <h3 class="fw-bold h5 mb-4">
+                                                        <i class="fa-solid fa-award text-info me-2"></i>La Bacheca dei
                                                         Trofei
                                                 </h3>
 
                                                 <div class="trophy-case-grid">
 
                                                         <!-- Scudetti -->
-                                                        {% for iscrizione in scudetti_vinti %}
+                                                        {% for main_league in showcase_data.mainleague_history %}
+                                                        {% if main_league.IsWinner %}
                                                         <div class="trophy-item">
                                                                 <div class="trophy-icon-circle bg-gold">
                                                                         <i class="fa-solid fa-trophy"></i>
                                                                 </div>
                                                                 <span
-                                                                        class="d-block fw-bold text-white mb-0 trophy-label-title">Campione</span>
-                                                                <span class="trophy-label-season">{{
-                                                                        iscrizione.season.name }}</span>
+                                                                        class="d-block fw-bold mb-0 trophy-label-title">{{ main_league.Competition.Name }} {{ main_league.Series.Name }}</span>
+                                                                <span class="trophy-label-season">{{ main_league.Season.Name }}</span>
                                                         </div>
+                                                        {% endif %}
                                                         {% endfor %}
 
                                                         <!-- Coppe -->
-                                                        {% for iscrizione in coppe_vinte %}
+                                                        {% for cup in showcase_data.cups_history %}
+                                                        {% if cup.IsWinner %}
                                                         <div class="trophy-item">
                                                                 <div class="trophy-icon-circle bg-silver">
                                                                         <i class="fa-solid fa-award"></i>
                                                                 </div>
                                                                 <span
-                                                                        class="d-block fw-bold text-white mb-0 trophy-label-title">Coppa</span>
-                                                                <span class="trophy-label-season">{{
-                                                                        iscrizione.season.name }}</span>
+                                                                        class="d-block fw-bold mb-0 trophy-label-title">{{ main_league.Competition.Name }}</span>
+                                                                <span class="trophy-label-season">{{ cup.Season.Name }}</span>
                                                         </div>
+                                                        {% endif %}
                                                         {% endfor %}
 
                                                         <!-- Bacheca Vuota -->
-                                                        {% if not scudetti_vinti and not coppe_vinte %}
+                                                        {% if not showcase_data.totale_scudetti and not showcase_data.totale_coppe %}
                                                         <div class="text-center py-4 w-100 empty-showcase-message">
                                                                 <i
-                                                                        class="fa-solid fa-circle-info fs-3 d-block mb-2"></i>
+                                                                        class="fa-solid fa-medal fs-3 d-block mb-2"></i>
                                                                 Bacheca ancora vuota. È ora di iniziare a vincere!
                                                         </div>
                                                         {% endif %}
@@ -117,7 +116,7 @@
                                 <!-- TIMELINE STORICA -->
                                 <div class="col-12 col-lg-5">
                                         <div class="card showcase-card p-4 h-100">
-                                                <h3 class="fw-bold h5 text-white mb-4">
+                                                <h3 class="fw-bold h5 mb-4">
                                                         <i
                                                                 class="fa-solid fa-clock-rotate-left text-info me-2"></i>Storico
                                                         Piazzamenti
@@ -125,18 +124,28 @@
 
                                                 <div class="history-timeline">
 
-                                                        {% for iscrizione in storico_iscrizioni %}
+                                                        {% for main_league in showcase_data.mainleague_history %}
                                                         <div class="timeline-row">
                                                                 <div
                                                                         class="d-flex justify-content-between align-items-start">
                                                                         <div>
                                                                                 <span
-                                                                                        class="fw-bold text-white d-block mb-0">{{
-                                                                                        iscrizione.season.name }}</span>
+                                                                                        class="fw-bold d-block mb-0">{{ main_league.Season.Name }}</span>
                                                                                 <small
-                                                                                        class="timeline-competition-detail">{{
-                                                                                        iscrizione.competition.name
-                                                                                        }}</small>
+                                                                                        class="timeline-competition-detail">{{ main_league.Competition.Name }} {{ main_league.Series.Name }}</small>
+                                                                        </div>
+
+                                                                        <div class="text-end">
+                                                                                {% if main_league.IsWinner %}
+                                                                                <span
+                                                                                        class="badge bg-warning text-dark fw-bold">1°
+                                                                                        Posto 🏆</span>
+                                                                                {% else %}
+                                                                                <span
+                                                                                        class="badge bg-light text-dark fw-bold">{{ main_league.Position }}°
+                                                                                        Posto 🥈</span>
+                                                                                
+                                                                                {% endif %}
                                                                         </div>
                                                                         
                                                                 </div>

@@ -14,9 +14,14 @@ def get_showcase_items(teamid, seasonid=None):
     mainleague_wins = items.filter(Q(IsWinner=True) & Q(Competition__Name=C.Constant_Strings.campionato)).count()
     cups_wins = items.filter(Q(IsWinner=True) & ~Q(Competition__Name=C.Constant_Strings.campionato)).count()
 
+    mainleague_history = items.filter(Q(Competition__Name=C.Constant_Strings.campionato)).order_by('-Season__id')
+    cups_history = items.filter(~Q(Competition__Name=C.Constant_Strings.campionato)).order_by('-Season__id')
+
     return {
         'totale_scudetti': mainleague_wins,
         'totale_coppe': cups_wins,
+        'mainleague_history': mainleague_history,
+        'cups_history': cups_history,
     }
 
 def get_real_match_string(day, real_team_id):

@@ -42,7 +42,7 @@ class ShowcaseView(View):
         showcase_items = SU.get_showcase_items(teamid)
         
         params = {
-            'showcase_items': showcase_items,
+            'showcase_data': showcase_items,
             'logo_path': logo_path,
         }   
 
