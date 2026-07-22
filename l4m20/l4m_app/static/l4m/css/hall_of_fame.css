@@ -1,0 +1,126 @@
+.main-div {
+    background-color: #0f172a
+}
+
+.custom-layout {
+    background-color: #0f172a;
+}
+
+:root {
+  --gold-gradient: linear-gradient(135deg, #ffd700, #ffa500);
+  --silver-gradient: linear-gradient(135deg, #e2e8f0, #64748b);
+  
+  --dark-bg-main: #0b0f19;
+  --dark-card-bg: #111622;
+  --dark-card-inner: #070a0f;
+  --dark-border: rgba(255, 255, 255, 0.05);
+  --text-muted-dark: #64748b;
+  --neon-accent: #38bdf8;
+}
+
+/* Titolo della pagina */
+.hall-title {
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #ffffff, #94a3b8);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Card della Singola Stagione */
+.season-hall-card {
+  background: var(--dark-card-bg);
+  border: 1px solid var(--dark-border);
+  border-radius: 20px;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.season-hall-card:hover {
+  border-color: rgba(56, 189, 248, 0.2);
+}
+
+.season-badge-header {
+  background: var(--dark-card-inner);
+  border: 1px solid var(--dark-border);
+  color: var(--neon-accent);
+  font-weight: 700;
+  border-radius: 12px;
+  padding: 6px 14px;
+  display: inline-block;
+  font-size: 0.9rem;
+}
+
+/* Row per il singolo trofeo/vittoria */
+.trophy-winner-row {
+  background: var(--dark-card-inner);
+  border: 1px solid var(--dark-border);
+  border-radius: 16px;
+  padding: 12px 16px;
+  transition: background-color 0.2s ease;
+}
+
+.trophy-winner-row:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* Wrapper dei Loghi (Competizione e Squadra) */
+.logo-icon-wrapper {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 4px;
+}
+
+.logo-icon-wrapper img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+/* Freccina divisoria tra logo competizione e squadra */
+.match-arrow {
+  color: var(--text-muted-dark);
+  font-size: 0.8rem;
+}
+
+/* Badge per differenziare tipo competizione */
+.badge-championship {
+  background: var(--gold-gradient);
+  color: #451a03 !important;
+  font-weight: 700;
+}
+
+.badge-cup {
+  background: var(--silver-gradient);
+  color: #0f172a !important;
+  font-weight: 700;
+}
+
+/* Media Queries Mobile */
+@media (max-width: 576px) {
+  .logo-icon-wrapper {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    padding: 3px;
+  }
+  .winner-team-name {
+    font-size: 0.9rem !important;
+  }
+  .comp-name {
+    font-size: 0.8rem !important;
+  }
+}

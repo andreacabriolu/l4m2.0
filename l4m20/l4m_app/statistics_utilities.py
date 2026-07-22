@@ -4,6 +4,25 @@ from django.db.models import F, Q, Avg
 from l4m20 import constants as C
 from . import utilities as U
 
+def get_hall_of_fame_data():
+    hall_of_fame_data = []
+
+    seasons = season.Season.objects.all().order_by('id')
+
+    for s in seasons:
+        season_data = {
+            'season': s,
+            'winners': {},
+        }
+
+        winners = team_competition.Team_Competition.objects.filter(Q(Season_id=s.id) & Q(IsWinner=True))
+        for winner in winners:
+            season_data['winners'][winner.Competition] = winner.Team
+
+        hall_of_fame_data.append(season_data)
+
+    return hall_of_fame_data
+
 def get_showcase_items(teamid, seasonid=None):
 
     items = team_competition.Team_Competition.objects.filter(Q(Team_id=teamid))

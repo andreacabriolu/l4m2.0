@@ -56,6 +56,7 @@ urlpatterns = [
     path("l4m/other/route66/", other_views.Route66View.as_view(), name="r66"),
     path("l4m/other/angel_butcher/", other_views.AngelButcherView.as_view(), name="angel_butcher"),
     path("l4m/showcase/", statistics_views.ShowcaseView.as_view(), name="showcase"),
+    path("l4m/hall_of_fame/", statistics_views.HallOfFameView.as_view(), name="hall_of_fame"),
 
 
 ]

@@ -1,0 +1,127 @@
+{% extends "./base.html" %}
+{% load static %}
+{% load custom_filters %}
+
+{% block title %} L4M2.0 - ALBO D'ORO {% endblock %}
+
+{% block links %}
+<link href="{% static 'l4m/css/hall_of_fame.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block scripts %}
+<!-- <script type="text/javascript" src="{% static 'l4m/js/hall_of_fame.js' %}"></script> -->
+{% endblock %}
+
+{% block content %}
+
+<div id="layoutSidenav_content" class="custom-layout">
+
+        <div class="main-div">
+                <div class="container py-4">
+
+
+                        <div class="text-center mb-5">
+                                <h1 class="hall-title fs-2 mb-2">
+                                        <i class="fa-solid fa-trophy text-warning me-2"></i>Albo d'Oro
+                                </h1>
+                        </div>
+
+                        <!-- Griglia delle Stagioni -->
+                        <div class="row g-4 justify-content-center">
+
+                                {% for item in hall_of_fame_data %}
+                                <div class="col-12 col-lg-6">
+                                        <div class="card season-hall-card p-4 h-100">
+
+                                                <!-- Intestazione Stagione -->
+                                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                                        <div class="season-badge-header">
+                                                                <i class="fa-solid fa-calendar-days me-2"></i>Stagione
+                                                                {{ item.season.Name }}
+                                                        </div>
+                                                </div>
+
+                                                <!-- Lista dei Vincitori delle Competizioni -->
+                                                <div class="d-flex flex-column gap-3">
+
+                                                        {% for k,v in item.winners.items %}
+                                                        <div
+                                                                class="trophy-winner-row d-flex align-items-center justify-content-between">
+
+                                                                <!-- Lato Sinistro: Competizione + Logo Competizione -->
+                                                                <div class="d-flex align-items-center gap-3">
+                                                                        <div class="logo-icon-wrapper shadow-sm">
+                                                                                <i class="fa-solid fa-award text-secondary"></i>
+                                                                                <!-- {% if k.logo_path %}
+                                                                                {% static 'l4m/images/competitions/' as
+                                                                                comp_logos %}
+                                                                                <img src="{{ comp_logos }}{{ k.logo_path }}"
+                                                                                        loading="lazy"
+                                                                                        alt="{{ k.Name }}">
+                                                                                {% else %}
+                                                                                <i
+                                                                                        class="fa-solid fa-award text-secondary"></i>
+                                                                                {% endif %} -->
+                                                                        </div>
+
+                                                                        <div>
+                                                                                <span
+                                                                                        class="d-block text-white fw-bold comp-name">{{ k.Name }}</span>
+                                                                                {% with comp_name=k.Name|lower %}
+                                                                                {% if "campionato" in comp_name %}
+                                                                                <span class="badge badge-championship">Campionato
+                                                                                        🏆</span>
+                                                                                {% else %}
+                                                                                <span class="badge badge-cup">Coppa
+                                                                                        🏅</span>
+                                                                                {% endif %}
+                                                                                {% endwith %}
+                                                                        </div>
+                                                                </div>
+
+                                                                <!-- Icona di connessione -->
+                                                                <div class="match-arrow px-1">
+                                                                        <i class="fa-solid fa-chevron-right"></i>
+                                                                </div>
+
+                                                                <!-- Lato Destro: Logo Squadra + Nome Squadra Vincitrice -->
+                                                                <div class="d-flex align-items-center gap-3 text-end">
+                                                                        <div>
+                                                                                <small class="d-block text-secondary"
+                                                                                        style="font-size: 0.7rem;">VINCITORE</small>
+                                                                                <span
+                                                                                        class="fw-bold text-white winner-team-name">{{v.Name}}</span>
+                                                                        </div>
+
+                                                                        <div class="logo-icon-wrapper shadow-sm">
+                                                                                {% if v.LogoPath %}
+                                                                                {% static 'l4m/images/logos/' as team_logos %}
+                                                                                <img src="{{ team_logos }}{{ v.LogoPath }}"
+                                                                                        loading="lazy"
+                                                                                        alt="{{ v.Name }}">
+                                                                                {% else %}
+                                                                                <img src="{% static 'l4m/images/logo.jpeg' %}"
+                                                                                        loading="lazy"
+                                                                                        alt="Default Logo">
+                                                                                {% endif %}
+                                                                        </div>
+                                                                </div>
+
+                                                        </div>
+                                                        {% endfor %}
+
+                                                </div>
+
+                                        </div>
+                                </div>
+                                {% empty %}
+                                <div class="col-12 text-center py-5 text-secondary">
+                                        <i class="fa-solid fa-hourglass-start fs-1 d-block mb-3"></i>
+                                        Nessun torneo ancora concluso nell'Albo d'Oro.
+                                </div>
+                                {% endfor %}
+                        </div>
+
+                </div>
+        </div>
+        {% endblock %}

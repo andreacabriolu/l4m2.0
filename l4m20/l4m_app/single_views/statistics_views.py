@@ -47,3 +47,15 @@ class ShowcaseView(View):
         }   
 
         return render(request, self.template_name, params)  
+
+class HallOfFameView(View):
+    template_name = 'l4m/hall_of_fame.html'
+
+    def get(self, request):
+        hall_of_fame_data = SU.get_hall_of_fame_data()
+        
+        params = {
+            'hall_of_fame_data': hall_of_fame_data,
+        }   
+
+        return render(request, self.template_name, params)
