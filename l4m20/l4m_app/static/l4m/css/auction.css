@@ -608,3 +608,339 @@ input:invalid {
 #dataList_free dt:hover {
   background-color: grey;
 }
+
+/* NEW */
+/* ==========================================================
+   AUCTION LAYOUT
+   ========================================================== */
+
+.auction-page{
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.auction-section{
+    margin-top: 2rem;
+}
+
+/* ==========================================================
+   SECTION TITLES
+   ========================================================== */
+
+.section-title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    margin-bottom:1rem;
+
+    color:#edf2f7;
+
+    font-size:1.25rem;
+    font-weight:700;
+}
+
+.section-title::after{
+
+    content:"";
+
+    flex:1;
+
+    height:1px;
+
+    margin-left:1rem;
+
+    background:linear-gradient(
+        to right,
+        rgba(79,140,255,.55),
+        transparent
+    );
+
+}
+
+/* ==========================================================
+   SUMMARY
+   ========================================================== */
+
+.auction-summary{
+
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:1rem;
+
+}
+
+@media (max-width:768px){
+
+.auction-summary{
+
+    grid-template-columns:repeat(2,1fr);
+
+}
+
+}
+
+.summary-card{
+
+    background:#242933;
+
+    border:1px solid rgba(255,255,255,.06);
+
+    border-radius:16px;
+
+    padding:1rem;
+
+    text-align:center;
+
+    transition:.25s;
+
+}
+
+.summary-card:hover{
+
+    border-color:rgba(79,140,255,.4);
+
+    transform:translateY(-2px);
+
+}
+
+.summary-label{
+
+    display:block;
+
+    color:#8b96a7;
+
+    font-size:.82rem;
+
+    text-transform:uppercase;
+
+    letter-spacing:.08em;
+
+}
+
+.summary-value{
+
+    display:block;
+
+    margin-top:.45rem;
+
+    color:white;
+
+    font-size:1.7rem;
+
+    font-weight:700;
+
+}
+
+.roster-section{
+
+    margin-bottom:2rem;
+    margin-top:1rem;
+
+}
+
+.roster-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:.8rem;
+
+}
+
+.roster-counter{
+
+    color:#7ea9ff;
+
+    font-weight:600;
+
+}
+
+.roster-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(95px,1fr));
+
+    gap:.75rem;
+
+}
+
+.roster-card{
+
+    position:relative;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    min-height:90px;
+
+    padding:.75rem;
+
+    border-radius:14px;
+
+    background:#262c37;
+
+    border:1px solid rgba(255,255,255,.05);
+
+    transition:.25s;
+
+    cursor:pointer;
+
+}
+
+.roster-card:hover{
+
+    border-color:#4f8cff;
+
+    transform:translateY(-2px);
+
+}
+
+.roster-card.empty{
+
+    color:#738096;
+
+    border-style:dashed;
+
+}
+
+.roster-card.bidding{
+
+    border-color:#4f8cff;
+
+}
+
+.roster-card.official{
+
+    border-color:#44c767;
+
+}
+
+.roster-card.overbid{
+
+    border-color:#e25a5a;
+
+}
+
+.player-name{
+
+    font-size:.85rem;
+
+    font-weight:600;
+
+    color:white;
+
+    text-align:center;
+
+}
+
+.player-price{
+
+    margin-top:.35rem;
+
+    color:#9fb8ff;
+
+    font-size:.82rem;
+
+}
+
+.player-status{
+
+    margin-top:.4rem;
+
+    font-size:.75rem;
+
+    color:#9ca8b8;
+
+}
+
+.role-tabs{
+
+    gap:.5rem;
+
+}
+
+.role-tabs .nav-link{
+
+    border-radius:999px;
+
+    padding:.6rem 1.2rem;
+
+    font-weight:600;
+
+    color:#aab5c5;
+
+    background:#262c37;
+
+    border:1px solid transparent;
+
+    transition:.2s;
+
+}
+
+.role-tabs .nav-link:hover{
+
+    border-color:#4f8cff;
+
+    color:white;
+
+}
+
+.role-tabs .nav-link.active{
+
+    background:#4f8cff;
+
+    color:white;
+
+}
+
+.market-search{
+
+    margin:1.5rem 0;
+
+}
+
+.market-search input{
+
+    background:#262c37;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    color:white;
+
+    border-radius:12px;
+
+    padding:.85rem 1rem;
+
+}
+
+.market-search input:focus{
+
+    border-color:#4f8cff;
+
+    box-shadow:none;
+
+}
+
+.player-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+
+    gap:1rem;
+
+}
+
