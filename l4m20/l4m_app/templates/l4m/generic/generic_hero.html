@@ -8,7 +8,7 @@
             {% static 'l4m/images/comp_logos/' as comp_logos_path %}
             <img src="{{comp_logos_path}}{{hero_logo}}" class="hero-logo" loading="lazy">
             {% else %}
-            <img src="{% static 'l4m/images/logo.jpeg' %}" class="hero-logo" loading="lazy">
+            <img src="{% static 'l4m/images/logo.jpeg' %}" class="hero-logo" loading="lazy" hidden>
         {% endif %}
 
         <h1 class="hero-title">

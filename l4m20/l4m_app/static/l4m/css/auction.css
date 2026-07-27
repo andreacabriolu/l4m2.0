@@ -811,8 +811,8 @@ input:invalid {
 .roster-card.empty{
 
     color:#738096;
-
-    border-style:dashed;
+    content:"+";
+    /* border-style:dashed; */
 
 }
 
@@ -858,11 +858,51 @@ input:invalid {
 
 .player-status{
 
-    margin-top:.4rem;
+    display:inline-flex;
 
-    font-size:.75rem;
+    align-items:center;
+    justify-content:center;
+    gap:.35rem;
 
-    color:#9ca8b8;
+    margin:.75rem auto 0;
+
+    padding:.3rem .75rem;
+
+    border-radius:999px;
+
+    background:rgba(79,140,255,.12);
+
+    color:#9fb8ff;
+
+    font-size:.78rem;
+
+    font-weight:600;
+
+    width:fit-content;
+
+}
+
+.player-status.warning{
+
+    background:rgba(255,193,7,.18);
+
+    color:#ffcb4d;
+
+}
+
+.player-status.expired{
+
+    background:rgba(220,53,69,.18);
+
+    color:#ff8a8a;
+
+}
+
+.player-status.official{
+
+    background:rgba(25,135,84,.15);
+
+    color:#7be09b;
 
 }
 

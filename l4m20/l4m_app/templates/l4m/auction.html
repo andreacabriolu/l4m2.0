@@ -17,7 +17,7 @@
 {% block content %}
 <div id="layoutSidenav_content" class="custom-layout">
     
-    <div class="alert alert-success alert-hidden fade in" role="alert" id="official-alert">
+    <div class="alert alert-success alert-hidden fade in" role="alert" id="official-alert" hidden>
         UFFICIALE!
     </div>
     
@@ -28,7 +28,9 @@
     <div class="bg-body p-5-custom main-div">
         <section class="auction-hero">
         
-        {% include "l4m/generic/generic_hero.html" with hero_title="Mercato" hero_subtitle=Asta hero_logo="auction.png" %}
+        {{ auction_data|json_script:"auction_data" }}
+
+        {% include "l4m/generic/generic_hero.html" with hero_title="Mercato" hero_subtitle=Asta %}
 
         </section>
 
@@ -56,7 +58,7 @@
             </div>
 
             <div class="summary-card">
-                <span class="summary-label">Aste</span>
+                <span class="summary-label">Aste in corso</span>
                 <span class="summary-value">
                     {{ active_auctions }}
                 </span>
@@ -73,19 +75,25 @@
                     <span>Portieri</span>
 
                     <span class="roster-counter">
-                        2 / 3
+                        0 / 3
                     </span>
 
                 </div>
 
                 <div class="roster-grid">
+                    {% for i in '123' %}
+                    <div class="roster-card empty" data-slot="p{{ i }}" data-role="P">
 
-                    <div class="roster-card empty">
-
-                        +
+                        <div class="player-name"></div>
+                    
+                        <div class="player-price"></div>
+                    
+                        <div class="player-status"></div>
+                    
+                        <div class="player-actions"></div>
 
                     </div>
-
+                    {% endfor %}
                 </div>
 
             </div>
@@ -97,57 +105,25 @@
                     <span>Difensori</span>
                 
                     <span class="roster-counter">
-                        2 / 8
+                        0 / 8
                     </span>
                 
                 </div>
                 
                 <div class="roster-grid">
-                
-                    <div class="roster-card bidding">
-                
-                        <div class="player-name">
-                
-                            Theo Hernandez
-                
-                        </div>
-                
-                        <div class="player-price">
-                
-                            57 FML
-                
-                        </div>
-                
-                        <div class="player-status">
-                
-                            ⏳ 12h
-                
-                        </div>
-                
+                    {% for i in '12345678' %}
+                    <div class="roster-card empty" data-slot="d{{ i }}" data-role="D">
+
+                        <div class="player-name"></div>
+                    
+                        <div class="player-price"></div>
+                    
+                        <div class="player-status"></div>
+                    
+                        <div class="player-actions"></div>
+
                     </div>
-                
-                    <div class="roster-card bidding">
-                
-                        <div class="player-name">
-                
-                            Theo Hernandez
-                
-                        </div>
-                
-                        <div class="player-price">
-                
-                            57 FML
-                
-                        </div>
-                
-                        <div class="player-status">
-                
-                            ⏳ 12h
-                
-                        </div>
-                
-                    </div>
-                
+                    {% endfor %}
                 </div>
 
             </div>
@@ -159,31 +135,25 @@
                     <span>Centrocampisti</span>
 
                     <span class="roster-counter">
-                        2 / 8
+                        0 / 8
                     </span>
 
                 </div>
 
                 <div class="roster-grid">
-                
-                    <div class="roster-card official">
-                
-                        <div class="player-name">
-                            Maignan
-                        </div>
-                
-                        <div class="player-price">
-                            41 FML
-                        </div>
-                
-                        <div class="player-status">
-                
-                            ✔
-                
-                        </div>
-                
+                    {% for i in '12345678' %}
+                    <div class="roster-card empty" data-slot="c{{ i }}" data-role="C">
+                        
+                        <div class="player-name"></div>
+                    
+                        <div class="player-price"></div>
+                    
+                        <div class="player-status"></div>
+                    
+                        <div class="player-actions"></div>
+
                     </div>
-                
+                    {% endfor %}
                 </div>
 
             </div>
@@ -195,37 +165,25 @@
                     <span>Attaccanti</span>
                 
                     <span class="roster-counter">
-                        3 / 8
+                        0 / 6
                     </span>
                 
                 </div>
                 
                 <div class="roster-grid">
-                
-                    <div class="roster-card official">
-                
-                        <div class="player-name">
-                            Maignan
-                        </div>
-                
-                        <div class="player-price">
-                            41 FML
-                        </div>
-                
-                        <div class="player-status">
-                
-                            ✔
-                
-                        </div>
-                
+                    {% for i in '123456' %}
+                    <div class="roster-card empty" data-slot="a{{ i }}" data-role="A">
+                        
+                        <div class="player-name"></div>
+                    
+                        <div class="player-price"></div>
+                    
+                        <div class="player-status"></div>
+                    
+                        <div class="player-actions"></div>
+                        
                     </div>
-                
-                    <div class="roster-card empty">
-                
-                        +
-                
-                    </div>
-                
+                    {% endfor %}
                 </div>
 
             </div>
@@ -265,67 +223,7 @@
 
             <div class="player-card">
 
-            <!-- <div class="player-top">
-
-                <div>
-
-                    <div class="player-surname">
-
-                        Leao
-
-                    </div>
-
-                    <div class="player-team">
-
-                        Milan
-
-                    </div>
-
-                </div>
-
-                <span class="role-badge">
-
-                    A
-
-                </span>
-
             </div>
-
-            <div class="player-current">
-
-                <span>
-
-                    Offerta
-
-                </span>
-
-                <strong>
-
-                    87
-
-                </strong>
-
-            </div>
-
-            <div class="player-owner">
-
-                Marco
-
-            </div>
-
-            <div class="player-expiration">
-
-                ⏳ 02:13
-
-            </div>
-
-            <button class="btn btn-primary w-100">
-
-                Punta
-
-            </button>
-
-        </div> -->
 
         </section>
 

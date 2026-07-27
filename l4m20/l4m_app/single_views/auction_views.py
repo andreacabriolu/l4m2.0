@@ -43,6 +43,24 @@ class AuctionView(LoginRequiredMixin, View):
             n_carognate = balance['N_carognate']
             n_svincoli = balance['N_svincoli']
 
+            auction_data = {
+                'summary': {
+                    'balance_for_bets': balance_for_bets,
+                    'n_carognate': n_carognate,
+                    'n_svincoli': n_svincoli,
+                    'residual': balance['Purchases_max'] - U.get_current_bets_amount(teamid),
+                    'active_auctions': 0, #TODO: implement active auctions count
+                },
+                'players': {
+                    'gk': list(players_gk),
+                    'def': list(players_def),
+                    'cc': list(players_cc),
+                    'fw': list(players_fw),
+                },
+                'roster': list(U.get_my_best_bets(teamid, my_market)),
+
+            }
+
             params = { 
                 'user_team': user_team,
                 'players_gk':players_gk,
@@ -60,7 +78,8 @@ class AuctionView(LoginRequiredMixin, View):
                 'max_svincoli' : C.MAX_SVINCOLI,
                 'n_svincoli' : n_svincoli,
                 'free_players' : free_players,
-                'is_live_day': U.is_live_day()
+                'is_live_day': U.is_live_day(),
+                'auction_data': auction_data,
 
             }
         except Exception as e:
