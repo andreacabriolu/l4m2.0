@@ -45,14 +45,7 @@ function getRemainingTime(dateString){
     const hours = Math.floor((minutes%1440)/60);
     const mins = minutes%60;
 
-    if(days>0)
-        return `${days}g ${hours}h`;
-
-    if(hours>0)
-        return `${hours}h ${mins}m`;
-
-    return `${mins}m`;
-
+    return `${days}g ${hours}h ${mins}m`;
 }
 
 /* ==========================================================
@@ -147,7 +140,7 @@ const Auction = {
         if (this.state.selectedRole) {
 
             players = players.filter(p =>
-                p.role === this.state.selectedRole
+                p.Role === this.state.selectedRole
             );
 
         }
@@ -156,12 +149,26 @@ const Auction = {
         if (searchText !== "") {
 
             players = players.filter(p =>
-                p.surname.toLowerCase().includes(searchText)
+                p.Surname.toLowerCase().includes(searchText)
             );
 
         }
 
-        // rendering...
+        // hide the players that are not in the filtered list
+        document.querySelectorAll(".player-card")
+            .forEach(card => {
+
+                const playerId = card.dataset.id;
+
+                const isVisible = players.some(p =>
+                    p.id == playerId
+                );
+
+                card.style.display = isVisible
+                    ? "block"
+                    : "none";
+
+            });
     },
 
     renderRoster(){
@@ -217,6 +224,18 @@ const Auction = {
 
     },
 
+    onRoleTabClicked(e) {
+
+        const btn = e.target.closest(".nav-link");
+
+        if (!btn) return;
+
+        const role = btn.dataset.role;
+
+        this.activateRole(role);
+
+    },
+
     onRosterBidClicked(e) {
 
         const slotId = e.currentTarget.dataset.slot;
@@ -264,17 +283,20 @@ const Auction = {
 
     onSearch(e) {
 
-    const text = e.target.value
-        .trim()
-        .toLowerCase();
+        const text = e.target.value
+            .trim()
+            .toLowerCase();
 
-    this.renderPlayers(text);
+        this.renderPlayers(text);
 
     },
 
     bindEvents() {
 
         $(document)
+            
+            .on("click", ".role-tabs",
+                this.onRoleTabClicked.bind(this))
 
             .on("click", ".roster-card.empty",
                 this.onEmptySlotClicked.bind(this))

@@ -812,7 +812,6 @@ input:invalid {
 
     color:#738096;
     content:"+";
-    /* border-style:dashed; */
 
 }
 
@@ -978,9 +977,351 @@ input:invalid {
 
     display:grid;
 
-    grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+    grid-template-columns:repeat(auto-fill,minmax(185px,1fr));
 
     gap:1rem;
 
 }
 
+.player-card{
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:space-between;
+
+    background:#242933;
+
+    border:1px solid rgba(255,255,255,.06);
+
+    border-radius:16px;
+
+    padding:1rem;
+
+    cursor:pointer;
+
+    transition:
+        transform .2s,
+        border-color .2s,
+        box-shadow .2s;
+
+}
+
+.player-card:hover{
+
+    transform:translateY(-3px);
+
+    border-color:#4f8cff;
+
+    box-shadow:
+        0 8px 22px rgba(0,0,0,.25);
+
+}
+
+.player-card-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:.8rem;
+
+}
+
+.market-player-name{
+
+    color:white;
+
+    font-weight:700;
+
+    font-size:1rem;
+
+    line-height:1.25;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+
+    white-space:nowrap;
+
+}
+
+.market-player-team{
+
+    color:#93a1b5;
+
+    font-size:.82rem;
+
+    margin-top:.2rem;
+
+}
+
+.market-player-price{
+
+    margin-top:1rem;
+
+    text-align:center;
+
+    font-size:1.45rem;
+
+    font-weight:700;
+
+    color:#7ea9ff;
+
+}
+
+.market-player-price:empty{
+
+    opacity:.4;
+
+}
+
+.market-player-status{
+
+    margin-top:.8rem;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:.35rem;
+
+    font-size:.78rem;
+
+    color:#aab5c5;
+
+}
+
+.role-badge{
+
+    width:28px;
+
+    height:28px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:.78rem;
+
+    font-weight:700;
+
+    color:white;
+
+}
+
+.role-P{
+    background:#3b82f6;
+}
+
+.role-D{
+    background:#10b981;
+}
+
+.role-C{
+    background:#f59e0b;
+}
+
+.role-A{
+    background:#ef4444;
+}
+
+.player-state{
+
+    width:10px;
+
+    height:10px;
+
+    border-radius:50%;
+
+}
+
+.player-state.available{
+
+    background:#6c757d;
+}
+
+.player-state.bidding{
+
+    background:#3b82f6;
+}
+
+.player-state.leading{
+
+    background:#22c55e;
+}
+
+.player-state.overbid{
+
+    background:#ef4444;
+}
+
+@media (max-width:768px){
+
+.player-grid{
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap:.75rem;
+
+}
+
+.player-card{
+
+    padding:.8rem;
+
+}
+
+.market-player-price{
+
+    font-size:1.2rem;
+
+}
+}
+
+.player-card.available { border-left: 4px solid #6c757d; }
+.player-card.bidding  { border-left: 4px solid #3b82f6; }
+.player-card.leading  { border-left: 4px solid #22c55e; }
+.player-card.overbid  { border-left: 4px solid #ef4444; }
+
+.role-tabs{
+
+    display:flex;
+    justify-content:center;
+    gap:.6rem;
+    flex-wrap:wrap;
+
+    margin-bottom:1.5rem;
+
+}
+
+.role-tabs .nav-link{
+
+    display:flex;
+    align-items:center;
+    gap:.55rem;
+
+    padding:.75rem 1.2rem;
+
+    border-radius:999px;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    background:#262c37;
+
+    color:#cbd5e1;
+
+    font-weight:600;
+
+    transition:all .25s ease;
+
+}
+
+.role-tabs .nav-link:hover{
+
+    background:#303847;
+
+    border-color:#4f8cff;
+
+    color:white;
+
+    transform:translateY(-2px);
+
+}
+
+.role-tabs .nav-link.active{
+
+    background:#4f8cff;
+
+    border-color:#4f8cff;
+
+    color:white;
+
+    box-shadow:
+        0 0 20px rgba(79,140,255,.30);
+
+}
+
+.role-tabs i{
+
+    font-size:1rem;
+
+}
+
+.role-count{
+
+    background:rgba(255,255,255,.15);
+
+    border-radius:999px;
+
+    padding:.15rem .45rem;
+
+    font-size:.72rem;
+
+    font-weight:700;
+
+}
+
+.role-tabs .nav-link.active .role-count{
+
+    background:rgba(255,255,255,.20);
+
+}
+
+@media (max-width:768px){
+
+.role-tabs{
+
+    justify-content:space-between;
+
+}
+
+.role-tabs .nav-link{
+
+    flex-direction:column;
+
+    gap:.25rem;
+
+    min-width:72px;
+
+    padding:.65rem .5rem;
+
+}
+
+.role-tabs .nav-link span:first-of-type{
+
+    display:none;
+
+}
+
+}
+
+.role-tabs .nav-link.active[data-role="P"]{
+    background:#3b82f6;
+    border-color:#3b82f6;
+}
+
+.role-tabs .nav-link.active[data-role="D"]{
+    background:#10b981;
+    border-color:#10b981;
+}
+
+.role-tabs .nav-link.active[data-role="C"]{
+    background:#f59e0b;
+    border-color:#f59e0b;
+}
+
+.role-tabs .nav-link.active[data-role="A"]{
+    background:#ef4444;
+    border-color:#ef4444;
+}

@@ -33,6 +33,7 @@ class AuctionView(LoginRequiredMixin, View):
             players_def = U.get_players_my_series("D", teamid, filtered_teams_ids, my_svincoli_current_session)
             players_cc = U.get_players_my_series("C", teamid, filtered_teams_ids, my_svincoli_current_session)
             players_fw = U.get_players_my_series("A", teamid, filtered_teams_ids, my_svincoli_current_session)
+            players_all = players_gk.union(players_def).union(players_cc).union(players_fw)
 
             free_players = list(players_gk) + list(players_def) + list(players_cc) + list(players_fw)
 
@@ -51,12 +52,7 @@ class AuctionView(LoginRequiredMixin, View):
                     'residual': balance['Purchases_max'] - U.get_current_bets_amount(teamid),
                     'active_auctions': 0, #TODO: implement active auctions count
                 },
-                'players': {
-                    'gk': list(players_gk),
-                    'def': list(players_def),
-                    'cc': list(players_cc),
-                    'fw': list(players_fw),
-                },
+                'players': sorted(players_all, key=lambda p: C.Constant_Dicts.RoleInts[p['Role']]),
                 'roster': list(U.get_my_best_bets(teamid, my_market)),
 
             }

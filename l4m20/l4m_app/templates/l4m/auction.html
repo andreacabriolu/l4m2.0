@@ -191,40 +191,106 @@
         </section>
 
         <section class="auction-market container">
-            <ul class="nav nav-pills role-tabs">
-        
-                P
-        
-                D
-        
-                C
-        
-                A
-        
+            <ul class="nav role-tabs justify-content-center">
+
+                <li class="nav-item">
+                    <button class="nav-link active" data-role="P">
+                        <i class="bi bi-hand-index-thumb"></i>
+                        <span>Portieri</span>
+                        <span class="role-count">28</span>
+                    </button>
+                </li>
+
+                <li class="nav-item">
+                    <button class="nav-link" data-role="D">
+                        <i class="bi bi-shield"></i>
+                        <span>Difensori</span>
+                        <span class="role-count">96</span>
+                    </button>
+                </li>
+
+                <li class="nav-item">
+                    <button class="nav-link" data-role="C">
+                        <i class="bi bi-people"></i>
+                        <span>Centrocampisti</span>
+                        <span class="role-count">96</span>
+                    </button>
+                </li>
+
+                <li class="nav-item">
+                    <button class="nav-link" data-role="A">
+                        <i class="bi bi-flag"></i>
+                        <span>Attaccanti</span>
+                        <span class="role-count">96</span>
+                    </button>
+                </li>
+
             </ul>
-
+        
             <div class="market-search">
-
-                <input
-                    class="form-control"
-                    placeholder="Cerca giocatore">
-
+        
+                <input id="player-search" class="form-control" placeholder="Cerca giocatore">
+        
             </div>
-
+        
             <div class="player-grid">
-
-                {% for player in players %}
-
-                    ...
-
+        
+                {% for player in auction_data.players %}
+        
+                <div class="player-card" data-id="{{ player.id }}" data-role="{{ player.Role }}">
+        
+                    <div class="player-card-header">
+        
+                        <span class="role-badge role-{{ player.Role }}">
+                            {{ player.Role }}
+                        </span>
+        
+                        <span class="player-state available"></span>
+        
+                    </div>
+        
+                    <div class="player-card-body">
+        
+                        <div class="market-player-name">
+                            {{ player.Surname }}
+                        </div>
+        
+                        <div class="market-player-team">
+                            {{ player.RealTeam__Name }}
+                        </div>
+        
+                        <div class="market-player-price">
+        
+                            {% if player.bet__Amount %}
+                            {{ player.bet__Amount }} FML
+                            {% else %}
+                            —
+                            {% endif %}
+        
+                        </div>
+        
+                        <div class="market-player-status">
+        
+                            {% if player.bet__Amount %}
+                            ⏳ {{ player.bet__Expiration_Date|date:"H:i" }}
+                            {% elif player.bet__Team__id %}
+                            📞 In attesa
+                            {% else %}
+                            Libero
+                            {% endif %}
+        
+                        </div>
+        
+                    </div>
+        
+                </div>
+        
                 {% endfor %}
-
+        
             </div>
-
-            <div class="player-card">
-
-            </div>
-
+        
+        
+        
         </section>
 
     </div>
