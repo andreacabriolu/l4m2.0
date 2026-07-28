@@ -288,8 +288,121 @@
                 {% endfor %}
         
             </div>
-        
-        
+
+            <div class="modal fade player-modal" id="playerModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content modal-content-dark">
+                        <div class="player-modal-header">
+            
+                            <div class="player-avatar-wrapper">
+                                <img id="player-avatar" class="player-avatar" src="" alt="">                            
+                            </div>
+
+                            <div class="player-name">
+                            </div>
+            
+                            <div class="player-team">
+                            </div>
+            
+                            <span class="role-badge player-role">
+                            </span>
+            
+                        </div>
+            
+                        <div class="player-modal-body">
+            
+                            <!-- <div class="player-price">
+                                <span class="price-label">Prezzo</span>
+                                <span class="price-value player-current-bet"></span>
+                            </div>
+            
+                            <div class="player-status">
+                                <span class="status-label">Stato</span>
+                                <span class="status-value player-owner"></span>
+                            </div>
+            
+                            <div class="player-expiration">
+                                <span class="expiration-label">Scadenza</span>
+                                <span class="expiration-value countdown player-expiration">⏳ 18h 22m</span>
+                            </div> -->
+            
+            
+                            <div class="auction-summary">
+            
+                                <div class="summary-item">
+            
+                                    <span class="summary-label">
+                                        Migliore offerta
+                                    </span>
+            
+                                    <span class="summary-value price player-current-bet">
+                                        48 FML
+                                    </span>
+            
+                                </div>
+            
+                                <div class="summary-item">
+            
+                                    <span class="summary-label">
+                                        In testa
+                                    </span>
+            
+                                    <span class="summary-value player-owner">
+                                        Atletico
+                                    </span>
+            
+                                </div>
+            
+                                <div class="summary-item">
+            
+                                    <span class="summary-label">
+                                        Scadenza
+                                    </span>
+            
+                                    <span class="summary-value countdown player-expiration">
+                                        ⏳ 18h 22m
+                                    </span>
+            
+                                </div>
+            
+                            </div>
+            
+                            <div class="bet-selector">
+            
+                                <button id="btnMinus">
+            
+                                    <i class="bi bi-dash"></i>
+            
+                                </button>
+            
+                                <input id="modalBid" readonly>
+            
+                                <button id="btnPlus">
+            
+                                    <i class="bi bi-plus"></i>
+            
+                                </button>
+            
+                            </div>
+            
+                        </div>
+            
+                        <div class="modal-footer">
+                            <button id="btnBid" class="player-action bid">Offri</button>
+            
+                            <button id="btnFinalize" class="player-action finalize">Finalizza</button>
+            
+                            <button id="btnContract" class="player-action contract">Contratta</button>
+            
+                            <button id="btnFree" class="player-action free">Svincola</button>
+
+                            <button type="button" class="player-action free" data-bs-dismiss="modal">Chiudi</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
         
         </section>
 

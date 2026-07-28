@@ -5,13 +5,41 @@ let current_div;
 let officialInfo = {};
 let bet_to_free_id;
 
-var RoleNames = {
-    'P': 'PORTIERE',
-    'D': 'DIFENSORE',
-    'C': 'CENTROCAMPISTA',
-    'A': 'ATTACCANTE',
-    '': ''
-};
+const ROLES = Object.freeze({
+
+    P: {
+        name: "PORTIERE",
+        short: "P",
+        icon: "bi-hand-index-thumb",
+        color: "#3b82f6",
+        css: "role-P"
+    },
+
+    D: {
+        name: "DIFENSORE",
+        short: "D",
+        icon: "bi-shield",
+        color: "#10b981",
+        css: "role-D"
+    },
+
+    C: {
+        name: "CENTROCAMPISTA",
+        short: "C",
+        icon: "bi-people",
+        color: "#f59e0b",
+        css: "role-C"
+    },
+
+    A: {
+        name: "ATTACCANTE",
+        short: "A",
+        icon: "bi-flag",
+        color: "#ef4444",
+        css: "role-A"
+    }
+
+});
 
 function showPopupErrorAlert(response) {
     alert(response);
@@ -84,30 +112,41 @@ const Auction = {
         const modal = document.getElementById("playerModal");
 
         modal.querySelector(".player-name")
-            .textContent = player.surname;
+            .textContent = player.Surname;
 
         modal.querySelector(".player-team")
-            .textContent = player.realteam;
+            .textContent = player.RealTeam__Name;
+
+        role_className = `role-${player.Role}`;
+        modal.querySelector(".player-role").className = `role-badge ${role_className} player-role`;
 
         modal.querySelector(".player-role")
-            .textContent = player.role_name;
+            .textContent = player.Role;
 
         modal.querySelector(".player-current-bet")
-            .textContent = player.bet_amount ?? "-";
+            .textContent = player.bet_Amount ?? "-";
 
         modal.querySelector(".player-owner")
-            .textContent = player.bet_team ?? "-";
+            .textContent = player.bet__Team_id__Name ?? "-";
 
         modal.querySelector(".player-expiration")
-            .textContent = player.expiration ?? "-";
+            .textContent = player.bet__Expiration_Date ?? "-";
 
         const bidInput = modal.querySelector("#modalBid");
 
-        bidInput.min = player.bet_amount
-            ? player.bet_amount + 1
+        bidInput.min = player.bet_Amount
+            ? player.bet_Amount + 1
             : 1;
 
         bidInput.value = bidInput.min;
+
+        bidInput.max = this.state.summary.residual; //TODO: check if this is correct
+
+        const avatar = document.getElementById("player-avatar");
+        avatar.src = `https://static-players.fantamaster.it/resized/${player.Surname.toLowerCase()}.png`;
+        avatar.onerror = function(){
+           this.src="/static/l4m/images/goal.png";
+        }
 
         bootstrap.Modal
             .getOrCreateInstance(modal)
@@ -119,7 +158,9 @@ const Auction = {
 
         card.className = "roster-card";
 
-        card.classList.add(slot.status);
+        card.classList.add("bidding");
+
+        card.dataset.id = slot.Player_id;
 
         card.querySelector(".player-name")
             .textContent = slot.Player_id__Surname ?? "-";
@@ -132,11 +173,10 @@ const Auction = {
 
     },
 
-    renderPlayers(searchText = "") {
+    renderPlayers(searchText = "", init = false) {
 
         let players = this.state.players;
 
-        // filtro per ruolo
         if (this.state.selectedRole) {
 
             players = players.filter(p =>
@@ -145,7 +185,6 @@ const Auction = {
 
         }
 
-        // filtro testuale
         if (searchText !== "") {
 
             players = players.filter(p =>
@@ -154,7 +193,6 @@ const Auction = {
 
         }
 
-        // hide the players that are not in the filtered list
         document.querySelectorAll(".player-card")
             .forEach(card => {
 
@@ -164,7 +202,7 @@ const Auction = {
                     p.id == playerId
                 );
 
-                card.style.display = isVisible
+                card.style.display = (isVisible && !init)
                     ? "block"
                     : "none";
 
@@ -242,17 +280,17 @@ const Auction = {
 
         const slot = this.state.roster.find(s =>
 
-            s.slot === slotId
+            s.Slot === slotId
 
         );
 
         if (!slot)
             return;
 
-        this.state.selectedSlot = slot.slot;
-        this.state.selectedPlayer = slot.player.id;
+        this.state.selectedSlot = slot.Slot;
+        this.state.selectedPlayer = slot.Player_id;
 
-        this.openPlayerModal(slot.player.id);
+        this.openPlayerModal(slot.Player_id);
     },
 
     onEmptySlotClicked(e) {
@@ -270,6 +308,32 @@ const Auction = {
         .scrollIntoView({
             behavior: "smooth"
         });
+
+    },
+
+    onBidPlusClicked(e) {
+
+        const bidInput = document.getElementById("modalBid");
+
+        const amount = parseInt(bidInput.value);
+
+        if (isNaN(amount) || amount >= bidInput.max)
+            return;
+
+        bidInput.value = amount + 1;
+
+    },
+
+    onBidMinusClicked(e) {
+
+        const bidInput = document.getElementById("modalBid");
+
+        const amount = parseInt(bidInput.value);
+
+        if (isNaN(amount) || amount <= bidInput.min)
+            return;
+
+        bidInput.value = amount - 1;
 
     },
 
@@ -295,6 +359,14 @@ const Auction = {
 
         $(document)
             
+            .on("click", "#btnPlus",
+                this.onBidPlusClicked.bind(this)
+            )
+
+            .on("click", "#btnMinus",
+                this.onBidMinusClicked.bind(this)
+            )
+
             .on("click", ".role-tabs",
                 this.onRoleTabClicked.bind(this))
 
@@ -331,7 +403,7 @@ const Auction = {
 
         this.renderSummary();
         this.renderRoster();
-        this.renderPlayers();
+        this.renderPlayers(init=true);
 
     }
 
