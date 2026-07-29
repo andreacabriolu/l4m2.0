@@ -76,12 +76,181 @@ function getRemainingTime(dateString){
     return `${days}g ${hours}h ${mins}m`;
 }
 
+function buildBet(){
+
+    return {
+
+        playerid: currentPlayer.id,
+
+        amount: parseInt(
+            document.querySelector("#betAmount").value
+        ),
+
+        session: CURRENT_SESSION,
+
+        slot: currentSlot,
+
+        market: CURRENT_MARKET
+
+    };
+
+}
+
+function validateBet(bet){
+
+    const min=currentPlayer.minBid;
+
+    const max=currentUser.maxBid;
+
+    if(bet.amount<min){
+
+        showPopupErrorAlert("Puntata troppo bassa");
+
+        return false;
+
+    }
+
+    if(bet.amount>max){
+
+        showPopupErrorAlert("Budget insufficiente");
+
+        return false;
+
+    }
+
+    return true;
+
+}
+
+async function apiSendBet(bet){
+
+    const response=await fetch("/l4m/auction/sendBet/",{
+
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json",
+            "X-CSRFToken":Cookies.get("csrftoken")
+        },
+
+        body:JSON.stringify(bet)
+
+    });
+
+    const json=await response.json();
+
+    if(!response.ok){
+
+        throw json.error;
+
+    }
+
+    return json;
+
+}
+
 /* ==========================================================
  *  AUCTION API
  * ========================================================== */
 const AuctionAPI = {
 
-    sendBet(){},
+    async sendBet() {
+
+        const bet = buildBet();
+
+        if (!validateBet(bet)) {
+            return;
+        }
+
+        try {
+
+            const response = await apiSendBet(bet);
+
+            AuctionState.balance = response.balance;
+
+            AuctionState.roster = response.roster;
+
+            Auction.updateAuctionSummary(response);
+
+            Auction.updateRosterCard(response.player, response.slot);
+
+            // Auction.removePlayerFromMarket(response.player.id);
+
+            bootstrap.Modal
+                .getInstance(document.getElementById("playerModal"))
+                ?.hide();
+
+        }
+        catch (err) {
+
+            showPopupErrorAlert(err);
+
+        }
+
+        
+        // const token = Cookies.get('csrftoken');
+        // const row = new Object();
+        // row.playername = $('#modal-pl-name').val();
+        // row.playerid = $('#modal-pl-id').val();
+        // row.betamount = $('#modal-pl-betamount').val();
+        // row.exp_date = calculate_expiration_date();
+        // row.userteamid = $('#user_team_id').val();
+        // row.userteamname = $('#user_team_name').val();
+        // row.balancemax = $('#my_balance_max').val();
+        // row.market = $('#my_market').val();
+        // row.carognata = $('#modal-pl-carognata').val();
+        // row.slot = current_div[0].id;
+        // row.session = $('#current_session').val();
+        // jsonData = JSON.stringify(row);
+
+        // var data = { 'jsonData': jsonData, 'csrfmiddlewaretoken': token };
+
+        // var min = parseInt($('#modal-pl-betamount').attr("min"));
+        // var max = parseInt($('#modal-pl-betamount').attr("max"));
+
+        // if ($('#modal-pl-betamount').attr('min') != null) {
+        //     if (row.betamount < min) {
+        //         showPopupErrorAlert("PUNTATA TROPPO BASSA!");
+        //         $('#modal-pl-betamount').val(min);
+        //         return;
+        //     }
+        // }
+
+        // if ($('#modal-pl-betamount').attr('max') != null) {
+        //     if (row.betamount > max) {
+        //         showPopupErrorAlert("PUNTATA TROPPO ALTA!");
+        //         $('#modal-pl-betamount').val(max);
+        //         return;
+        //     }
+        // }
+
+        // if ($('#modal-pl-carognata').val() == "True") {
+        //     showPopupErrorAlert("RILANCIO CAROGNA!");
+        // }
+
+        // $.post("/l4m/auction/sendBet/", data, function (response) {
+        //     if (response.startsWith('error')) {
+        //         showPopupErrorAlert(response);
+        //     }
+        //     else {
+        //         $('#main-balance').text(`${JSON.parse(response)['max']} FML`);
+        //         $('#main-carognate').text(`${JSON.parse(response)['n_carognate']} / 3`);
+        //         new_residual = parseInt(JSON.parse(response)['amount']);
+        //         $('#main-residual').text(`${new_residual} FML`);
+        //         set_bet_min_max(null, JSON.parse(response)['amount'])
+        //         entry = document.querySelector("dl.dl-class dt[data-id='" + row.playerid + "']");
+        //         if (entry != null) {
+        //             entry.parentNode.removeChild(entry);
+        //         }
+
+        //         set_div(row);
+        //     }
+        // });
+
+        // plr_dlg.close();
+        // dlg.close();
+
+    },
 
     getPlayer(){},
 
@@ -95,10 +264,21 @@ const AuctionAPI = {
  *  AUCTION STATE
  * ========================================================== */
 
+const AuctionState = {
+    currentPlayer: null,
+    currentSlot: null,
+    currentSession: null,
+    marketPlayers: [],
+    roster: [],
+    balance: null
+};
+
 const Auction = {
 
     /* PLAYER CARD */
     openPlayerModal(playerId) {
+
+        let currentPlayer = null;
 
         const player = this.state.players.find(p =>
 
@@ -108,6 +288,8 @@ const Auction = {
 
         if (!player)
             return;
+
+        currentPlayer = player;
 
         const modal = document.getElementById("playerModal");
 
@@ -124,18 +306,18 @@ const Auction = {
             .textContent = player.Role;
 
         modal.querySelector(".player-current-bet")
-            .textContent = player.bet_Amount ?? "-";
+            .textContent = player.bet__Amount ?? "-";
 
         modal.querySelector(".player-owner")
             .textContent = player.bet__Team_id__Name ?? "-";
 
         modal.querySelector(".player-expiration")
-            .textContent = player.bet__Expiration_Date ?? "-";
+            .textContent = getRemainingTime(player.bet__Expiration_Date) ?? "-";
 
         const bidInput = modal.querySelector("#modalBid");
 
-        bidInput.min = player.bet_Amount
-            ? player.bet_Amount + 1
+        bidInput.min = player.bet__Amount
+            ? player.bet__Amount + 1
             : 1;
 
         bidInput.value = bidInput.min;
@@ -151,6 +333,27 @@ const Auction = {
         bootstrap.Modal
             .getOrCreateInstance(modal)
             .show();
+
+    },
+
+    updateAuctionSummary(data){
+
+        document.querySelector("#main-balance")
+            .textContent=`${data.max} FML`;
+
+        document.querySelector("#main-residual")
+            .textContent=`${data.amount} FML`;
+
+        document.querySelector("#main-carognate")
+            .textContent=`${data.n_carognate}/3`;
+
+    },
+
+    removePlayerFromMarket(id){
+
+        document
+            .querySelector(`.market-player-card[data-player-id="${id}"]`)
+            ?.remove();
 
     },
 
@@ -445,7 +648,7 @@ document.addEventListener("DOMContentLoaded", () => {
 //             fdt[i].style.display = "none";
 //         }
 //     }
-    
+
 // }
 
 // function openCarognataModal() {
