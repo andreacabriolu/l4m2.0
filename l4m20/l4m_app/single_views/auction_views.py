@@ -22,7 +22,8 @@ class AuctionView(LoginRequiredMixin, View):
             teamid = user_team['id']
             seriesid=U.get_my_series(teamid)[0].id
             my_market = U.get_my_markets(seriesid)[0].id #TODO: improve check
-            my_best_bets = U.list_my_best_bets(U.get_my_best_bets(teamid, my_market))
+            mbb = U.get_my_best_bets(teamid, my_market)
+            my_best_bets = U.list_my_best_bets(mbb)
             current_session = U.get_current_session(my_market)
             
             filtered_teams = team.Team.objects.filter(Series__id=seriesid)
@@ -50,10 +51,10 @@ class AuctionView(LoginRequiredMixin, View):
                     'n_carognate': n_carognate,
                     'n_svincoli': n_svincoli,
                     'residual': balance['Purchases_max'] - U.get_current_bets_amount(teamid),
-                    'active_auctions': 0, #TODO: implement active auctions count
+                    'active_auctions': len(mbb),
                 },
-                'players': sorted(players_all, key=lambda p: C.Constant_Dicts.RoleInts[p['Role']]),
-                'roster': list(U.get_my_best_bets(teamid, my_market)),
+                'players': sorted(players_all, key=lambda p: (C.Constant_Dicts.RoleInts[p['Role']], p['Surname'])),
+                'roster': list(mbb),
 
             }
 

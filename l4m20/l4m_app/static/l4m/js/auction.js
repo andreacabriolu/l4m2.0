@@ -80,17 +80,17 @@ function buildBet(){
 
     return {
 
-        playerid: currentPlayer.id,
+        playerid: AuctionState.currentPlayer.id,
 
         amount: parseInt(
-            document.querySelector("#betAmount").value
+            document.querySelector("#modalBid").value
         ),
 
-        session: CURRENT_SESSION,
+        session: AuctionState.currentSession,
 
-        slot: currentSlot,
+        slot: AuctionState.currentSlot,
 
-        market: CURRENT_MARKET
+        market: AuctionState.currentMarket,
 
     };
 
@@ -98,9 +98,9 @@ function buildBet(){
 
 function validateBet(bet){
 
-    const min=currentPlayer.minBid;
+    const min=AuctionState.currentPlayer.minBid;
 
-    const max=currentUser.maxBid;
+    const max=AuctionState.currentUser.maxBid;
 
     if(bet.amount<min){
 
@@ -278,18 +278,32 @@ const Auction = {
     /* PLAYER CARD */
     openPlayerModal(playerId) {
 
-        let currentPlayer = null;
+        AuctionState.currentPlayer = null;
 
-        const player = this.state.players.find(p =>
+        let player = this.state.players.find(p =>
 
             p.id == playerId
 
         );
 
+        if (!player) {
+            player = this.state.roster.find(slot =>
+                slot.Player_id == playerId
+            );
+
+            //roster mapping
+            player.Surname = player.Player_id__Surname;
+            player.RealTeam__Name = player.Player_id__RealTeam__Name;
+            player.Role = player.Player_id__Role;
+            player.bet__Amount = player.Amount;
+            player.bet__Team_id__Name = player.Player_id__Team_id__Name; //TODO: value this
+            player.bet__Expiration_Date = player.Expiration_Date;
+        }
+
         if (!player)
             return;
 
-        currentPlayer = player;
+        AuctionState.currentPlayer = player;
 
         const modal = document.getElementById("playerModal");
 
@@ -319,9 +333,7 @@ const Auction = {
         bidInput.min = player.bet__Amount
             ? player.bet__Amount + 1
             : 1;
-
         bidInput.value = bidInput.min;
-
         bidInput.max = this.state.summary.residual; //TODO: check if this is correct
 
         const avatar = document.getElementById("player-avatar");
@@ -563,12 +575,10 @@ const Auction = {
         $(document)
             
             .on("click", "#btnPlus",
-                this.onBidPlusClicked.bind(this)
-            )
+                this.onBidPlusClicked.bind(this))
 
             .on("click", "#btnMinus",
-                this.onBidMinusClicked.bind(this)
-            )
+                this.onBidMinusClicked.bind(this))
 
             .on("click", ".role-tabs",
                 this.onRoleTabClicked.bind(this))
@@ -576,14 +586,20 @@ const Auction = {
             .on("click", ".roster-card.empty",
                 this.onEmptySlotClicked.bind(this))
 
-            .on("click", ".roster-card.bidding",
+            .on("click", ".roster-card",
                 this.onRosterBidClicked.bind(this))
 
             .on("click", ".player-card",
                 this.onPlayerClicked.bind(this))
 
             .on("keyup", "#player-search",
-                this.onSearch.bind(this));
+                this.onSearch.bind(this))
+                
+            .on("click", "#btnBid",
+                AuctionAPI.sendBet.bind(AuctionAPI))
+
+
+            ;
 
     },
 

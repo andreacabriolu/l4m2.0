@@ -60,7 +60,7 @@
             <div class="summary-card">
                 <span class="summary-label">Aste in corso</span>
                 <span class="summary-value">
-                    {{ active_auctions }}
+                    {{ auction_data.summary.active_auctions }}
                 </span>
             </div>
 
@@ -197,7 +197,7 @@
                     <button class="nav-link" data-role="P">
                         <i class="bi bi-hand-index-thumb"></i>
                         <span>Portieri</span>
-                        <span class="role-count">28</span>
+                        <span class="role-count">{{ players_gk|length }}</span>
                     </button>
                 </li>
 
@@ -205,7 +205,7 @@
                     <button class="nav-link" data-role="D">
                         <i class="bi bi-shield"></i>
                         <span>Difensori</span>
-                        <span class="role-count">96</span>
+                        <span class="role-count">{{ players_def|length }}</span>
                     </button>
                 </li>
 
@@ -213,7 +213,7 @@
                     <button class="nav-link" data-role="C">
                         <i class="bi bi-people"></i>
                         <span>Centrocampisti</span>
-                        <span class="role-count">96</span>
+                        <span class="role-count">{{ players_cc|length }}</span>
                     </button>
                 </li>
 
@@ -221,7 +221,7 @@
                     <button class="nav-link" data-role="A">
                         <i class="bi bi-flag"></i>
                         <span>Attaccanti</span>
-                        <span class="role-count">96</span>
+                        <span class="role-count">{{ players_fw|length }}</span>
                     </button>
                 </li>
 
