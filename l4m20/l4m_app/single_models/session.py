@@ -10,6 +10,7 @@ class Session(models.Model):
     Market = models.ForeignKey(C.Constant_Strings.market, on_delete=models.CASCADE, null=True)
     Begin = models.DateTimeField(null=True)
     End = models.DateTimeField(null=True)
+    Expiration = models.IntegerField(null=True, default=48)  # in hours
 
     def __str__(self):
         return " ".join([self.Name])

@@ -47,14 +47,27 @@ class AuctionView(LoginRequiredMixin, View):
 
             auction_data = {
                 'summary': {
-                    'balance_for_bets': balance_for_bets,
-                    'n_carognate': n_carognate,
-                    'n_svincoli': n_svincoli,
-                    'residual': balance['Purchases_max'] - U.get_current_bets_amount(teamid),
                     'active_auctions': len(mbb),
+                    'user_team_id': user_team['id'],
+                    'user_team_name': user_team['Name'],
+                },
+                'balance': {
+                    'total': balance['Purchases_max'],
+                    'residual': balance['Purchases_max'] - U.get_current_bets_amount(teamid),
+                    'carognate': n_carognate,
+                    'max_bid': balance_for_bets,
+                    'n_svincoli': n_svincoli,
                 },
                 'players': sorted(players_all, key=lambda p: (C.Constant_Dicts.RoleInts[p['Role']], p['Surname'])),
                 'roster': list(mbb),
+                'session': {
+                    'id': current_session.id,
+                    'name': current_session.Name,
+                    'max_nsvincoli': current_session.Nsvincoli,
+                    'max_ncarognate': current_session.Ncarognate,
+                    'expiration': current_session.Expiration,
+                },
+                'market': my_market,
 
             }
 
@@ -91,7 +104,7 @@ class SendBetView(View):
         uname = request.user.username
 
         try:
-            data = json.loads(request.POST.get("jsonData"))
+            data = json.loads(request.body.decode('utf-8'))
             if (data is None): return
             
             logger.debug(f"{uname} : SENDING BET: {data}")
@@ -111,16 +124,20 @@ class SendBetView(View):
                 return HttpResponse(f'error NUMERO MASSIMO DI GIOCATORI PER RUOLO!')
 
         except Exception as e:
-            return HttpResponse(f'error inserting bet and updating balance: {e}')
+            return HttpResponse(f'error inserting bet and updating balance: {e}', status=500)
         
-        return HttpResponse(json.dumps({'amount': bet_result, 'max': balance_max, 'n_carognate': n_carognate}))
+        return HttpResponse(json.dumps({'amount': bet_result, 
+                                        'max': balance_max, 
+                                        'n_carognate': n_carognate,
+                                        'roster': list(U.get_my_best_bets(data['userteamid'], data['market']))
+                                        }))
 
 class FinBetView(View):
     template_name = 'l4m/auction.html'
 
     def post(self, request): 
         try:
-            data = json.loads(request.POST.get("jsonData"))
+            data = json.loads(request.body.decode('utf-8'))
             if (data is None): return
             
             msg = U.finalize_bet(data)

@@ -76,21 +76,36 @@ function getRemainingTime(dateString){
     return `${days}g ${hours}h ${mins}m`;
 }
 
+function calculate_expiration_date() {
+    const now = new Date()
+    let options = {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric'
+    }
+    return new Date(new Date(now).setHours(now.getHours() + AuctionState.currentSession.expiration)).toLocaleString("it-IT", options)
+}
+
 function buildBet(){
 
     return {
 
+        playername: AuctionState.currentPlayer.Surname,
         playerid: AuctionState.currentPlayer.id,
-
-        amount: parseInt(
+        betamount: parseInt(
             document.querySelector("#modalBid").value
         ),
-
-        session: AuctionState.currentSession,
-
+        exp_date: calculate_expiration_date(),
+        userteamid: AuctionState.userTeam.id,
+        userteamname: AuctionState.userTeam.name,
+        balancemax: AuctionState.balance.total,
+        market: AuctionState.market,
+        carognata: false, //TODO: check if this is correct
         slot: AuctionState.currentSlot,
-
-        market: AuctionState.currentMarket,
+        session: AuctionState.currentSession.id
 
     };
 
@@ -98,9 +113,9 @@ function buildBet(){
 
 function validateBet(bet){
 
-    const min=AuctionState.currentPlayer.minBid;
+    const min = AuctionState.currentPlayer.bet__Amount;
 
-    const max=AuctionState.currentUser.maxBid;
+    const max=AuctionState.balance.maxBid;
 
     if(bet.amount<min){
 
@@ -166,15 +181,18 @@ const AuctionAPI = {
 
             const response = await apiSendBet(bet);
 
-            AuctionState.balance = response.balance;
+            AuctionState.balance.maxBid = response.max;
+            AuctionState.balance.total = response.max;
+            AuctionState.balance.residual = response.amount;
+            AuctionState.balance.carognate = response.n_carognate;
 
             AuctionState.roster = response.roster;
 
-            Auction.updateAuctionSummary(response);
+            Auction.updateAuctionSummary();
 
-            Auction.updateRosterCard(response.player, response.slot);
+            Auction.renderRoster();
 
-            // Auction.removePlayerFromMarket(response.player.id);
+            Auction.removePlayerFromMarket(AuctionState.currentPlayer.id);
 
             bootstrap.Modal
                 .getInstance(document.getElementById("playerModal"))
@@ -265,29 +283,79 @@ const AuctionAPI = {
  * ========================================================== */
 
 const AuctionState = {
+
     currentPlayer: null,
+
     currentSlot: null,
-    currentSession: null,
-    marketPlayers: [],
+
+    currentSession: {
+        id: null,
+        name: "",
+        max_nsvincoli: 0,
+        max_ncarognate: 0,
+        expiration: 0
+    },
+
     roster: [],
-    balance: null
+
+    market: null,
+
+    players: [],
+
+    balance: {
+        total: 0,
+        residual: 0,
+        maxBid: 0,
+        carognate: 0
+    },
+
+    filters: {
+        role: "P",
+        search: ""
+    },
+
+    userTeam: {
+        id: null,
+        name: null
+    }
+
 };
 
 const Auction = {
+
+    findFirstFreeSlot(role) {
+
+    const slots = document.querySelectorAll(
+        `.roster-slot[data-role="${role}"]`
+    );
+
+    for (const slot of slots) {
+
+        const occupied = slot.querySelector(".player-card");
+
+        if (!occupied) {
+            return slot;
+        }
+    }
+
+    return null;
+
+    },
+
 
     /* PLAYER CARD */
     openPlayerModal(playerId) {
 
         AuctionState.currentPlayer = null;
 
-        let player = this.state.players.find(p =>
+        let player = AuctionState.players.find(p =>
 
             p.id == playerId
 
         );
 
         if (!player) {
-            player = this.state.roster.find(slot =>
+            player = AuctionState.roster.find(slot =>
                 slot.Player_id == playerId
             );
 
@@ -334,12 +402,12 @@ const Auction = {
             ? player.bet__Amount + 1
             : 1;
         bidInput.value = bidInput.min;
-        bidInput.max = this.state.summary.residual; //TODO: check if this is correct
+        bidInput.max = AuctionState.balance.residual; //TODO: check if this is correct
 
         const avatar = document.getElementById("player-avatar");
         avatar.src = `https://static-players.fantamaster.it/resized/${player.Surname.toLowerCase()}.png`;
         avatar.onerror = function(){
-           this.src="/static/l4m/images/goal.png";
+           this.src=`https://static-players.fantamaster.it/player.png`;
         }
 
         bootstrap.Modal
@@ -348,23 +416,23 @@ const Auction = {
 
     },
 
-    updateAuctionSummary(data){
+    updateAuctionSummary(){
 
         document.querySelector("#main-balance")
-            .textContent=`${data.max} FML`;
+            .textContent=`${AuctionState.balance.total} FML`;
 
         document.querySelector("#main-residual")
-            .textContent=`${data.amount} FML`;
+            .textContent=`${AuctionState.balance.residual} FML`;
 
         document.querySelector("#main-carognate")
-            .textContent=`${data.n_carognate}/3`;
+            .textContent=`${AuctionState.balance.carognate}/3`;
 
     },
 
     removePlayerFromMarket(id){
 
         document
-            .querySelector(`.market-player-card[data-player-id="${id}"]`)
+            .querySelector(`.player-card[data-id="${id}"]`)
             ?.remove();
 
     },
@@ -390,12 +458,12 @@ const Auction = {
 
     renderPlayers(searchText = "", init = false) {
 
-        let players = this.state.players;
+        let players = AuctionState.players;
 
-        if (this.state.selectedRole) {
+        if (AuctionState.filters.role) {
 
             players = players.filter(p =>
-                p.Role === this.state.selectedRole
+                p.Role === AuctionState.filters.role
             );
 
         }
@@ -426,7 +494,7 @@ const Auction = {
 
     renderRoster(){
 
-        Object.values(this.state.roster)
+        Object.values(AuctionState.roster)
 
             .forEach(slot => {
 
@@ -443,13 +511,13 @@ const Auction = {
     renderSummary(){
 
         $("#main-balance")
-            .text(this.state.summary.balance);
+            .text(AuctionState.balance.total + " FML");
 
         $("#main-residual")
-            .text(this.state.summary.residual);
+            .text(AuctionState.balance.residual + " FML");
 
         $("#main-carognate")
-            .text(this.state.summary.n_carognate);
+            .text(AuctionState.balance.carognate + AuctionState.currentSession.max_ncarognate);
 
     },
 
@@ -457,7 +525,7 @@ const Auction = {
 
         const id = e.currentTarget.dataset.id;
 
-        this.state.selectedPlayer = id;
+        AuctionState.currentPlayer = id;
 
         this.openPlayerModal(id);
 
@@ -465,7 +533,7 @@ const Auction = {
 
     activateRole(role){
 
-        this.state.selectedRole = role;
+        AuctionState.filters.role = role;
 
         $(".role-tabs .nav-link")
             .removeClass("active");
@@ -493,7 +561,7 @@ const Auction = {
 
         const slotId = e.currentTarget.dataset.slot;
 
-        const slot = this.state.roster.find(s =>
+        const slot = AuctionState.roster.find(s =>
 
             s.Slot === slotId
 
@@ -502,8 +570,8 @@ const Auction = {
         if (!slot)
             return;
 
-        this.state.selectedSlot = slot.Slot;
-        this.state.selectedPlayer = slot.Player_id;
+        AuctionState.currentSlot = slot.Slot;
+        AuctionState.currentPlayer = slot.Player_id;
 
         this.openPlayerModal(slot.Player_id);
     },
@@ -513,8 +581,8 @@ const Auction = {
     const slot = e.currentTarget.dataset.slot;
     const role = e.currentTarget.dataset.role;
 
-    this.state.selectedSlot = slot;
-    this.state.selectedRole = role;
+    AuctionState.currentSlot = slot;
+    AuctionState.filters.role = role;
 
     this.activateRole(role);
 
@@ -554,9 +622,17 @@ const Auction = {
 
     loadInitialData() {
 
-        this.state = JSON.parse(
+        auction_data = JSON.parse(
             document.getElementById("auction_data").textContent
         );
+
+        AuctionState.currentSession = auction_data.session;
+        AuctionState.balance = auction_data.balance;
+        AuctionState.roster = auction_data.roster;
+        AuctionState.players = auction_data.players;
+        AuctionState.market = auction_data.market;
+        AuctionState.userTeam.id = auction_data.summary.user_team_id;
+        AuctionState.userTeam.name = auction_data.summary.user_team_name;
 
     },
 
@@ -600,18 +676,6 @@ const Auction = {
 
 
             ;
-
-    },
-
-    state: {
-
-        roster: [],
-        players: {},
-        summary: {},
-
-        selectedSlot: null,
-        selectedRole: null,
-        selectedPlayer: null
 
     },
 
@@ -1032,19 +1096,7 @@ document.addEventListener("DOMContentLoaded", () => {
 //     });
 // }
 
-// function calculate_expiration_date() {
-//     const now = new Date()
-//     let options = {
-//         year: 'numeric',
-//         month: 'numeric',
-//         day: 'numeric',
-//         hour: 'numeric',
-//         minute: 'numeric',
-//         second: 'numeric'
-//     }
-//     //TODO: set parameter for betting expiration time
-//     return new Date(new Date(now).setDate(now.getDate() + 1)).toLocaleString("it-IT", options)
-// }
+
 
 // function sendBet() {
 //     const token = Cookies.get('csrftoken');

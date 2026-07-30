@@ -894,7 +894,7 @@ def send_bet(data):
                         Player = player_,
                         Team = user_team,
                         Expiration_Date=exp_date_obj,
-                        Slot=bet_obj.Slot,
+                        Slot='unused',
                         Market=market_,
                         Session=session_)
 
