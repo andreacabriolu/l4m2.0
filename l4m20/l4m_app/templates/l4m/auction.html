@@ -68,8 +68,7 @@
 
         <section class="auction-roster container">
 
-            <div class="roster-section">
-
+            <section class="roster-section" data-role="P">
                 <div class="roster-header">
 
                     <span>Portieri</span>
@@ -77,59 +76,26 @@
                     <span class="roster-counter">
                         0 / 3
                     </span>
-
                 </div>
 
-                <div class="roster-grid">
-                    {% for i in '123' %}
-                    <div class="roster-card empty" data-slot="p{{ i }}" data-role="P">
+                <div class="roster-grid"></div>
+            </section>
 
-                        <div class="player-name"></div>
-                    
-                        <div class="player-price"></div>
-                    
-                        <div class="player-status"></div>
-                    
-                        <div class="player-actions"></div>
-
-                    </div>
-                    {% endfor %}
-                </div>
-
-            </div>
-
-            <div class="roster-section">
-
+            <section class="roster-section" data-role="D">
                 <div class="roster-header">
-                
+
                     <span>Difensori</span>
-                
+
                     <span class="roster-counter">
                         0 / 8
                     </span>
-                
+
                 </div>
-                
-                <div class="roster-grid">
-                    {% for i in '12345678' %}
-                    <div class="roster-card empty" data-slot="d{{ i }}" data-role="D">
+                <div class="roster-grid"></div>
 
-                        <div class="player-name"></div>
-                    
-                        <div class="player-price"></div>
-                    
-                        <div class="player-status"></div>
-                    
-                        <div class="player-actions"></div>
+            </section>
 
-                    </div>
-                    {% endfor %}
-                </div>
-
-            </div>
-
-            <div class="roster-section">
-
+            <section class="roster-section" data-role="C">
                 <div class="roster-header">
 
                     <span>Centrocampisti</span>
@@ -139,54 +105,23 @@
                     </span>
 
                 </div>
+                <div class="roster-grid"></div>
 
-                <div class="roster-grid">
-                    {% for i in '12345678' %}
-                    <div class="roster-card empty" data-slot="c{{ i }}" data-role="C">
-                        
-                        <div class="player-name"></div>
-                    
-                        <div class="player-price"></div>
-                    
-                        <div class="player-status"></div>
-                    
-                        <div class="player-actions"></div>
-
-                    </div>
-                    {% endfor %}
-                </div>
-
-            </div>
-
-            <div class="roster-section">
-
+            </section>
+            
+            <section class="roster-section" data-role="A">
                 <div class="roster-header">
-                
-                    <span>Attaccanti</span>
-                
-                    <span class="roster-counter">
-                        0 / 6
-                    </span>
-                
-                </div>
-                
-                <div class="roster-grid">
-                    {% for i in '123456' %}
-                    <div class="roster-card empty" data-slot="a{{ i }}" data-role="A">
-                        
-                        <div class="player-name"></div>
-                    
-                        <div class="player-price"></div>
-                    
-                        <div class="player-status"></div>
-                    
-                        <div class="player-actions"></div>
-                        
-                    </div>
-                    {% endfor %}
-                </div>
 
-            </div>
+                    <span>Attaccanti</span>
+
+                    <span class="roster-counter">
+                        0 / 3
+                    </span>
+
+                </div>
+                <div class="roster-grid"></div>
+
+            </section>
 
         </section>
 
@@ -298,10 +233,10 @@
                                 <img id="player-avatar" class="player-avatar" src="" alt="">                            
                             </div>
 
-                            <div class="player-name">
+                            <div class="card-player-name">
                             </div>
             
-                            <div class="player-team">
+                            <div class="card-player-team">
                             </div>
             
                             <span class="role-badge player-role">
@@ -310,22 +245,6 @@
                         </div>
             
                         <div class="player-modal-body">
-            
-                            <!-- <div class="player-price">
-                                <span class="price-label">Prezzo</span>
-                                <span class="price-value player-current-bet"></span>
-                            </div>
-            
-                            <div class="player-status">
-                                <span class="status-label">Stato</span>
-                                <span class="status-value player-owner"></span>
-                            </div>
-            
-                            <div class="player-expiration">
-                                <span class="expiration-label">Scadenza</span>
-                                <span class="expiration-value countdown player-expiration">⏳ 18h 22m</span>
-                            </div> -->
-            
             
                             <div class="auction-summary">
             

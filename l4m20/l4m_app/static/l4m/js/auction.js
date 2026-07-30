@@ -41,6 +41,13 @@ const ROLES = Object.freeze({
 
 });
 
+const ROSTER_LIMITS = Object.freeze({
+    P: 3,
+    D: 8,
+    C: 6,
+    A: 6
+});
+
 function showPopupErrorAlert(response) {
     alert(response);
 }
@@ -104,7 +111,7 @@ function buildBet(){
         balancemax: AuctionState.balance.total,
         market: AuctionState.market,
         carognata: false, //TODO: check if this is correct
-        slot: AuctionState.currentSlot,
+        slot: '',
         session: AuctionState.currentSession.id
 
     };
@@ -286,8 +293,6 @@ const AuctionState = {
 
     currentPlayer: null,
 
-    currentSlot: null,
-
     currentSession: {
         id: null,
         name: "",
@@ -323,26 +328,6 @@ const AuctionState = {
 
 const Auction = {
 
-    findFirstFreeSlot(role) {
-
-    const slots = document.querySelectorAll(
-        `.roster-slot[data-role="${role}"]`
-    );
-
-    for (const slot of slots) {
-
-        const occupied = slot.querySelector(".player-card");
-
-        if (!occupied) {
-            return slot;
-        }
-    }
-
-    return null;
-
-    },
-
-
     /* PLAYER CARD */
     openPlayerModal(playerId) {
 
@@ -355,8 +340,8 @@ const Auction = {
         );
 
         if (!player) {
-            player = AuctionState.roster.find(slot =>
-                slot.Player_id == playerId
+            player = AuctionState.roster.find(r =>
+                r.Player_id == playerId
             );
 
             //roster mapping
@@ -375,10 +360,10 @@ const Auction = {
 
         const modal = document.getElementById("playerModal");
 
-        modal.querySelector(".player-name")
+        modal.querySelector(".card-player-name")
             .textContent = player.Surname;
 
-        modal.querySelector(".player-team")
+        modal.querySelector(".card-player-team")
             .textContent = player.RealTeam__Name;
 
         role_className = `role-${player.Role}`;
@@ -456,6 +441,73 @@ const Auction = {
 
     },
 
+    createRosterCard(player, role){
+
+        const card=document.createElement("div");
+
+        card.className="roster-card";
+
+        card.classList.add("bidding");
+
+        card.dataset.id = player.Player_id;
+        card.dataset.role = role;
+
+        card.innerHTML=`
+            <div class="roster-player-name">${player.Player_id__Surname}</div>
+            <div class="roster-player-price">$${player.Amount}</div>
+            <div class="roster-player-status">${getRemainingTime(player.Expiration_Date ?? "-")}</div>
+        `;
+
+        return card;
+
+    },
+
+    createEmptyCard(role) {
+
+        const card = document.createElement("div");
+        card.dataset.role = role;
+
+        card.className = "roster-card empty";
+
+        card.innerHTML = `
+            <i class="bi bi-plus-circle"></i>
+            <span>Vuoto</span>
+        `;
+
+        return card;
+
+    },
+
+    renderRole(role){
+
+        const container=document.querySelector(
+            `.roster-section[data-role="${role}"]`
+        );
+
+        const grid = container.querySelector(".roster-grid");
+        grid.innerHTML = "";
+
+        const roster_players=AuctionState.roster.filter(
+            p=>p.Player_id__Role===role
+        );
+
+        container.querySelector(".roster-counter").textContent = 
+            `${roster_players.length}/${ROSTER_LIMITS[role]}`;
+
+        
+        const total = ROSTER_LIMITS[role];
+
+        for (let i = 0; i < total; i++) {
+
+            if (i < roster_players.length) {
+                grid.appendChild(this.createRosterCard(roster_players[i], role));
+            } else {
+                grid.appendChild(this.createEmptyCard(role));
+            }
+        }    
+
+    },
+
     renderPlayers(searchText = "", init = false) {
 
         let players = AuctionState.players;
@@ -494,18 +546,9 @@ const Auction = {
 
     renderRoster(){
 
-        Object.values(AuctionState.roster)
-
-            .forEach(slot => {
-
-                const card = document.querySelector(
-                    `.roster-card[data-slot="${slot.Slot}"]`
-                );
-
-                this.updateRosterCard(card, slot);
-
-            });
-
+        Object.keys(ROSTER_LIMITS).forEach(role => {
+            this.renderRole(role);
+        });
     },
 
     renderSummary(){
@@ -559,38 +602,35 @@ const Auction = {
 
     onRosterBidClicked(e) {
 
-        const slotId = e.currentTarget.dataset.slot;
+        const player_id = e.currentTarget.dataset.id;
 
-        const slot = AuctionState.roster.find(s =>
+        const roster_player = AuctionState.roster.find(r =>
 
-            s.Slot === slotId
+            r.Player_id == player_id
 
         );
 
-        if (!slot)
+        if (!roster_player)
             return;
 
-        AuctionState.currentSlot = slot.Slot;
-        AuctionState.currentPlayer = slot.Player_id;
+        AuctionState.currentPlayer = roster_player.Player_id;
 
-        this.openPlayerModal(slot.Player_id);
+        this.openPlayerModal(roster_player.Player_id);
     },
 
     onEmptySlotClicked(e) {
 
-    const slot = e.currentTarget.dataset.slot;
-    const role = e.currentTarget.dataset.role;
+        const role = e.currentTarget.dataset.role;
 
-    AuctionState.currentSlot = slot;
-    AuctionState.filters.role = role;
+        AuctionState.filters.role = role;
 
-    this.activateRole(role);
+        this.activateRole(role);
 
-    document
-        .querySelector(".auction-market")
-        .scrollIntoView({
-            behavior: "smooth"
-        });
+        document
+            .querySelector(".auction-market")
+            .scrollIntoView({
+                behavior: "smooth"
+            });
 
     },
 

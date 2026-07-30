@@ -807,7 +807,7 @@ def get_my_best_bets(teamid, marketid):
     bets = bet.Bet.objects.\
         filter(Q(Team_id=teamid) & Q(Market_id=marketid)).\
         values('Amount','Player_id','Player_id__Surname','Expiration_Date','Slot',
-               'IsRaised','IsExpired','id','Team_id','IsOfficial','Carognata')
+               'IsRaised','IsExpired','id','Team_id','IsOfficial','Carognata', 'Player_id__Role')
                
     if(qplayer is not None):
        bets = bets.exclude(Q(Player_id=qplayer.Player_id))
