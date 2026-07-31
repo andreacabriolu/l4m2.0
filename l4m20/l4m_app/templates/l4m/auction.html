@@ -207,7 +207,7 @@
                         <div class="market-player-status">
         
                             {% if player.bet__Amount %}
-                            ⏳ {{ player.bet__Expiration_Date|date:"H:i" }}
+                            ⏳ {{ player.bet__Expiration_Date|slice:":19" }} 
                             {% elif player.bet__Team__id %}
                             📞 In attesa
                             {% else %}
@@ -223,11 +223,17 @@
                 {% endfor %}
         
             </div>
+        
+        </section>
 
-            <div class="modal fade player-modal" id="playerModal" tabindex="-1" aria-hidden="true">
+        <div class="modal fade player-modal" id="playerModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content modal-content-dark">
                         <div class="player-modal-header">
+
+                            <button class="player-close" type="button" aria-label="Chiudi">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
             
                             <div class="player-avatar-wrapper">
                                 <img id="player-avatar" class="player-avatar" src="" alt="">                            
@@ -307,23 +313,17 @@
                         </div>
             
                         <div class="modal-footer">
-                            <button id="btnBid" class="player-action bid">Offri</button>
+                            <button id="btnBid" data-action="bid" class="player-action bid">Offri</button>
             
-                            <button id="btnFinalize" class="player-action finalize">Finalizza</button>
+                            <button id="btnFinalize" data-action="finalize" class="player-action finalize">Ufficializza</button>
             
-                            <button id="btnContract" class="player-action contract">Contratta</button>
+                            <button id="btnContract" data-action="contract" class="player-action contract">Firma il contratto</button>
             
-                            <button id="btnFree" class="player-action free">Svincola</button>
-
-                            <button type="button" class="player-action free" data-bs-dismiss="modal">Chiudi</button>
+                            <button id="btnFree" data-action="free" class="player-action free">Svincola</button>
                         </div>
                     </div>
                 </div>
             </div>
-
-            
-        
-        </section>
 
     </div>
 </div>

@@ -752,7 +752,7 @@ def get_players_my_series(filter_role, teamid, filtered_teams_ids, my_svincoli_c
         Q(bet__Team_id__in=filtered_teams_ids)
     ).values(
         'id', 'Surname', 'Name', 'Role', 'RealTeam__Name',
-        'bet__Amount','bet__Team_id__Name', 'bet__IsExpired','bet__Carognata','bet__Expiration_Date'
+        'bet__Amount', 'bet__Team_id', 'bet__Team_id__Name', 'bet__IsExpired','bet__Carognata','bet__Expiration_Date'
     ).order_by('Surname')
 
         

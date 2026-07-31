@@ -44,9 +44,46 @@ const ROLES = Object.freeze({
 const ROSTER_LIMITS = Object.freeze({
     P: 3,
     D: 8,
-    C: 6,
+    C: 8,
     A: 6
 });
+
+const PLAYER_STATUS = Object.freeze({
+    OPEN: "open",
+    OVERBID: "overbid",
+    EXPIRED: "expired",
+    OFFICIAL: "official",
+    FREEABLE: "freeable",
+    CAROGNABLE: "carognable",
+    ROSTER: "roster",
+});
+
+const ACTIONS = {
+
+        bid: {
+            visible: f => 
+                f.roster === false && 
+                f.expired === false
+        },
+
+        finalize: {
+            visible: f =>
+                f.roster === true && 
+                f.expired === true
+        },
+
+        contract: {
+            visible: f =>
+                f.roster === true &&
+                f.official === true
+        },
+
+        free: {
+            visible: f =>
+                f.freeable === true
+        }
+
+};
 
 function showPopupErrorAlert(response) {
     alert(response);
@@ -111,7 +148,7 @@ function buildBet(){
         balancemax: AuctionState.balance.total,
         market: AuctionState.market,
         carognata: false, //TODO: check if this is correct
-        slot: '',
+        slot: 'x',
         session: AuctionState.currentSession.id
 
     };
@@ -121,8 +158,8 @@ function buildBet(){
 function validateBet(bet){
 
     const min = AuctionState.currentPlayer.bet__Amount;
-
     const max=AuctionState.balance.maxBid;
+    const role = AuctionState.currentPlayer.Role;
 
     if(bet.amount<min){
 
@@ -135,6 +172,14 @@ function validateBet(bet){
     if(bet.amount>max){
 
         showPopupErrorAlert("Budget insufficiente");
+
+        return false;
+
+    }
+
+    if (AuctionState.roster.filter(p => p.Player_id__Role === role).length >= ROSTER_LIMITS[role]) {
+
+        showPopupErrorAlert("Numero massimo di giocatori per ruolo raggiunto");
 
         return false;
 
@@ -328,6 +373,32 @@ const AuctionState = {
 
 const Auction = {
 
+    getPlayerFlags(player) {
+
+        return {
+            roster: player.Roster ?? false,
+            expired: player.IsExpired ?? false,
+            official: player.IsOfficial ?? false,
+            carognata: player.Carognata ?? false,
+            freeable: false, //TODO DEFINE
+
+        };
+    },
+
+    renderPlayerActions(flags){
+
+        document
+            .querySelectorAll(".player-action")
+            .forEach(btn => {
+
+                const action = ACTIONS[btn.dataset.action];
+
+                btn.hidden = !action.visible(flags);
+
+            });
+
+    },
+
     /* PLAYER CARD */
     openPlayerModal(playerId) {
 
@@ -344,19 +415,27 @@ const Auction = {
                 r.Player_id == playerId
             );
 
-            //roster mapping
-            player.Surname = player.Player_id__Surname;
-            player.RealTeam__Name = player.Player_id__RealTeam__Name;
-            player.Role = player.Player_id__Role;
-            player.bet__Amount = player.Amount;
-            player.bet__Team_id__Name = player.Player_id__Team_id__Name; //TODO: value this
-            player.bet__Expiration_Date = player.Expiration_Date;
+            if (player) {
+
+                //roster mapping
+                player.Roster = true;
+                player.Surname = player.Player_id__Surname;
+                player.RealTeam__Name = player.Player_id__RealTeam__Name;
+                player.Role = player.Player_id__Role;
+                player.bet__Amount = player.Amount;
+                player.bet__Team_id__Name = player.Player_id__Team_id__Name; //TODO: value this
+                player.bet__Expiration_Date = player.Expiration_Date;
+            }
         }
 
         if (!player)
             return;
 
         AuctionState.currentPlayer = player;
+
+        const flags = this.getPlayerFlags(player);
+
+        this.renderPlayerActions(flags);
 
         const modal = document.getElementById("playerModal");
 
@@ -537,6 +616,8 @@ const Auction = {
                     p.id == playerId
                 );
 
+                
+
                 card.style.display = (isVisible && !init)
                     ? "block"
                     : "none";
@@ -660,6 +741,16 @@ const Auction = {
 
     },
 
+    onPlayerCloseClicked(e) {
+
+        const modal = document.getElementById("playerModal");
+
+        const bootstrapModal = bootstrap.Modal.getInstance(modal);
+
+        bootstrapModal.hide();
+
+    },
+
     loadInitialData() {
 
         auction_data = JSON.parse(
@@ -713,7 +804,9 @@ const Auction = {
                 
             .on("click", "#btnBid",
                 AuctionAPI.sendBet.bind(AuctionAPI))
-
+            
+            .on("click", ".player-close",
+                this.onPlayerCloseClicked.bind(this))
 
             ;
 
