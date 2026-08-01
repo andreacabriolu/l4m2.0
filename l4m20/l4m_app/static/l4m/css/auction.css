@@ -1,4 +1,14 @@
+:root{
 
+    --auction-open:#22c55e;
+
+    --auction-warning:#facc15;
+
+    --auction-expired:#ef4444;
+
+    --auction-official:#6b7280;
+
+}
 
 /* NEW */
 /* ==========================================================
@@ -1256,6 +1266,121 @@
 
 }
 
+.roster-card.state-bidding{
+    border-left:4px solid #5350ea;
+}
 
+.roster-card.state-carognata{
+    border-left:4px solid #facc15;
+}
 
+.roster-card.state-expired{
+    border-left:4px solid #ef4444;
+}
 
+.roster-card.state-official{
+    border-left:4px solid #16a34a;
+}
+
+.state-bidding{
+
+    border-left-color:var(--auction-open);
+
+}
+
+.state-carognata{
+
+    border-left-color:var(--auction-warning);
+
+}
+
+.state-expired{
+
+    border-left-color:var(--auction-expired);
+
+}
+
+.carognata-alert{
+
+    display:flex;
+
+    gap:1rem;
+
+    align-items:flex-start;
+
+    margin:1.25rem 0;
+
+    padding:1rem 1.2rem;
+
+    border-left:5px solid #facc15;
+
+    border-radius:14px;
+
+    background:linear-gradient(
+        135deg,
+        rgba(250,204,21,.14),
+        rgba(250,204,21,.04)
+    );
+
+    animation:carognataFade .25s ease;
+}
+
+.carognata-icon{
+
+    flex-shrink:0;
+
+    width:42px;
+    height:42px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    background:#facc15;
+
+    color:#222;
+
+    font-size:1.2rem;
+
+    box-shadow:0 0 16px rgba(250,204,21,.25);
+
+}
+
+.carognata-title{
+
+    color:#ffe27a;
+
+    font-size:.95rem;
+
+    font-weight:700;
+
+    letter-spacing:.08em;
+
+    margin-bottom:.35rem;
+
+}
+
+@media (max-width:768px){
+
+    .carognata-alert{
+
+        padding:.9rem;
+
+        gap:.8rem;
+
+    }
+
+    .carognata-icon{
+
+        width:36px;
+        height:36px;
+
+        font-size:1rem;
+
+    }
+
+}

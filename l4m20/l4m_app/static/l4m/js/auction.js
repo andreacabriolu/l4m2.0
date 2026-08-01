@@ -102,7 +102,7 @@ function getRemainingTime(dateString){
     if (dateString === "-" || dateString === null || dateString === undefined)
         return "-";
 
-    const expiration = new Date(dateString);
+    const expiration = new Date(dateString.slice(0,19)); //TODO: no better way?
 
     const now = new Date();
 
@@ -131,6 +131,23 @@ function calculate_expiration_date() {
         second: 'numeric'
     }
     return new Date(new Date(now).setHours(now.getHours() + AuctionState.currentSession.expiration)).toLocaleString("it-IT", options)
+}
+
+function getStateClass(player){
+        className = "state-bidding";
+
+        if (player.Roster) {
+            className = "state-bidding";
+        } else if (player.IsOfficial) {
+            className = "state-official";
+        } else if (player.IsExpired) {
+            className = "state-expired";
+        } else if (player.Carognata) {
+            className = "state-carognata";
+        }
+
+        return className;
+    
 }
 
 function buildBet(){
@@ -257,74 +274,39 @@ const AuctionAPI = {
 
         }
 
-        
-        // const token = Cookies.get('csrftoken');
-        // const row = new Object();
-        // row.playername = $('#modal-pl-name').val();
-        // row.playerid = $('#modal-pl-id').val();
-        // row.betamount = $('#modal-pl-betamount').val();
-        // row.exp_date = calculate_expiration_date();
-        // row.userteamid = $('#user_team_id').val();
-        // row.userteamname = $('#user_team_name').val();
-        // row.balancemax = $('#my_balance_max').val();
-        // row.market = $('#my_market').val();
-        // row.carognata = $('#modal-pl-carognata').val();
-        // row.slot = current_div[0].id;
-        // row.session = $('#current_session').val();
-        // jsonData = JSON.stringify(row);
-
-        // var data = { 'jsonData': jsonData, 'csrfmiddlewaretoken': token };
-
-        // var min = parseInt($('#modal-pl-betamount').attr("min"));
-        // var max = parseInt($('#modal-pl-betamount').attr("max"));
-
-        // if ($('#modal-pl-betamount').attr('min') != null) {
-        //     if (row.betamount < min) {
-        //         showPopupErrorAlert("PUNTATA TROPPO BASSA!");
-        //         $('#modal-pl-betamount').val(min);
-        //         return;
-        //     }
-        // }
-
-        // if ($('#modal-pl-betamount').attr('max') != null) {
-        //     if (row.betamount > max) {
-        //         showPopupErrorAlert("PUNTATA TROPPO ALTA!");
-        //         $('#modal-pl-betamount').val(max);
-        //         return;
-        //     }
-        // }
-
-        // if ($('#modal-pl-carognata').val() == "True") {
-        //     showPopupErrorAlert("RILANCIO CAROGNA!");
-        // }
-
-        // $.post("/l4m/auction/sendBet/", data, function (response) {
-        //     if (response.startsWith('error')) {
-        //         showPopupErrorAlert(response);
-        //     }
-        //     else {
-        //         $('#main-balance').text(`${JSON.parse(response)['max']} FML`);
-        //         $('#main-carognate').text(`${JSON.parse(response)['n_carognate']} / 3`);
-        //         new_residual = parseInt(JSON.parse(response)['amount']);
-        //         $('#main-residual').text(`${new_residual} FML`);
-        //         set_bet_min_max(null, JSON.parse(response)['amount'])
-        //         entry = document.querySelector("dl.dl-class dt[data-id='" + row.playerid + "']");
-        //         if (entry != null) {
-        //             entry.parentNode.removeChild(entry);
-        //         }
-
-        //         set_div(row);
-        //     }
-        // });
-
-        // plr_dlg.close();
-        // dlg.close();
-
     },
 
     getPlayer(){},
 
-    finalize(){},
+    async finalize() {
+        // div_id = officialInfo['divid'];
+//     pl_id = officialInfo['playerid'];
+//     pl_amount = officialInfo['betAmount'];
+
+//     const token = Cookies.get('csrftoken');
+//     const row = new Object();
+
+//     row.playerid = pl_id;
+//     row.amount = parseInt(pl_amount);
+//     row.userteamid = $('#user_team_id').val();
+
+//     jsonData = JSON.stringify(row);
+
+//     var data = { 'jsonData': jsonData, 'csrfmiddlewaretoken': token };
+//     $.post("/l4m/auction/finalizeBet/", data, function (response) {
+//         if (response.startsWith('error')) {
+//             showPopupErrorAlert(response);
+//         }
+//         else {
+//             $('#' + div_id).addClass('end-official');
+//             $('#' + div_id + '_img').prop('hidden', true);
+//             $('#' + div_id).children().prop('disabled', true);
+//             $("#official-alert").fadeTo(2000, 500);
+//             $("#official-alert").slideUp(500, function () { $("#official-alert").slideUp(500); });
+
+//         }
+//     });
+    },
 
     freePlayer(){}
 
@@ -466,7 +448,12 @@ const Auction = {
             ? player.bet__Amount + 1
             : 1;
         bidInput.value = bidInput.min;
-        bidInput.max = AuctionState.balance.residual; //TODO: check if this is correct
+        bidInput.max = AuctionState.balance.residual;
+
+        document
+            .getElementById("carognataAlert")
+            .hidden = (player.bet__Carognata) ? false : true;
+
 
         const avatar = document.getElementById("player-avatar");
         avatar.src = `https://static-players.fantamaster.it/resized/${player.Surname.toLowerCase()}.png`;
@@ -503,20 +490,20 @@ const Auction = {
 
     updateRosterCard(card, slot){
 
-        card.className = "roster-card";
+        // card.className = "roster-card";
 
-        card.classList.add("bidding");
+        // card.classList.add(getStateClass(slot));
 
-        card.dataset.id = slot.Player_id;
+        // card.dataset.id = slot.Player_id;
 
-        card.querySelector(".player-name")
-            .textContent = slot.Player_id__Surname ?? "-";
+        // card.querySelector(".player-name")
+        //     .textContent = slot.Player_id__Surname ?? "-";
 
-        card.querySelector(".player-price")
-            .textContent = slot.Amount ?? "-";
+        // card.querySelector(".player-price")
+        //     .textContent = slot.Amount ?? "-";
 
-        card.querySelector(".player-status")
-            .textContent = getRemainingTime(slot.Expiration_Date ?? "-");
+        // card.querySelector(".player-status")
+        //     .textContent = getRemainingTime(slot.Expiration_Date ?? "-");
 
     },
 
@@ -526,7 +513,7 @@ const Auction = {
 
         card.className="roster-card";
 
-        card.classList.add("bidding");
+        card.classList.add(getStateClass(player));
 
         card.dataset.id = player.Player_id;
         card.dataset.role = role;

@@ -29,14 +29,9 @@ class AuctionView(LoginRequiredMixin, View):
             filtered_teams = team.Team.objects.filter(Series__id=seriesid)
             filtered_teams_ids = [team.id for team in filtered_teams]
             my_svincoli_current_session = U.get_my_svincolati(team=teamid, session=current_session)
-            
-            players_gk = U.get_players_my_series("P", teamid, filtered_teams_ids, my_svincoli_current_session)
-            players_def = U.get_players_my_series("D", teamid, filtered_teams_ids, my_svincoli_current_session)
-            players_cc = U.get_players_my_series("C", teamid, filtered_teams_ids, my_svincoli_current_session)
-            players_fw = U.get_players_my_series("A", teamid, filtered_teams_ids, my_svincoli_current_session)
-            players_all = players_gk.union(players_def).union(players_cc).union(players_fw)
+            players_all = U.get_all_players_my_series(teamid, filtered_teams_ids, my_svincoli_current_session, my_market)
 
-            free_players = list(players_gk) + list(players_def) + list(players_cc) + list(players_fw)
+            free_players = list(players_all)
 
             balance = U.get_balance(teamid)[0] #TODO: improve check
             balance_for_bets = U.get_balance_for_bets(teamid, balance['Purchases_max'])
