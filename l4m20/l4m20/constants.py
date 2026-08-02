@@ -56,6 +56,7 @@ class SendBetResult:
 
 class ErrorCodes:
     ALREADY_OFFICIAL = -1
+    PLAYER_NOT_IN_SQUAD = -2
 
 class Events:
     GOAL_TAKEN = 'GG'

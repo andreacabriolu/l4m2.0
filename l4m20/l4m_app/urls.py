@@ -21,6 +21,7 @@ urlpatterns = [
     path("l4m/auction/getPlayerInfo/", auction_views.GetPlayerInfoView.as_view(), name="get_player_info"),
     path("l4m/auction/getBalance/", auction_views.GetBalanceView.as_view(), name="get_balance"),
     path("l4m/auction/getBalanceForBets/", auction_views.GetBalanceForBetsView.as_view(), name="get_balance_for_bets"),
+    path("l4m/auction/signContract/", auction_views.SignContractView.as_view(), name="sign_contract"),
     path("l4m/allauctions/", allauction_views.AllAuctionsView.as_view(), name="allauction"),
     path("l4m/allauctions/<int:series_id>/", allauction_views.AllAuctionsView.as_view(), name="allauction_series"),
     path("l4m/lineup_/", lineup_views.LineupView.as_view(), name="lineup_"),

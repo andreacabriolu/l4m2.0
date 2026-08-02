@@ -960,7 +960,7 @@ def finalize_bet(data):
     my_market = get_object_or_404(market.Market, id=my_market_id)
     last_bet = bet.Bet.objects.filter(Q(Player=player_) & Q(Market=my_market))
 
-    if(len(last_bet) < 0):
+    if(len(last_bet) <= 0): #very rare case, only during tests
         return
     
     if(last_bet[0].IsOfficial == True):
@@ -968,10 +968,13 @@ def finalize_bet(data):
     
     last_bet.update(IsOfficial=True)
 
-    fin_new = squads.Squads(Amount=fin_obj.Amount,
-                Player = player_,
-                Team = user_team,
-                Last_bet = last_bet[0])
+    fin_new = squads.Squads(
+        Amount=fin_obj.Amount,
+        Player = player_,
+        Team = user_team,
+        Last_bet = last_bet[0],
+        Season = get_current_season()
+    )
     fin_new.save()            
 
     
@@ -1137,3 +1140,17 @@ def check_penalties(t_id, day, comp_id):
             return 0, 0, 0 #0 pt
         else:
             return -1, -1, -1 #-1 pt 
+
+def sign_contract(contract_data):
+
+    player_ = get_object_or_404(player.Player, id=contract_data['playerid'])
+    team_ = get_object_or_404(team.Team, id=contract_data['teamid'])
+    season = get_current_season()
+
+    existing_squad = squads.Squads.objects.filter(Q(Player=player_) & Q(Team=team_) & Q(Season=season))
+
+    if existing_squad.exists():
+        existing_squad.update(Years=contract_data['years'])
+
+    else:
+        return C.ErrorCodes.PLAYER_NOT_IN_SQUAD

@@ -69,7 +69,8 @@ const ACTIONS = {
         finalize: {
             visible: f =>
                 f.roster === true && 
-                f.expired === true
+                f.expired === true &&
+                f.official === false
         },
 
         contract: {
@@ -206,6 +207,33 @@ function validateBet(bet){
 
 }
 
+function buildContractData(){
+    return {
+        playerid: AuctionState.currentPlayer.id,
+        teamid: AuctionState.userTeam.id,
+        years: parseInt(document.querySelector(".contract-option.active").dataset.years)
+    }
+
+}
+
+async function apiExecute(url, data){
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": Cookies.get("csrftoken")
+        },
+        body: JSON.stringify(data)
+    });
+    const json = await response.json();
+
+    if (!response.ok) {
+        throw json.error;
+    }
+
+    return json;
+}
+
 async function apiSendBet(bet){
 
     const response=await fetch("/l4m/auction/sendBet/",{
@@ -233,6 +261,40 @@ async function apiSendBet(bet){
 
 }
 
+function buildFinalData(){
+    return {
+        playerid: AuctionState.currentPlayer.id,
+        userteamid: AuctionState.userTeam.id,
+        amount: AuctionState.currentPlayer.Amount,
+    }
+
+}
+
+async function apiFinalize(finalData){
+    const response=await fetch("/l4m/auction/finalizeBet/",{
+
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json",
+            "X-CSRFToken":Cookies.get("csrftoken")
+        },
+
+        body:JSON.stringify(finalData)
+
+    });
+
+    const json=await response.json();
+
+    if(!response.ok){
+
+        throw json.error;
+
+    }
+
+    return json;
+}
+
 /* ==========================================================
  *  AUCTION API
  * ========================================================== */
@@ -248,7 +310,7 @@ const AuctionAPI = {
 
         try {
 
-            const response = await apiSendBet(bet);
+            const response = await apiExecute("/l4m/auction/sendBet/", bet);
 
             AuctionState.balance.maxBid = response.max;
             AuctionState.balance.total = response.max;
@@ -276,36 +338,62 @@ const AuctionAPI = {
 
     },
 
-    getPlayer(){},
-
     async finalize() {
-        // div_id = officialInfo['divid'];
-//     pl_id = officialInfo['playerid'];
-//     pl_amount = officialInfo['betAmount'];
 
-//     const token = Cookies.get('csrftoken');
-//     const row = new Object();
+        const finalData = buildFinalData();
 
-//     row.playerid = pl_id;
-//     row.amount = parseInt(pl_amount);
-//     row.userteamid = $('#user_team_id').val();
+        try {
 
-//     jsonData = JSON.stringify(row);
+            const response = await apiExecute("/l4m/auction/finalizeBet/", finalData);
 
-//     var data = { 'jsonData': jsonData, 'csrfmiddlewaretoken': token };
-//     $.post("/l4m/auction/finalizeBet/", data, function (response) {
-//         if (response.startsWith('error')) {
-//             showPopupErrorAlert(response);
-//         }
-//         else {
-//             $('#' + div_id).addClass('end-official');
-//             $('#' + div_id + '_img').prop('hidden', true);
-//             $('#' + div_id).children().prop('disabled', true);
-//             $("#official-alert").fadeTo(2000, 500);
-//             $("#official-alert").slideUp(500, function () { $("#official-alert").slideUp(500); });
+            // AuctionState.roster = response.roster;
 
-//         }
-//     });
+            Auction.renderRoster();
+
+            bootstrap.Modal
+                .getInstance(document.getElementById("playerModal"))
+                ?.hide();
+
+        }
+        catch (err) {
+
+            showPopupErrorAlert(err);
+
+        }
+    },
+
+    showContractModal(){
+
+        const modal = document.getElementById("contractModal");
+
+        modal.querySelector(".contract-name").textContent = AuctionState.currentPlayer.Surname;
+
+        bootstrap.Modal
+            .getOrCreateInstance(modal)
+            .show();
+    },
+
+    async signContract() {
+        const contractData = buildContractData();
+
+        try {
+
+            const response = await apiExecute("/l4m/auction/signContract/", contractData);
+
+            bootstrap.Modal
+                .getInstance(document.getElementById("contractModal"))
+                ?.hide();
+
+            bootstrap.Modal
+                .getInstance(document.getElementById("playerModal"))
+                ?.hide();
+
+        }
+        catch (err) {
+
+            showPopupErrorAlert(err);
+
+        }
     },
 
     freePlayer(){}
@@ -400,6 +488,7 @@ const Auction = {
             if (player) {
 
                 //roster mapping
+                player.id = player.Player_id;
                 player.Roster = true;
                 player.Surname = player.Player_id__Surname;
                 player.RealTeam__Name = player.Player_id__RealTeam__Name;
@@ -453,6 +542,22 @@ const Auction = {
         document
             .getElementById("carognataAlert")
             .hidden = (player.bet__Carognata) ? false : true;
+
+        document
+            .querySelectorAll(".contract-option")
+            .forEach(card => {
+
+                card.onclick = () => {
+
+                    document
+                        .querySelectorAll(".contract-option")
+                        .forEach(c => c.classList.remove("active"));
+
+                    card.classList.add("active");
+
+                };
+
+            });
 
 
         const avatar = document.getElementById("player-avatar");
@@ -794,6 +899,15 @@ const Auction = {
             
             .on("click", ".player-close",
                 this.onPlayerCloseClicked.bind(this))
+
+            .on("click", "#btnFinalize",
+                AuctionAPI.finalize.bind(AuctionAPI))
+
+            .on("click", "#btnContract",
+                AuctionAPI.showContractModal.bind(AuctionAPI))
+
+            .on("click", "#btnSignContract",
+                AuctionAPI.signContract.bind(AuctionAPI))
 
             ;
 

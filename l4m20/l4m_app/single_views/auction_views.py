@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views import View
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 import json
 import datetime
@@ -137,11 +137,11 @@ class FinBetView(View):
             
             msg = U.finalize_bet(data)
             if(msg == C.ErrorCodes.ALREADY_OFFICIAL):
-                return HttpResponse('error GIOCATORE GIÀ UFFICIALE')
+                return JsonResponse({'error': 'GIOCATORE GIÀ UFFICIALE'}, status=400)
 
-            return HttpResponse(msg)
+            return JsonResponse({'message': msg})
         except Exception as e:
-            return HttpResponse(f'error inserting bet: {e}')
+            return JsonResponse({'error': f'error finalizing bet: {e}'}, status=500)
 
     
 class GetPlayerInfoView(View):
@@ -198,3 +198,17 @@ class FreePlayerView(View):
             return HttpResponse(msg)
         except Exception as e:
             return HttpResponse(f'error freeing player: {e}')
+
+class SignContractView(View):
+    def post(self, request):
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+            if (data is None): return
+            
+            msg = U.sign_contract(data)
+            if(msg == C.ErrorCodes.PLAYER_NOT_IN_SQUAD):
+                return JsonResponse({'error': 'GIOCATORE NON NELLA SQUADRA'}, status=400)
+
+            return JsonResponse({'message': msg})
+        except Exception as e:
+            return JsonResponse({'error': f'error signing contract: {e}'}, status=500)

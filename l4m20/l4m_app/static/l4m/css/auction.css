@@ -1384,3 +1384,106 @@
     }
 
 }
+
+.contract-modal{
+
+    background:#252c36;
+
+    color:#eef2f7;
+
+    border-radius:18px;
+
+}
+
+.contract-player{
+
+    text-align:center;
+
+    margin-bottom:1.5rem;
+
+}
+
+.contract-name{
+
+    font-size:1.2rem;
+
+    font-weight:700;
+
+}
+
+.contract-role{
+
+    color:#8f9baa;
+
+    margin-top:.25rem;
+
+}
+
+.contract-options{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:1rem;
+
+    margin-top:1rem;
+
+}
+
+.contract-option{
+
+    border:2px solid #394250;
+
+    border-radius:16px;
+
+    background:#2e3642;
+
+    padding:1rem;
+
+    transition:.2s;
+
+    cursor:pointer;
+
+}
+
+.contract-option:hover{
+
+    border-color:#4f8cff;
+
+    transform:translateY(-2px);
+
+}
+
+.contract-option.active{
+
+    border-color:#4f8cff;
+
+    background:rgba(79,140,255,.15);
+
+    box-shadow:0 0 15px rgba(79,140,255,.2);
+
+}
+
+.years{
+
+    font-size:2rem;
+
+    font-weight:700;
+
+    color:#4f8cff;
+
+}
+
+.label{
+
+    margin-top:.3rem;
+
+    font-size:.8rem;
+
+    letter-spacing:.08em;
+
+    color:#c8d1dc;
+
+}
+
