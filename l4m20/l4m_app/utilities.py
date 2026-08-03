@@ -752,7 +752,8 @@ def get_all_players_my_series(teamid, filtered_teams_ids, my_svincoli_current_se
         Q(bet__Team_id__in=filtered_teams_ids)
     ).values(
         'id', 'Surname', 'Name', 'Role', 'RealTeam__Name',
-        'bet__Amount', 'bet__Team_id__Name', 'bet__IsExpired','bet__Carognata','bet__Expiration_Date'
+        'bet__Amount', 'bet__Team_id__Name', 'bet__IsExpired','bet__Carognata','bet__Expiration_Date',
+        'squads__Years'
     ).distinct('id')
 
 def get_players_my_series(filter_role, teamid, filtered_teams_ids, my_svincoli_current_session, my_market):
@@ -833,14 +834,22 @@ def get_my_best_bets(teamid, marketid):
 	
     qplayer = squads.Squads.objects.\
       filter(Q(Team_id=teamid) & Q(Quarantine=True)).first()
-	
+
+    season = get_current_season()
+    old_squad_player = squads.Squads.objects.\
+      filter(Q(Season=season)).first()
+    
     bets = bet.Bet.objects.\
         filter(Q(Team_id=teamid) & Q(Market_id=marketid)).\
         values('Amount','Player_id','Player_id__Surname','Expiration_Date','Slot',
-               'IsRaised','IsExpired','id','Team_id','IsOfficial','Carognata', 'Player_id__Role')
+               'IsRaised','IsExpired','id','Team_id','IsOfficial','Carognata', 
+               'Player_id__Role', 'squads__Years').distinct('Player_id')
                
     if(qplayer is not None):
        bets = bets.exclude(Q(Player_id=qplayer.Player_id))
+
+    if(old_squad_player is not None):
+       bets = bets.exclude(Q(Player_id=old_squad_player.Player_id))
        
     return bets   
        

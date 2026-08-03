@@ -48,16 +48,6 @@ const ROSTER_LIMITS = Object.freeze({
     A: 6
 });
 
-const PLAYER_STATUS = Object.freeze({
-    OPEN: "open",
-    OVERBID: "overbid",
-    EXPIRED: "expired",
-    OFFICIAL: "official",
-    FREEABLE: "freeable",
-    CAROGNABLE: "carognable",
-    ROSTER: "roster",
-});
-
 const ACTIONS = {
 
         bid: {
@@ -295,6 +285,34 @@ async function apiFinalize(finalData){
     return json;
 }
 
+function getPlayerStatus(player, flags = null) {    
+    if (flags.roster === false && 
+        flags.expired === false) {
+            return [getRemainingTime(player.bet__Expiration_Date ?? "-"), 
+                ("state-bidding" ? flags.carognata === false : "state-carognata")];
+       }
+
+    if (flags.roster === true &&
+        flags.expired === true &&
+        flags.official === false) {
+            return ["SCADUTO", "state-expired"];
+    }
+
+    if (flags.roster === true 
+        && flags.official === true && 
+        flags.signed === false) {
+        return ["UFFICIALE", "state-official"];
+    }
+        
+    if (flags.roster === true &&
+        flags.official === true &&
+        flags.signed === true) {
+        return ["SOTTO CONTRATTO", "state-official"]; //TODO: check signed color
+    }
+    
+    return [getRemainingTime(player.bet__Expiration_Date ?? "-"), "state-bidding"]; //default
+}
+
 /* ==========================================================
  *  AUCTION API
  * ========================================================== */
@@ -346,9 +364,11 @@ const AuctionAPI = {
 
             const response = await apiExecute("/l4m/auction/finalizeBet/", finalData);
 
-            // AuctionState.roster = response.roster;
+            player = AuctionState.getPlayer(AuctionState.currentPlayer.id);
+            player.IsOfficial = true;
+            player.flags = Auction.getPlayerFlags(player);
 
-            Auction.renderRoster();
+            Auction.refreshPlayer(player);
 
             bootstrap.Modal
                 .getInstance(document.getElementById("playerModal"))
@@ -379,6 +399,10 @@ const AuctionAPI = {
         try {
 
             const response = await apiExecute("/l4m/auction/signContract/", contractData);
+
+            player = AuctionState.getPlayer(AuctionState.currentPlayer.id);
+
+            player.squads__Years = parseInt(document.querySelector(".contract-option.active").dataset.years);
 
             bootstrap.Modal
                 .getInstance(document.getElementById("contractModal"))
@@ -437,11 +461,33 @@ const AuctionState = {
     userTeam: {
         id: null,
         name: null
+    },
+
+    getPlayer(playerId) {
+        return (
+            this.roster.find(r => r.Player_id == playerId) ?? 
+            this.players.find(p => p.id == playerId) ??
+            null
+        );
     }
 
 };
 
 const Auction = {
+
+    refreshPlayer(player){
+
+        flags = Auction.getPlayerFlags(player);
+        
+        const [playerStatus, playerClass] = getPlayerStatus(player, flags);
+
+        this.renderRosterCard(player, playerStatus, playerClass);
+
+        this.renderPlayerModal(playerStatus);
+
+        this.renderPlayerActions(player.flags);
+
+    },
 
     getPlayerFlags(player) {
 
@@ -450,23 +496,10 @@ const Auction = {
             expired: player.IsExpired ?? false,
             official: player.IsOfficial ?? false,
             carognata: player.Carognata ?? false,
+            signed: (player.squads__Years != null) ?? false,
             freeable: false, //TODO DEFINE
 
         };
-    },
-
-    renderPlayerActions(flags){
-
-        document
-            .querySelectorAll(".player-action")
-            .forEach(btn => {
-
-                const action = ACTIONS[btn.dataset.action];
-
-                btn.hidden = !action.visible(flags);
-
-            });
-
     },
 
     /* PLAYER CARD */
@@ -505,7 +538,6 @@ const Auction = {
         AuctionState.currentPlayer = player;
 
         const flags = this.getPlayerFlags(player);
-
         this.renderPlayerActions(flags);
 
         const modal = document.getElementById("playerModal");
@@ -528,8 +560,9 @@ const Auction = {
         modal.querySelector(".player-owner")
             .textContent = player.bet__Team_id__Name ?? "-";
 
+        const [playerStatus, playerClass] = getPlayerStatus(player, flags);
         modal.querySelector(".player-expiration")
-            .textContent = getRemainingTime(player.bet__Expiration_Date) ?? "-";
+            .textContent = playerStatus;
 
         const bidInput = modal.querySelector("#modalBid");
 
@@ -538,6 +571,9 @@ const Auction = {
             : 1;
         bidInput.value = bidInput.min;
         bidInput.max = AuctionState.balance.residual;
+
+        // bidInput.value = playerClass == "state-bidding" ? bidInput.min : player.bet__Amount;
+        // bidInput.disabled = (playerClass != "state-bidding"); //TODO: bad practice?
 
         document
             .getElementById("carognataAlert")
@@ -612,6 +648,41 @@ const Auction = {
 
     },
 
+    renderPlayerModal(playerStatus){
+    
+        modal = document.getElementById("playerModal");
+        modal.querySelector(".player-expiration").textContent = 
+            playerStatus;
+        
+    },
+
+    renderRosterCard(player, playerStatus, playerClass){
+        
+        player_card = document.querySelector(`.roster-card[data-id="${player.Player_id}"]`);
+        if (!player_card) return;
+
+        player_card.classList.remove(...player_card.classList);
+        player_card.classList.add("roster-card", playerClass);
+
+        player_card.querySelector(".roster-player-status").textContent = 
+            playerStatus;
+    
+    },
+
+    renderPlayerActions(flags){
+
+        document
+            .querySelectorAll(".player-action")
+            .forEach(btn => {
+
+                const action = ACTIONS[btn.dataset.action];
+
+                btn.hidden = !action.visible(flags);
+
+            });
+
+    },
+
     createRosterCard(player, role){
 
         const card=document.createElement("div");
@@ -626,7 +697,7 @@ const Auction = {
         card.innerHTML=`
             <div class="roster-player-name">${player.Player_id__Surname}</div>
             <div class="roster-player-price">$${player.Amount}</div>
-            <div class="roster-player-status">${getRemainingTime(player.Expiration_Date ?? "-")}</div>
+            <div class="roster-player-status">${player.IsOfficial ? "UFFICIALE" : getRemainingTime(player.Expiration_Date ?? "-")}</div>
         `;
 
         return card;

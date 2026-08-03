@@ -23,7 +23,6 @@ class AuctionView(LoginRequiredMixin, View):
             seriesid=U.get_my_series(teamid)[0].id
             my_market = U.get_my_markets(seriesid)[0].id #TODO: improve check
             mbb = U.get_my_best_bets(teamid, my_market)
-            my_best_bets = U.list_my_best_bets(mbb)
             current_session = U.get_current_session(my_market)
             
             filtered_teams = team.Team.objects.filter(Series__id=seriesid)
