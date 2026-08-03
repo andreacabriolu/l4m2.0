@@ -42,10 +42,22 @@ class DB_Connector:
         
         self.cur.execute(insert_q, data)
 
-    def insert_player(self, surname, role, realteam_id):
-        insert_q = f"insert into l4m_app_player (\"Surname\", \"Role\", \"RealTeam_id\", \"Status\") values (%s,%s,%s,%s)"
+    def insert_player(self, surname, role, realteam_id, quotation):
+        insert_q = f"insert into l4m_app_player (\"Surname\", \"Role\", \"RealTeam_id\", \"Status\", \"Quotation\") values (%s,%s,%s,%s,%s)"
 
-        self.cur.execute(insert_q, (surname, role, realteam_id, 'A'))
+        self.cur.execute(insert_q, (surname, role, realteam_id, 'A', quotation))
+
+    def upsert_player(self, surname, role, realteam_id, quotation):
+        upsert_q = f"""
+        INSERT INTO l4m_app_player (\"Surname\", \"Role\", \"RealTeam_id\", \"Status\", \"Quotation\")
+        VALUES (%s, %s, %s, %s, %s)
+        ON CONFLICT (\"Surname\") DO UPDATE SET
+            \"Role\" = excluded.\"Role\",
+            \"RealTeam_id\" = excluded.\"RealTeam_id\",
+            \"Status\" = excluded.\"Status\",
+            \"Quotation\" = excluded.\"Quotation\"
+        """
+        self.cur.execute(upsert_q, (surname, role, realteam_id, 'A', quotation))
 
     def close(self):
         self.cur.close()
