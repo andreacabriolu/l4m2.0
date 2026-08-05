@@ -46,7 +46,7 @@
             <div class="summary-card">
                 <span class="summary-label">Monte ingaggi</span>
                 <span class="summary-value" id="main-wages">
-                    {{ balance.wages }} FML
+                    {{ balance.wages }}/{{ balance.wages_max }} FML
                 </span>
             </div>
 
@@ -303,24 +303,27 @@
                             </div>
             
                             <div class="bet-selector">
-            
+                            
                                 <button id="btnMinus">
-            
+                            
                                     <i class="bi bi-dash"></i>
-            
+                            
                                 </button>
-            
+                            
                                 <input id="modalBid" type="number">
-            
+                            
+                                <div id="betHelp" class="bet-help">
+                                </div>
+                            
                                 <button id="btnPlus">
-            
+                            
                                     <i class="bi bi-plus"></i>
-            
+                            
                                 </button>
-            
+                            
                             </div>
-            
-                        </div>
+                            
+                            </div>
 
                         <div id="carognataAlert" class="carognata-alert" hidden>
                         

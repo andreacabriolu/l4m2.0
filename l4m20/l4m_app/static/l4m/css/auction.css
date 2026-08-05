@@ -1469,3 +1469,20 @@
 
 }
 
+.bet-help{
+
+    min-height:20px;
+
+    margin-top:.4rem;
+
+    font-size:.85rem;
+
+    color:#ef4444;
+
+}
+
+.is-invalid{
+
+    border-color:#ef4444 !important;
+
+}

@@ -60,6 +60,7 @@ class AuctionView(LoginRequiredMixin, View):
                 'balance': {
                     'total': balance['Purchases_max'],
                     'wages': balance['Wages_amount'],
+                    'wages_total': balance['Wages_max'],
                     'residual': balance['Purchases_max'] - current_bets_amount,
                     'carognate': n_carognate,
                     'maxBid': balance_for_bets,
@@ -101,28 +102,30 @@ class SendBetView(View):
             
             logger.debug(f"{uname} : SENDING BET: {data}")
 
-            bet_result, new_balance_for_bets, n_carognate, balance_max = U.send_bet(data)
+            bet_return = U.send_bet(data)
+            # bet_result, new_balance_for_bets, n_carognate, balance_max = U.send_bet(data)
 
-            if(bet_result == C.SendBetResult.BET_OVERFLOW):
+            if(bet_return.bet_result == C.SendBetResult.BET_OVERFLOW):
                 return JsonResponse({'error': 'PUNTATA TROPPO ALTA!'}, status=400)
             
-            if(bet_result == C.SendBetResult.BET_UNDERFLOW):
+            if(bet_return.bet_result == C.SendBetResult.BET_UNDERFLOW):
                 return JsonResponse({'error': 'PUNTATA TROPPO BASSA!'}, status=400)
 
-            if(bet_result == C.SendBetResult.BET_EXPIRED):
+            if(bet_return.bet_result == C.SendBetResult.BET_EXPIRED):
                 return JsonResponse({'error': 'GIOCATORE SCADUTO!'}, status=400)
             
-            if(bet_result == C.SendBetResult.BET_SLOT_EXCEED):
+            if(bet_return.bet_result == C.SendBetResult.BET_SLOT_EXCEED):
                 return JsonResponse({'error': 'NUMERO MASSIMO DI GIOCATORI PER RUOLO!'}, status=400)
 
         except Exception as e:
             return JsonResponse({'error': f'error inserting bet and updating balance: {e}'}, status=500)
         
-        return JsonResponse({'amount': bet_result, 
-                            'max': balance_max, 
-                            'balance_for_bets': new_balance_for_bets,
-                            'n_carognate': n_carognate,
-                            'roster': list(U.get_my_best_bets(data['userteamid'], data['market']))
+        return JsonResponse({'result': bet_return.bet_result, 
+                             'residual': bet_return.residual,
+                             'total': bet_return.total, 
+                             'balance_for_bets': bet_return.new_balance_for_bets,
+                             'n_carognate': bet_return.n_carognate,
+                             'roster': list(U.get_my_best_bets(data['userteamid'], data['market']))
                             })
 
 class FinBetView(View):
@@ -207,6 +210,6 @@ class SignContractView(View):
             if(msg == C.ErrorCodes.PLAYER_NOT_IN_SQUAD):
                 return JsonResponse({'error': 'GIOCATORE NON NELLA SQUADRA'}, status=400)
 
-            return JsonResponse({'message': msg})
+            return JsonResponse(msg)
         except Exception as e:
             return JsonResponse({'error': f'error signing contract: {e}'}, status=500)

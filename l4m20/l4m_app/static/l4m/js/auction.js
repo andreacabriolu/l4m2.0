@@ -124,10 +124,54 @@ function calculate_expiration_date() {
     return new Date(new Date(now).setHours(now.getHours() + AuctionState.currentSession.expiration)).toLocaleString("it-IT", options)
 }
 
+function validateMinMaxBid(newamount, min, max) {
+
+    const btn = document.getElementById("btnBid");
+
+    if (isNaN(newamount) || newamount < parseInt(min))
+        {
+            btn.classList.add("is-invalid");
+            btn.disabled = true;
+
+            document
+                .getElementById("betHelp")
+                .textContent =
+                `Minimo: ${min} FML`;
+            
+                return false;
+
+        }
+        else if (isNaN(newamount) || newamount > parseInt(max))
+        {
+            btn.classList.add("is-invalid");
+            btn.disabled = true;
+
+            document
+                .getElementById("betHelp")
+                .textContent =
+                `Massimo: ${max} FML`;
+            
+                return false;
+        }
+        else {
+
+            btn.classList.remove("is-invalid");
+
+            btn.disabled = false;
+
+            document
+                .getElementById("betHelp")
+                .textContent = "";
+
+        }
+
+        return true;
+}
+
 function getStateClass(player){
         className = "state-bidding";
 
-        if (player.Roster) {
+        if (player.Roster && !player.IsOfficial && !player.IsExpired && !player.Carognata) {
             className = "state-bidding";
         } else if (player.IsOfficial) {
             className = "state-official";
@@ -156,7 +200,7 @@ function buildBet(){
         balancemax: AuctionState.balance.total,
         market: AuctionState.market,
         carognata: false, //TODO: check if this is correct
-        slot: 'x',
+        slot: 'unused',
         session: AuctionState.currentSession.id
 
     };
@@ -279,8 +323,8 @@ const AuctionAPI = {
             const response = await apiExecute("/l4m/auction/sendBet/", bet);
 
             AuctionState.balance.maxBid = response.balance_for_bets;
-            AuctionState.balance.total = response.max;
-            AuctionState.balance.residual = response.amount;
+            AuctionState.balance.total = response.total;
+            AuctionState.balance.residual = response.residual;
             AuctionState.balance.carognate = response.n_carognate;
 
             AuctionState.roster = response.roster;
@@ -349,10 +393,12 @@ const AuctionAPI = {
             const response = await apiExecute("/l4m/auction/signContract/", contractData);
 
             player = AuctionState.getPlayer(AuctionState.currentPlayer.id);
-
             player.squads__Years = parseInt(document.querySelector(".contract-option.active").dataset.years);
 
+            AuctionState.balance.wages = response.wages_amount;
+
             Auction.refreshPlayer(player);
+            Auction.renderSummary();
 
             bootstrap.Modal
                 .getInstance(document.getElementById("contractModal"))
@@ -401,7 +447,8 @@ const AuctionState = {
         residual: 0,
         maxBid: 0,
         carognate: 0,
-        wages: 0
+        wages: 0,
+        wages_total: 0
     },
 
     filters: {
@@ -450,7 +497,7 @@ const Auction = {
 
         this.renderPlayerModal(playerStatus);
 
-        this.renderPlayerActions(player.flags);
+        this.renderPlayerActions(flags);
 
     },
 
@@ -515,7 +562,7 @@ const Auction = {
             .textContent = player.RealTeam__Name;
 
         modal.querySelector(".card-player-wage")
-            .textContent = "INGAGGIO: " + (player.Quotation ?? "-") + " FML";
+            .textContent = "INGAGGIO: " + (Math.round(player.Quotation * 0.5) ?? "-") + " FML"; //TODO: magic number!
 
         role_className = `role-${player.Role}`;
         modal.querySelector(".player-role").className = `role-badge ${role_className} player-role`;
@@ -535,14 +582,21 @@ const Auction = {
 
         const bidInput = modal.querySelector("#modalBid");
 
+        document
+                .getElementById("betHelp")
+                .textContent = "";
+
         bidInput.min = player.bet__Amount
             ? player.bet__Amount + 1
             : 1;
         bidInput.value = bidInput.min;
         bidInput.max = AuctionState.balance.maxBid;
 
-        // bidInput.value = playerClass == "state-bidding" ? bidInput.min : player.bet__Amount;
-        // bidInput.disabled = (playerClass != "state-bidding"); //TODO: bad practice?
+        bidPlusBtn = modal.querySelector("#btnPlus");
+        bidMinusBtn = modal.querySelector("#btnMinus");
+        bidInput.disabled = (player.Roster || player.IsExpired) ? true : false;
+        bidPlusBtn.disabled = (player.Roster || player.IsExpired) ? true : false;
+        bidMinusBtn.disabled = (player.Roster || player.IsExpired) ? true : false;
 
         document
             .getElementById("carognataAlert")
@@ -626,6 +680,8 @@ const Auction = {
 
     createRosterCard(player, role){
 
+        player.Roster = true;
+
         const card=document.createElement("div");
 
         card.className="roster-card";
@@ -635,11 +691,13 @@ const Auction = {
         card.dataset.id = player.Player_id;
         card.dataset.role = role;
 
+        const [playerStatus, playerClass] = getPlayerStatus(player, this.getPlayerFlags(player));
+
         card.innerHTML=`
             <div class="roster-player-name">${player.Player_id__Surname}</div>
             <div class="roster-player-price">$${player.Amount}</div>
             <div class="roster-player-realteam">${player.Player_id__RealTeam__Name}</div>
-            <div class="roster-player-status">${player.IsOfficial ? "UFFICIALE" : getRemainingTime(player.Expiration_Date ?? "-")}</div>
+            <div class="roster-player-status">${playerStatus}</div>
         `;
 
         return card;
@@ -743,7 +801,7 @@ const Auction = {
             .text(AuctionState.balance.residual + "/" + AuctionState.balance.total + " FML");
 
         $("#main-wages")
-            .text(AuctionState.balance.wages + " FML");
+            .text(AuctionState.balance.wages + "/" + AuctionState.balance.wages_total + " FML");
 
         $("#main-max_bid")
             .text(AuctionState.balance.maxBid + " FML");
@@ -826,14 +884,14 @@ const Auction = {
     onBidPlusClicked(e) {
 
         const bidInput = document.getElementById("modalBid");
-
+        const maxBid = AuctionState.balance.maxBid;
+        
         const amount = parseInt(bidInput.value);
+        newAmount = amount + 1;
 
-        if (isNaN(amount) || amount >= bidInput.max)
-            return;
-
-        bidInput.value = amount + 1;
-
+        if (validateMinMaxBid(newAmount, bidInput.min, maxBid)) {
+            bidInput.value = newAmount;
+        }
     },
 
     onBidMinusClicked(e) {
@@ -841,12 +899,21 @@ const Auction = {
         const bidInput = document.getElementById("modalBid");
 
         const amount = parseInt(bidInput.value);
+        newAmount = amount - 1;
 
-        if (isNaN(amount) || amount <= bidInput.min)
-            return;
+        if (validateMinMaxBid(newAmount, bidInput.min, AuctionState.balance.maxBid)) {
+            bidInput.value = newAmount;
+        }
 
-        bidInput.value = amount - 1;
+    },
 
+    onBidInputChanged(e) {
+        const amount = Number(e.target.value);
+
+        const maxBid = AuctionState.balance.maxBid;
+
+        validateMinMaxBid(amount, e.target.min, maxBid);
+            
     },
 
     onPlayerCloseClicked(e) {
@@ -925,6 +992,9 @@ const Auction = {
 
             .on("click", "#btnSignContract",
                 AuctionAPI.signContract.bind(AuctionAPI))
+
+            .on("input", "#modalBid", 
+                this.onBidInputChanged.bind(this)) 
 
             ;
 

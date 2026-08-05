@@ -890,8 +890,8 @@ def get_my_best_bets(teamid, marketid):
     if(qplayer is not None):
        bets = bets.exclude(Q(Player_id=qplayer.Player_id))
 
-    if(old_squad_player is not None):
-       bets = bets.exclude(Q(Player_id=old_squad_player.Player_id))
+    # if(old_squad_player is not None):
+    #    bets = bets.exclude(Q(Player_id=old_squad_player.Player_id))
        
     return bets   
        
@@ -943,10 +943,10 @@ def send_bet(data):
     balance_for_bets = get_balance_for_bets(bet_obj.Team, int(balance_max))
 
     if(not check_max_n_bets(user_team.id, player_.Role)):
-        return C.SendBetResult.BET_SLOT_EXCEED, balance_max, ncarognate
+        return C.SendBetReturnValues(C.SendBetResult.BET_SLOT_EXCEED)
 
     if(bet_obj.Amount > balance_for_bets):
-        return C.SendBetResult.BET_OVERFLOW, balance_max, ncarognate
+        return C.SendBetReturnValues(C.SendBetResult.BET_OVERFLOW)
 
     try:
         bet_old = bet.Bet.objects.filter(Q(Player=player_) & Q(Market=market_))
@@ -954,10 +954,12 @@ def send_bet(data):
             _bet_old = bet_old[0]
 
             if(_bet_old.IsExpired == True):
-                return C.SendBetResult.BET_EXPIRED, balance_max, ncarognate
+                return C.SendBetReturnValues(
+                    C.SendBetResult.BET_EXPIRED)
 
             if(bet_obj.Amount <= _bet_old.Amount):
-                return C.SendBetResult.BET_UNDERFLOW, balance_max, ncarognate
+                return C.SendBetReturnValues(
+                    C.SendBetResult.BET_UNDERFLOW)
 
             bet_history_new = bet_history.Bet_History(
                 Amount=_bet_old.Amount,
@@ -998,6 +1000,13 @@ def send_bet(data):
 
     new_balance_for_bets = get_balance_for_bets(bet_obj.Team, int(my_bal.Purchases_max), marketid=market_.id)
     new_bets_amount = get_current_bets_amount(bet_obj.Team, marketid=market_.id)
+
+    return C.SendBetReturnValues(
+            bet_result=C.SendBetResult.BET_OK, 
+            residual=(my_bal.Purchases_max  - new_bets_amount),  
+            new_balance_for_bets=new_balance_for_bets, 
+            n_carognate=ncarognate + 1 if (carognata == "True") else ncarognate, 
+            total=my_bal.Purchases_max)
 
     return (
         (my_bal.Purchases_max  - new_bets_amount), \
@@ -1206,24 +1215,23 @@ def sign_contract(contract_data):
     team_ = get_object_or_404(team.Team, id=contract_data['teamid'])
     season = get_current_season()
     years_signed = contract_data['years']
+    rounded_wage = round(player_.Quotation * C.WAGE_MULTIPLIER) #0.5
+    total_wage = rounded_wage * years_signed
 
     existing_squad = squads.Squads.objects.filter(Q(Player=player_) & Q(Team=team_) & Q(Season=season))
 
-
     if existing_squad.exists():
-        existing_squad.update(Years=years_signed)
+        existing_squad.update(Years=years_signed, Salary=total_wage)
     else:
         return C.ErrorCodes.PLAYER_NOT_IN_SQUAD
 
     balance_ = get_balance(team_.id)
     wages_amount = balance_[0]['Wages_amount'] if len(balance_) > 0 else 0
     wages_max = balance_[0]['Wages_max'] if len(balance_) > 0 else 0
-    quotation = player_.Quotation
-    player_wage = quotation * C.WAGE_MULTIPLIER #0.5
-    wages_amount += player_wage
-    wages_max -= player_wage
+    wages_amount += total_wage
+    # wages_max -= total_wage
 
-    balance_.update(Wages_amount=wages_amount, Wages_max=wages_max)
+    balance_.update(Wages_amount=wages_amount)
 
-    return {'wages_amount': wages_amount, 'wages_max': wages_max, 'player_wage': player_wage}
+    return {'wages_amount': wages_amount, 'player_wage': total_wage}
 

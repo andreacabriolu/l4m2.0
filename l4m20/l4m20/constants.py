@@ -1,3 +1,7 @@
+from dataclasses import dataclass
+from typing import Optional
+
+
 class Constant_Strings:
     player = "Player"
     bet = "Bet"
@@ -56,6 +60,14 @@ class SendBetResult:
     BET_UNDERFLOW = -2
     BET_EXPIRED = -3
     BET_SLOT_EXCEED = -4
+
+@dataclass
+class SendBetReturnValues:
+    bet_result: int
+    residual: Optional[int] = None
+    new_balance_for_bets: Optional[int] = None
+    n_carognate: Optional[int] = None
+    total: Optional[int] = None
 
 class ErrorCodes:
     ALREADY_OFFICIAL = -1
