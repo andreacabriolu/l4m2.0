@@ -30,26 +30,39 @@ class AuctionView(LoginRequiredMixin, View):
             my_svincoli_current_session = U.get_my_svincolati(team=teamid, session=current_session)
             players_all = U.get_all_players_my_series(teamid, filtered_teams_ids, my_svincoli_current_session, my_market)
 
+            players_gk = [p for p in players_all if p['Role'] == 'P']
+            players_def = [p for p in players_all if p['Role'] == 'D']
+            players_cc = [p for p in players_all if p['Role'] == 'C']
+            players_fw = [p for p in players_all if p['Role'] == 'A']
+
             free_players = list(players_all)
 
             balance = U.get_balance(teamid)[0] #TODO: improve check
-            balance_for_bets = U.get_balance_for_bets(teamid, balance['Purchases_max'])
+            balance_for_bets = U.get_balance_for_bets(teamid, balance['Purchases_max'], my_market)
             if(balance_for_bets is None): 
                 balance_for_bets = 0
             n_carognate = balance['N_carognate']
             n_svincoli = balance['N_svincoli']
+            current_bets_amount = U.get_current_bets_amount(teamid, my_market)
 
             auction_data = {
                 'summary': {
                     'active_auctions': len(mbb),
                     'user_team_id': user_team['id'],
                     'user_team_name': user_team['Name'],
+                    'n_players_by_role': {
+                        'P': len(players_gk),
+                        'D': len(players_def),
+                        'C': len(players_cc),
+                        'A': len(players_fw)
+                        }
                 },
                 'balance': {
                     'total': balance['Purchases_max'],
-                    'residual': balance['Purchases_max'] - U.get_current_bets_amount(teamid),
+                    'wages': balance['Wages_amount'],
+                    'residual': balance['Purchases_max'] - current_bets_amount,
                     'carognate': n_carognate,
-                    'max_bid': balance_for_bets,
+                    'maxBid': balance_for_bets,
                     'n_svincoli': n_svincoli,
                 },
                 'players': sorted(players_all, key=lambda p: (C.Constant_Dicts.RoleInts[p['Role']], p['Surname'])),
@@ -66,21 +79,6 @@ class AuctionView(LoginRequiredMixin, View):
             }
 
             params = { 
-                # 'user_team': user_team,
-                # 'players_gk':players_gk,
-                # 'players_def':players_def,
-                # 'players_cc':players_cc,
-                # 'players_fw':players_fw,
-                # 'my_best_bets':my_best_bets,
-                'balance' : balance,
-                # 'balance_for_bets' : balance_for_bets,
-                'residual': balance['Purchases_max'] - U.get_current_bets_amount(teamid),
-                # 'my_market': my_market,
-                # 'session': current_session,
-                'max_carognate' : C.MAX_CAROGNATE,
-                'n_carognate' : n_carognate,
-                'max_svincoli' : C.MAX_SVINCOLI,
-                'n_svincoli' : n_svincoli,
                 # 'free_players' : free_players,
                 'is_live_day': U.is_live_day(),
                 'auction_data': auction_data,
@@ -103,28 +101,29 @@ class SendBetView(View):
             
             logger.debug(f"{uname} : SENDING BET: {data}")
 
-            bet_result, balance_max, n_carognate = U.send_bet(data)
+            bet_result, new_balance_for_bets, n_carognate = U.send_bet(data)
 
             if(bet_result == C.SendBetResult.BET_OVERFLOW):
-                return HttpResponse(f'error PUNTATA TROPPO ALTA!')
+                return JsonResponse({'error': 'PUNTATA TROPPO ALTA!'}, status=400)
             
             if(bet_result == C.SendBetResult.BET_UNDERFLOW):
-                return HttpResponse(f'error PUNTATA TROPPO BASSA!')
+                return JsonResponse({'error': 'PUNTATA TROPPO BASSA!'}, status=400)
 
             if(bet_result == C.SendBetResult.BET_EXPIRED):
-                return HttpResponse(f'error GIOCATORE SCADUTO!')
+                return JsonResponse({'error': 'GIOCATORE SCADUTO!'}, status=400)
             
             if(bet_result == C.SendBetResult.BET_SLOT_EXCEED):
-                return HttpResponse(f'error NUMERO MASSIMO DI GIOCATORI PER RUOLO!')
+                return JsonResponse({'error': 'NUMERO MASSIMO DI GIOCATORI PER RUOLO!'}, status=400)
 
         except Exception as e:
-            return HttpResponse(f'error inserting bet and updating balance: {e}', status=500)
+            return JsonResponse({'error': f'error inserting bet and updating balance: {e}'}, status=500)
         
-        return HttpResponse(json.dumps({'amount': bet_result, 
-                                        'max': balance_max, 
-                                        'n_carognate': n_carognate,
-                                        'roster': list(U.get_my_best_bets(data['userteamid'], data['market']))
-                                        }))
+        return JsonResponse({'amount': bet_result, 
+                            # 'max': balance_max, 
+                            'balance_for_bets': new_balance_for_bets,
+                            'n_carognate': n_carognate,
+                            'roster': list(U.get_my_best_bets(data['userteamid'], data['market']))
+                            })
 
 class FinBetView(View):
     template_name = 'l4m/auction.html'
@@ -194,9 +193,9 @@ class FreePlayerView(View):
             
             msg = U.free_player(bet_id, session_svincolo)
             
-            return HttpResponse(msg)
+            return JsonResponse({'message': msg})
         except Exception as e:
-            return HttpResponse(f'error freeing player: {e}')
+            return JsonResponse({'error': f'error freeing player: {e}'}, status=500)
 
 class SignContractView(View):
     def post(self, request):

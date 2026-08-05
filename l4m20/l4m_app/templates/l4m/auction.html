@@ -38,22 +38,29 @@
 
             <div class="summary-card">
                 <span class="summary-label">Monte acquisti</span>
-                <span class="summary-value" id="main-balance">
-                    {{ balance.Purchases_max }} FML
+                <span class="summary-value" id="main-residual">
+                    {{ balance.residual }} FML
                 </span>
             </div>
 
             <div class="summary-card">
-                <span class="summary-label">Residui</span>
-                <span class="summary-value" id="main-residual">
-                    {{ residual }} FML
+                <span class="summary-label">Monte ingaggi</span>
+                <span class="summary-value" id="main-wages">
+                    {{ balance.wages }} FML
+                </span>
+            </div>
+
+            <div class="summary-card">
+                <span class="summary-label">Puntata massima</span>
+                <span class="summary-value" id="main-max_bid">
+                    {{ balance.max_bid }} FML
                 </span>
             </div>
 
             <div class="summary-card">
                 <span class="summary-label">Carognate</span>
                 <span class="summary-value" id="main-carognate">
-                    {{ n_carognate }}/ {{max_carognate}}
+                    {{ n_carognate }}/{{max_carognate}}
                 </span>
             </div>
 
@@ -132,7 +139,7 @@
                     <button class="nav-link" data-role="P">
                         <i class="bi bi-hand-index-thumb"></i>
                         <span>Portieri</span>
-                        <span class="role-count">{{ players_gk|length }}</span>
+                        <span class="role-count">{{ auction_data.summary.n_players_by_role.P }}</span>
                     </button>
                 </li>
 
@@ -140,7 +147,7 @@
                     <button class="nav-link" data-role="D">
                         <i class="bi bi-shield"></i>
                         <span>Difensori</span>
-                        <span class="role-count">{{ players_def|length }}</span>
+                        <span class="role-count">{{ auction_data.summary.n_players_by_role.D }}</span>
                     </button>
                 </li>
 
@@ -148,7 +155,7 @@
                     <button class="nav-link" data-role="C">
                         <i class="bi bi-people"></i>
                         <span>Centrocampisti</span>
-                        <span class="role-count">{{ players_cc|length }}</span>
+                        <span class="role-count">{{ auction_data.summary.n_players_by_role.C }}</span>
                     </button>
                 </li>
 
@@ -156,7 +163,7 @@
                     <button class="nav-link" data-role="A">
                         <i class="bi bi-flag"></i>
                         <span>Attaccanti</span>
-                        <span class="role-count">{{ players_fw|length }}</span>
+                        <span class="role-count">{{ auction_data.summary.n_players_by_role.A }}</span>
                     </button>
                 </li>
 

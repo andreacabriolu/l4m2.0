@@ -787,7 +787,7 @@ def get_all_players_my_series(teamid, filtered_teams_ids, my_svincoli_current_se
     ).filter(
         has_expired_bet=False  
     ).order_by('id').values(
-        'id', 'Surname', 'Name', 'Role', 'RealTeam__Name',
+        'id', 'Surname', 'Name', 'Role', 'RealTeam__Name', 'Quotation',
         'bet__Amount', 'bet__Team_id__Name', 'bet__IsExpired',
         'bet__Carognata', 'bet__Expiration_Date',
         'squads__Years'
@@ -849,9 +849,9 @@ def check_max_n_bets(teamid, role):
     )
 
 
-def get_current_bets_amount(teamid):
+def get_current_bets_amount(teamid, marketid):
     sum = bet.Bet.objects.filter(Q(Team_id=teamid) & \
-                                 Q(Market_id=get_my_market(teamid).id)).aggregate(Sum('Amount'))['Amount__sum']
+                                 Q(Market_id=marketid)).aggregate(Sum('Amount'))['Amount__sum']
     return sum if sum is not None else 0
 
 def update_balance_latelineup(bal):
@@ -859,10 +859,14 @@ def update_balance_latelineup(bal):
     bal.N_formazioni_non_schierate = n_non_schierate + 1
     bal.save()
 
-def get_balance_for_bets(teamid, balance_max):
-    sum = bet.Bet.objects.filter(Q(Team_id=teamid) & Q(Market_id=get_my_market(teamid).id)).aggregate(Sum('Amount'))
+def get_balance_for_bets(teamid, balance_max, marketid=None):
+    if marketid is None:
+        my_market = get_my_market(teamid)
+        marketid = my_market.id
+
+    sum = bet.Bet.objects.filter(Q(Team_id=teamid) & Q(Market_id=marketid)).aggregate(Sum('Amount'))
     #missing slot count
-    num_active_bets = bet.Bet.objects.filter(Q(Team_id=teamid)).aggregate(Count('id'))
+    num_active_bets = bet.Bet.objects.filter(Q(Team_id=teamid) & Q(Market_id=marketid)).aggregate(Count('id'))
     num_missing_slots = (C.NUM_SLOTS - num_active_bets['id__count']) - 1
 
     return ((balance_max - sum['Amount__sum'] - num_missing_slots) if sum['Amount__sum'] is not None else balance_max - num_missing_slots)
@@ -905,7 +909,7 @@ def get_balance_obj(teamid):
 def get_balance(teamid):
     return balance.Balance.objects.\
         filter(Q(Team_id=teamid) & Q(Season__Active=True)).\
-        values('Purchases_amount','Purchases_max','N_carognate','N_svincoli')
+        values('Purchases_amount','Purchases_max','Wages_amount','Wages_max','N_carognate','N_svincoli')
 
 def get_all_team_players():
     return player.Player.objects.filter(bet__Market__Series__Season__Active=True).\
@@ -991,8 +995,15 @@ def send_bet(data):
         #RESCUE OLD BET FROM BET_HISTORY TODO
         raise Exception(e) 
 
-    return (my_bal.Purchases_max - get_current_bets_amount(bet_obj.Team)), balance_max, (ncarognate + 1) if (carognata == "True") else ncarognate
-    
+    new_balance_for_bets = get_balance_for_bets(bet_obj.Team, int(balance_max), marketid=market_.id)
+    new_bets_amount = get_current_bets_amount(bet_obj.Team, marketid=market_.id)
+
+    return (
+        (balance_max - new_bets_amount), \
+        new_balance_for_bets, \
+        (ncarognate + 1) if (carognata == "True") else ncarognate
+    )
+
 def finalize_bet(data):
 
     fin_obj = squads.Squads_Obj()
@@ -1192,11 +1203,25 @@ def sign_contract(contract_data):
     player_ = get_object_or_404(player.Player, id=contract_data['playerid'])
     team_ = get_object_or_404(team.Team, id=contract_data['teamid'])
     season = get_current_season()
+    years_signed = contract_data['years']
 
     existing_squad = squads.Squads.objects.filter(Q(Player=player_) & Q(Team=team_) & Q(Season=season))
 
-    if existing_squad.exists():
-        existing_squad.update(Years=contract_data['years'])
 
+    if existing_squad.exists():
+        existing_squad.update(Years=years_signed)
     else:
         return C.ErrorCodes.PLAYER_NOT_IN_SQUAD
+
+    balance_ = get_balance(team_.id)
+    wages_amount = balance_[0]['Wages_amount'] if len(balance_) > 0 else 0
+    wages_max = balance_[0]['Wages_max'] if len(balance_) > 0 else 0
+    quotation = player_.Quotation
+    player_wage = quotation * C.WAGE_MULTIPLIER #0.5
+    wages_amount += player_wage
+    wages_max -= player_wage
+
+    balance_.update(Wages_amount=wages_amount, Wages_max=wages_max)
+
+    return {'wages_amount': wages_amount, 'wages_max': wages_max, 'player_wage': player_wage}
+

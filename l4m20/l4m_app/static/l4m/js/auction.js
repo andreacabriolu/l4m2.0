@@ -224,33 +224,6 @@ async function apiExecute(url, data){
     return json;
 }
 
-async function apiSendBet(bet){
-
-    const response=await fetch("/l4m/auction/sendBet/",{
-
-        method:"POST",
-
-        headers:{
-            "Content-Type":"application/json",
-            "X-CSRFToken":Cookies.get("csrftoken")
-        },
-
-        body:JSON.stringify(bet)
-
-    });
-
-    const json=await response.json();
-
-    if(!response.ok){
-
-        throw json.error;
-
-    }
-
-    return json;
-
-}
-
 function buildFinalData(){
     return {
         playerid: AuctionState.currentPlayer.id,
@@ -258,31 +231,6 @@ function buildFinalData(){
         amount: AuctionState.currentPlayer.Amount,
     }
 
-}
-
-async function apiFinalize(finalData){
-    const response=await fetch("/l4m/auction/finalizeBet/",{
-
-        method:"POST",
-
-        headers:{
-            "Content-Type":"application/json",
-            "X-CSRFToken":Cookies.get("csrftoken")
-        },
-
-        body:JSON.stringify(finalData)
-
-    });
-
-    const json=await response.json();
-
-    if(!response.ok){
-
-        throw json.error;
-
-    }
-
-    return json;
 }
 
 function getPlayerStatus(player, flags = null) {    
@@ -330,14 +278,14 @@ const AuctionAPI = {
 
             const response = await apiExecute("/l4m/auction/sendBet/", bet);
 
-            AuctionState.balance.maxBid = response.max;
-            AuctionState.balance.total = response.max;
+            AuctionState.balance.maxBid = response.balance_for_bets;
+            // AuctionState.balance.total = response.max; -- IGNORE ---
             AuctionState.balance.residual = response.amount;
             AuctionState.balance.carognate = response.n_carognate;
 
             AuctionState.roster = response.roster;
 
-            Auction.updateAuctionSummary();
+            Auction.renderSummary();
 
             Auction.renderRoster();
 
@@ -404,6 +352,8 @@ const AuctionAPI = {
 
             player.squads__Years = parseInt(document.querySelector(".contract-option.active").dataset.years);
 
+            Auction.refreshPlayer(player);
+
             bootstrap.Modal
                 .getInstance(document.getElementById("contractModal"))
                 ?.hide();
@@ -450,7 +400,8 @@ const AuctionState = {
         total: 0,
         residual: 0,
         maxBid: 0,
-        carognate: 0
+        carognate: 0,
+        wages: 0
     },
 
     filters: {
@@ -461,6 +412,20 @@ const AuctionState = {
     userTeam: {
         id: null,
         name: null
+    },
+
+    n_players_by_role: {
+        P: 0,
+        D: 0,
+        C: 0,
+        A: 0
+    },
+
+    triennal_contracts_signed: {
+        P: 0,
+        D: 0,
+        C: 0,
+        A: 0
     },
 
     getPlayer(playerId) {
@@ -570,7 +535,7 @@ const Auction = {
             ? player.bet__Amount + 1
             : 1;
         bidInput.value = bidInput.min;
-        bidInput.max = AuctionState.balance.residual;
+        bidInput.max = AuctionState.balance.maxBid;
 
         // bidInput.value = playerClass == "state-bidding" ? bidInput.min : player.bet__Amount;
         // bidInput.disabled = (playerClass != "state-bidding"); //TODO: bad practice?
@@ -608,43 +573,15 @@ const Auction = {
 
     },
 
-    updateAuctionSummary(){
-
-        document.querySelector("#main-balance")
-            .textContent=`${AuctionState.balance.total} FML`;
-
-        document.querySelector("#main-residual")
-            .textContent=`${AuctionState.balance.residual} FML`;
-
-        document.querySelector("#main-carognate")
-            .textContent=`${AuctionState.balance.carognate}/3`;
-
-    },
-
     removePlayerFromMarket(id){
 
         document
             .querySelector(`.player-card[data-id="${id}"]`)
             ?.remove();
 
-    },
-
-    updateRosterCard(card, slot){
-
-        // card.className = "roster-card";
-
-        // card.classList.add(getStateClass(slot));
-
-        // card.dataset.id = slot.Player_id;
-
-        // card.querySelector(".player-name")
-        //     .textContent = slot.Player_id__Surname ?? "-";
-
-        // card.querySelector(".player-price")
-        //     .textContent = slot.Amount ?? "-";
-
-        // card.querySelector(".player-status")
-        //     .textContent = getRemainingTime(slot.Expiration_Date ?? "-");
+        document
+            .querySelector(`.auction-market .nav-link[data-role="${AuctionState.currentPlayer.Role}"] .role-count`)
+            .textContent = AuctionState.n_players_by_role[AuctionState.currentPlayer.Role] - 1;
 
     },
 
@@ -797,14 +734,17 @@ const Auction = {
 
     renderSummary(){
 
-        $("#main-balance")
-            .text(AuctionState.balance.total + " FML");
-
         $("#main-residual")
             .text(AuctionState.balance.residual + " FML");
 
+        $("#main-wages")
+            .text(AuctionState.balance.wages + " FML");
+
+        $("#main-max_bid")
+            .text(AuctionState.balance.maxBid + " FML");
+
         $("#main-carognate")
-            .text(AuctionState.balance.carognate + AuctionState.currentSession.max_ncarognate);
+            .text(AuctionState.balance.carognate + "/" + AuctionState.currentSession.max_ncarognate);
 
     },
 
@@ -927,6 +867,7 @@ const Auction = {
         AuctionState.market = auction_data.market;
         AuctionState.userTeam.id = auction_data.summary.user_team_id;
         AuctionState.userTeam.name = auction_data.summary.user_team_name;
+        AuctionState.n_players_by_role = auction_data.summary.n_players_by_role;
 
     },
 
