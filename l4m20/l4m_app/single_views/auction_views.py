@@ -101,7 +101,7 @@ class SendBetView(View):
             
             logger.debug(f"{uname} : SENDING BET: {data}")
 
-            bet_result, new_balance_for_bets, n_carognate = U.send_bet(data)
+            bet_result, new_balance_for_bets, n_carognate, balance_max = U.send_bet(data)
 
             if(bet_result == C.SendBetResult.BET_OVERFLOW):
                 return JsonResponse({'error': 'PUNTATA TROPPO ALTA!'}, status=400)
@@ -119,7 +119,7 @@ class SendBetView(View):
             return JsonResponse({'error': f'error inserting bet and updating balance: {e}'}, status=500)
         
         return JsonResponse({'amount': bet_result, 
-                            # 'max': balance_max, 
+                            'max': balance_max, 
                             'balance_for_bets': new_balance_for_bets,
                             'n_carognate': n_carognate,
                             'roster': list(U.get_my_best_bets(data['userteamid'], data['market']))

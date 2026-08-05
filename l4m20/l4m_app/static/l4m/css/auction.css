@@ -287,11 +287,32 @@
     text-align:center;
 }
 
+.card-player-wage{
+
+    font-size:1rem;
+
+    font-weight:600;
+
+    color:#b8dcab;
+
+    text-align:center;
+}
+
 .roster-player-price{
 
     margin-top:.35rem;
 
     color:#9fb8ff;
+
+    font-size:.82rem;
+
+}
+
+.roster-player-realteam{
+
+    margin-top:.35rem;
+
+    color: #e4c7bc;
 
     font-size:.82rem;
 
@@ -324,7 +345,6 @@
     text-align:center;
 
 }
-
 
 .roster-player-name{
 
@@ -335,44 +355,6 @@
     color:white;
 
     text-align:center;
-}
-
-.roster-player-price{
-
-    margin-top:.35rem;
-
-    color:#9fb8ff;
-
-    font-size:.82rem;
-
-}
-
-.roster-player-status{
-
-    display:inline-flex;
-
-    align-items:center;
-    justify-content:center;
-    gap:.35rem;
-
-    margin:.75rem auto 0;
-
-    padding:.3rem .75rem;
-
-    border-radius:999px;
-
-    background:rgba(79,140,255,.12);
-
-    color:#9fb8ff;
-
-    font-size:.78rem;
-
-    font-weight:600;
-
-    color:white;
-
-    text-align:center;
-
 }
 
 .player-price{

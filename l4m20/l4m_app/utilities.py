@@ -790,7 +790,7 @@ def get_all_players_my_series(teamid, filtered_teams_ids, my_svincoli_current_se
         'id', 'Surname', 'Name', 'Role', 'RealTeam__Name', 'Quotation',
         'bet__Amount', 'bet__Team_id__Name', 'bet__IsExpired',
         'bet__Carognata', 'bet__Expiration_Date',
-        'squads__Years'
+        'squads__Years', 'Quotation'
     ).distinct('id')
 
 def get_players_my_series(filter_role, teamid, filtered_teams_ids, my_svincoli_current_session, my_market):
@@ -884,7 +884,8 @@ def get_my_best_bets(teamid, marketid):
         filter(Q(Team_id=teamid) & Q(Market_id=marketid)).\
         values('Amount','Player_id','Player_id__Surname','Expiration_Date','Slot',
                'IsRaised','IsExpired','id','Team_id','IsOfficial','Carognata', 
-               'Player_id__Role', 'squads__Years').distinct('Player_id')
+               'Player_id__Role', 'Player_id__RealTeam__Name', 
+               'Player_id__Quotation','squads__Years').distinct('Player_id')
                
     if(qplayer is not None):
        bets = bets.exclude(Q(Player_id=qplayer.Player_id))
@@ -995,13 +996,14 @@ def send_bet(data):
         #RESCUE OLD BET FROM BET_HISTORY TODO
         raise Exception(e) 
 
-    new_balance_for_bets = get_balance_for_bets(bet_obj.Team, int(balance_max), marketid=market_.id)
+    new_balance_for_bets = get_balance_for_bets(bet_obj.Team, int(my_bal.Purchases_max), marketid=market_.id)
     new_bets_amount = get_current_bets_amount(bet_obj.Team, marketid=market_.id)
 
     return (
-        (balance_max - new_bets_amount), \
+        (my_bal.Purchases_max  - new_bets_amount), \
         new_balance_for_bets, \
-        (ncarognate + 1) if (carognata == "True") else ncarognate
+        (ncarognate + 1) if (carognata == "True") else ncarognate,
+        my_bal.Purchases_max
     )
 
 def finalize_bet(data):

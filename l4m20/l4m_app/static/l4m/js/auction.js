@@ -279,7 +279,7 @@ const AuctionAPI = {
             const response = await apiExecute("/l4m/auction/sendBet/", bet);
 
             AuctionState.balance.maxBid = response.balance_for_bets;
-            // AuctionState.balance.total = response.max; -- IGNORE ---
+            AuctionState.balance.total = response.max;
             AuctionState.balance.residual = response.amount;
             AuctionState.balance.carognate = response.n_carognate;
 
@@ -492,8 +492,9 @@ const Auction = {
                 player.RealTeam__Name = player.Player_id__RealTeam__Name;
                 player.Role = player.Player_id__Role;
                 player.bet__Amount = player.Amount;
-                player.bet__Team_id__Name = player.Player_id__Team_id__Name; //TODO: value this
+                player.bet__Team_id__Name = player.Player_id__Team_id__Name; //TODO: value this?
                 player.bet__Expiration_Date = player.Expiration_Date;
+                player.Quotation = player.Player_id__Quotation;
             }
         }
 
@@ -512,6 +513,9 @@ const Auction = {
 
         modal.querySelector(".card-player-team")
             .textContent = player.RealTeam__Name;
+
+        modal.querySelector(".card-player-wage")
+            .textContent = "INGAGGIO: " + (player.Quotation ?? "-") + " FML";
 
         role_className = `role-${player.Role}`;
         modal.querySelector(".player-role").className = `role-badge ${role_className} player-role`;
@@ -634,6 +638,7 @@ const Auction = {
         card.innerHTML=`
             <div class="roster-player-name">${player.Player_id__Surname}</div>
             <div class="roster-player-price">$${player.Amount}</div>
+            <div class="roster-player-realteam">${player.Player_id__RealTeam__Name}</div>
             <div class="roster-player-status">${player.IsOfficial ? "UFFICIALE" : getRemainingTime(player.Expiration_Date ?? "-")}</div>
         `;
 
@@ -735,7 +740,7 @@ const Auction = {
     renderSummary(){
 
         $("#main-residual")
-            .text(AuctionState.balance.residual + " FML");
+            .text(AuctionState.balance.residual + "/" + AuctionState.balance.total + " FML");
 
         $("#main-wages")
             .text(AuctionState.balance.wages + " FML");
