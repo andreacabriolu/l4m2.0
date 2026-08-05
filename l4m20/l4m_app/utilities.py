@@ -8,6 +8,28 @@ from zoneinfo import ZoneInfo
 from l4m20 import constants as C
 import requests as req
 
+def undo_bet(teamid, playerid, betamount):
+    # Check if the player has a bet to undo
+    existing_bet = bet.Bet.objects.filter(Team_id=teamid, Player_id=playerid).first()
+    if not existing_bet:
+        return False  # No bet to undo
+
+    # Check if the undo period has expired (20 seconds)
+    time_since_bet = datetime.datetime.now(ZoneInfo('Europe/Rome')) - existing_bet.Time
+    if time_since_bet.total_seconds() > 20:
+        return False  # Undo period expired
+
+    # Refund the bet amount to the team's balance
+    team_balance = balance.Balance.objects.filter(Team_id=teamid).first()
+    if team_balance:
+        team_balance.Amount += betamount
+        team_balance.save()
+
+    # Delete the existing bet
+    existing_bet.delete()
+
+    return True  # Bet successfully undone
+
 def get_current_season():
     return season.Season.objects.filter(Active=True).first()
 

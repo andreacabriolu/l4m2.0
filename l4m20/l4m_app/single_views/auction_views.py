@@ -213,3 +213,17 @@ class SignContractView(View):
             return JsonResponse(msg)
         except Exception as e:
             return JsonResponse({'error': f'error signing contract: {e}'}, status=500)
+
+class UndoBetView(View):
+    def post(self, request):
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+            if (data is None): return
+            
+            msg = U.undo_bet(data)
+            if(msg == C.ErrorCodes.BET_NOT_FOUND):
+                return JsonResponse({'error': 'PUNTATA NON TROVATA'}, status=400)
+
+            return JsonResponse(msg)
+        except Exception as e:
+            return JsonResponse({'error': f'error undoing bet: {e}'}, status=500)

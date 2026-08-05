@@ -1252,6 +1252,10 @@
     border-left:4px solid #5350ea;
 }
 
+.roster-card.state-editable{
+    border-left:4px solid #dbdee4 dashed;
+}
+
 .roster-card.state-carognata{
     border-left:4px solid #facc15;
 }
@@ -1486,3 +1490,4 @@
     border-color:#ef4444 !important;
 
 }
+

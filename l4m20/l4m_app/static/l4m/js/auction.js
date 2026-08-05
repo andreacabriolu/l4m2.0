@@ -52,8 +52,10 @@ const ACTIONS = {
 
         bid: {
             visible: f => 
-                f.roster === false && 
-                f.expired === false
+                (f.roster === false && 
+                f.expired === false) ||
+                (f.roster === true &&
+                f.editable === true)
         },
 
         finalize: {
@@ -66,12 +68,18 @@ const ACTIONS = {
         contract: {
             visible: f =>
                 f.roster === true &&
-                f.official === true
+                f.official === true &&
+                f.signed === false
         },
 
         free: {
             visible: f =>
                 f.freeable === true
+        },
+
+        cancelBid: {
+            visible: f =>
+                f.editable === true
         }
 
 };
@@ -171,8 +179,13 @@ function validateMinMaxBid(newamount, min, max) {
 function getStateClass(player){
         className = "state-bidding";
 
-        if (player.Roster && !player.IsOfficial && !player.IsExpired && !player.Carognata) {
-            className = "state-bidding";
+        if (player.Roster) { 
+            if (player.EditableUntil) {
+                className = "state-editable";
+            }
+            else if (!player.IsOfficial && !player.IsExpired && !player.Carognata) {
+                className = "state-bidding";
+            } 
         } else if (player.IsOfficial) {
             className = "state-official";
         } else if (player.IsExpired) {
@@ -278,9 +291,9 @@ function buildFinalData(){
 }
 
 function getPlayerStatus(player, flags = null) {    
-    if (flags.roster === false && 
-        flags.expired === false) {
-            return [getRemainingTime(player.bet__Expiration_Date ?? "-"), 
+
+    if (flags.expired === false) {
+            return [getRemainingTime(player.Expiration_Date ?? "-"), 
                 ("state-bidding" ? flags.carognata === false : "state-carognata")];
        }
 
@@ -290,8 +303,8 @@ function getPlayerStatus(player, flags = null) {
             return ["SCADUTO", "state-expired"];
     }
 
-    if (flags.roster === true 
-        && flags.official === true && 
+    if (flags.roster === true &&
+        flags.official === true && 
         flags.signed === false) {
         return ["UFFICIALE", "state-official"];
     }
@@ -305,10 +318,45 @@ function getPlayerStatus(player, flags = null) {
     return [getRemainingTime(player.bet__Expiration_Date ?? "-"), "state-bidding"]; //default
 }
 
+function startCountdown() {
+
+    timer = null
+
+    clearInterval(timer);
+
+    timer = setInterval(()=>{
+
+        const remaining =
+            Math.ceil((AuctionState.undoBet.expiresAt-Date.now())/1000);
+
+        if(remaining<=0){
+
+            document.getElementById("btnCancelBid").hidden = true;
+            return;
+
+        }
+
+        document
+            .getElementById("btnCancelBid")
+            .textContent =
+            `Annulla puntata (${remaining} secondi)`;
+
+    },250);
+
+}
+
 /* ==========================================================
  *  AUCTION API
  * ========================================================== */
 const AuctionAPI = {
+
+    async undoBet() {
+    
+        if (!AuctionState.undoBet) {
+            return;
+        }
+
+    },
 
     async sendBet() {
 
@@ -326,18 +374,31 @@ const AuctionAPI = {
             AuctionState.balance.total = response.total;
             AuctionState.balance.residual = response.residual;
             AuctionState.balance.carognate = response.n_carognate;
-
             AuctionState.roster = response.roster;
+            AuctionState.currentPlayer.Roster = true;
+            AuctionState.currentPlayer.EditableUntil = Date.now() + 20000; //TODO: magic number
 
             Auction.renderSummary();
 
             Auction.renderRoster();
+
+            Auction.refreshPlayer(AuctionState.currentPlayer);
+
+            AuctionState.undoBet = {
+                playerId: AuctionState.currentPlayer.id,
+                betAmount: bet.betamount,
+                // betId,
+                expiresAt: Date.now() + 20000
+            };
+
+            startCountdown();
 
             Auction.removePlayerFromMarket(AuctionState.currentPlayer.id);
 
             bootstrap.Modal
                 .getInstance(document.getElementById("playerModal"))
                 ?.hide();
+            
 
         }
         catch (err) {
@@ -481,7 +542,7 @@ const AuctionState = {
             this.players.find(p => p.id == playerId) ??
             null
         );
-    }
+    },
 
 };
 
@@ -509,8 +570,8 @@ const Auction = {
             official: player.IsOfficial ?? false,
             carognata: player.Carognata ?? false,
             signed: (player.squads__Years != null) ?? false,
-            freeable: false, //TODO DEFINE
-
+            freeable: false, //TODO DEFINE,
+            editable: (player.EditableUntil && player.EditableUntil > Date.now()) ?? false
         };
     },
 
@@ -571,7 +632,7 @@ const Auction = {
             .textContent = player.Role;
 
         modal.querySelector(".player-current-bet")
-            .textContent = player.bet__Amount ?? "-";
+            .textContent = player.bet__Amount ?? player.amount ?? "-";
 
         modal.querySelector(".player-owner")
             .textContent = player.bet__Team_id__Name ?? "-";
@@ -594,9 +655,9 @@ const Auction = {
 
         bidPlusBtn = modal.querySelector("#btnPlus");
         bidMinusBtn = modal.querySelector("#btnMinus");
-        bidInput.disabled = (player.Roster || player.IsExpired) ? true : false;
-        bidPlusBtn.disabled = (player.Roster || player.IsExpired) ? true : false;
-        bidMinusBtn.disabled = (player.Roster || player.IsExpired) ? true : false;
+        bidInput.disabled = ((player.Roster && !player.EditableUntil) || player.IsExpired) ? true : false;
+        bidPlusBtn.disabled = ((player.Roster && !player.EditableUntil) || player.IsExpired) ? true : false;
+        bidMinusBtn.disabled = ((player.Roster && !player.EditableUntil) || player.IsExpired) ? true : false;
 
         document
             .getElementById("carognataAlert")
@@ -640,6 +701,8 @@ const Auction = {
         document
             .querySelector(`.auction-market .nav-link[data-role="${AuctionState.currentPlayer.Role}"] .role-count`)
             .textContent = AuctionState.n_players_by_role[AuctionState.currentPlayer.Role] - 1;
+
+        // AuctionState.players = AuctionState.players.filter(p => p.id != id);
 
     },
 
@@ -995,6 +1058,9 @@ const Auction = {
 
             .on("input", "#modalBid", 
                 this.onBidInputChanged.bind(this)) 
+
+            .on("click", "#undoBtn",
+                AuctionAPI.undoBet.bind(AuctionAPI))
 
             ;
 
