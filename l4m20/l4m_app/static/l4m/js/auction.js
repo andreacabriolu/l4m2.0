@@ -1,9 +1,4 @@
-let dlg, plr_dlg;
-let search;
-let player;
-let current_div;
-let officialInfo = {};
-let bet_to_free_id;
+const CANCEL_BID_TIMER = 20000; // 20 seconds
 
 const ROLES = Object.freeze({
 
@@ -290,10 +285,18 @@ function buildFinalData(){
 
 }
 
-function getPlayerStatus(player, flags = null) {    
+function buildUndoBet(undoBet){
+
+    return {
+        player_id: undoBet.playerId,
+        bet_id: undoBet.betId,
+    }
+}
+
+function getPlayerStatus(player, flags = null, expiration_date = null) {    
 
     if (flags.expired === false) {
-            return [getRemainingTime(player.Expiration_Date ?? "-"), 
+            return [getRemainingTime(expiration_date ?? player.Expiration_Date ?? "-"), 
                 ("state-bidding" ? flags.carognata === false : "state-carognata")];
        }
 
@@ -315,10 +318,10 @@ function getPlayerStatus(player, flags = null) {
         return ["SOTTO CONTRATTO", "state-official"]; //TODO: check signed color
     }
     
-    return [getRemainingTime(player.bet__Expiration_Date ?? "-"), "state-bidding"]; //default
+    return [getRemainingTime(expiration_date ?? player.bet__Expiration_Date ?? "-"), "state-bidding"]; //default
 }
 
-function startCountdown() {
+function startCountdown(undoBet) {
 
     timer = null
 
@@ -327,7 +330,7 @@ function startCountdown() {
     timer = setInterval(()=>{
 
         const remaining =
-            Math.ceil((AuctionState.undoBet.expiresAt-Date.now())/1000);
+            Math.ceil((undoBet.expiresAt-Date.now())/1000);
 
         if(remaining<=0){
 
@@ -351,9 +354,33 @@ function startCountdown() {
 const AuctionAPI = {
 
     async undoBet() {
-    
-        if (!AuctionState.undoBet) {
-            return;
+
+        undoBet = AuctionState.undo_bets.find(b => b.playerId === AuctionState.currentPlayer.id);
+        dataUndoBet = buildUndoBet(undoBet);
+
+        try {
+
+            const response = await apiExecute("/l4m/auction/undoBet/", dataUndoBet);
+            // showPopupErrorAlert(response.message);
+            AuctionState.currentPlayer.EditableUntil = null;
+            AuctionState.currentPlayer.Roster = false;
+
+            AuctionState.roster = AuctionState.roster.filter(r => r.Player_id !== AuctionState.currentPlayer.id);
+            AuctionState.n_players_by_role[AuctionState.currentPlayer.Role] -= 1;
+            AuctionState.players.push(AuctionState.currentPlayer);
+
+            Auction.renderSummary();
+            Auction.renderRoster();
+            Auction.renderPlayers();
+            Auction.refreshPlayer(AuctionState.currentPlayer);
+            AuctionState.undo_bets = AuctionState.undo_bets.filter(b => b.playerId !== AuctionState.currentPlayer.id);
+
+            bootstrap.Modal
+                .getInstance(document.getElementById("playerModal"))
+                ?.hide();
+        }
+        catch (err) {
+            showPopupErrorAlert(err);
         }
 
     },
@@ -376,7 +403,7 @@ const AuctionAPI = {
             AuctionState.balance.carognate = response.n_carognate;
             AuctionState.roster = response.roster;
             AuctionState.currentPlayer.Roster = true;
-            AuctionState.currentPlayer.EditableUntil = Date.now() + 20000; //TODO: magic number
+            AuctionState.currentPlayer.EditableUntil = Date.now() + CANCEL_BID_TIMER;
 
             Auction.renderSummary();
 
@@ -384,14 +411,15 @@ const AuctionAPI = {
 
             Auction.refreshPlayer(AuctionState.currentPlayer);
 
-            AuctionState.undoBet = {
+            _undoBet = {
                 playerId: AuctionState.currentPlayer.id,
                 betAmount: bet.betamount,
-                // betId,
-                expiresAt: Date.now() + 20000
+                betId: response.bet_id,
+                expiresAt: Date.now() + CANCEL_BID_TIMER
             };
+            AuctionState.undo_bets.push(_undoBet);
 
-            startCountdown();
+            startCountdown(_undoBet);
 
             Auction.removePlayerFromMarket(AuctionState.currentPlayer.id);
 
@@ -544,6 +572,8 @@ const AuctionState = {
         );
     },
 
+    undo_bets: [],
+
 };
 
 const Auction = {
@@ -637,7 +667,8 @@ const Auction = {
         modal.querySelector(".player-owner")
             .textContent = player.bet__Team_id__Name ?? "-";
 
-        const [playerStatus, playerClass] = getPlayerStatus(player, flags);
+        expiration_date = player.bet__Expiration_Date ?? player.Expiration_Date ?? "-";
+        const [playerStatus, playerClass] = getPlayerStatus(player, flags, expiration_date);
         modal.querySelector(".player-expiration")
             .textContent = playerStatus;
 
@@ -841,8 +872,6 @@ const Auction = {
                 const isVisible = players.some(p =>
                     p.id == playerId
                 );
-
-                
 
                 card.style.display = (isVisible && !init)
                     ? "block"
@@ -1059,7 +1088,7 @@ const Auction = {
             .on("input", "#modalBid", 
                 this.onBidInputChanged.bind(this)) 
 
-            .on("click", "#undoBtn",
+            .on("click", "#btnCancelBid",
                 AuctionAPI.undoBet.bind(AuctionAPI))
 
             ;

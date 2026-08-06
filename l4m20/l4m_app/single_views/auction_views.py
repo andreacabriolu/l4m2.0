@@ -103,7 +103,6 @@ class SendBetView(View):
             logger.debug(f"{uname} : SENDING BET: {data}")
 
             bet_return = U.send_bet(data)
-            # bet_result, new_balance_for_bets, n_carognate, balance_max = U.send_bet(data)
 
             if(bet_return.bet_result == C.SendBetResult.BET_OVERFLOW):
                 return JsonResponse({'error': 'PUNTATA TROPPO ALTA!'}, status=400)
@@ -120,7 +119,8 @@ class SendBetView(View):
         except Exception as e:
             return JsonResponse({'error': f'error inserting bet and updating balance: {e}'}, status=500)
         
-        return JsonResponse({'result': bet_return.bet_result, 
+        return JsonResponse({'result': bet_return.bet_result,
+                             'bet_id': bet_return.bet_id, 
                              'residual': bet_return.residual,
                              'total': bet_return.total, 
                              'balance_for_bets': bet_return.new_balance_for_bets,
@@ -144,7 +144,6 @@ class FinBetView(View):
         except Exception as e:
             return JsonResponse({'error': f'error finalizing bet: {e}'}, status=500)
 
-    
 class GetPlayerInfoView(View):
 
     def post(self, request):
@@ -219,11 +218,14 @@ class UndoBetView(View):
         try:
             data = json.loads(request.body.decode('utf-8'))
             if (data is None): return
-            
-            msg = U.undo_bet(data)
-            if(msg == C.ErrorCodes.BET_NOT_FOUND):
-                return JsonResponse({'error': 'PUNTATA NON TROVATA'}, status=400)
 
-            return JsonResponse(msg)
+            _team = U.get_user_team(request.user.id)
+            msg = U.undo_bet(data, _team)
+            if(msg == C.CancelBidResult.CANCEL_NOT_FOUND):
+                return JsonResponse({'error': 'PUNTATA NON TROVATA'}, status=400)
+            elif(msg == C.CancelBidResult.CANCEL_EXPIRED):
+                return JsonResponse({'error': 'PUNTATA SCADUTA'}, status=400)
+
+            return JsonResponse({'message': 'PUNTATA ANNULLATA CON SUCCESSO'})
         except Exception as e:
             return JsonResponse({'error': f'error undoing bet: {e}'}, status=500)

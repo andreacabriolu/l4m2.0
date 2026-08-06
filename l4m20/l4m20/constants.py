@@ -51,8 +51,15 @@ LOSE_PT = 0
 WAGE_MULTIPLIER = 0.5
 MAX_TRIENNAL_CONTRACTS_PER_ROLE = 1
 MIN_ANNUAL_CONTRACTS_PER_ROLE = 1
+BID_CANCEL_TIMEOUT = 20
 
 NUM_DAYS_AUCTION = 2
+
+class CancelBidResult:
+    CANCEL_OK = 0
+    CANCEL_EXPIRED = -1
+    CANCEL_NOT_FOUND = -2
+    CANCEL_BET_OVERCOME = -3
 
 class SendBetResult:
     BET_OK = 0
@@ -64,6 +71,7 @@ class SendBetResult:
 @dataclass
 class SendBetReturnValues:
     bet_result: int
+    bet_id: Optional[int] = None
     residual: Optional[int] = None
     new_balance_for_bets: Optional[int] = None
     n_carognate: Optional[int] = None

@@ -8,27 +8,52 @@ from zoneinfo import ZoneInfo
 from l4m20 import constants as C
 import requests as req
 
-def undo_bet(teamid, playerid, betamount):
-    # Check if the player has a bet to undo
-    existing_bet = bet.Bet.objects.filter(Team_id=teamid, Player_id=playerid).first()
+def undo_bet(data, team):
+    teamid = team['id']
+
+    #check for existing bet
+    existing_bet = bet.Bet.objects.filter(Q(id=data['bet_id']) & Q(Team_id=teamid)).first()
     if not existing_bet:
-        return False  # No bet to undo
+        return C.CancelBidResult.CANCEL_NOT_FOUND
+    
+    existing_bet_time = existing_bet.Time
 
-    # Check if the undo period has expired (20 seconds)
+    #check if a new bet has been placed for the same player after the bet to be undone
+    overcome_bet_exists = bet.Bet.objects.filter(
+        Q(Player_id=data['player_id']) &
+        Q(Session_id=existing_bet.Session_id) &
+        Q(Time__gt=existing_bet_time)
+    ).exists()
+
+    if overcome_bet_exists:
+        return C.CancelBidResult.CANCEL_BET_OVERCOME
+
+    #check if the bet is still within the cancel timeout
     time_since_bet = datetime.datetime.now(ZoneInfo('Europe/Rome')) - existing_bet.Time
-    if time_since_bet.total_seconds() > 20:
-        return False  # Undo period expired
+    if time_since_bet.total_seconds() > C.BID_CANCEL_TIMEOUT:
+        return C.CancelBidResult.CANCEL_EXPIRED
 
-    # Refund the bet amount to the team's balance
-    team_balance = balance.Balance.objects.filter(Team_id=teamid).first()
-    if team_balance:
-        team_balance.Amount += betamount
-        team_balance.save()
-
-    # Delete the existing bet
     existing_bet.delete()
 
-    return True  # Bet successfully undone
+    #restore old bet, if existing
+    last_bet = bet_history.Bet_History.objects.filter(
+        Player_id=data['player_id'], 
+        Session_id=get_current_session(existing_bet.Market).id).order_by('-Time').first()
+    
+    if last_bet:
+        old_bet = bet.Bet(
+            Amount=last_bet.Amount,
+            Ghost=last_bet.Ghost,
+            Carognata=last_bet.Carognata,
+            Player_id=last_bet.Player_id,
+            Team_id=last_bet.Team_id,
+            Session_id=last_bet.Session_id,
+            Svincolo=last_bet.Svincolo,
+            Session_svincolo_id=last_bet.Session_svincolo_id
+        )
+        old_bet.save()
+
+    return C.CancelBidResult.CANCEL_OK
 
 def get_current_season():
     return season.Season.objects.filter(Active=True).first()
@@ -1025,6 +1050,7 @@ def send_bet(data):
 
     return C.SendBetReturnValues(
             bet_result=C.SendBetResult.BET_OK, 
+            bet_id=bet_new.id,
             residual=(my_bal.Purchases_max  - new_bets_amount),  
             new_balance_for_bets=new_balance_for_bets, 
             n_carognate=ncarognate + 1 if (carognata == "True") else ncarognate, 
