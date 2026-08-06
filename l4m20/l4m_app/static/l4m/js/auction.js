@@ -335,6 +335,8 @@ function startCountdown(undoBet) {
         if(remaining<=0){
 
             document.getElementById("btnCancelBid").hidden = true;
+            // document.getElementById("btnBid").hidden = true;
+
             return;
 
         }
@@ -825,7 +827,7 @@ const Auction = {
 
         const roster_players=AuctionState.roster.filter(
             p=>p.Player_id__Role===role
-        );
+        ).sort((a,b)=>b.Amount-a.Amount);
 
         container.querySelector(".roster-counter").textContent = 
             `${roster_players.length}/${ROSTER_LIMITS[role]}`;
