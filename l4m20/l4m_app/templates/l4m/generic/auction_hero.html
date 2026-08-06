@@ -1,0 +1,43 @@
+<div class="page-hero auction-hero">
+
+    <div class="page-hero-inner">
+
+        <h1 class="hero-title">
+            {{ market_session.name }}
+        </h1>
+
+        <div class="hero-session">
+
+            <i class="bi bi-calendar3"></i>
+
+            {{ market_session.start|date:"d M Y" }}
+
+            —
+
+            {{ market_session.end|date:"d M Y" }}
+
+        </div>
+
+        <div class="hero-status">
+
+            {% if market_session.is_open %}
+
+                <span class="status-badge status-open">
+                    <i class="bi bi-unlock-fill"></i>
+                    Mercato aperto
+                </span>
+
+            {% else %}
+
+                <span class="status-badge status-closed">
+                    <i class="bi bi-lock-fill"></i>
+                    Mercato chiuso
+                </span>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>

@@ -5,6 +5,7 @@
 
 {% block links %}
 <link href="{% static 'l4m/css/auction.css' %}" rel="stylesheet">
+<link href="{% static 'l4m/css/generic.css' %}" rel="stylesheet">
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 
 {% endblock %}
@@ -30,7 +31,7 @@
         
         {{ auction_data|json_script:"auction_data" }}
 
-        {% include "l4m/generic/generic_hero.html" with hero_title="" hero_subtitle=Asta %}
+        {% include "l4m/generic/auction_hero.html" with market_session=auction_data.session %}
 
         </section>
 

@@ -31,6 +31,7 @@ class AllAuctionsView(LoginRequiredMixin, View):
     
         all_team_players = U.get_all_team_players()
         filtered_teams = team.Team.objects.filter(Series__id=seriesid)
+        market_id = U.get_my_markets(seriesid)[0].id #TODO: improve check
         
         user_team_name = U.get_user_team(request.user.id)['Name'].replace(' ','_')
         team_players = {}
@@ -70,7 +71,7 @@ class AllAuctionsView(LoginRequiredMixin, View):
             
             amount = balance['Purchases_max']
             pmax = balance_for_bets
-            current_bets_amount = U.get_current_bets_amount(_team.id)
+            current_bets_amount = U.get_current_bets_amount(_team.id, market_id)
 
             li = [{'Surname': 'Monte Acquisti', 'Name': None, 'bet__Team_id': _team.id, 'bet__Amount': amount, 'bet__IsExpired': True, 'bet__Carognata': False, 'bet__Expiration_Date': '','id':"0", 'Role': 'I'},
                   {'Surname': 'Restante', 'Name': None, 'bet__Team_id': _team.id, 'bet__Amount': (amount - current_bets_amount), 'bet__IsExpired': True, 'bet__Carognata': False, 'bet__Expiration_Date': '','id':"0", 'Role': 'I'},

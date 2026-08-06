@@ -74,6 +74,9 @@ class AuctionView(LoginRequiredMixin, View):
                     'max_nsvincoli': current_session.Nsvincoli,
                     'max_ncarognate': current_session.Ncarognate,
                     'expiration': current_session.Expiration,
+                    'start': current_session.Begin,
+                    'end': current_session.End,
+                    'is_open': current_session.Begin <= datetime.datetime.now(datetime.timezone.utc) <= current_session.End,
                 },
                 'market': my_market,
 
