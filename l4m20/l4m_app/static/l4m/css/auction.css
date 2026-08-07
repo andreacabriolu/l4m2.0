@@ -287,15 +287,20 @@
     text-align:center;
 }
 
-.card-player-wage{
+.card-player-wage {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
 
-    font-size:1rem;
+    padding: .25rem .65rem;
+    border-radius: 999px;
 
-    font-weight:600;
+    font-size: .8rem;
+    font-weight: 700;
 
-    color:#b8dcab;
-
-    text-align:center;
+    color: #f8fafc;
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.12);
 }
 
 .roster-player-price{
@@ -889,7 +894,7 @@
 
 .player-modal-header .role-badge{
 
-    margin-top:1rem;
+    margin-top:0;
 
 }
 
@@ -1210,6 +1215,15 @@
 
 .player-header{
     position:relative;
+}
+
+.player-header-meta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .6rem;
+
+    margin-top: .35rem;
 }
 
 .player-close{
