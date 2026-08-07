@@ -7,10 +7,13 @@ from django.db.models.functions import Coalesce
 from zoneinfo import ZoneInfo
 from l4m20 import constants as C
 import requests as req
+from .libs import *
 
 def undo_bet(data, team):
-    teamid = team['id']
+    logger.debug(f"UNDOING BET: {data['bet_id']} FOR TEAM: {team['id']} AND PLAYER: {data['player_id']}")
 
+    teamid = team['id']
+    
     #check for existing bet
     existing_bet = bet.Bet.objects.filter(Q(id=data['bet_id']) & Q(Team_id=teamid)).first()
     if not existing_bet:
