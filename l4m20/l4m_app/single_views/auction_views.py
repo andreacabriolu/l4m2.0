@@ -22,6 +22,8 @@ class AuctionView(LoginRequiredMixin, View):
             teamid = user_team['id']
             seriesid=U.get_my_series(teamid)[0].id
             my_market = U.get_my_markets(seriesid)[0].id #TODO: improve check
+            if (my_market is None):
+                raise Exception(f'No market found for series {seriesid}')
             mbb = U.get_my_best_bets(teamid, my_market)
             current_session = U.get_current_session(my_market)
             

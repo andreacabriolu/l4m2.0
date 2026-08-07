@@ -777,34 +777,6 @@ def get_my_svincolati(team, session=None):
     return [s.Player_id for s in svincoli_list]
 
 def get_all_players_my_series(teamid, filtered_teams_ids, my_svincoli_current_session, my_market):
-    #           #~
-    # bet_qs =  bet.Bet.objects.filter(
-    #     Player_id=OuterRef('pk'),
-    #     Team_id__in=filtered_teams_ids,
-    #     Market_id=my_market
-    # ).order_by('id')
-    
-    # return player.Player.objects.filter(
-    #     RealTeam__isnull=False,
-    #     Status='A',
-    # ).exclude(
-    #     bet__Team_id=teamid
-    # ).exclude(
-    #     Q(id__in=my_svincoli_current_session)
-    # ).annotate(
-    #   bet__Amount=Coalesce(Subquery(bet_qs.values('Amount')[:1]), Value(None)),
-    #   bet__Team_id__Name=Coalesce(Subquery(bet_qs.values('Team_id__Name')[:1]), Value(None)),
-    #   bet__IsExpired=Coalesce(Subquery(bet_qs.values('IsExpired')[:1]), Value(None)),
-    #   bet__Carognata=Coalesce(Subquery(bet_qs.values('Carognata')[:1]), Value(None)),
-    #   bet__Expiration_Date=Coalesce(Subquery(bet_qs.values('Expiration_Date')[:1]), Value(None)),
-    # ).exclude(
-    #     Q(bet__IsExpired=True) &
-    #     Q(bet__Team_id__in=filtered_teams_ids)
-    # ).values(
-    #     'id', 'Surname', 'Name', 'Role', 'RealTeam__Name',
-    #     'bet__Amount', 'bet__Team_id__Name', 'bet__IsExpired','bet__Carognata','bet__Expiration_Date',
-    #     'squads__Years'
-    # ).distinct('id')
 
     bet_qs = bet.Bet.objects.filter(
         Player_id=OuterRef('pk'),
@@ -819,11 +791,15 @@ def get_all_players_my_series(teamid, filtered_teams_ids, my_svincoli_current_se
         IsExpired=True
     )
 
+    has_my_team_bet = bet.Bet.objects.filter(
+        Player_id=OuterRef('pk'),
+        Team_id=teamid,
+        Market_id=my_market
+    )
+
     return player.Player.objects.filter(
         RealTeam__isnull=False,
         Status='A',
-    ).exclude(
-        Q(bet__Team_id=teamid) & Q(bet__Market_id=my_market)
     ).exclude(
         id__in=my_svincoli_current_session
     ).annotate(
@@ -832,10 +808,12 @@ def get_all_players_my_series(teamid, filtered_teams_ids, my_svincoli_current_se
         bet__IsExpired=Subquery(bet_qs.values('IsExpired')[:1]),
         bet__Carognata=Subquery(bet_qs.values('Carognata')[:1]),
         bet__Expiration_Date=Subquery(bet_qs.values('Expiration_Date')[:1]),
-        
+
+        has_my_team_bet=Exists(has_my_team_bet),
         has_expired_bet=Exists(expired_bet_exists)
     ).filter(
-        has_expired_bet=False  
+        has_expired_bet=False,
+        has_my_team_bet=False
     ).order_by('id').values(
         'id', 'Surname', 'Name', 'Role', 'RealTeam__Name', 'Quotation',
         'bet__Amount', 'bet__Team_id__Name', 'bet__IsExpired',
