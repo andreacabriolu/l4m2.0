@@ -296,8 +296,16 @@ function buildUndoBet(undoBet){
 function getPlayerStatus(player, flags = null, expiration_date = null) {    
 
     if (flags.expired === false) {
+            expired_class = "state-bidding";
+            if (flags.editable === true) {
+                expired_class = "state-editable";
+            }
+            else if (flags.carognata === true) {
+                expired_class = "state-carognata";
+            }
+
             return [getRemainingTime(expiration_date ?? player.Expiration_Date ?? "-"), 
-                ("state-bidding" ? flags.carognata === false : "state-carognata")];
+                (expired_class)];
        }
 
     if (flags.roster === true &&
@@ -335,7 +343,7 @@ function startCountdown(undoBet) {
         if(remaining<=0){
 
             document.getElementById("btnCancelBid").hidden = true;
-            // document.getElementById("btnBid").hidden = true;
+            document.getElementById("btnBid").hidden = true;
 
             return;
 
@@ -782,12 +790,13 @@ const Auction = {
 
         card.className="roster-card";
 
-        card.classList.add(getStateClass(player));
+        // card.classList.add(getStateClass(player));
 
         card.dataset.id = player.Player_id;
         card.dataset.role = role;
 
         const [playerStatus, playerClass] = getPlayerStatus(player, this.getPlayerFlags(player));
+        card.classList.add(playerClass);
 
         card.innerHTML=`
             <div class="roster-player-name">${player.Player_id__Surname}</div>

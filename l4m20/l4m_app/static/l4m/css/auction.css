@@ -1254,6 +1254,7 @@
 
 .roster-card.state-editable{
     border-left:4px solid #dbdee4 dashed;
+    background:linear-gradient(90deg,rgba(79,140,255,.08),transparent);
 }
 
 .roster-card.state-carognata{
