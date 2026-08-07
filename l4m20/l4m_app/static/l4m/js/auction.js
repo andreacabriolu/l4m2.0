@@ -342,8 +342,12 @@ function startCountdown(undoBet) {
 
         if(remaining<=0){
 
+            clearInterval(timer);
+
             document.getElementById("btnCancelBid").hidden = true;
-            document.getElementById("btnBid").hidden = true;
+            // document.getElementById("btnBid").hidden = true;
+
+            Auction.renderPlayerActions(Auction.getPlayerFlags(AuctionState.currentPlayer));
 
             return;
 
