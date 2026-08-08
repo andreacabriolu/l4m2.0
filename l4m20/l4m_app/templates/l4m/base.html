@@ -264,24 +264,32 @@
                 </div>
                 <div class="sb-sidenav-button">
                 </div>
-                <div class="online-users">
 
-                <div class="online-users-header">
-                    <span class="online-indicator"></span>
+                <div class="online-users" id="onlineUsersPanel">
                 
-                    <span>
-                        ONLINE
-                    </span>
+                    <button type="button" class="online-users-header" id="onlineUsersToggle" aria-expanded="false"
+                        aria-controls="onlineUsersList">
                 
-                    <span id="onlineUsersCount" class="online-users-count">
-                        0
-                    </span>
+                        <span class="online-indicator"></span>
+                
+                        <span class="online-users-title">
+                            ONLINE
+                        </span>
+                
+                        <span id="onlineUsersCount" class="online-users-count">
+                            0
+                        </span>
+                
+                        <i id="onlineUsersChevron" class="fas fa-chevron-down online-users-chevron">
+                        </i>
+                
+                    </button>
+                
+                    <div id="onlineUsersList" class="online-users-list" hidden>
+                    </div>
+                
                 </div>
-                
-                <div id="onlineUsersList" class="online-users-list">
-                </div>
-                
-                </div>
+
                 <div class="sb-sidenav-footer" hidden>
                     <div class="small">Utente:</div>
                     {{user}}

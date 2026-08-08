@@ -15,15 +15,50 @@ window.addEventListener('DOMContentLoaded', event => {
         });
     }
 
+    const onlineUsersToggle =
+        document.getElementById("onlineUsersToggle");
+
+    const onlineUsersList =
+        document.getElementById("onlineUsersList");
+
+    const onlineUsersChevron =
+        document.getElementById("onlineUsersChevron");
+
+
+    onlineUsersToggle?.addEventListener("click", () => {
+
+        const expanded =
+            onlineUsersToggle.getAttribute("aria-expanded") === "true";
+
+        onlineUsersToggle.setAttribute(
+            "aria-expanded",
+            String(!expanded)
+        );
+
+        onlineUsersList.hidden = expanded;
+
+        onlineUsersChevron.classList.toggle(
+            "fa-chevron-down",
+            expanded
+        );
+
+        onlineUsersChevron.classList.toggle(
+            "fa-chevron-up",
+            !expanded
+        );
+
+    });
+
+
 });
 
 class Utilities {
     static buildForm(url, token, jsonData) {
 
         return $('<form action="' + url + '" method="post">' +
-        '<input type="text" name="jsonData" value="'+jsonData+'" />' +
-        '<input type="hidden" name="csrfmiddlewaretoken" value="'+token+'" />' +
-        '</form>');
+            '<input type="text" name="jsonData" value="' + jsonData + '" />' +
+            '<input type="hidden" name="csrfmiddlewaretoken" value="' + token + '" />' +
+            '</form>');
     }
 }
 

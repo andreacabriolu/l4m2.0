@@ -124,25 +124,47 @@
 }
 
 .online-users {
-    padding: .75rem 1rem;
-    margin: .5rem .75rem 1rem;
-
+    margin: .5rem .75rem .75rem;
     border-radius: .6rem;
 
     background: rgba(255, 255, 255, .04);
     border: 1px solid rgba(255, 255, 255, .06);
+
+    overflow: hidden;
 }
 
 .online-users-header {
+    width: 100%;
+
     display: flex;
     align-items: center;
-    gap: .45rem;
+
+    gap: .5rem;
+
+    padding: .65rem .75rem;
+
+    border: 0;
+    background: transparent;
+
+    color: rgba(255, 255, 255, .65);
 
     font-size: .75rem;
     font-weight: 600;
     letter-spacing: .08em;
 
-    color: rgba(255, 255, 255, .55);
+    cursor: pointer;
+
+    text-align: left;
+}
+
+.online-users-header:hover {
+    background: rgba(255, 255, 255, .04);
+    color: rgba(255, 255, 255, .9);
+}
+
+.online-users-header:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, .35);
+    outline-offset: -2px;
 }
 
 .online-users-count {
@@ -178,11 +200,9 @@
 }
 
 .online-users-list {
-    margin-top: .6rem;
+    padding: .25rem .75rem .65rem;
 
-    display: flex;
-    flex-direction: column;
-    gap: .3rem;
+    border-top: 1px solid rgba(255, 255, 255, .05);
 }
 
 .online-user {
@@ -192,5 +212,17 @@
 
     font-size: .8rem;
     color: rgba(255, 255, 255, .7);
+}
+
+.online-users-chevron {
+    width: .75rem;
+
+    font-size: .65rem;
+
+    opacity: .5;
+
+    transition:
+        transform .2s ease,
+        opacity .2s ease;
 }
 
