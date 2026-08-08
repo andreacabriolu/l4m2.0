@@ -49,13 +49,14 @@ class DB_Connector:
 
     def upsert_player(self, surname, role, realteam_id, quotation):
         upsert_q = f"""
-        INSERT INTO l4m_app_player (\"Surname\", \"Role\", \"RealTeam_id\", \"Status\", \"Quotation\")
-        VALUES (%s, %s, %s, %s, %s)
+        INSERT INTO l4m_app_player (\"Surname\", \"Role\", \"RealTeam_id\", \"Status\", \"Quotation\", \"ModifiedOn\")
+        VALUES (%s, %s, %s, %s, %s, NOW())
         ON CONFLICT (\"Surname\") DO UPDATE SET
             \"Role\" = excluded.\"Role\",
             \"RealTeam_id\" = excluded.\"RealTeam_id\",
             \"Status\" = excluded.\"Status\",
-            \"Quotation\" = excluded.\"Quotation\"
+            \"Quotation\" = excluded.\"Quotation\",
+            \"ModifiedOn\" = NOW()
         """
         self.cur.execute(upsert_q, (surname, role, realteam_id, 'A', quotation))
 
