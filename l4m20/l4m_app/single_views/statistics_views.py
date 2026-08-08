@@ -65,7 +65,7 @@ class HallOfFameView(View):
 
         return render(request, self.template_name, params)
 
-ONLINE_TIMEOUT = timedelta(seconds=30) #check if user is online in the last 30 seconds
+ONLINE_TIMEOUT = timedelta(seconds=60) #check if user is online in the last 60 seconds
 @login_required
 def heartbeat(request):
 
@@ -81,6 +81,7 @@ def heartbeat(request):
 
     online_users = (
         online_presence.OnlinePresence.objects
+        .filter(last_seen__gte=timezone.now() - ONLINE_TIMEOUT)
         .select_related("user")
         .order_by("user__username")
     )

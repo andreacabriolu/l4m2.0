@@ -22,6 +22,7 @@ class DashboardView(LoginRequiredMixin, View):
         my_team = U.get_user_team(request.user.id)
         my_series = U.get_all_my_series(teamid=my_team['id'])
         all_competitions = U.get_all_live_competitions()
+        current_season = U.get_current_season()
 
         logo_path = my_team['LogoPath']
 
@@ -35,6 +36,7 @@ class DashboardView(LoginRequiredMixin, View):
             'day': U.get_current_day(),
             'all_campionato_series': all_campionato_series,
             'logo_path': logo_path,
+            'season': current_season.Name,
         }
         
         return render(request, self.template_name, params)

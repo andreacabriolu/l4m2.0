@@ -111,4 +111,4 @@ async function sendHeartbeat() {
 
 sendHeartbeat();
 
-setInterval(sendHeartbeat, 30000);
+setInterval(sendHeartbeat, 60000);

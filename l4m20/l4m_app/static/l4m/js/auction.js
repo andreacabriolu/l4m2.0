@@ -79,9 +79,7 @@ const ACTIONS = {
 
         clause: {
             visible: f =>
-                f.roster === true &&
-                f.official === true &&
-                f.signed === true
+                false //TODO: implement clause logic
         }
 
 };

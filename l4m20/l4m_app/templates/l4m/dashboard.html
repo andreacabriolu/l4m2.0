@@ -29,23 +29,40 @@
     </div>
 
     <div class="bg-body-tertiary main-div" id="dashboardDiv">
-        <div class="row featurette">
-          <div class="col-md-7 team-name-dash">
-            <h1 class="featurette-heading fw-normal lh-1 display-1">
-              {{teamname}}
-            </h1>
-          </div>
-          <div class="col-md-5 team-logo">
-            {% if logo_path %}
-            {% static 'l4m/images/logos/' as logos_path %} 
-            <img src="{{logos_path}}{{logo_path}}" loading="lazy" 
-                class="featurette-image" >
-            {% else %}
-            <img src="{% static 'l4m/images/logo.jpeg' %}" loading="lazy" 
-                class="featurette-image" >
-            {% endif %}
-          </div>
-        </div>
+
+        <section class="team-hero">
+        
+            <div class="team-hero-logo-wrapper">
+        
+                {% if logo_path %}
+                {% static 'l4m/images/logos/' as logos_path %}
+        
+                <img src="{{logos_path}}{{logo_path}}" loading="lazy" class="team-hero-logo" alt="Logo {{ teamname }}">
+                {% else %}
+        
+                <img src="{% static 'l4m/images/logo.jpeg' %}" loading="lazy" class="team-hero-logo" alt="Logo L4M">
+        
+                {% endif %}
+        
+            </div>
+        
+            <div class="team-hero-content">
+        
+                <div class="team-hero-label">
+                    MANAGER: {{ user|upper }}
+                </div>
+        
+                <h1 class="team-hero-name">
+                    {{ teamname }}
+                </h1>
+        
+                <div class="team-hero-season">
+                    {{ season }}
+                </div>
+        
+            </div>
+        
+        </section>
 
         <hr class="featurette-divider" />
 
