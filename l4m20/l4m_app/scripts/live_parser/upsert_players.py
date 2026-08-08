@@ -1,13 +1,22 @@
+import io
+
 import pandas as pd
+import requests
 import utilities as U
 
 from db_connector import DB_Connector
 
 # 1. Carica il file Excel
 file_path = "live_parser/listone_26_27.xlsx"
+url = "https://apicdn.fantamaster.it/export/?format=excel&sort=name"
 
 # Saltiamo la prima riga di titolo dell'Excel per prendere la vera intestazione ('Surname', 'Squadra', 'Ruolo', ...)
-df = pd.read_excel(file_path, sheet_name="Tutti", skiprows=1)
+# df = pd.read_excel(file_path, sheet_name="Tutti", skiprows=1)
+
+response = requests.get(url)
+response.raise_for_status()  # Controlla se la richiesta ha avuto successo
+
+df = pd.read_excel(io.BytesIO(response.content), sheet_name="Tutti", skiprows=1, skipfooter=2)
 
 # Rimuove eventuali righe vuote o senza Surname
 df = df.dropna(subset=["Nome"])
@@ -16,16 +25,6 @@ df = df.dropna(subset=["Nome"])
 conn = DB_Connector()
 
 # 3. Query di Upsert (Inserisce se nuovo, aggiorna se il Surname esiste già)
-# N.B. Modifica i nomi delle colonne della tabella l4m_app_players se differiscono nel tuo DB.
-# upsert_query = """
-# INSERT INTO l4m_app_players (Surname, RealTeam_id, Role, Quotation)
-# VALUES (?, ?, ?, ?)
-# ON CONFLICT(Surname) DO UPDATE SET
-#     RealTeam_id = excluded.RealTeam_id,
-#     Role = excluded.Role,
-#     Quotation = excluded.Quotation,
-# """
-
 count_updated = 0
 count_inserted = 0
 
