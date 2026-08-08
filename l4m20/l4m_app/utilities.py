@@ -1092,6 +1092,12 @@ def get_current_day(competition_id=""):
     day = config.Config.objects.filter(Name="CurrentDay").first()
     return day.Value
 
+def get_team_by_userid(userid):
+    t = team.Team.objects.filter(Users__id=userid).values('id','Name')
+    if len(t) > 0:
+        return t[0]
+    return None
+
 def get_team_name_by_id(teamid):
     return team.Team.objects.filter(id=teamid).values('Name')[0]['Name']
 

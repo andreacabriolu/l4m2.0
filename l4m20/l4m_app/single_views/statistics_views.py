@@ -1,13 +1,18 @@
-from django.http import HttpResponse
+from datetime import timedelta
+
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 import json
 from django.db.models import Q
 
-from l4m_app.single_models import vote
+from ..single_models import vote, online_presence
+from django.utils import timezone
 from .. import statistics_utilities as SU
 from .. import utilities as U
+
 
 class StatisticsView(LoginRequiredMixin, View):
     template_name = 'l4m/player_statistics.html'
@@ -59,3 +64,35 @@ class HallOfFameView(View):
         }   
 
         return render(request, self.template_name, params)
+
+ONLINE_TIMEOUT = timedelta(seconds=30) #check if user is online in the last 30 seconds
+@login_required
+def heartbeat(request):
+
+    presence, created = online_presence.OnlinePresence.objects.get_or_create(
+    user=request.user
+    )
+
+    if (
+        created or
+        presence.last_seen < timezone.now() - ONLINE_TIMEOUT):
+            presence.last_seen = timezone.now()
+            presence.save(update_fields=["last_seen"])
+
+    online_users = (
+        online_presence.OnlinePresence.objects
+        .select_related("user")
+        .order_by("user__username")
+    )
+
+    return JsonResponse({
+        "count": online_users.count(),
+        "users": [
+            user.user.username
+            for user in online_users
+        ],
+        "teams": [
+            U.get_team_by_userid(user.user.id)['Name']
+            for user in online_users
+        ],
+    })

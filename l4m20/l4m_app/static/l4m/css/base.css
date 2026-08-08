@@ -122,3 +122,75 @@
 .nav-link-honor {
   color: rgb(188, 157, 53) !important;
 }
+
+.online-users {
+    padding: .75rem 1rem;
+    margin: .5rem .75rem 1rem;
+
+    border-radius: .6rem;
+
+    background: rgba(255, 255, 255, .04);
+    border: 1px solid rgba(255, 255, 255, .06);
+}
+
+.online-users-header {
+    display: flex;
+    align-items: center;
+    gap: .45rem;
+
+    font-size: .75rem;
+    font-weight: 600;
+    letter-spacing: .08em;
+
+    color: rgba(255, 255, 255, .55);
+}
+
+.online-users-count {
+    margin-left: auto;
+
+    min-width: 1.5rem;
+    height: 1.5rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: rgba(53, 199, 89, .15);
+    color: #35c759;
+
+    font-size: .75rem;
+    font-weight: 700;
+}
+
+.online-indicator,
+.online-user-dot {
+    width: 7px;
+    height: 7px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background: #35c759;
+    box-shadow: 0 0 7px rgba(53, 199, 89, .6);
+}
+
+.online-users-list {
+    margin-top: .6rem;
+
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+}
+
+.online-user {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+
+    font-size: .8rem;
+    color: rgba(255, 255, 255, .7);
+}
+
