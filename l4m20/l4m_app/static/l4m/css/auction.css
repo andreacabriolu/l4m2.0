@@ -1265,7 +1265,7 @@
 @media (max-width: 576px) {
 
     .player-close {
-        top: 10px;
+        top: 2.5rem;
         right: 10px;
 
         width: 34px;
