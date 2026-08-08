@@ -75,6 +75,13 @@ const ACTIONS = {
         cancelBid: {
             visible: f =>
                 f.editable === true
+        },
+
+        clause: {
+            visible: f =>
+                f.roster === true &&
+                f.official === true &&
+                f.signed === true
         }
 
 };
@@ -592,6 +599,17 @@ const AuctionState = {
 
 const Auction = {
 
+    updateModalFooter() {
+
+        const footer = document.querySelector("#playerModal .modal-footer");
+
+        const visibleButtons = [
+            ...footer.querySelectorAll(".player-action")
+        ].filter(button => !button.hidden);
+
+        footer.hidden = visibleButtons.length === 0;
+    },
+
     refreshPlayer(player){
 
         flags = Auction.getPlayerFlags(player);
@@ -730,6 +748,8 @@ const Auction = {
         avatar.onerror = function(){
            this.src=`https://static-players.fantamaster.it/player.png`;
         }
+
+        Auction.updateModalFooter();
 
         bootstrap.Modal
             .getOrCreateInstance(modal)

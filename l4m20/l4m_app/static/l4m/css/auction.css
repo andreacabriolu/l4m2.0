@@ -862,6 +862,8 @@
 
 .player-modal-header{
 
+    position:relative;
+
     text-align:center;
 
     padding:2rem 1.5rem 1.5rem;
@@ -1049,6 +1051,14 @@
     font-weight:600;
 
     transition:.2s;
+
+}
+
+.player-action.clause{
+
+    background:#f59e0b;
+
+    color:white;
 
 }
 
@@ -1249,6 +1259,20 @@
     justify-content:center;
 
     transition:.2s;
+
+}
+
+@media (max-width: 576px) {
+
+    .player-close {
+        top: 10px;
+        right: 10px;
+
+        width: 34px;
+        height: 34px;
+
+        font-size: .85rem;
+    }
 
 }
 
