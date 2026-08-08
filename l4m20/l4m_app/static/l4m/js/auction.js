@@ -214,7 +214,7 @@ function buildBet(){
         userteamname: AuctionState.userTeam.name,
         balancemax: AuctionState.balance.total,
         market: AuctionState.market,
-        carognata: false, //TODO: check if this is correct
+        carognata: AuctionState.currentPlayer.bet__Carognata,
         slot: 'unused',
         session: AuctionState.currentSession.id
 

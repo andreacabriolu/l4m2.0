@@ -995,7 +995,7 @@ def send_bet(data):
                 Team=_bet_old.Team,
                 Market=market_,
                 Session=session_,
-                Carognata = True if carognata=="True" else False
+                Carognata = True if carognata==True else False
             )
             bet_history_new.save()
 
@@ -1011,7 +1011,7 @@ def send_bet(data):
 
         bet_new.save()
 
-        if(carognata == "True"):
+        if(carognata == True):
             
             my_bal.N_carognate = ncarognate + 1
 
@@ -1034,15 +1034,8 @@ def send_bet(data):
             bet_id=bet_new.id,
             residual=(my_bal.Purchases_max  - new_bets_amount),  
             new_balance_for_bets=new_balance_for_bets, 
-            n_carognate=ncarognate + 1 if (carognata == "True") else ncarognate, 
+            n_carognate=ncarognate + 1 if (carognata == True) else ncarognate, 
             total=my_bal.Purchases_max)
-
-    return (
-        (my_bal.Purchases_max  - new_bets_amount), \
-        new_balance_for_bets, \
-        (ncarognate + 1) if (carognata == "True") else ncarognate,
-        my_bal.Purchases_max
-    )
 
 def finalize_bet(data):
 
