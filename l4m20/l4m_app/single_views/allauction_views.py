@@ -65,10 +65,10 @@ class AllAuctionsView(LoginRequiredMixin, View):
             if len(balances_) <= 0: 
                 continue
 
-            lp.sort(key=lambda x: x['bet__Amount'], reverse=True)
-            ld.sort(key=lambda x: x['bet__Amount'], reverse=True)
-            lc.sort(key=lambda x: x['bet__Amount'], reverse=True)
-            la.sort(key=lambda x: x['bet__Amount'], reverse=True)
+            lp.sort(key=lambda x: x['bet__Expiration_Date'], reverse=True)
+            ld.sort(key=lambda x: x['bet__Expiration_Date'], reverse=True)
+            lc.sort(key=lambda x: x['bet__Expiration_Date'], reverse=True)
+            la.sort(key=lambda x: x['bet__Expiration_Date'], reverse=True)
 
             balance = balances_[0]
             balance_for_bets = U.get_balance_for_bets(_team.id, balance['Purchases_max'])
