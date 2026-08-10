@@ -50,9 +50,7 @@ def undo_bet(data, team):
             Carognata=last_bet.Carognata,
             Player_id=last_bet.Player_id,
             Team_id=last_bet.Team_id,
-            Session_id=last_bet.Session_id,
-            Svincolo=last_bet.Svincolo,
-            Session_svincolo_id=last_bet.Session_svincolo_id
+            Session_id=last_bet.Session_id
         )
         old_bet.save()
 
