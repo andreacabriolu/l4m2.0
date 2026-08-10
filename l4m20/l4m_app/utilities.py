@@ -50,7 +50,10 @@ def undo_bet(data, team):
             Carognata=last_bet.Carognata,
             Player_id=last_bet.Player_id,
             Team_id=last_bet.Team_id,
-            Session_id=last_bet.Session_id
+            Session_id=last_bet.Session_id,
+            Time=last_bet.Time,
+            Market_id=last_bet.Market_id,
+            Expiration_Date=last_bet.Expiration_Date
         )
         old_bet.save()
 
@@ -993,7 +996,8 @@ def send_bet(data):
                 Team=_bet_old.Team,
                 Market=market_,
                 Session=session_,
-                Carognata = True if carognata==True else False
+                Carognata = True if carognata==True else False,
+                Expiration_Date=_bet_old.Expiration_Date
             )
             bet_history_new.save()
 
