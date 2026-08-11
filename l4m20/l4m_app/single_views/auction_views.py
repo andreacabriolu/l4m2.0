@@ -69,6 +69,7 @@ class AuctionView(LoginRequiredMixin, View):
                     'n_svincoli': n_svincoli,
                 },
                 'players': sorted(players_all, key=lambda p: (C.Constant_Dicts.RoleInts[p['Role']], p['Surname'])),
+                'bids_history': U.get_bids_history(my_market),
                 'roster': list(mbb),
                 'session': {
                     'id': current_session.id,

@@ -9,6 +9,31 @@ from l4m20 import constants as C
 import requests as req
 from .libs import *
 
+def get_bids_history(market):
+    history = bet_history.Bet_History.objects.filter(Q(Market_id=market)).values(
+        'id','Player_id','Amount','Time','Carognata','Team_id').order_by('-Time')
+
+    bids_history = []
+    #group by player and get the last bid for each player
+    
+    for player_id in set([b['Player_id'] for b in history]):
+        last_bids = history.filter(Player_id=player_id).order_by('-Time')
+        p = get_object_or_404(player.Player, pk=player_id)
+
+        bids_history.append({
+            'player_name': f"{p.Surname}",
+            'player_id': p.id,
+            'bids' : [{
+                'amount': b['Amount'],
+                'time': b['Time'].astimezone(ZoneInfo('Europe/Rome')).strftime("%Y-%m-%d %H:%M:%S"),
+                'carognata': b['Carognata'],
+                'teamname': get_team_name_by_id(b['Team_id'])
+            } for b in last_bids]
+
+        })
+
+    return bids_history
+
 def undo_bet(data, team):
     logger.debug(f"UNDOING BET: {data['bet_id']} FOR TEAM: {team['id']} AND PLAYER: {data['player_id']}")
 

@@ -635,6 +635,75 @@ const Auction = {
         };
     },
 
+    renderBidHistory(bids) {
+
+        const container = document.getElementById("bidHistory");
+        const count = document.getElementById("bidHistoryCount");
+        const toggle = document.getElementById("bidHistoryToggle");
+
+        container.innerHTML = "";
+        container.hidden = true;
+        count.textContent = "0";
+        toggle.setAttribute(
+            "aria-expanded",
+            false
+        );
+
+        if (bids === undefined || bids === null) {
+            return;
+        }
+
+        player_bids = bids.bids;
+
+        count.textContent = player_bids.length;
+
+        if (!player_bids.length) {
+
+            container.innerHTML = `
+            <div class="bid-history-empty">
+                Nessun rilancio
+            </div>
+        `;
+
+            return;
+        }
+
+        player_bids.forEach((bid, index) => {
+
+            const item = document.createElement("div");
+
+            item.className =
+                "bid-history-item";
+                //  + (index === 0 ? " current" : "");
+
+            item.innerHTML = `
+            <div class="bid-history-marker"></div>
+
+            <div class="bid-history-content">
+
+                <div class="bid-history-top">
+
+                    <span class="bid-history-team">
+                        ${bid.teamname}
+                    </span>
+
+                    <span class="bid-history-amount">
+                        ${bid.amount} FML
+                    </span>
+
+                </div>
+
+                <div class="bid-history-time">
+                    ${bid.time} ${bid.carognata ?"(CAR)" : ""}
+                </div>
+
+            </div>
+        `;
+
+            container.appendChild(item);
+        });
+    },
+
     /* PLAYER CARD */
     openPlayerModal(playerId) {
 
@@ -746,6 +815,12 @@ const Auction = {
         avatar.onerror = function(){
            this.src=`https://static-players.fantamaster.it/player.png`;
         }
+
+        const bids = AuctionState.bids_history.find(b =>
+            b.player_id == player.id
+        );
+
+        this.renderBidHistory(bids);
 
         Auction.updateModalFooter();
 
@@ -1065,6 +1140,7 @@ const Auction = {
         AuctionState.userTeam.id = auction_data.summary.user_team_id;
         AuctionState.userTeam.name = auction_data.summary.user_team_name;
         AuctionState.n_players_by_role = auction_data.summary.n_players_by_role;
+        AuctionState.bids_history = auction_data.bids_history;
 
     },
 
@@ -1075,6 +1151,22 @@ const Auction = {
             .toLowerCase();
 
         this.renderPlayers(text);
+
+    },
+
+    onExpandBidHistory(e) {
+
+        const history = document.getElementById("bidHistory");
+
+        const expanded =
+            e.target.getAttribute("aria-expanded") === "true";
+
+        e.target.setAttribute(
+            "aria-expanded",
+            String(!expanded)
+        );
+
+        history.hidden = expanded;
 
     },
 
@@ -1123,6 +1215,9 @@ const Auction = {
 
             .on("click", "#btnCancelBid",
                 AuctionAPI.undoBet.bind(AuctionAPI))
+
+            .on("click", "#bidHistoryToggle",
+                this.onExpandBidHistory.bind(this))
 
             ;
 
