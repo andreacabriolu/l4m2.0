@@ -52,22 +52,12 @@
                                                                 <div class="d-flex align-items-center gap-3">
                                                                         <div class="logo-icon-wrapper shadow-sm">
                                                                                 <i class="fa-solid fa-award text-secondary"></i>
-                                                                                <!-- {% if k.logo_path %}
-                                                                                {% static 'l4m/images/competitions/' as
-                                                                                comp_logos %}
-                                                                                <img src="{{ comp_logos }}{{ k.logo_path }}"
-                                                                                        loading="lazy"
-                                                                                        alt="{{ k.Name }}">
-                                                                                {% else %}
-                                                                                <i
-                                                                                        class="fa-solid fa-award text-secondary"></i>
-                                                                                {% endif %} -->
                                                                         </div>
 
                                                                         <div>
                                                                                 <span
                                                                                         class="d-block text-white fw-bold comp-name">{{ k.Name }}</span>
-                                                                                {% with comp_name=k.Name|lower %}
+                                                                                {% with comp_name=k.Competition.Name|lower %}
                                                                                 {% if "campionato" in comp_name %}
                                                                                 <span class="badge badge-championship">Campionato
                                                                                         🏆</span>

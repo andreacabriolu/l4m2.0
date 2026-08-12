@@ -17,7 +17,12 @@ def get_hall_of_fame_data():
 
         winners = team_competition.Team_Competition.objects.filter(Q(Season_id=s.id) & Q(IsWinner=True))
         for winner in winners:
-            season_data['winners'][winner.Competition] = winner.Team
+
+            if winner.Competition.Name == C.Constant_Strings.campionato:
+                season_data['winners'][winner.Series] = winner.Team
+            else:
+                season_data['winners'][winner.Competition] = winner.Team
+            
 
         hall_of_fame_data.append(season_data)
 
