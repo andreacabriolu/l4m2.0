@@ -6,6 +6,7 @@ from django.utils.translation import gettext_lazy as _
 class CompetitionCalendar(models.Model):
 
     Competition = models.ForeignKey(on_delete=models.CASCADE,to=C.Constant_Strings.competition, null=True)
+    Season = models.ForeignKey(on_delete=models.CASCADE,to=C.Constant_Strings.season, null=True)
     Day = models.IntegerField()              # day of play
     Stage = models.CharField(max_length=50)
     HomeAway = models.BooleanField(default=False)
