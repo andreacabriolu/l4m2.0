@@ -1042,8 +1042,8 @@ def send_bet(data):
             
             my_bal.N_carognate = ncarognate + 1
 
-            if(my_bal.N_carognate > C.MAX_CAROGNATE): #penalty
-                my_bal.Purchases_max = my_bal.Purchases_max - 1
+            if(my_bal.N_carognate > session_.Ncarognate): #penalty
+                my_bal.Wages_max = my_bal.Wages_max - 1
 
             my_bal.save()
     
@@ -1193,7 +1193,12 @@ def check_day_already_started(day):
 def free_player(bet_id, session_svincolo):
     _bet = bet.Bet.objects.get(pk=int(bet_id))
 
-    _squad = squads.Squads.objects.filter(Q(Team=_bet.Team_id) & Q(Player=_bet.Player))
+    _squad = squads.Squads.objects.filter(
+        Q(Team=_bet.Team_id) & 
+        Q(Player=_bet.Player) &
+        Q(Season__Active=True)
+    ).first()
+
     if(_squad is None):
         return
     _squad.delete()

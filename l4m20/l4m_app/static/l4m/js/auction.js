@@ -337,8 +337,6 @@ function getPlayerStatus(player, flags = null, expiration_date = null) {
 let timer= null;
 function startCountdown(undoBet) {
 
-    // timer = null;
-
     clearInterval(timer);
 
     timer = setInterval(()=>{

@@ -37,7 +37,7 @@ class AuctionView(LoginRequiredMixin, View):
             players_cc = [p for p in players_all if p['Role'] == 'C']
             players_fw = [p for p in players_all if p['Role'] == 'A']
 
-            free_players = list(players_all)
+            # free_players = list(players_all)
 
             balance = U.get_balance(teamid)[0] #TODO: improve check
             balance_for_bets = U.get_balance_for_bets(teamid, balance['Purchases_max'], my_market)
@@ -69,6 +69,7 @@ class AuctionView(LoginRequiredMixin, View):
                     'n_svincoli': n_svincoli,
                 },
                 'players': sorted(players_all, key=lambda p: (C.Constant_Dicts.RoleInts[p['Role']], p['Surname'])),
+                # 'free_players' : free_players,
                 'bids_history': U.get_bids_history(my_market),
                 'roster': list(mbb),
                 'session': {
@@ -86,7 +87,6 @@ class AuctionView(LoginRequiredMixin, View):
             }
 
             params = { 
-                # 'free_players' : free_players,
                 'is_live_day': U.is_live_day(),
                 'auction_data': auction_data,
 
