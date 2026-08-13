@@ -334,9 +334,10 @@ function getPlayerStatus(player, flags = null, expiration_date = null) {
     return [getRemainingTime(expiration_date ?? player.bet__Expiration_Date ?? "-"), "state-bidding"]; //default
 }
 
+let timer= null;
 function startCountdown(undoBet) {
 
-    timer = null
+    // timer = null;
 
     clearInterval(timer);
 
@@ -350,7 +351,6 @@ function startCountdown(undoBet) {
             clearInterval(timer);
 
             document.getElementById("btnCancelBid").hidden = true;
-            // document.getElementById("btnBid").hidden = true;
 
             Auction.renderPlayerActions(Auction.getPlayerFlags(AuctionState.currentPlayer));
 
@@ -406,9 +406,20 @@ const AuctionAPI = {
 
     async sendBet() {
 
+        const btn = document.getElementById("btnBid");
+
+        if (btn.disabled) {
+            return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = "Invio puntata...";
+
         const bet = buildBet();
 
         if (!validateBet(bet)) {
+            btn.disabled = false;
+            btn.textContent = "Offri";
             return;
         }
 
@@ -423,12 +434,6 @@ const AuctionAPI = {
             AuctionState.roster = response.roster;
             AuctionState.currentPlayer.Roster = true;
             AuctionState.currentPlayer.EditableUntil = Date.now() + CANCEL_BID_TIMER;
-
-            Auction.renderSummary();
-
-            Auction.renderRoster();
-
-            Auction.refreshPlayer(AuctionState.currentPlayer);
 
             _undoBet = {
                 playerId: AuctionState.currentPlayer.id,
@@ -446,11 +451,18 @@ const AuctionAPI = {
                 .getInstance(document.getElementById("playerModal"))
                 ?.hide();
             
+            Auction.refreshPlayer(AuctionState.currentPlayer);
+            Auction.renderSummary();
+            Auction.renderRoster();
+            btn.disabled = false;
+            btn.textContent = "Offri";
 
         }
         catch (err) {
 
             showPopupErrorAlert(err);
+            btn.disabled = false;
+            btn.textContent = "Offri";
 
         }
 
