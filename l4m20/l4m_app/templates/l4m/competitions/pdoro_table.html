@@ -1,0 +1,35 @@
+<table class="pdoro-table w-100">
+    <thead>
+        <tr>
+            <th class="col-pos">#</th>
+            <th class="col-team">Squadra</th>
+            <th class="col-pts">Coeff</th>
+            <th>FPT</th>
+            <th>PG</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for team in group.ranking %}
+        <!-- <tr class="
+            {% if forloop.counter <= 2 %}qualified{% endif %}
+            {% if forloop.last %}relegated{% endif %}
+        "> -->
+        <tr>
+            <td class="col-pos">{{ forloop.counter }}</td>
+            <td class="col-team">
+                <span class="team-name">{{ team.team }}</span>
+            </td>
+            <td class="col-pts">{{ team.pt }}</td>
+            <td>{{ team.fpt }}</td>
+            <td>{{ team.pg }}</td>
+            <td>{{ team.v }}</td>
+            <td>{{ team.n }}</td>
+            <td>{{ team.p }}</td>
+            <td>{{ team.gf }}</td>
+            <td>{{ team.gs }}</td>
+            <td>{{ team.dr }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
