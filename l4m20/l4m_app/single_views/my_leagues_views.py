@@ -18,7 +18,21 @@ class MyLeaguesView(LoginRequiredMixin, View):
         my_team = U.get_user_team(request.user.id)
         comp = competition.Competition.objects.get(id=competition_id)
         logo_path = comp.LogoPath
+        
+        groups_data = U.get_groups_data_for_competition(competition_id)
+        bracket_data = U.get_bracket_data_for_competition(competition_id)
 
+        # --- DEBUG OUTPUT ---
+        print("\n" + "="*50, flush=True)
+        print(f"--> COMPETITION: {comp.Name} (ID: {competition_id})", flush=True)
+        
+        print("\n--- GROUPS DATA ---", flush=True)
+        print(groups_data)
+        
+        print("\n--- BRACKET DATA ---", flush=True)
+        print(bracket_data)
+        print("="*50 + "\n", flush=True)
+        # --------------------
         params = {
             'comp' : comp,
             'logo_path': logo_path,

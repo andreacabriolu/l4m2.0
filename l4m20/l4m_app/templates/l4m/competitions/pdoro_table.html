@@ -4,8 +4,7 @@
             <th class="col-pos">#</th>
             <th class="col-team">Squadra</th>
             <th class="col-pts">Coeff</th>
-            <th>FPT</th>
-            <th>PG</th>
+            <th>Coeff Avg</th>
         </tr>
     </thead>
     <tbody>
@@ -19,15 +18,8 @@
             <td class="col-team">
                 <span class="team-name">{{ team.team }}</span>
             </td>
-            <td class="col-pts">{{ team.pt }}</td>
-            <td>{{ team.fpt }}</td>
-            <td>{{ team.pg }}</td>
-            <td>{{ team.v }}</td>
-            <td>{{ team.n }}</td>
-            <td>{{ team.p }}</td>
-            <td>{{ team.gf }}</td>
-            <td>{{ team.gs }}</td>
-            <td>{{ team.dr }}</td>
+            <td class="col-pts">{{ team.pdo }}</td>
+            <td>{{ team.pdoav }}</td>
         </tr>
         {% endfor %}
     </tbody>

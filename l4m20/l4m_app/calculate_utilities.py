@@ -597,3 +597,7 @@ def save_results_for_total(votes_per_series):
         
         mr_home.save()
         mr_away.save()
+        
+        
+def calculate_panchina_doro(competition, day):
+    print('ciao') 
