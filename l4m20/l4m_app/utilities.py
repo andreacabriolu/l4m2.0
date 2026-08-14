@@ -9,6 +9,25 @@ from l4m20 import constants as C
 import requests as req
 from .libs import *
 
+def get_signed_contracts(teamid):
+    _squads = squads.Squads.objects.filter(
+        Q(Team_id=teamid) & 
+        Q(Season_id=get_current_season().id)).values('Player_id','Years')
+    
+    signed_contracts_per_role = {
+        'P': {'1': 0, '2': 0, '3': 0},
+        'D': {'1': 0, '2': 0, '3': 0},
+        'C': {'1': 0, '2': 0, '3': 0},
+        'A': {'1': 0, '2': 0, '3': 0}
+    }
+
+    for s in _squads:
+        p = get_object_or_404(player.Player, pk=s['Player_id'])
+        if s['Years'] in [1, 2, 3]: #avoid not signed contracts
+            signed_contracts_per_role[p.Role][str(s['Years'])] += 1
+
+    return signed_contracts_per_role
+
 def get_bids_history(market):
     history = bet_history.Bet_History.objects.filter(Q(Market_id=market)).values(
         'id','Player_id','Amount','Time','Carognata','Team_id').order_by('-Time')
@@ -1276,6 +1295,23 @@ def check_penalties(t_id, day, comp_id):
         else:
             return -1, -1, -1 #-1 pt 
 
+def check_contract(squad_contracts, role, years_signed):
+
+    n_contracts_per_role = sum(squad_contracts.get(role, {}).values()) if role in squad_contracts else 0
+    max_per_role = C.Constant_Dicts.Roles.get(role, 0)
+    at_least_one_annual = squad_contracts.get(role, {})['1'] >= C.MIN_ANNUAL_CONTRACTS_PER_ROLE if role in squad_contracts and '1' in squad_contracts[role] else False
+
+    if n_contracts_per_role == (max_per_role -1):
+        if years_signed == 2 or years_signed == 3 and not at_least_one_annual: #we need at least one annual contract
+            return C.ErrorCodes.MIN_ANNUAL_CONTRACTS_PER_ROLE_NEEDED
+
+    if years_signed == 3:
+        current_triennals_per_role = squad_contracts[role][years_signed.__str__()] if role in squad_contracts and years_signed.__str__() in squad_contracts[role] else 0
+        if current_triennals_per_role >= C.MAX_TRIENNAL_CONTRACTS_PER_ROLE:
+            return C.ErrorCodes.MAX_TRIENNAL_CONTRACTS_PER_ROLE_EXCEEDED
+
+    return True
+
 def sign_contract(contract_data):
 
     player_ = get_object_or_404(player.Player, id=contract_data['playerid'])
@@ -1284,6 +1320,11 @@ def sign_contract(contract_data):
     years_signed = contract_data['years']
     rounded_wage = round(player_.Quotation * C.WAGE_MULTIPLIER) #0.5
     total_wage = rounded_wage * years_signed
+
+    squad_contracts = get_signed_contracts(team_.id)
+    check_result = check_contract(squad_contracts, player_.Role, years_signed)
+    if(check_result != True): #error code returned
+        return check_result
 
     existing_squad = squads.Squads.objects.filter(Q(Player=player_) & Q(Team=team_) & Q(Season=season))
 
@@ -1296,7 +1337,6 @@ def sign_contract(contract_data):
     wages_amount = balance_[0]['Wages_amount'] if len(balance_) > 0 else 0
     wages_max = balance_[0]['Wages_max'] if len(balance_) > 0 else 0
     wages_amount += total_wage
-    # wages_max -= total_wage
 
     balance_.update(Wages_amount=wages_amount)
 

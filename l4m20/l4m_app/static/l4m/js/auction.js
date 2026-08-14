@@ -620,11 +620,11 @@ const AuctionState = {
         A: 0
     },
 
-    triennal_contracts_signed: {
-        P: 0,
-        D: 0,
-        C: 0,
-        A: 0
+    contracts_signed_per_role: {
+        P: {'1': 0, '2': 0, '3': 0},
+        D: {'1': 0, '2': 0, '3': 0},
+        C: {'1': 0, '2': 0, '3': 0},
+        A: {'1': 0, '2': 0, '3': 0}
     },
 
     getPlayer(playerId) {
@@ -1199,6 +1199,7 @@ const Auction = {
         AuctionState.userTeam.name = auction_data.summary.user_team_name;
         AuctionState.n_players_by_role = auction_data.summary.n_players_by_role;
         AuctionState.bids_history = auction_data.bids_history;
+        AuctionState.contracts_signed_per_role = auction_data.contracts_signed_per_role;
 
     },
 

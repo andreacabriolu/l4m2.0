@@ -69,6 +69,7 @@ class AuctionView(LoginRequiredMixin, View):
                 'players': sorted(players_all, key=lambda p: (C.Constant_Dicts.RoleInts[p['Role']], p['Surname'])),
                 'bids_history': U.get_bids_history(my_market),
                 'roster': list(mbb),
+                'contracts_signed': U.get_signed_contracts(teamid),
                 'session': {
                     'id': current_session.id,
                     'name': current_session.Name,
@@ -217,6 +218,10 @@ class SignContractView(View):
             msg = U.sign_contract(data)
             if(msg == C.ErrorCodes.PLAYER_NOT_IN_SQUAD):
                 return JsonResponse({'error': 'GIOCATORE NON NELLA SQUADRA'}, status=400)
+            elif(msg == C.ErrorCodes.MAX_TRIENNAL_CONTRACTS_PER_ROLE_EXCEEDED):
+                return JsonResponse({'error': 'NUMERO MASSIMO DI CONTRATTI TRIENNALI PER RUOLO RAGGIUNTO'}, status=400)
+            elif(msg == C.ErrorCodes.MIN_ANNUAL_CONTRACTS_PER_ROLE_NEEDED):
+                return JsonResponse({'error': 'ALMENO UN CONTRATTO ANNUALE PER RUOLO NECESSARIO'}, status=400)
 
             return JsonResponse(msg)
         except Exception as e:

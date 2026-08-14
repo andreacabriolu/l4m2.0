@@ -23,6 +23,7 @@ class Constant_Dicts:
     RoleEnum = {'1':'PORTIERE', '2':'DIFENSORE','3':'CENTROCAMPISTA','4':'ATTACCANTE'}
     RoleChars = {'POR': 'P', 'DIF': 'D', 'CC': 'C', 'ATT': 'A'}
     RoleInts = {'P': 0, 'D': 1, 'C': 2, 'A': 3}
+    Roles = {'P': 3, 'D': 8, 'C': 8, 'A': 6}
 
 class Constant_Lists:
     Modules = ['3-5-2','3-4-3','4-4-2','4-3-3','4-5-1','5-3-2','5-4-1']
@@ -82,6 +83,8 @@ class ErrorCodes:
     PLAYER_NOT_IN_SQUAD = -2
     BET_NOT_FOUND = -3
     INVALID_PARAMETERS = -4
+    MAX_TRIENNAL_CONTRACTS_PER_ROLE_EXCEEDED = -5
+    MIN_ANNUAL_CONTRACTS_PER_ROLE_NEEDED = -7
 
 class Events:
     GOAL_TAKEN = 'GG'
