@@ -71,6 +71,14 @@ DEBUG = config('DEBUG', cast=bool)
 # ALLOWED_HOSTS = []
 ALLOWED_HOSTS = ['127.0.0.1','209.38.103.187','www.lega4mori.com','lega4mori.com']
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://lega4mori.com',
+    'https://www.lega4mori.com',
+]
+
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = 'Lax'
 
 # Application definition
 
