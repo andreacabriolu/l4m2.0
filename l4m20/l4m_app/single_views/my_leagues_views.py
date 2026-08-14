@@ -22,17 +22,30 @@ class MyLeaguesView(LoginRequiredMixin, View):
         groups_data = U.get_groups_data_for_competition(competition_id)
         bracket_data = U.get_bracket_data_for_competition(competition_id)
 
-        # --- DEBUG OUTPUT ---
-        print("\n" + "="*50, flush=True)
-        print(f"--> COMPETITION: {comp.Name} (ID: {competition_id})", flush=True)
+        params = {
+            'comp' : comp,
+            'logo_path': logo_path,
+            'current_stage': 'Girone', #TODO restore U.get_current_stage(competition_id),
+            'groups_data': U.get_groups_data_for_competition(competition_id),
+            'bracket_data': U.get_bracket_data_for_competition(competition_id),
+        }
         
-        print("\n--- GROUPS DATA ---", flush=True)
-        print(groups_data)
+        return render(request, self.template_name, params)
+
+class MyLeaguesNoMatchView(LoginRequiredMixin, View):
+    template_name = 'l4m/my_leagues.html'
+
+    def get(self,request, competition_id=None):
+        my_team = U.get_user_team(request.user.id)
+        comp = competition.Competition.objects.get(id=competition_id)
+        logo_path = comp.LogoPath
         
-        print("\n--- BRACKET DATA ---", flush=True)
-        print(bracket_data)
-        print("="*50 + "\n", flush=True)
-        # --------------------
+        groups_data = U.get_groups_data_no_competition(competition_id)
+        # ~ bracket_data = U.get_bracket_data_no_competition(competition_id)
+
+        # ~ groups_data = U.get_groups_data_for_competition(competition_id)
+        # ~ bracket_data = U.get_bracket_data_for_competition(competition_id)
+
         params = {
             'comp' : comp,
             'logo_path': logo_path,

@@ -413,11 +413,20 @@ def get_matchdays_info(series):
     return matchdays_info
 
 
+def get_groups_data_no_competition(competition_id):
+	# Strcture for competitions that do not have an actual match (pdoro, r4m, b11 etc)
+    groups_data = []
+    series_girone = get_all_series_girone(competition_id)
+
+    print('ciao')
+    print(series_girone)
+
+
 def get_groups_data_for_competition(competition_id):
     groups_data = []
     series_girone = get_all_series_girone(competition_id)
 
-    
+    print(series_girone)
     
     for s in series_girone:
 # Rimuoviamo le restrizioni in .values(...) per estrarre TUTTI i campi del DB
@@ -434,18 +443,27 @@ def get_groups_data_for_competition(competition_id):
         # 2. CONTEGGIO RECORD
         print(f"\n--- TROVATE {group_teams.count()} SQUADRE PER LA SERIE ID {s.id} ---", flush=True)
 
+        
+        group_teams = team.Team.objects.filter(Series__id=s.id).values('id','Name')
         # 3. STAMPA DETTAGLIATA DI OGNI SQUADRA CON TUTTI GLI ATTRIBUTI
         import pprint
         for index, t in enumerate(group_teams, start=1):
-            print(f"\n--- SQUADRA {index} ---", flush=True)
+            print(f"\n--- teams {index} {s}---", flush=True)
             pprint.pprint(dict(t))
             
         print("="*60 + "\n", flush=True)
-        
-        # ~ group_teams = team.Team.objects.filter(Series__id=s.id).values('id','Name')
-        # ~ group_matchdays = get_matchdays_info(s)
-        # ~ ranking_line = ranking.Ranking.objects.filter(Q(Series_id=s.id)).values_list('RankingLine', flat=True).order_by('-Day').first()
-        # ~ group_ranking = parse_ranking_line(ranking_line) if ranking_line else []
+
+        group_matchdays = get_matchdays_info(s)
+        # 3. STAMPA DETTAGLIATA DI OGNI SQUADRA CON TUTTI GLI ATTRIBUTI
+        import pprint
+        for index, t in enumerate(group_matchdays, start=1):
+            print(f"\n--- matchdays {index} ---", flush=True)
+            pprint.pprint(dict(t))
+            
+        print("="*60 + "\n", flush=True)
+
+        ranking_line = ranking.Ranking.objects.filter(Q(Series_id=s.id)).values_list('RankingLine', flat=True).order_by('-Day').first()
+        group_ranking = parse_ranking_line(ranking_line) if ranking_line else []
         
 
         groups_data.append({
