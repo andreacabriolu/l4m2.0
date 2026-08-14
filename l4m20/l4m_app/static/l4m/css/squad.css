@@ -1,140 +1,134 @@
-.custom-table {
-    width: 30%;
-    border-spacing: 1em !important;
-    /* --bs-table-bg: #515357 !important; */
-    color: whitesmoke !important;
-    font-weight:bold;
-    border-spacing: .5em !important;  
-}
+/* ==========================================================
+   ADATTAMENTO TABELLA #allTeamsTable AL TEMA DARK/MODERN
+   ========================================================== */
 
+/* Container principale della pagina */
 .main-div {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    background-color: black;
+    background-color: #181d24; /* Nero/Scuro morbido coerente col resto */
+    padding: 1.5rem;
 }
 
-.dataTables_wrapper {
-    margin-left: 3%;
-}
-
-.betting-player {
-    background-color: gray !important;
-    border-bottom-color: currentColor;
-    /* mix-blend-mode: color-dodge; */
-    /* color: green !important; */
-}
-
-.betting-player-expired {
-    background-color: rgba(125, 179, 129, 0.8) !important;
-    border-bottom-color: currentColor;
-    /* mix-blend-mode: color-dodge; */
-}
-
-.betting-player-carognata {
-    background-color: rgba(171, 176, 124, 0.8) !important;
-    border-bottom-color: currentColor;
-    /* mix-blend-mode: color-dodge; */
-}
-
-.table-caption {
-    caption-side:top;
-    padding: 10px;
-    font-weight: bold;
-    border:solid;
-    text-align: center;
-}
-  
+/* Stile della tabella principale */
 #allTeamsTable {
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     margin: 20px auto;
-    width: auto;
-    min-width: 80%;
-    color:black;
+    width: 100%;
+    max-width: 1400px;
+    background: #20252e; /* Sfondo scuro delle card del secondo CSS */
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    color: #edf2f7 !important;
 }
+
+/* Intestazioni e Celle generali */
+#allTeamsTable th, 
 #allTeamsTable td {
- min-height:30px;
- color:black;
-}
-
-.spacer-cell {
-    background-color: black !important;
-    width: 5px !important;
-    min-width: 5px !important;
-    max-width: 5px !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    border: none !important;}
-
-.role-label {
-    background-color: #333;
-    color: white;
-    font-weight: bold;
-    vertical-align: middle;
-    width: 5%;
-    cursor: pointer;
-}
-
-#allTeamsTable th, #allTeamsTable td {
-    border: 1px solid #ccc;
-    padding: 10px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 12px 14px;
     text-align: center;
+    color: #eef2f7 !important;
+    font-size: 0.9rem;
 }
 
-#allTeamsTable th.team-header,
-#allTeamsTable td:not(.role-label) {
-    padding-left: 10px;
-    padding-right: 10px;
+/* Header delle colonne / Intestazione squadre */
+#allTeamsTable th,
+#allTeamsTable th.team-header {
+    background: linear-gradient(90deg, rgba(79, 140, 255, 0.12), transparent);
+    color: #4f8cff !important;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 2px solid rgba(79, 140, 255, 0.3);
 }
 
+/* Colonna Ruolo (P, D, C, A) */
 #allTeamsTable td.role-label {
-    background-color: #333;
-    color: white;
+    background-color: #262c37 !important;
+    color: #ffffff !important;
+    font-weight: 800;
+    width: 40px;
     vertical-align: middle;
-    font-weight: bold;
-    width: 5%;
+    border-right: 2px solid rgba(255, 255, 255, 0.1);
 }
 
-#allTeamsTable tr.role-separator td {
-    border: none;
-    height: 5px;
-    background-color: transparent;
-    padding: 0;
-}
-.first_column {
-    width:5%;
-}
-.fixed-width {
-    max-width: 30%; /* or whatever value fits your layout */
-    text-align: center;
-    white-space: nowrap;
-}
+/* Colorazione Badge/Role se preferisci i colori specifici per ruolo */
+.P-row td.role-label { color: #3b82f6 !important; }
+.D-row td.role-label { color: #10b981 !important; }
+.C-row td.role-label { color: #f59e0b !important; }
+.A-row td.role-label { color: #ef4444 !important; }
 
-/* Optional: different background per role block */
+/* Sfondi alternati per le righe dei ruoli (Sostituiscono i vecchi #D9D9D9 e #f9f9f9) */
 .P-row td:not(.role-label),
-.P-row th {
-    background-color: #D9D9D9;
+.C-row td:not(.role-label) {
+    background-color: #242933 !important; /* Grigio scuro Card */
 }
 
 .D-row td:not(.role-label),
-.D-row th {
-    background-color: #f9f9f9;
+.A-row td:not(.role-label) {
+    background-color: #1e222b !important; /* Alternanza leggermente più scura */
 }
 
-.C-row td:not(.role-label),
-.C-row th {
-    background-color: #D9D9D9;
+/* Hover sulle celle per effetto moderno */
+#allTeamsTable td:not(.role-label):not(.spacer-cell):hover {
+    background-color: rgba(79, 140, 255, 0.15) !important;
+    color: #ffffff !important;
+    transition: background-color 0.2s ease;
 }
 
-.A-row td:not(.role-label),
-.A-row th {
-    background-color: #f9f9f9;
-}
-
-.row-like {
-    background-color: #D9D9D9;
-}
+/* Separatori di ruolo / Spaziatori */
+#allTeamsTable tr.role-separator td,
 .spacer td {
-  height: 15px;   /* adjust space */
-  border: none;   /* remove border if your table has it */
+    height: 8px;
+    background-color: #181d24 !important;
+    border: none !important;
+    padding: 0;
+}
+
+.spacer-cell {
+    background-color: #181d24 !important;
+    width: 6px !important;
+    min-width: 6px !important;
+    max-width: 6px !important;
+    padding: 0 !important;
+    border: none !important;
+}
+
+/* Tag / Giocatori in asta all'interno della tabella */
+.betting-player {
+    background-color: rgba(59, 130, 246, 0.25) !important;
+    color: #93c5fd !important;
+    font-weight: bold;
+    border: 1px solid #3b82f6 !important;
+}
+
+.betting-player-expired {
+    background-color: rgba(239, 68, 68, 0.2) !important;
+    color: #fca5a5 !important;
+    border: 1px solid #ef4444 !important;
+}
+
+.betting-player-carognata {
+    background-color: rgba(250, 204, 21, 0.2) !important;
+    color: #fde047 !important;
+    border: 1px solid #facc15 !important;
+}
+
+/* Titolo/Caption della tabella */
+.table-caption {
+    caption-side: top;
+    padding: 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #edf2f7;
+    background: #242933;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: none;
+    border-radius: 16px 16px 0 0;
+    text-align: center;
 }
