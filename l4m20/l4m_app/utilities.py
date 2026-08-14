@@ -844,7 +844,7 @@ def get_all_players_my_series(teamid, filtered_teams_ids, my_svincoli_current_se
         'id', 'Surname', 'Name', 'Role', 'RealTeam__Name', 'Quotation',
         'bet__Amount', 'bet__Team_id__Name', 'bet__IsExpired',
         'bet__Carognata', 'bet__Expiration_Date',
-        'squads__Years', 'Quotation'
+        'squads__Years', 'Status'
     ).distinct('id')
 
 def get_players_my_series(filter_role, teamid, filtered_teams_ids, my_svincoli_current_session, my_market):
@@ -929,24 +929,18 @@ def get_my_best_bets(teamid, marketid):
 	
     qplayer = squads.Squads.objects.\
       filter(Q(Team_id=teamid) & Q(Quarantine=True)).first()
-
-    season = get_current_season()
-    old_squad_player = squads.Squads.objects.\
-      filter(Q(Season=season)).first()
     
     bets = bet.Bet.objects.\
         filter(Q(Team_id=teamid) & Q(Market_id=marketid)).\
-        values('Amount','Player_id','Player_id__Surname','Expiration_Date','Slot',
-               'IsRaised','IsExpired','id','Team_id','IsOfficial','Carognata', 
+        values('Amount','Expiration_Date', 'Session_id',
+               'IsExpired','id','Team_id','IsOfficial','Carognata', 
                'Player_id__Role', 'Player_id__RealTeam__Name', 
-               'Player_id__Quotation','squads__Years').distinct('Player_id')
+               'Player_id__Quotation', 'Player_id__Status', 'Player_id','Player_id__Surname',
+               'squads__Years').distinct('Player_id')
                
     if(qplayer is not None):
        bets = bets.exclude(Q(Player_id=qplayer.Player_id))
 
-    # if(old_squad_player is not None):
-    #    bets = bets.exclude(Q(Player_id=old_squad_player.Player_id))
-       
     return bets   
        
        
@@ -1190,8 +1184,21 @@ def check_day_already_started(day):
         return False, datetime.datetime.now(ZoneInfo('Europe/Rome'))
     return datetime.datetime.now(ZoneInfo('Europe/Rome')) >= day_time_limit, day_time_limit
 
-def free_player(bet_id, session_svincolo):
-    _bet = bet.Bet.objects.get(pk=int(bet_id))
+def free_player(data):
+    player_id = data.get("playerid")
+    team_id = data.get("teamid")
+    market = data.get("market")
+    session_svincolo = get_current_session(market).id if get_current_session(market) is not None else None
+    if player_id is None or team_id is None or market is None or session_svincolo is None:
+        return C.ErrorCodes.INVALID_PARAMETERS
+
+    _bet = bet.Bet.objects.filter(Q(Player=player_id) & 
+                                  Q(Team=team_id) &
+                                  Q(Market=market) &
+                                  Q(IsOfficial=True)).first()
+
+    if(_bet is None):
+        return C.ErrorCodes.BET_NOT_FOUND
 
     _squad = squads.Squads.objects.filter(
         Q(Team=_bet.Team_id) & 
@@ -1200,7 +1207,7 @@ def free_player(bet_id, session_svincolo):
     ).first()
 
     if(_squad is None):
-        return
+        return C.ErrorCodes.PLAYER_NOT_IN_SQUAD
     _squad.delete()
 
     bet_history_new = bet_history.Bet_History(

@@ -37,8 +37,6 @@ class AuctionView(LoginRequiredMixin, View):
             players_cc = [p for p in players_all if p['Role'] == 'C']
             players_fw = [p for p in players_all if p['Role'] == 'A']
 
-            # free_players = list(players_all)
-
             balance = U.get_balance(teamid)[0] #TODO: improve check
             balance_for_bets = U.get_balance_for_bets(teamid, balance['Purchases_max'], my_market)
             if(balance_for_bets is None): 
@@ -69,7 +67,6 @@ class AuctionView(LoginRequiredMixin, View):
                     'n_svincoli': n_svincoli,
                 },
                 'players': sorted(players_all, key=lambda p: (C.Constant_Dicts.RoleInts[p['Role']], p['Surname'])),
-                # 'free_players' : free_players,
                 'bids_history': U.get_bids_history(my_market),
                 'roster': list(mbb),
                 'session': {
@@ -195,12 +192,18 @@ class GetBalanceForBetsView(View):
 class FreePlayerView(View):
     def post(self, request):
         try:
-            bet_id = request.POST.get("bet_id")
-            session_svincolo = request.POST.get("session_svincolo")
-            if (bet_id is None): return
+            data = json.loads(request.body.decode('utf-8'))
+            if (data is None): return
             
-            msg = U.free_player(bet_id, session_svincolo)
-            
+            msg = U.free_player(data)
+
+            if (msg == C.ErrorCodes.BET_NOT_FOUND):
+                return JsonResponse({'error': 'PUNTATA NON TROVATA'}, status=400)
+            elif (msg == C.ErrorCodes.INVALID_PARAMETERS):
+                return JsonResponse({'error': 'PARAMETRI NON VALIDI'}, status=400)
+            elif (msg == C.ErrorCodes.PLAYER_NOT_IN_SQUAD):
+                return JsonResponse({'error': 'GIOCATORE NON NELLA SQUADRA'}, status=400)
+
             return JsonResponse({'message': msg})
         except Exception as e:
             return JsonResponse({'error': f'error freeing player: {e}'}, status=500)

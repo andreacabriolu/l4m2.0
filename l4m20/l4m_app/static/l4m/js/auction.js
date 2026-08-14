@@ -69,6 +69,8 @@ const ACTIONS = {
 
         free: {
             visible: f =>
+                f.roster === true &&
+                f.official === true &&
                 f.freeable === true
         },
 
@@ -295,6 +297,14 @@ function buildUndoBet(undoBet){
     return {
         player_id: undoBet.playerId,
         bet_id: undoBet.betId,
+    }
+}
+
+function buildFreeData(){
+    return {
+        playerid: AuctionState.currentPlayer.id,
+        teamid: AuctionState.userTeam.id,
+        market: AuctionState.market,
     }
 }
 
@@ -534,7 +544,31 @@ const AuctionAPI = {
         }
     },
 
-    freePlayer(){}
+    async freePlayer(){
+        const freeData = buildFreeData();
+
+        try {
+
+            const response = await apiExecute("/l4m/auction/freePlayer/", freeData);
+
+            player = AuctionState.getPlayer(AuctionState.currentPlayer.id);
+            player.IsOfficial = false;
+            player.flags = Auction.getPlayerFlags(player);
+
+            Auction.renderPlayerActions(player.flags);
+            Auction.removePlayerFromRoster();
+
+            bootstrap.Modal
+                .getInstance(document.getElementById("playerModal"))
+                ?.hide();
+
+        }
+        catch (err) {
+
+            showPopupErrorAlert(err);
+
+        }
+    }
 
 };
 
@@ -640,7 +674,7 @@ const Auction = {
             official: player.IsOfficial ?? false,
             carognata: player.Carognata ?? false,
             signed: (player.squads__Years != null) ?? false,
-            freeable: false, //TODO DEFINE,
+            freeable: (player.Status == "E" || player.Session_id != AuctionState.currentSession.id), //cannot free if bought in the current session
             editable: (player.EditableUntil && player.EditableUntil > Date.now()) ?? false
         };
     },
@@ -741,7 +775,9 @@ const Auction = {
                 player.bet__Amount = player.Amount;
                 player.bet__Team_id__Name = player.Player_id__Team_id__Name; //TODO: value this?
                 player.bet__Expiration_Date = player.Expiration_Date;
+                player.bet__Session_id = player.Session_id;
                 player.Quotation = player.Player_id__Quotation;
+                player.Status = player.Player_id__Status;
             }
         }
 
@@ -852,6 +888,18 @@ const Auction = {
 
         // AuctionState.players = AuctionState.players.filter(p => p.id != id);
 
+    },
+
+    removePlayerFromRoster(){
+        
+        document
+            .querySelector(`.roster-card[data-id="${AuctionState.currentPlayer.id}"]`)
+            ?.remove();
+    
+        document
+            .querySelector(`.roster-section[data-role="${AuctionState.currentPlayer.Role}"] .roster-counter`)
+            .textContent = `${AuctionState.n_players_by_role[AuctionState.currentPlayer.Role]}/${ROSTER_LIMITS[AuctionState.currentPlayer.Role]}`;
+        
     },
 
     renderPlayerModal(playerStatus){
@@ -1228,6 +1276,10 @@ const Auction = {
 
             .on("click", "#bidHistoryToggle",
                 this.onExpandBidHistory.bind(this))
+
+            .on("click", "#btnFree",
+                AuctionAPI.freePlayer.bind(AuctionAPI)
+            )
 
             ;
 

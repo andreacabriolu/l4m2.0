@@ -80,6 +80,8 @@ class SendBetReturnValues:
 class ErrorCodes:
     ALREADY_OFFICIAL = -1
     PLAYER_NOT_IN_SQUAD = -2
+    BET_NOT_FOUND = -3
+    INVALID_PARAMETERS = -4
 
 class Events:
     GOAL_TAKEN = 'GG'
