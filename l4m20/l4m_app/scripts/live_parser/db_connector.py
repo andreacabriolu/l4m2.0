@@ -56,7 +56,8 @@ class DB_Connector:
             \"RealTeam_id\" = excluded.\"RealTeam_id\",
             \"Status\" = excluded.\"Status\",
             \"Quotation\" = excluded.\"Quotation\",
-            \"ModifiedOn\" = NOW()
+            \"ModifiedOn\" = NOW(),
+            \"JustModified\" = TRUE
         """
         self.cur.execute(upsert_q, (surname, role, realteam_id, 'A', quotation))
 

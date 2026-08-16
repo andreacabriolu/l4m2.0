@@ -20,6 +20,7 @@ class Player(models.Model):
     RealTeam = models.ForeignKey(on_delete=models.CASCADE,to=C.Constant_Strings.real_team, null=True)
     Quotation = models.IntegerField(null=True)
     ModifiedOn = models.DateTimeField(auto_now=True, null=True)
+    JustModified = models.BooleanField(default=False, null=True)
     
     def __str__(self):
         return self.Surname

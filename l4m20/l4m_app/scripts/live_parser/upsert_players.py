@@ -30,6 +30,10 @@ count_inserted = 0
 
 realteams_cache = dict(U.get_realteams(conn))
 
+# Clean the JustModified flag for all players before the upsert operation
+conn.update("l4m_app_player", "\"JustModified\" = FALSE", "1=1", ())
+conn.commit()
+
 for _, row in df.iterrows():
     nome = U.clean_name(str(row["Nome"]).strip())
     squadra = str(row["Squadra"]).strip() if pd.notna(row["Squadra"]) else ""
@@ -37,6 +41,11 @@ for _, row in df.iterrows():
     quotazione = int(row["Quotazione"]) if pd.notna(row["Quotazione"]) else 0
 
     conn.upsert_player(nome, ruolo, realteams_cache.get(squadra), quotazione)  # Inserisce il giocatore se non esiste già
+
+conn.commit()
+
+#Imposta estero i giocatori non modificati dall'inserimento
+conn.update("l4m_app_player", "\"Status\" = 'E'", "\"JustModified\" = FALSE", ())
 
 # Salva le modifiche e chiudi
 conn.commit()
