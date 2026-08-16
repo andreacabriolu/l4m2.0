@@ -39,7 +39,10 @@ class AllAuctionsView(LoginRequiredMixin, View):
         
         for _team in filtered_teams:
             qplayer = squads.Squads.objects.\
-             filter(Q(Team_id=_team.id) & Q(Quarantine=True)).first()
+             filter(
+                 Q(Team_id=_team.id) & 
+                 Q(Quarantine=True) &
+                 Q(Season_id__Active=True)).first()
             
             if(qplayer):
                 idq = qplayer.Player_id
