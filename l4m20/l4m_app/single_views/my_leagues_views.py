@@ -40,20 +40,26 @@ class MyLeaguesNoMatchView(LoginRequiredMixin, View):
         comp = competition.Competition.objects.get(id=competition_id)
         logo_path = comp.LogoPath
         
-        groups_data = U.get_groups_data_no_competition(competition_id)
         # ~ bracket_data = U.get_bracket_data_no_competition(competition_id)
 
         # ~ groups_data = U.get_groups_data_for_competition(competition_id)
         # ~ bracket_data = U.get_bracket_data_for_competition(competition_id)
+ 
+        # Retrieve the flat matchday records
+        league_records = U.get_panchina_doro_flat_data(competition_id)
+        
+        print("AAA")
+        print(league_records)
 
         params = {
-            'comp' : comp,
-            'logo_path': logo_path,
-            'current_stage': 'Girone', #TODO restore U.get_current_stage(competition_id),
-            'groups_data': U.get_groups_data_for_competition(competition_id),
-            'bracket_data': U.get_bracket_data_for_competition(competition_id),
+            'comp': comp,
+            'logo_path': comp.LogoPath,
+            'current_stage': 'Girone',
+            'league_records': league_records,  # Structured list of dicts
+            'bracket_data': [],                # Disabled for non-match views
+            'is_no_match': True,
         }
-        
+                
         return render(request, self.template_name, params)
     
 class RetrieveCalendarInfoView(View):

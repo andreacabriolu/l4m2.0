@@ -1,27 +1,118 @@
-<table class="pdoro-table w-100">
+<table class="pdoro-table w-100" id="panchinaDoroTable">
     <thead>
         <tr>
             <th class="col-pos">#</th>
-            <th class="col-team">Squadra</th>
-            <th class="col-pts">Coeff</th>
-            <th>Coeff Avg</th>
+            <th class="col-team text-start">Squadra</th>
+            <th class="text-center">Coeff Avg <small class="text-muted">(Click per dettagli)</small></th>
         </tr>
     </thead>
     <tbody>
-        {% for team in group.ranking %}
-        <!-- <tr class="
-            {% if forloop.counter <= 2 %}qualified{% endif %}
-            {% if forloop.last %}relegated{% endif %}
-        "> -->
-        <tr>
+        {% for record in league_records %}
+        <!-- Main Team Summary Row -->
+        <tr class="main-team-row">
             <td class="col-pos">{{ forloop.counter }}</td>
-            <td class="col-team">
-                <span class="team-name">{{ team.team }}</span>
+            <td class="col-team text-start">
+                <span class="team-name">{{ record.team }}</span>
             </td>
-            <td class="col-pts">{{ team.pdo }}</td>
-            <td>{{ team.pdoav }}</td>
+            <!-- Clickable Average Cell formatted to 3 decimal places -->
+            <td class="text-center toggle-drawer-cell" data-target="#drawer-{{ record.team_id }}">
+                <span class="badge bg-primary fs-6 pdo-avg-badge">
+                    {{ record.pdoav|floatformat:3 }} <i class="bi bi-chevron-down ms-1"></i>
+                </span>
+            </td>
+            <td class="text-center"><strong>{{ record.total_pts|floatformat:3 }}</strong></td>
+        </tr>
+        
+        <!-- Expandable Detail Drawer -->
+        <tr id="drawer-{{ record.team_id }}" class="daily-detail-drawer d-none">
+            <td colspan="4" class="p-0">
+                <div class="daily-breakdown-container p-3">
+                    <div class="small fw-bold text-muted uppercase mb-2">Punteggi Giornata per Giornata:</div>
+                    
+                    <div class="day-grid-7">
+                        {% for day_stat in record.daily_scores %}
+                            <div class="day-score-pill">
+                                <span class="day-label">G.{{ day_stat.day }}:</span>
+                                <!-- Individual Matchday Score formatted to 3 decimal places -->
+                                <span class="score-val">{{ day_stat.pts|floatformat:3 }}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+        
+                </div>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4" class="text-center py-3">Nessun dato disponibile.</td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
 
+<!-- CSS dedicato -->
+<style>
+/* Container forcing exactly 7 equal columns */
+.day-grid-7 {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* 7 items per row */
+    gap: 0.5rem; /* Space between pills */
+}
+
+/* Responsive adjustment for mobile screens */
+@media (max-width: 768px) {
+    .day-grid-7 {
+        grid-template-columns: repeat(4, 1fr); /* 4 per row on mobile */
+    }
+}
+
+@media (max-width: 480px) {
+    .day-grid-7 {
+        grid-template-columns: repeat(2, 1fr); /* 2 per row on small phones */
+    }
+}
+
+/* Individual Pill Adjustments */
+.day-score-pill {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.35rem 0.55rem;
+    border-radius: 8px;
+    background: #262c37;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+.day-score-pill .day-label {
+    color: #94a3b8;
+    font-weight: 600;
+}
+
+.day-score-pill .score-val {
+    color: #edf2f7;
+    font-weight: 700;
+}
+</style>
+
+<!-- JavaScript per l'espansione -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.toggle-drawer-cell').forEach(function(cell) {
+            cell.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-target');
+                const drawerRow = document.querySelector(targetId);
+                const chevron = this.querySelector('i');
+
+                if (drawerRow) {
+                    drawerRow.classList.toggle('d-none');
+                    if (chevron) {
+                        chevron.classList.toggle('bi-chevron-down');
+                        chevron.classList.toggle('bi-chevron-up');
+                    }
+                }
+            });
+        });
+    });
+</script>
