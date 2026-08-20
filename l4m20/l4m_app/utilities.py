@@ -1197,7 +1197,7 @@ def cleanJSON(jsonData):
     return jsonData    
 
 def check_day_already_started(day):
-    today_matches = real_calendar.Real_calendar.objects.filter(Day=day).values('Date').order_by('Date')
+    today_matches = real_calendar.Real_calendar.objects.filter(Q(Day=day) & Q(Season__Active=True)).values('Date').order_by('Date')
     day_time_limit = today_matches.first()['Date'].astimezone(ZoneInfo(key='Europe/Rome')) if len(today_matches) > 0 else None
     if day_time_limit is None:
         return False, datetime.datetime.now(ZoneInfo('Europe/Rome'))
