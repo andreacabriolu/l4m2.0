@@ -27,7 +27,7 @@ def LineupView_(request):
     teamid = user_team['id']
     mods = C.Constant_Lists.Modules
     current_day = U.get_current_day()
-    my_series = U.get_all_my_series(teamid)
+    # my_series = U.get_all_my_series(teamid)
 
     day_already_started, day_time_limit = U.check_day_already_started(current_day)
     
@@ -38,7 +38,7 @@ def LineupView_(request):
 
     for gk in players_gk:
         pl_realteamid = gk['Player__RealTeam__id']
-        real_match = real_calendar.Real_calendar.objects.filter(Q(Day=current_day) & \
+        real_match = real_calendar.Real_calendar.objects.filter(Q(Day=current_day) & Q(Season__Active=True) & \
                                                         (Q(RealTeamHome_id=pl_realteamid) | Q(RealTeamAway_id=pl_realteamid)))
         if(len(real_match) <= 0):
             continue
@@ -47,7 +47,7 @@ def LineupView_(request):
 
     for df in players_def:
         pl_realteamid = df['Player__RealTeam__id']
-        real_match = real_calendar.Real_calendar.objects.filter(Q(Day=current_day) & \
+        real_match = real_calendar.Real_calendar.objects.filter(Q(Day=current_day) & Q(Season__Active=True) & \
                                                         (Q(RealTeamHome_id=pl_realteamid) | Q(RealTeamAway_id=pl_realteamid)))
         if(len(real_match) <= 0):
             continue
@@ -56,7 +56,7 @@ def LineupView_(request):
 
     for cc in players_cc:
         pl_realteamid = cc['Player__RealTeam__id']
-        real_match = real_calendar.Real_calendar.objects.filter(Q(Day=current_day) & \
+        real_match = real_calendar.Real_calendar.objects.filter(Q(Day=current_day) & Q(Season__Active=True) & \
                                                         (Q(RealTeamHome_id=pl_realteamid) | Q(RealTeamAway_id=pl_realteamid)))
         if(len(real_match) <= 0):
             continue
@@ -65,7 +65,7 @@ def LineupView_(request):
 
     for fw in players_fw:
         pl_realteamid = fw['Player__RealTeam__id']
-        real_match = real_calendar.Real_calendar.objects.filter(Q(Day=current_day) & \
+        real_match = real_calendar.Real_calendar.objects.filter(Q(Day=current_day) & Q(Season__Active=True) & \
                                                         (Q(RealTeamHome_id=pl_realteamid) | Q(RealTeamAway_id=pl_realteamid)))
         if(len(real_match) <= 0):
             continue
@@ -74,7 +74,6 @@ def LineupView_(request):
 
     players_my = list(players_def) + list(players_cc)+ list(players_fw)
     players_all = players_my + list(players_gk)
-    # all_competitions = U.get_my_lineup_active_competitions(my_series, current_day)
     all_competitions = U.get_my_lineup_competitions_from_calendar(teamid, current_day)
 
     if(len(request.POST) > 0 and 'jsonData' in request.POST):
@@ -83,7 +82,7 @@ def LineupView_(request):
     else:
         competition_id=1
 
-    late_lineup = U.check_late_lineup(teamid, current_day, competition_id)
+    late_lineup = U.check_late_lineup(teamid, current_day, competition_id) #TODO: check this
     overtime = U.check_competition_overtime(competition_id, current_day)
     
     params = { 

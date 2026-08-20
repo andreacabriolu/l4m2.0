@@ -544,7 +544,8 @@ def is_single_match_knockout(cc):
     return (cc.HomeAway == False) & (cc.Overtime == True) if cc is not None else False
 
 def check_competition_overtime(competition_id, day):
-    cc = competition_calendar.CompetitionCalendar.objects.filter(Q(Competition=competition_id) & Q(Day=day)).values('Overtime')
+    cc = competition_calendar.CompetitionCalendar.objects.filter(
+        Q(Competition=competition_id) & Q(Day=day) & Q(Season__Active=True)).values('Overtime')
     return cc.first()['Overtime'] if len(cc) > 0 else False
 
 def check_late_lineup(teamid, day, competition_id):
@@ -678,7 +679,7 @@ def get_my_lineup_competitions_from_calendar(teamid, day):
     return competition.Competition.objects.filter(Q(Lineup=True) & \
         Q(id__in=matches_calendar.MatchesCalendar.objects.filter(
             (Q(HomeTeam=teamid) | Q(AwayTeam=teamid)) &
-            Q(CompetitionCalendar__Day=day)
+            Q(CompetitionCalendar__Day=day) & Q(CompetitionCalendar__Season__Active=True)
         ).values_list('CompetitionCalendar__Competition', flat=True).distinct()
         )
     )
@@ -731,7 +732,8 @@ def get_my_series_from_calendar(teamid, competitionid, day):
         Q(Competition=competitionid) &
         Q(id__in=matches_calendar.MatchesCalendar.objects.filter(
             (Q(HomeTeam=teamid) | Q(AwayTeam=teamid)) &
-            Q(CompetitionCalendar__Day=day)
+            Q(CompetitionCalendar__Day=day ) &
+            Q(CompetitionCalendar__Season__Active=True)
         ).values_list('Series', flat=True).distinct())
     )
 
