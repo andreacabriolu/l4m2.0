@@ -466,7 +466,9 @@ def is_series_girone(series_id):
 
 def get_competition_series_stages_days_mapping():
     mapping = {}
-    all_cc = competition_calendar.CompetitionCalendar.objects.all().select_related('competition')\
+    all_cc = competition_calendar.CompetitionCalendar.objects.filter(
+        Q(Season__Active=True)
+    ).select_related('competition')\
         .values('Competition_id','Day','Stage','Competition_id__Name').order_by('Day')
 
     for cc in all_cc:
@@ -557,7 +559,7 @@ def check_late_lineup(teamid, day, competition_id):
  
 
 def get_day_comps_lineups(day):
-    teams = team.Team.objects.all().values('id','Name')
+    teams = team.Team.objects.filter(Active=True).values('id','Name')
     team_lups_comps = {}
 
     for t in teams:
@@ -570,16 +572,21 @@ def get_day_comps_lineups(day):
     return team_lups_comps
 
 def get_my_lineups_competitions_by_day(teamid, day):
-    return lineup.Lineup.objects.filter(Q(Team=teamid) & Q(Day=day)).values('Series_id__Competition_id')
+    return lineup.Lineup.objects.filter(
+        Q(Team=teamid) & Q(Day=day) & Q(Series__Season__Active=True)).values('Series_id__Competition_id')
 
 def get_my_lineups_by_day_distinct(teamid, day):
-    return lineup.Lineup.objects.filter(Q(Team=teamid) & Q(Day=day)).aggregate(nlin=Count('Series_id', distinct=True))
+    return lineup.Lineup.objects.filter(
+        Q(Team=teamid) & Q(Day=day) & Q(Series__Season__Active=True)
+    ).aggregate(nlin=Count('Series_id', distinct=True))
 
 def get_my_active_competitions_filtered(teamid, day):
     return competition.Competition.objects.filter(Q(Active=True) & \
-                                                  Q(Lineup=True) & \
-                                                  Q(team_competition__Team_id=teamid) & \
-                                                  Q(competitioncalendar__Day=day))
+        Q(Lineup=True) & \
+        Q(team_competition__Team_id=teamid) & \
+        Q(competitioncalendar__Day=day) & \
+        Q(competitioncalendar__Season__Active=True)
+    )
 
 def get_results_calendar(series_id, day):
     results = []
@@ -644,7 +651,11 @@ def get_ranking(c_id, s_id, day):
     return r
 
 def get_days(c_id):
-    return competition_calendar.CompetitionCalendar.objects.filter(Q(Competition=c_id)&Q(Suspended=False)).values('Day')
+    return competition_calendar.CompetitionCalendar.objects.filter(
+        Q(Competition=c_id)&
+        Q(Suspended=False) & 
+        Q(Season__Active=True)
+    ).values('Day')
 
 def get_competition_by_id(id):
     return competition.Competition.objects.get(pk=id)
