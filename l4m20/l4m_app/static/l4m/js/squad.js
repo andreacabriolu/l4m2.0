@@ -58,14 +58,14 @@ function fillSingleTeamTable() {
                     .toLowerCase()
                     .trim()
                     .replace(/'/g, '')
+                    .replace(/_/g, '-')   // Replaces underscores with dashes (e.g., pellegrino_ma -> pellegrino-ma)
                     .replace(/\s+/g, '-');
                 
                 const avatarUrl = `https://static-players.fantamaster.it/resized/${cleanName}.png`;
-                const defaultImg = 'https://static-players.fantamaster.it/player.png';
+                const defaultImg = 'https://static-players.fantamaster.it/resized/player.png';
 
                 avatarImg = `<div class="avatar-circle"><img class="player-avatar" src="${avatarUrl}" alt="" style="width: 45px; height: 45px; object-fit: contain;" onerror="this.onerror=null; this.src='${defaultImg}';"></div>`;
             }
-
             // Safe team logo formatting (aligned inline without creating a new column)
             const realTeamName = player.Player__RealTeam__Name || '';
             let teamCellContent = '';
