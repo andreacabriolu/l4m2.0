@@ -4,11 +4,16 @@
 
 /* Container principale della pagina */
 .main-div {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    display: block; /* Modificato da flex per permettere lo sticky della finestra */
     background-color: #181d24; /* Nero/Scuro morbido coerente col resto */
     padding: 1.5rem;
+}
+
+/* Wrapper attorno alla tabella */
+#allTeamsDiv,
+#allTeamsDiv > div {
+    width: 100%;
+    overflow: visible !important; /* Deve essere visible per far funzionare lo sticky */
 }
 
 /* Stile della tabella principale */
@@ -18,12 +23,12 @@
     margin: 20px auto;
     width: 100%;
     max-width: 1400px;
-    background: #20252e; /* Sfondo scuro delle card del secondo CSS */
+    background: #20252e;
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 16px;
-    overflow: hidden;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
     color: #edf2f7 !important;
+    overflow: visible !important; /* Rimosso hidden che bloccava position: sticky */
 }
 
 /* Intestazioni e Celle generali */
@@ -36,10 +41,14 @@
     font-size: 0.9rem;
 }
 
-/* Header delle colonne / Intestazione squadre */
+/* Header STICKY sulla finestra del browser */
 #allTeamsTable th,
 #allTeamsTable th.team-header {
-    background: linear-gradient(90deg, rgba(79, 140, 255, 0.12), transparent);
+    position: -webkit-sticky !important;
+    position: sticky !important;
+    top: 0; /* Se la tua navbar in alto è fissa, cambia in top: 56px (o l'altezza della navbar) */
+    z-index: 99;
+    background: #20252e !important; /* Sfondo solido obbligatorio */
     color: #4f8cff !important;
     font-weight: 700;
     text-transform: uppercase;

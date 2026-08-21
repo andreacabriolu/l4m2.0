@@ -1114,15 +1114,25 @@ def get_user_team(userid):
     return team.Team.objects.filter(Users__id=userid).values('id','Name','LogoPath')[0]
 
 def get_my_players_filtered(filter_role, teamid):
-
     return squads.Squads.objects.\
         filter(Team_id=teamid).\
         filter(Player__Role=filter_role).\
         filter(Quarantine=False).\
         filter(Season__Active=True).\
-        values('id','Player__id','Player__Surname','Player__RealTeam__Name','Amount','Player__Role', 'Player__RealTeam__id').\
+        values(
+            'id',
+            'Player__id',
+            'Player__Surname',
+            'Player__RealTeam__Name',
+            'Amount',
+            'Player__Role',
+            'Player__RealTeam__id',
+            'Years',   # <--- ADD THIS
+            'Salary'   # <--- ADD THIS
+        ).\
         order_by('Player__Surname')
-
+        
+        
 def complete_list(l, num_max, role):
     if(len(l) < num_max):
         for _ in range(num_max - len(l)):
