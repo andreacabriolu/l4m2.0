@@ -31,15 +31,17 @@
     overflow: visible !important; /* Rimosso hidden che bloccava position: sticky */
 }
 
-/* Intestazioni e Celle generali */
+/* Ensure all table headers and cells are perfectly centered vertically */
 #allTeamsTable th, 
 #allTeamsTable td {
     border: 1px solid rgba(255, 255, 255, 0.05);
-    padding: 12px 14px;
+    padding: 10px 14px;
     text-align: center;
+    vertical-align: middle !important; /* <--- ADD THIS */
     color: #eef2f7 !important;
     font-size: 0.9rem;
 }
+
 
 /* Header STICKY sulla finestra del browser */
 #allTeamsTable th,
@@ -140,4 +142,34 @@
     border-bottom: none;
     border-radius: 16px 16px 0 0;
     text-align: center;
+}
+
+/* Flexible container to keep team content centered in cell but aligned internally */
+.team-cell-container {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    width: 130px; /* Fixed width ensures all team names align vertically */
+    text-align: left;
+}
+
+/* Fixed width container for logo slot */
+.team-logo-wrap {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.team-logo-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.team-name-text {
+    white-space: nowrap;
 }

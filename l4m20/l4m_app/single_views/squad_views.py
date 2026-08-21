@@ -19,14 +19,6 @@ class SquadView(LoginRequiredMixin, View):
         myseries=series_mine[0].Name
         uname='-'
 
-        
-        # 1. Total count of players in DB
-        print("Total Players:", player.Player.objects.count())
-        
-        # 2. Inspect all field names and foreign relations on the Player model
-        print("\n--- PLAYER FIELDS & RELATIONS ---")
-        for f in player.Player._meta.get_fields():
-            print(f"{f.name} -> {f.get_internal_type() if hasattr(f, 'get_internal_type') else 'Relation'}")
                 
         tinfo = {"team_name": tname,"team_series": myseries,"team_user":uname}
         
