@@ -417,7 +417,8 @@ def get_lineup_to_show(_team, day, comp_id, overtime):
 def get_my_couples_from_calendar(teamid, day):
     return matches_calendar.MatchesCalendar.objects.filter(
         (Q(HomeTeam=teamid) | Q(AwayTeam=teamid)) &
-        Q(CompetitionCalendar__Day=day)
+        Q(CompetitionCalendar__Day=day) & 
+        Q(CompetitionCalendar__Season__Active=True)
     )
 
 def format_votes(mr):

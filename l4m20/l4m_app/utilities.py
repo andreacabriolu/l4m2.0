@@ -704,22 +704,24 @@ def get_my_competitions(my_series):
     return competition.Competition.objects.filter(series__id__in=my_series)
 
 def get_overtime_penalties(competitionid, day):
-    cc= competition_calendar.CompetitionCalendar.objects.filter(Q(Competition=competitionid)&Q(Day=day)).values('Overtime','Penalties')
+    cc= competition_calendar.CompetitionCalendar.objects.filter(
+        Q(Competition=competitionid)&Q(Day=day) & Q(Season__Active=True)).values('Overtime','Penalties')
     return cc.first()['Overtime'] if len(cc)>0 else False #here we assume that if overtime is true, penalties are true too
 
 def get_penalties(competitionid, day):
-    cc= competition_calendar.CompetitionCalendar.objects.filter(Q(Competition=competitionid)&Q(Day=day)).values('Penalties')
+    cc= competition_calendar.CompetitionCalendar.objects.filter(Q(Competition=competitionid)&Q(Day=day) & Q(Season__Active=True)).values('Penalties')
     return cc.first()['Penalties'] if len(cc)>0 else False
 
 def get_homeaway(competitionid, day):
-    cc= competition_calendar.CompetitionCalendar.objects.filter(Q(Competition=competitionid)&Q(Day=day)).values('HomeAway')
+    cc= competition_calendar.CompetitionCalendar.objects.filter(Q(Competition=competitionid)&Q(Day=day) & Q(Season__Active=True)).values('HomeAway')
     return cc.first()['HomeAway'] if len(cc)>0 else False
 
 def get_all_series_from_calendar(competitionid, day):
     return series.Series.objects.filter(
         id__in=matches_calendar.MatchesCalendar.objects.filter(
             Q(CompetitionCalendar__Competition=competitionid) &
-            Q(CompetitionCalendar__Day=day)
+            Q(CompetitionCalendar__Day=day) &
+            Q(CompetitionCalendar__Season__Active=True)
         ).values_list('Series', flat=True).distinct()
     )
 

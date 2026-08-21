@@ -378,8 +378,8 @@ def LiveView(request, competition_id, series_id, day):
                 if(len(l) <= 0 and overtime): #overtime (day started)
                     last_valid_l = U.get_last_valid_lineup(t)
 
-                if last_valid_l is None:
-                    continue #TODO: create random lineup?
+                    if last_valid_l is None:
+                        continue #TODO: create random lineup?
 
                 lineup_to_show = t.Name #base
 
