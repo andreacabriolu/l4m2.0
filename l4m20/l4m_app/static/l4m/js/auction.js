@@ -67,6 +67,13 @@ const ACTIONS = {
                 f.signed === false
         },
 
+        editContract: {
+            visible: f =>
+                f.roster === true &&
+                f.official === true &&
+                f.signed === true
+        },
+
         free: {
             visible: f =>
                 f.roster === true &&
@@ -176,28 +183,6 @@ function validateMinMaxBid(newamount, min, max) {
         }
 
         return true;
-}
-
-function getStateClass(player){
-        className = "state-bidding";
-
-        if (player.Roster) { 
-            if (player.EditableUntil) {
-                className = "state-editable";
-            }
-            else if (!player.IsOfficial && !player.IsExpired && !player.Carognata) {
-                className = "state-bidding";
-            } 
-        } else if (player.IsOfficial) {
-            className = "state-official";
-        } else if (player.IsExpired) {
-            className = "state-expired";
-        } else if (player.Carognata) {
-            className = "state-carognata";
-        }
-
-        return className;
-    
 }
 
 function buildBet(){
@@ -338,7 +323,7 @@ function getPlayerStatus(player, flags = null, expiration_date = null) {
     if (flags.roster === true &&
         flags.official === true &&
         flags.signed === true) {
-        return ["SOTTO CONTRATTO", "state-official"]; //TODO: check signed color
+        return ["SOTTO CONTRATTO", "state-contract"];
     }
     
     return [getRemainingTime(expiration_date ?? player.bet__Expiration_Date ?? "-"), "state-bidding"]; //default
@@ -372,6 +357,17 @@ function startCountdown(undoBet) {
             `Annulla puntata (${remaining} secondi)`;
 
     },250);
+
+}
+
+function evaluate(playerStatus, player) {
+
+    if (playerStatus === "SOTTO CONTRATTO") {
+        y = parseInt(player.squads__Years);
+        return y + (y === 1 ? " ANNO" : " ANNI");
+    }
+
+    return playerStatus;
 
 }
 
@@ -513,6 +509,26 @@ const AuctionAPI = {
             .show();
     },
 
+    showEditContractModal(){
+
+        const modal = document.getElementById("editContractModal");
+
+        modal.querySelector(".contract-name").textContent = AuctionState.currentPlayer.Surname;
+
+        const currentYears = AuctionState.currentPlayer.squads__Years;
+        modal.querySelectorAll(".contract-option").forEach(card => {
+            if (parseInt(card.dataset.years) === currentYears) {
+                card.classList.add("active");
+            } else {
+                card.classList.remove("active");
+            }
+        });
+
+        bootstrap.Modal
+            .getOrCreateInstance(modal)
+            .show();
+    },
+
     async signContract() {
         const contractData = buildContractData();
 
@@ -568,7 +584,13 @@ const AuctionAPI = {
             showPopupErrorAlert(err);
 
         }
-    }
+    },
+
+    async editContract() {
+    
+        const contractData = buildContractData();
+
+    },
 
 };
 
@@ -815,7 +837,7 @@ const Auction = {
         expiration_date = player.bet__Expiration_Date ?? player.Expiration_Date ?? "-";
         const [playerStatus, playerClass] = getPlayerStatus(player, flags, expiration_date);
         modal.querySelector(".player-expiration")
-            .textContent = playerStatus;
+            .textContent = evaluate(playerStatus, player);
 
         const bidInput = modal.querySelector("#modalBid");
 
@@ -944,8 +966,6 @@ const Auction = {
         const card=document.createElement("div");
 
         card.className="roster-card";
-
-        // card.classList.add(getStateClass(player));
 
         card.dataset.id = player.Player_id;
         card.dataset.role = role;
@@ -1265,6 +1285,9 @@ const Auction = {
 
             .on("click", "#btnContract",
                 AuctionAPI.showContractModal.bind(AuctionAPI))
+
+            .on("click", "#btnEditContract",
+                AuctionAPI.showEditContractModal.bind(AuctionAPI))
 
             .on("click", "#btnSignContract",
                 AuctionAPI.signContract.bind(AuctionAPI))

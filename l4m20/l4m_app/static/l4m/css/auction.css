@@ -1307,6 +1307,10 @@
     border-left:4px solid #16a34a;
 }
 
+.roster-card.state-contract{
+    border-left:4px solid #d8d2e1;
+}
+
 .state-bidding{
 
     border-left-color:var(--auction-open);
@@ -1727,5 +1731,265 @@
     color: #55c878;
 }
 
+/* ==========================================================
+   MODIFICA CONTRATTO
+   ========================================================== */
 
+.edit-contract-modal {
+    overflow: hidden;
+}
+
+
+/* Header */
+
+.edit-contract-modal .modal-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.edit-contract-modal .modal-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.edit-contract-modal .modal-title i {
+    font-size: 1.1rem;
+    opacity: 0.85;
+}
+
+
+/* Player */
+
+.edit-contract-modal .contract-player {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    padding: 14px 16px;
+    margin-bottom: 22px;
+
+    border-radius: 12px;
+
+    background: rgba(255, 255, 255, 0.045);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.contract-player-icon {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.08);
+
+    font-size: 1.1rem;
+}
+
+.contract-player-label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    opacity: 0.5;
+}
+
+.edit-contract-modal .contract-name {
+    margin-top: 2px;
+
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+
+/* Contratto attuale */
+
+.current-contract {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 13px 16px;
+    margin-bottom: 24px;
+
+    border-radius: 10px;
+
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.current-contract-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    opacity: 0.55;
+}
+
+.current-contract-value {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+.current-contract-unit {
+    font-size: 0.75rem;
+    font-weight: 500;
+    opacity: 0.55;
+}
+
+
+/* Label */
+
+.edit-contract-modal .contract-label {
+    margin-bottom: 10px;
+
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+
+    opacity: 0.65;
+}
+
+
+/* Durate */
+
+.edit-contract-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+
+    margin-bottom: 20px;
+}
+
+.edit-contract-options .contract-option {
+    position: relative;
+
+    min-height: 88px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    background: rgba(255, 255, 255, 0.035);
+
+    color: inherit;
+
+    cursor: pointer;
+
+    transition:
+        background 0.18s ease,
+        border-color 0.18s ease,
+        transform 0.18s ease;
+}
+
+.edit-contract-options .contract-option:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(255, 255, 255, 0.18);
+}
+
+.edit-contract-options .contract-option:active {
+    transform: scale(0.97);
+}
+
+.edit-contract-options .contract-option.active {
+    background: rgba(13, 110, 253, 0.15);
+    border-color: rgba(13, 110, 253, 0.75);
+    box-shadow: 0 0 0 1px rgba(13, 110, 253, 0.12);
+}
+
+.edit-contract-options .years {
+    font-size: 1.7rem;
+    line-height: 1;
+    font-weight: 700;
+}
+
+.edit-contract-options .label {
+    margin-top: 5px;
+
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+
+    opacity: 0.55;
+}
+
+
+/* Informazione */
+
+.edit-contract-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+
+    padding: 11px 13px;
+
+    border-radius: 9px;
+
+    background: rgba(255, 255, 255, 0.035);
+
+    font-size: 0.75rem;
+    line-height: 1.45;
+
+    opacity: 0.65;
+}
+
+.edit-contract-info i {
+    margin-top: 1px;
+
+    flex-shrink: 0;
+
+    font-size: 0.9rem;
+}
+
+
+/* Footer */
+
+.edit-contract-modal .modal-footer {
+    gap: 8px;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.edit-contract-modal .modal-footer .btn {
+    border-radius: 9px;
+}
+
+
+/* Mobile */
+
+@media (max-width: 576px) {
+
+    .edit-contract-modal .modal-body {
+        padding: 18px;
+    }
+
+    .edit-contract-modal .modal-footer {
+        padding: 12px 18px;
+    }
+
+    .edit-contract-options {
+        gap: 7px;
+    }
+
+    .edit-contract-options .contract-option {
+        min-height: 78px;
+    }
+
+    .edit-contract-options .years {
+        font-size: 1.5rem;
+    }
+
+}
 
