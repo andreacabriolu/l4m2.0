@@ -497,11 +497,13 @@ def get_competition_series_stages_days_mapping():
     return mapping
 
 def get_official_current_day(day_time_boundaries, teamid):
+    _market = get_my_market(teamid)
     official = bet.Bet.objects.filter(
         Q(Team=teamid) &
         Q(IsOfficial=True) &
         Q(Expiration_Date__gte=day_time_boundaries[0]) &
-        Q(Expiration_Date__lte=day_time_boundaries[1])
+        Q(Expiration_Date__lte=day_time_boundaries[1]) &
+        Q(Market=_market.id)
     ).values('Player_id')
     
     return [o['Player_id'] for o in official]
@@ -514,17 +516,20 @@ def is_live_day():
     return current_day_boundaries[0] <= now <= current_day_boundaries[1]
 
 def get_svincoli_current_day(day_time_boundaries, teamid):
+    _market = get_my_market(teamid)
     svincoli = bet_history.Bet_History.objects.filter(
         Q(Svincolo=True) &
         Q(Team=teamid) &
         Q(Time__gte=day_time_boundaries[0]) &
-        Q(Time__lte=day_time_boundaries[1])
+        Q(Time__lte=day_time_boundaries[1]) &
+        Q(Market=_market.id)
     ).values('Player_id')
     
     return [s['Player_id'] for s in svincoli]
 
 def get_current_day_boundaries(current_day):
-    today_matches = real_calendar.Real_calendar.objects.filter(Day=current_day).values('Date').order_by('Date')
+    today_matches = real_calendar.Real_calendar.objects.filter(Q(Day=current_day)&
+                                                               Q(Season__Active=True)).values('Date').order_by('Date')
     if len(today_matches) == 0:
         return (None, None)
     day_time_start = today_matches.first()['Date'].astimezone(ZoneInfo(key='Europe/Rome')) if len(today_matches) > 0 else None

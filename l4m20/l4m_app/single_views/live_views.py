@@ -245,7 +245,7 @@ class LiveB11View(LoginRequiredMixin, View):
     def get(self, request):
         current_day = U.get_current_day()
         
-        team_ids_names = team.Team.objects.values_list("id", "Name")
+        team_ids_names = team.Team.objects.filter(Active=True).values_list("id", "Name")
 
         live_votes, live_teams, already_played_teams = LU.get_live_votes(int(current_day))
         
