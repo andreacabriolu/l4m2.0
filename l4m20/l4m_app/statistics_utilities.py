@@ -75,7 +75,9 @@ def get_real_match_string(day, real_team_id):
     return match_name
 
 def get_player_statistics_per_day(player_id):
-    stats = vote.Vote.objects.filter(Q(Player_id=player_id) & Q(Day__gt=0)).order_by('Day')
+    stats = vote.Vote.objects.filter(Q(Player_id=player_id) & 
+                                     Q(Day__gt=0)&
+                                     Q(Season__isnull=True)).order_by('Day')
     _player = player.Player.objects.get(pk=player_id)
 
     if len(stats) <= 0:
@@ -128,7 +130,10 @@ def get_player_statistics_per_day(player_id):
 
 def aggregate_player_statistics(player_id):
     _player = player.Player.objects.get(pk=player_id)
-    stats = vote.Vote.objects.filter(Q(Player_id=player_id) & Q(Day__gt=0) & Q(Vote__gt=0))
+    stats = vote.Vote.objects.filter(Q(Player_id=player_id) & 
+                                     Q(Day__gt=0) & 
+                                     Q(Vote__gt=0) &
+                                     Q(Season__isnull=True)) #TODO: change...
 
     if len(stats) <= 0:
         return None

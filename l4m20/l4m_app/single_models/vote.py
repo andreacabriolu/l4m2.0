@@ -30,6 +30,7 @@ class Vote(models.Model):
     SubJ = models.IntegerField(default=0)    # sub-judice: all bonuses are to be confirmed
     Sub = models.FloatField(default=0.0)     # substitution: +30 in at minute 30, -87 out at minute 87
     Live = models.BooleanField(default=False)
+    Season = models.ForeignKey(on_delete=models.CASCADE,to=C.Constant_Strings.season, null=True)
 
     def __str__(self):
         return f"{self.Player} - Giornata {self.Day} ({self.Vote})"

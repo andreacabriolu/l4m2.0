@@ -15,7 +15,8 @@ def get_angel_butcher_data():
     for _team in teams:
         team_matches = matches_results.MatchesResults.objects.filter(
             Q(Team_id=_team['id']) & \
-            Q(MatchesCalendar__CompetitionCalendar__Competition__Name="Campionato"))\
+            Q(MatchesCalendar__CompetitionCalendar__Competition__Name="Campionato") &
+            Q(MatchesCalendar__CompetitionCalendar__Season__Active=True))\
             .select_related('MatchesCalendar','CompetitionCalendar')\
             .values('Votes_Tit')
         
@@ -79,8 +80,12 @@ def get_route66_data():
     teams = team.Team.objects.filter(Active=True).values('id','Name')
 
     for _team in teams:
-        team_matches = matches_results.MatchesResults.objects.filter(Q(Team_id=_team['id']) & Q(MatchesCalendar__CompetitionCalendar__Competition__Name="Campionato"))\
-            .select_related('MatchesCalendar','CompetitionCalendar').values('MatchesCalendar__CompetitionCalendar__Day', 'Team_id', 'Fp').order_by('MatchesCalendar__CompetitionCalendar__Day')
+        team_matches = matches_results.MatchesResults.objects.filter(
+            Q(Team_id=_team['id']) & 
+            Q(MatchesCalendar__CompetitionCalendar__Competition__Name="Campionato") &
+            Q(MatchesCalendar__CompetitionCalendar__Season__Active=True)
+        )\
+        .select_related('MatchesCalendar','CompetitionCalendar').values('MatchesCalendar__CompetitionCalendar__Day', 'Team_id', 'Fp').order_by('MatchesCalendar__CompetitionCalendar__Day')
 
         team_data = {
             'team_name': _team['Name'],
