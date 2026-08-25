@@ -25,15 +25,15 @@
             <td class="col-team">
                 <span class="team-name">{{ team.team }}</span>
             </td>
-            <td class="col-pts">{{ team.pt }}</td>
-            <td>{{ team.fpt }}</td>
-            <td>{{ team.pg }}</td>
-            <td>{{ team.v }}</td>
-            <td>{{ team.n }}</td>
-            <td>{{ team.p }}</td>
-            <td>{{ team.gf }}</td>
-            <td>{{ team.gs }}</td>
-            <td>{{ team.dr }}</td>
+            <td class="col-pts">{{ team.pt|floatformat }}</td>
+            <td>{{ team.fpt|floatformat}}</td>
+            <td>{{ team.pg|floatformat}}</td>
+            <td>{{ team.v|floatformat }}</td>
+            <td>{{ team.n|floatformat }}</td>
+            <td>{{ team.p|floatformat }}</td>
+            <td>{{ team.gf|floatformat }}</td>
+            <td>{{ team.gs|floatformat }}</td>
+            <td>{{ team.dr|floatformat }}</td>
         </tr>
         {% endfor %}
     </tbody>

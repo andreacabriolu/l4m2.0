@@ -115,7 +115,7 @@ def parse_ranking_line(ranking_line):
         for k,v in l.items():
             line['team'] = team.Team.objects.get(pk=k).Name.upper()
             for _k,_v in v.items():
-                line[_k] = int(_v)
+                line[_k] = float(_v)
 
         lines.append(line)
     

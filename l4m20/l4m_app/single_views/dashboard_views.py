@@ -79,7 +79,7 @@ class RetrieveB11RankingInfoView(View):
         for k,_v in json_l.items():
             line = []
             line.append(team.Team.objects.get(pk=k).Name.upper())
-            line.append(int(_v))
+            line.append(float(_v))
             # _scores_fp= U.get_scores(k) TODO: save b11 results and print in the dashboard table
             # line.append(_scores_fp)
             lines.append(line)
@@ -104,7 +104,7 @@ class RetrieveRankingInfoView(View):
             for k,v in l.items():
                 line.append(team.Team.objects.get(pk=k).Name.upper())
                 for _,_v in v.items():
-                    line.append(int(_v)) 
+                    line.append(float(_v)) 
             lines.append(line)
 
         return HttpResponse(json.dumps({ 'lines': lines }))
