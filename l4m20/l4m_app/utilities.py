@@ -644,7 +644,11 @@ def get_last_available_ranking(c_id, s_id):
 def get_ranking(c_id, s_id, day):
     #check the first not suspended day before (any competition, since b11 is not listed as regular competition)
     if check_day_suspended(day):
-        days = competition_calendar.CompetitionCalendar.objects.filter(Q(Suspended=False)&Q(Day__lt=day)).values('Day').order_by('-Day')
+        days = competition_calendar.CompetitionCalendar.objects.filter(
+            Q(Suspended=False)&
+            Q(Day__lt=day)&
+            Q(Season__Active=True)
+        ).values('Day').order_by('-Day')
         if len(days) <= 0:
             return None
         day = days[0]['Day']
@@ -742,7 +746,9 @@ def get_all_series_from_calendar(competitionid, day):
     )
 
 def get_unica_series(competitionid):
-    return series.Series.objects.filter(Q(Name='Unica') & Q(Competition_id=competitionid))
+    return series.Series.objects.filter(
+        Q(Name='Unica') & 
+        Q(Competition_id=competitionid))
 
 def get_my_series_from_calendar(teamid, competitionid, day):
     return series.Series.objects.filter(

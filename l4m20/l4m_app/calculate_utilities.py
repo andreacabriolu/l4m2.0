@@ -91,7 +91,6 @@ def write_league_rankings(vote_per_series, competition_id, day, seriesid, noLine
         RankingLine = json.dumps(new_ranking_line),
         Competition = competition.Competition.objects.get(pk=competition_id),
         Series = series.Series.objects.get(pk=seriesid),
-        Season = "SEASON 1", #TODO: season mechanism to do
         Day= day
     )
         
@@ -122,7 +121,6 @@ def write_b11_ranking(all_best, competition_id, seriesid, day):
         RankingLine = json.dumps(new_ranking_line),
         Competition = competition.Competition.objects.get(pk=competition_id),
         Series = series.Series.objects.get(pk=seriesid),
-        Season = "SEASON 1", #TODO: season mechanism to do
         Day= day
     )
         
@@ -266,7 +264,7 @@ def calculate_total_league(competition, day):
 def calculate_b11_league(competition, day):
     b11_series = U.get_unica_series(competition)
     if len(b11_series) > 0: 
-        team_ids_names = team.Team.objects.values_list("id", "Name")
+        team_ids_names = team.Team.objects.filter(Active=True).values_list("id", "Name")
 
         curr_day = U.get_current_day() 
         days_to_calculate = range(int(day), int(curr_day)) if (int(day) < int(curr_day)) else [int(curr_day)]
