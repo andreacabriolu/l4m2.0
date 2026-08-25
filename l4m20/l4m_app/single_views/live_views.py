@@ -303,7 +303,7 @@ def LiveView(request, competition_id, series_id, day):
         mrs = LU.get_matches_results(couples)
 
         for mr in mrs:
-            mr = mr.order_by('-Home') #home team first
+            mr = mr.order_by('Home') #home team first
             votes_home = LU.format_votes(mr[0]) #format votes_tit, items, votes_ris
             votes_away = LU.format_votes(mr[1]) #format votes_tit, items, votes_ris
 

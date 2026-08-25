@@ -1221,25 +1221,27 @@ def get_votes(lineup, current_day, live_votes, live_teams, already_played_teams=
         else:
         #player NOT LIVE
             #EXCEPTION for 6 politico -- next year a vote for each competition REQUIRED!
-            if current_day ==  16 and \
-                lineup.Series.Competition.id in [7,8,9] and \
-                pl.RealTeam.id in [14,31,8,11,20,2,25,12]: #triple HARD check !!!!!!!!!!!
-                    if(l[0].endswith('tit')):
-                        votes_tit.append(make_political_vote_obj(pl, lineup.Series.Competition, current_day, cap_id))
-                    else:
-                        votes_ris.append(make_political_vote_obj(pl, lineup.Series.Competition, current_day, cap_id))
+            # if current_day ==  16 and \
+            #     lineup.Series.Competition.id in [7,8,9] and \
+            #     pl.RealTeam.id in [14,31,8,11,20,2,25,12]: #triple HARD check !!!!!!!!!!!
+            #         if(l[0].endswith('tit')):
+            #             votes_tit.append(make_political_vote_obj(pl, lineup.Series.Competition, current_day, cap_id))
+            #         else:
+            #             votes_ris.append(make_political_vote_obj(pl, lineup.Series.Competition, current_day, cap_id))
+            # else:
+            _vote = vote.Vote.objects.filter(Q(Player_id=pl.id) & 
+                                             Q(Day=current_day) &
+                                             Q(Season=None))
+            if(l[0].endswith('tit')):
+                votes_tit.append(make_vote_obj(_vote[0], cap_id) if isValid(_vote) else \
+                                make_empty_vote_obj(pl.id, cap_id, already_played, current_day))
             else:
-                _vote = vote.Vote.objects.filter(Q(Player_id=pl.id) & Q(Day=current_day))
-                if(l[0].endswith('tit')):
-                    votes_tit.append(make_vote_obj(_vote[0], cap_id) if isValid(_vote) else \
-                                    make_empty_vote_obj(pl.id, cap_id, already_played, current_day))
-                else:
-                    votes_ris.append(make_vote_obj(_vote[0], cap_id) if isValid(_vote) else \
-                                    make_empty_vote_obj(pl.id, cap_id, already_played, current_day))
+                votes_ris.append(make_vote_obj(_vote[0], cap_id) if isValid(_vote) else \
+                                make_empty_vote_obj(pl.id, cap_id, already_played, current_day))
 
-                if len(_vote) > 0:
-                    if(pl.id == cap_id):
-                        cap_vote = _vote[0].Vote
+            if len(_vote) > 0:
+                if(pl.id == cap_id):
+                    cap_vote = _vote[0].Vote
     
     valid_votes = []
     n_subs = 0
