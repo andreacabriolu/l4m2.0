@@ -27,3 +27,4 @@ class Vote_Live_Obj():
     Msg = str
     Live = bool
     RealTeam = str
+    Season = int

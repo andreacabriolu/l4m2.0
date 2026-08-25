@@ -8,7 +8,7 @@ import utilities as U
 import logging
 logger = logging.getLogger("live_scraper")
 
-logging.basicConfig(filename='log/scarper.log', level=logging.INFO)
+logging.basicConfig(filename='scarper.log', level=logging.INFO)
 
 TEST = False
 
@@ -38,6 +38,8 @@ try:
     players = dict(U.get_players(conn))
     players_realteam = dict(U.get_players_realteam(conn))
     real_teams = dict(U.get_realteams(conn))
+    season = U.get_current_season(conn)
+    today_competitions = U.get_today_competitions(conn, current_day, season)
 
     votes = {}
 
@@ -64,6 +66,7 @@ try:
         vote.Live = False
         vote.Sub = 0
         vote.RealTeam = players_realteam[players[name]]
+        vote.Season = season
 
         votes[players[name]] = vote
 
@@ -79,15 +82,15 @@ try:
     #complete votes
     for _,vote in votes.items():
         vote.Day = int(current_day)
-        vote.Competition = int(1) #TODO magic number: campionato
         vote.AssP = U.get_current_assp(conn, vote)
         vote.TotVote = U.calculate_totvote(vote)
+        vote.Season = season
 
     #clean up the table
-    U.delete_votes_of_day(conn, current_day)
+    U.delete_votes_of_day(conn, current_day, season)
 
     #write ONLY final votes
-    U.insert_votes(conn, votes)
+    U.insert_votes(conn, votes, today_competitions)
     conn.commit()
     logger.log(logging.INFO, f'executed at {datetime.datetime.now()}')
 

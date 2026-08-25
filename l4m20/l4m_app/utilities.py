@@ -541,7 +541,11 @@ def check_day_suspended(day):
     return len(suspended) > 0
 
 def get_competition_calendar_entry(competition_id, day):
-    cc = competition_calendar.CompetitionCalendar.objects.filter(Q(Competition=competition_id) & Q(Day=day))
+    cc = competition_calendar.CompetitionCalendar.objects.filter(
+        Q(Competition=competition_id) & 
+        Q(Day=day) &
+        Q(Season__Active=True)
+    )
     return cc.first() if len(cc) > 0 else None
 
 def is_round_trip_match(cc):

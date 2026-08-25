@@ -77,7 +77,8 @@ def get_real_match_string(day, real_team_id):
 def get_player_statistics_per_day(player_id):
     stats = vote.Vote.objects.filter(Q(Player_id=player_id) & 
                                      Q(Day__gt=0)&
-                                     Q(Season__isnull=True)).order_by('Day')
+                                     Q(Season__Active=True) &
+                                     Q(Competition=1)).order_by('Day') #we check stats only for main league votes, always present
     _player = player.Player.objects.get(pk=player_id)
 
     if len(stats) <= 0:
@@ -133,7 +134,8 @@ def aggregate_player_statistics(player_id):
     stats = vote.Vote.objects.filter(Q(Player_id=player_id) & 
                                      Q(Day__gt=0) & 
                                      Q(Vote__gt=0) &
-                                     Q(Season__isnull=True)) #TODO: change...
+                                     Q(Season__Active=True)&
+                                     Q(Competition=1))
 
     if len(stats) <= 0:
         return None

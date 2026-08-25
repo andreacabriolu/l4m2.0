@@ -3,6 +3,28 @@ import constants as C
 from db_connector import *
 from vote_live import *
 
+def get_current_season(conn:DB_Connector):
+    try:
+        rows = conn.select(table="l4m_app_season", cols='\"id\"', conditions='"Active"=%s', data=('true',))
+        if len(rows) <= 0:
+            return None
+        return rows[0][0]
+    except Exception as e:
+        raise e
+
+def get_today_competitions(conn:DB_Connector, current_day, current_season):
+    try:
+        rows = conn.select(table="l4m_app_competition_calendar", 
+                           cols='\"Competition_id\"', 
+                           conditions='"Day"=%s AND "Season_id"=%s', 
+                           data=(current_day, current_season))
+        competitions = set()
+        for row in rows:
+            competitions.add(row[0])
+        return competitions
+    except Exception as e:
+        raise e
+
 def set_final(conn:DB_Connector, score, real_teams, current_day):
     if score['time'] == C.Events.END_MATCH:
         team_home = real_teams[score['home_name']]
@@ -75,48 +97,6 @@ def read_csv(path):
 
 def clean_name(name):
     return name.replace(' ','_').replace('\'','')
-
-def manage_fool_name_exceptions(name):
-    if name=='Ederson_J':
-        return 'Ederson_DS'
-    if name=='Anguissa':
-        return 'Zambo_Anguissa'
-    if name=='Ndicka':
-        return 'NDicka'
-    if name=='Pellegrino_Ma':
-        return 'Pellegrino_M'
-    if name=='Iker_Bravo':
-        return 'Bravo'
-    if name=='Pedro R':
-        return 'Pedro'
-    if name=='Bernabe\'':
-        return 'Bernabè'
-    if name=='Giovane_S':
-        return 'Giovane'
-    if name=='N\'Dri':
-        return 'NDri'
-    if name=='Davis':
-        return 'Davis_K'
-    if name=='Dele_Bashiru':
-        return 'Dele-Bashiru'
-    if name=='Bradaric_D':
-        return 'Bradaric'
-    if name=='Vitinha':
-        return 'Vitinha_O'
-    if name=='Locatelli_M':
-        return 'Locatelli'
-    if name=='Lazzari_M':
-        return 'Lazzari'
-    if name=='Danilo_Veiga':
-        return 'Veiga_D'
-    if name=='Wesley_F':
-        return 'Wesley'
-    if name=='Ranieri':
-        return 'Ranieri_L'
-    if name=='Nico_Paz':
-        return 'Paz_N'
-
-    return name
 
 def set_live(score, votes, players):
     hlineup = score['home_lineups']
@@ -290,44 +270,46 @@ def fill_with_events(events, players, votes, players_realteam):
             case C.Events.SUB:
                 continue
 
-def delete_votes_of_day(conn:DB_Connector, day):
+def delete_votes_of_day(conn:DB_Connector, day, season):
     if day == "":
         return
     
     try:
-        conn.delete("l4m_app_vote", conditions=f"\"Day\"={day}")
+        conn.delete("l4m_app_vote", conditions=f"\"Day\"={day} AND \"Season_id\"={season}")
     except Exception as e:
         raise e
 
-def insert_votes(conn:DB_Connector, votes):
+def insert_votes(conn:DB_Connector, votes, today_competitions=None):
     try:
         for _,vote in votes.items():
             if vote.Live:
                 continue
-            data_vote = (vote.Day, 
-                         vote.Vote, 
-                         vote.TotVote,
-                         vote.GoalSc, 
-                         vote.GoalTa, 
-                         0, #GoalDe 
-                         vote.PenSc, 
-                         vote.PenMi,
-                         vote.PenSa,
-                         vote.Own, 
-                         vote.Yel, 
-                         vote.Red, 
-                         vote.YelRed, 
-                         vote.AssS,
-                         0, #vote.AssH,
-                         0, #vote.AssL,
-                         vote.AssP,
-                         0, #vote.SubJ,
-                         vote.Sub, 
-                         vote.Competition,
-                         vote.Player,
-                         vote.RealTeam,
-                         vote.Live)
-            conn.insert(table="l4m_app_vote", data=data_vote)
+            for comp in today_competitions:
+                data_vote = (vote.Day, 
+                            vote.Vote, 
+                            vote.TotVote,
+                            vote.GoalSc, 
+                            vote.GoalTa, 
+                            0, #GoalDe 
+                            vote.PenSc, 
+                            vote.PenMi,
+                            vote.PenSa,
+                            vote.Own, 
+                            vote.Yel, 
+                            vote.Red, 
+                            vote.YelRed, 
+                            vote.AssS,
+                            0, #vote.AssH,
+                            0, #vote.AssL,
+                            vote.AssP,
+                            0, #vote.SubJ,
+                            vote.Sub, 
+                            comp, #one vote per competition
+                            vote.Player,
+                            vote.RealTeam,
+                            vote.Live,
+                            vote.Season)
+                conn.insert(table="l4m_app_vote", data=data_vote)
     except Exception as e:
         raise e
     
