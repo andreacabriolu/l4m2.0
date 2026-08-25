@@ -249,6 +249,7 @@ window.addEventListener('DOMContentLoaded', event => {
     var current_day = $('#current_day').val();
     var real_current_day = $('#real_current_day').val();
 
+
     ////////NEW LIVE BUTTONS////////
 
     $(function () {
@@ -259,6 +260,11 @@ window.addEventListener('DOMContentLoaded', event => {
 
         let currentCompetition = null;
         let currentStage = null;
+
+        // /* Expand the main league stages by default */
+        const main_league_id = 1; //MAGIC NUMBER: main league id
+        curr_comp_id = main_league_id;
+        buildStages(main_league_id);
 
         /* -------------------------
             Competition click
