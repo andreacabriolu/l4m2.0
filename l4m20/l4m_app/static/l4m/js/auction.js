@@ -250,6 +250,14 @@ function buildContractData(){
 
 }
 
+function buildEditContractData(){
+    return {
+        playerid: AuctionState.currentPlayer.id,
+        teamid: AuctionState.userTeam.id,
+        years: parseInt(document.querySelector(".edit-contract-options .contract-option.active").dataset.years)
+    }
+}
+
 async function apiExecute(url, data){
     const response = await fetch(url, {
         method: "POST",
@@ -516,6 +524,9 @@ const AuctionAPI = {
         modal.querySelector(".contract-name").textContent = AuctionState.currentPlayer.Surname;
 
         const currentYears = AuctionState.currentPlayer.squads__Years;
+
+        modal.querySelector("#editContractCurrentYears").textContent = currentYears;
+
         modal.querySelectorAll(".contract-option").forEach(card => {
             if (parseInt(card.dataset.years) === currentYears) {
                 card.classList.add("active");
@@ -588,7 +599,33 @@ const AuctionAPI = {
 
     async editContract() {
     
-        const contractData = buildContractData();
+        const contractData = buildEditContractData();
+
+        try {
+            const response = await apiExecute("/l4m/auction/signContract/", contractData);
+
+            player = AuctionState.getPlayer(AuctionState.currentPlayer.id);
+            player.squads__Years = parseInt(document.querySelector(".edit-contract-options .contract-option.active").dataset.years);
+
+            AuctionState.balance.wages = response.wages_amount;
+
+            Auction.refreshPlayer(player);
+            Auction.renderSummary();
+
+            bootstrap.Modal
+                .getInstance(document.getElementById("editContractModal"))
+                ?.hide();
+
+            bootstrap.Modal
+                .getInstance(document.getElementById("playerModal"))
+                ?.hide();
+
+        }
+        catch (err) {
+
+            showPopupErrorAlert(err);
+
+        }
 
     },
 
@@ -1288,6 +1325,9 @@ const Auction = {
 
             .on("click", "#btnEditContract",
                 AuctionAPI.showEditContractModal.bind(AuctionAPI))
+
+            .on("click", "#btnEditContractConfirm",
+                AuctionAPI.editContract.bind(AuctionAPI))
 
             .on("click", "#btnSignContract",
                 AuctionAPI.signContract.bind(AuctionAPI))

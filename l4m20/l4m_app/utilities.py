@@ -1369,10 +1369,12 @@ def sign_contract(contract_data):
     else:
         return C.ErrorCodes.PLAYER_NOT_IN_SQUAD
 
+    wages_amount = squads.Squads.objects.filter(Q(Team=team_) & Q(Season__Active=True)).aggregate(
+        Sum('Salary'))['Salary__sum']
+
     balance_ = get_balance(team_.id)
-    wages_amount = balance_[0]['Wages_amount'] if len(balance_) > 0 else 0
-    wages_max = balance_[0]['Wages_max'] if len(balance_) > 0 else 0
-    wages_amount += total_wage
+    # wages_amount = balance_[0]['Wages_amount'] if len(balance_) > 0 else 0
+    # wages_amount += total_wage
 
     balance_.update(Wages_amount=wages_amount)
 
