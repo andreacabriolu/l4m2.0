@@ -412,14 +412,17 @@ def calculate_league(competition, day):
 def save_b11_results(all_best, day):
     for best in all_best:
         if best is not None: #RECALCULATE
-            existing_b11 = b11_results.B11Results.objects.filter(Q(Day=day) & Q(Team__id=best['team_id']))
+            existing_b11 = b11_results.B11Results.objects.filter(Q(Day=day) & 
+                                                                 Q(Team__id=best['team_id']) &
+                                                                 Q(Season__Active=True))
             if len(existing_b11) > 0:
                 existing_b11[0].delete()
 
             b11_result = b11_results.B11Results(
                 Day = day,
                 Team = team.Team.objects.get(pk=best['team_id']),
-                B11Fp = best['score']
+                B11Fp = best['score'],
+                Season = season.Season.objects.get(Active=True)
             )
             
             b11_result.save()

@@ -7,6 +7,7 @@ class B11Results(models.Model):
     Day = models.IntegerField()
     Team = models.ForeignKey(on_delete=models.CASCADE,to=C.Constant_Strings.team, null=True)    
     B11Fp = models.FloatField()
+    Season = models.ForeignKey(on_delete=models.CASCADE,to=C.Constant_Strings.season, null=True)
 
     def __str__(self):
         return f"{self.Team} {self.Fp}"
