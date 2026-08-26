@@ -1,23 +1,20 @@
-# import os
-# import django
+import os
 
-# os.environ.setdefault(
-#     "DJANGO_SETTINGS_MODULE",
-#     "l4m20.settings"
-# )
+os.environ.setdefault(
+    "DJANGO_SETTINGS_MODULE",
+    "l4m20.settings"
+)
 
-# django.setup()
+import django
+django.setup()
 
-# from l4m_app.models import Real_calendar
-
-import datetime
 from zoneinfo import ZoneInfo
-
 from icalendar import Calendar
-
-from db_connector import DB_Connector
 import requests
-
+from l4m_app.utilities import get_real_team_by_name
+import l4m20.constants as C
+from l4m_app.single_models import real_calendar
+from django.db.models import Q
 
 ICS_URL = "https://www.matchesio.com/it/competition/serie-a-it/export/ics/"
 
@@ -37,4 +34,30 @@ for event in calendar.walk("VEVENT"):
     dtstart = event.get("DTSTART").dt.astimezone(ZoneInfo(key='Europe/Rome'))
     uid = event.get("UID")
 
-    print(uid, summary, dtstart)
+    now = django.utils.timezone.now()
+
+    if dtstart < now:#.astimezone(ZoneInfo(key='Europe/Rome')):
+        continue
+
+    teams = summary.split(" - ")
+
+    if len(teams) != 2:
+        continue
+
+    home_team = get_real_team_by_name(C.Mappings.TEAM_NAMES_MAPPING.get(teams[0].strip().lower(), teams[0].strip()))
+    away_team = get_real_team_by_name(C.Mappings.TEAM_NAMES_MAPPING.get(teams[1].strip().lower(), teams[1].strip()))
+    real_match = real_calendar.Real_calendar.objects.filter(
+        Q(RealTeamHome=home_team) & 
+        Q(RealTeamAway=away_team) &
+        Q(Season__Active=True)).first()
+
+    if real_match is None:
+        continue
+
+    real_match.Date = dtstart
+    
+    real_match.save(update_fields=['Date', 'FT'])    
+
+    print (f"Updated match: {home_team} vs {away_team} on {dtstart.astimezone(ZoneInfo(key='Europe/Rome')).strftime('%d-%m-%Y alle %H:%M')}")
+
+print("Calendars updated successfully.")

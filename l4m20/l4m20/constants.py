@@ -1,6 +1,33 @@
 from dataclasses import dataclass
 from typing import Optional
 
+class Mappings:
+    TEAM_NAMES_MAPPING = {
+        "atalanta": "Atalanta",
+        "bologna": "Bologna",
+        "cagliari": "Cagliari",
+        "como": "Como",
+        "empoli": "Empoli",
+        "fiorentina": "Fiorentina",
+        "frosinone": "Frosinone",
+        "genoa": "Genoa",
+        "inter": "Inter",
+        "juventus": "Juventus",
+        "lazio": "Lazio",
+        "lecce": "Lecce",
+        "ac milan": "Milan",
+        "monza": "Monza",
+        "napoli": "Napoli",
+        "parma": "Parma",
+        "as roma": "Roma",
+        "salernitana": "Salernitana",
+        "sampdoria": "Sampdoria",
+        "sassuolo": "Sassuolo",
+        "spezia": "Spezia",
+        "torino": "Torino",
+        "udinese": "Udinese",
+        "venezia": "Venezia",
+    }
 
 class Constant_Strings:
     player = "Player"
