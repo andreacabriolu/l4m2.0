@@ -722,7 +722,8 @@ def get_my_lineup_active_competitions(my_series, day):
 def get_all_today_competitions(day):
     return competition.Competition.objects.filter(Q(Active=True) & \
                                                   Q(Live=True) & \
-                                                  Q(competitioncalendar__Day=day))
+                                                  Q(competitioncalendar__Day=day) & \
+                                                  Q(competitioncalendar__Season__Active=True))
 
 def get_my_competitions(my_series):
     return competition.Competition.objects.filter(series__id__in=my_series)
