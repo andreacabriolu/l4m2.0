@@ -561,8 +561,15 @@ def check_competition_overtime(competition_id, day):
 
 def check_late_lineup(teamid, day, competition_id):
     _series = get_my_series(teamid, competition_id)
+
+    if len(_series) == 0:
+        return False
+
     if len(_series) > 0:
-        lin = lineup.Lineup.objects.filter(Q(Day=day) & Q(Team=teamid) & Q(Series=_series[0])).values('Version').order_by('Version')
+        lin = lineup.Lineup.objects.filter(
+            Q(Day=day) & 
+            Q(Team=teamid) & 
+            Q(Series=_series[0])).values('Version').order_by('Version')
 
     return not (lin.first()['Version'] > (-1)) if len(lin) > 0 else False
  

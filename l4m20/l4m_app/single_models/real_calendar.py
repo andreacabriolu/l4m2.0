@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 class Real_calendar(models.Model):
-    ExternalId = models.IntegerField()
+    ExternalId = models.IntegerField(null=True, blank=True)
     Day = models.IntegerField()
     Date = models.DateTimeField()
     RealTeamHome = models.ForeignKey(C.Constant_Strings.real_team, on_delete=models.CASCADE, related_name="team_home")
