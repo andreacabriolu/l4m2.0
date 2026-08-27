@@ -1,4 +1,19 @@
 import os
+import sys
+from pathlib import Path
+
+CURRENT_FILE = Path(__file__).resolve()
+
+for parent in CURRENT_FILE.parents:
+    if (parent / "manage.py").exists():
+        PROJECT_ROOT = parent
+        break
+else:
+    raise RuntimeError(
+        "Django project root not found"
+    )
+
+sys.path.insert(0, str(PROJECT_ROOT))
 
 os.environ.setdefault(
     "DJANGO_SETTINGS_MODULE",
@@ -36,7 +51,7 @@ for event in calendar.walk("VEVENT"):
 
     now = django.utils.timezone.now()
 
-    if dtstart < now:#.astimezone(ZoneInfo(key='Europe/Rome')):
+    if dtstart < now:
         continue
 
     teams = summary.split(" - ")
@@ -58,6 +73,6 @@ for event in calendar.walk("VEVENT"):
     
     real_match.save(update_fields=['Date', 'FT'])    
 
-    print (f"Updated match: {home_team} vs {away_team} on {dtstart.astimezone(ZoneInfo(key='Europe/Rome')).strftime('%d-%m-%Y alle %H:%M')}")
+    # print (f"Updated match: {home_team} vs {away_team} on {dtstart.astimezone(ZoneInfo(key='Europe/Rome')).strftime('%d-%m-%Y alle %H:%M')}")
 
 print("Calendars updated successfully.")
