@@ -1353,11 +1353,11 @@ def check_contract(squad_contracts, role, years_signed):
     max_per_role = C.Constant_Dicts.Roles.get(role, 0)
     at_least_one_annual = squad_contracts.get(role, {})['1'] >= C.MIN_ANNUAL_CONTRACTS_PER_ROLE if role in squad_contracts and '1' in squad_contracts[role] else False
 
-    if n_contracts_per_role == (max_per_role -1):
-        if years_signed == 2 or years_signed == 3 and not at_least_one_annual: #we need at least one annual contract
+    if n_contracts_per_role == (max_per_role -1): #check annuals on last signed contract
+        if years_signed > 1 and not at_least_one_annual:
             return C.ErrorCodes.MIN_ANNUAL_CONTRACTS_PER_ROLE_NEEDED
 
-    if years_signed == 3:
+    if years_signed == 3: #check triennals
         current_triennals_per_role = squad_contracts[role][years_signed.__str__()] if role in squad_contracts and years_signed.__str__() in squad_contracts[role] else 0
         if current_triennals_per_role >= C.MAX_TRIENNAL_CONTRACTS_PER_ROLE:
             return C.ErrorCodes.MAX_TRIENNAL_CONTRACTS_PER_ROLE_EXCEEDED
