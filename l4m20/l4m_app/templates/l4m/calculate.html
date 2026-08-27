@@ -115,7 +115,8 @@
                 {% for k,v in team_comps_lineups.items %}
                 <div>
                     <p class="lineups-label sm">{{v.tname|upper}}</p>
-                    <button type="button" {% if v.full %} class="btn btn-success btn-lup" {% else %}
+                    <button type="button" {% if v.full %} class="btn btn-success btn-lup" {% elif v.partial %}
+                        class="btn btn-warning btn-lup" {% else %}
                         class="btn btn-danger btn-lup" {% endif %} id="btn_lup_{{k}}" 
                         onclick="showMissingLups('{{k}}','{{v.tname|upper}}')">
                         {{v.nlineups}}/{{v.ncomps}}

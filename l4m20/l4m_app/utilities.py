@@ -582,8 +582,12 @@ def get_day_comps_lineups(day):
         t_nlineups = get_my_lineups_by_day_distinct(t['id'], day)
         t_comps = get_my_lineup_competitions_from_calendar(t['id'], day)
         
-        team_lups_comps[t['id']] = { 'tname':t['Name'], 'nlineups': t_nlineups['nlin'], 'ncomps': len(t_comps), \
-                                    'full': t_nlineups['nlin'] - len(t_comps) == 0}
+        team_lups_comps[t['id']] = {'tname':t['Name'], \
+                                    'nlineups': t_nlineups['nlin'], \
+                                    'ncomps': len(t_comps), \
+                                    'full': t_nlineups['nlin'] - len(t_comps) == 0, \
+                                    'partial': ((len(t_comps) - t_nlineups['nlin']) > 0 ) and (t_nlineups['nlin'] > 0), \
+                                    'empty': len(t_comps) == 0 }
 
     return team_lups_comps
 
