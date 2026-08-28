@@ -1383,7 +1383,9 @@ def sign_contract(contract_data):
     existing_squad = squads.Squads.objects.filter(Q(Player=player_) & Q(Team=team_) & Q(Season=season))
 
     if existing_squad.exists():
-        existing_squad.update(Years=years_signed, Salary=total_wage)
+        existing_squad.update(Years=years_signed, 
+                              Salary=total_wage, 
+                              Quot=player_.Quotation)
     else:
         return C.ErrorCodes.PLAYER_NOT_IN_SQUAD
 
