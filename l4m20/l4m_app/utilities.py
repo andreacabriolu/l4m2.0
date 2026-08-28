@@ -1,3 +1,5 @@
+import math
+
 from .models import *
 from django.db.models import Q, Sum, Count, Case, When, Value, F, OuterRef, Subquery, Exists
 import json
@@ -1014,7 +1016,7 @@ def list_my_best_bets(mbb):
 
 def get_balance_obj(teamid):
     return balance.Balance.objects.\
-        filter(Team_id=teamid)
+        filter(Team_id=teamid, Season__Active=True)
 
 def get_balance(teamid):
     return balance.Balance.objects.\
@@ -1370,7 +1372,7 @@ def sign_contract(contract_data):
     team_ = get_object_or_404(team.Team, id=contract_data['teamid'])
     season = get_current_season()
     years_signed = contract_data['years']
-    rounded_wage = round(player_.Quotation * C.WAGE_MULTIPLIER) #0.5
+    rounded_wage = math.floor((player_.Quotation * C.WAGE_MULTIPLIER) + 0.5) #round to nearest integer 
     total_wage = rounded_wage * years_signed
 
     squad_contracts = get_signed_contracts(team_.id)
@@ -1388,11 +1390,16 @@ def sign_contract(contract_data):
     wages_amount = squads.Squads.objects.filter(Q(Team=team_) & Q(Season__Active=True)).aggregate(
         Sum('Salary'))['Salary__sum']
 
-    balance_ = get_balance(team_.id)
-    # wages_amount = balance_[0]['Wages_amount'] if len(balance_) > 0 else 0
-    # wages_amount += total_wage
+    balance_ = get_balance_obj(team_.id)
 
-    balance_.update(Wages_amount=wages_amount)
+    if balance_ is None or len(balance_) <= 0:
+        return C.ErrorCodes.BALANCE_NOT_FOUND
 
-    return {'wages_amount': wages_amount, 'player_wage': total_wage}
+    balance_ = balance_[0]
+    balance_.Wages_amount = wages_amount
+    balance_.save(update_fields=['Wages_amount'])
+
+    return {'wages_amount': wages_amount, 
+            'wages_residual': balance_.Wages_max - wages_amount,
+            'player_wage': total_wage}
 

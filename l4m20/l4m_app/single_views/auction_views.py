@@ -60,6 +60,7 @@ class AuctionView(LoginRequiredMixin, View):
                 'balance': {
                     'total': balance['Purchases_max'],
                     'wages': balance['Wages_amount'],
+                    'wages_residual': balance['Wages_max'] - balance['Wages_amount'],
                     'wages_total': balance['Wages_max'],
                     'residual': balance['Purchases_max'] - current_bets_amount,
                     'carognate': n_carognate,
@@ -222,6 +223,8 @@ class SignContractView(View):
                 return JsonResponse({'error': 'NUMERO MASSIMO DI CONTRATTI TRIENNALI PER RUOLO RAGGIUNTO'}, status=400)
             elif(msg == C.ErrorCodes.MIN_ANNUAL_CONTRACTS_PER_ROLE_NEEDED):
                 return JsonResponse({'error': 'ALMENO UN CONTRATTO ANNUALE PER RUOLO NECESSARIO'}, status=400)
+            elif(msg == C.ErrorCodes.BALANCE_NOT_FOUND):
+                return JsonResponse({'error': 'BILANCIO NON TROVATO'}, status=400)
 
             return JsonResponse(msg)
         except Exception as e:
