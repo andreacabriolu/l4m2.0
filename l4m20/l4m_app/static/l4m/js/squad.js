@@ -59,7 +59,7 @@ function fillSingleTeamTable() {
     let html = `<div style="overflow-x: auto;width:80%;">`;
     html += `<table style="width:90%" class="table custom-table hover" id="allTeamsTable" cellspacing="0" cellpadding="5">`;
     html += `<thead><tr>`;
-    html += `<th>Ruolo</th><th>Foto</th><th>Giocatore</th><th>Squadra</th><th>Costo</th><th>Durata</th><th>Ingaggio</th>`;
+    html += `<th>Ruolo</th><th>Foto</th><th>Giocatore</th><th>Squadra</th><th>Costo</th><th>Durata</th><th>Ingaggio</th><th>Ingaggio Totale</th>`;
     html += `</tr></thead>`;
     html += `<tbody>`;
 
@@ -125,6 +125,10 @@ function fillSingleTeamTable() {
                 ? `${player.Years} ${numYears === 1 ? 'anno' : 'anni'}` 
                 : '';
 
+            const quotationText = (player.Player__Quotation !== null && player.Player__Quotation !== undefined && player.Player__Quotation !== '')
+                ? `${Math.round(player.Player__Quotation)} fml` 
+                : '';
+
             const salaryText = (hasContract && player.Salary !== null && player.Salary !== undefined && player.Salary !== '') 
                 ? `${Math.round(player.Salary)} fml` 
                 : '';
@@ -140,6 +144,7 @@ function fillSingleTeamTable() {
             html += `<td>${teamCellContent}</td>`;
             html += `<td>${amountText}</td>`;
             html += `<td>${yearsText}</td>`;
+            html += `<td>${quotationText}</td>`;
             html += `<td>${salaryText}</td>`;
             html += `</tr>`;
         }

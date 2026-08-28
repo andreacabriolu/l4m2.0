@@ -859,7 +859,7 @@ const Auction = {
             .textContent = player.RealTeam__Name;
 
         modal.querySelector(".card-player-wage")
-            .textContent = "INGAGGIO: " + (Math.round(player.Quotation * 0.5) ?? "-") + " FML"; //TODO: magic number!
+            .textContent = "INGAGGIO: " + (Math.round(player.Quotation) ?? "-") + " FML";
 
         role_className = `role-${player.Role}`;
         modal.querySelector(".player-role").className = `role-badge ${role_className} player-role`;

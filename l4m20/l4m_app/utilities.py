@@ -1169,8 +1169,9 @@ def get_my_players_filtered(filter_role, teamid):
             'Amount',
             'Player__Role',
             'Player__RealTeam__id',
-            'Years',   # <--- ADD THIS
-            'Salary'   # <--- ADD THIS
+            'Years',
+            'Player__Quotation',
+            'Salary'  
         ).\
         order_by('Player__Surname')
         
@@ -1372,8 +1373,7 @@ def sign_contract(contract_data):
     team_ = get_object_or_404(team.Team, id=contract_data['teamid'])
     season = get_current_season()
     years_signed = contract_data['years']
-    rounded_wage = math.floor((player_.Quotation * C.WAGE_MULTIPLIER) + 0.5) #round to nearest integer 
-    total_wage = rounded_wage * years_signed
+    total_wage = player_.Quotation * years_signed
 
     squad_contracts = get_signed_contracts(team_.id)
     check_result = check_contract(squad_contracts, player_.Role, years_signed)

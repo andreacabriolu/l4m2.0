@@ -3,8 +3,12 @@ import io
 import pandas as pd
 import requests
 import utilities as U
+import math
 
 from db_connector import DB_Connector
+
+def _round(value):
+    return math.floor((value * 0.5) + 0.5) #round to nearest integer 
 
 # 1. Carica il file Excel
 file_path = "live_parser/listone_26_27.xlsx"
@@ -38,7 +42,7 @@ for _, row in df.iterrows():
     nome = U.clean_name(str(row["Nome"]).strip())
     squadra = str(row["Squadra"]).strip() if pd.notna(row["Squadra"]) else ""
     ruolo = str(row["Ruolo"]).strip() if pd.notna(row["Ruolo"]) else ""
-    quotazione = int(row["Quotazione"]) if pd.notna(row["Quotazione"]) else 0
+    quotazione = int(_round(row["Quotazione"])) if pd.notna(row["Quotazione"]) else 0
 
     conn.upsert_player(nome, ruolo, realteams_cache.get(squadra), quotazione)  # Inserisce il giocatore se non esiste già
 
