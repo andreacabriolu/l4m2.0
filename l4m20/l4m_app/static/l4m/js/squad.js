@@ -114,7 +114,7 @@ function fillSingleTeamTable() {
             const numSalary = Number(player.Salary);
             const numYears = Number(player.Years);
             if (hasContract && !isNaN(numSalary) && !isNaN(numYears)) {
-                totalSalary += (numSalary * numYears);
+                totalSalary += (numSalary);
             }
 
             const amountText = (player.Amount !== null && player.Amount !== undefined && player.Amount !== '') 
