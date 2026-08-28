@@ -161,66 +161,143 @@ def get_winner(home_data, away_data):
         
     return (False, False) #DRAW, IMPOSSIBLE TO DECIDE WINNER
 
-def get_all_final_stages(competition_id):
-    return competition_calendar.CompetitionCalendar.objects.filter(Q(Competition=competition_id) &\
-                ~Q(Stage='Girone')).values('Stage','id','Overtime','Num_Matches').distinct()
-
-def get_et_outcome(home_data, away_data):
-    if home_data is None or away_data is None:
-        return False
-    return home_data['ET_Winner'] or away_data['ET_Winner'] and not (home_data['Pen_Winner'] or away_data['Pen_Winner'])
-
-def get_pen_outcome(home_data, away_data):
-    if home_data is None or away_data is None:
-        return False
-    return home_data['Pen_Winner'] or away_data['Pen_Winner']
-
 def get_panchina_doro_flat_data(competition_id):
-    rankings = ranking.Ranking.objects.filter(
-        Competition_id=competition_id
-    ).order_by('Day')
-
     flat_data = []
 
-    # ... existing DB parsing logic ...
-
     # -------------------------------------------------------------
-    # GIMMICK / FALLBACK MOCK DATA (When DB is empty)
+    # CONFIGURAZIONE PESI PARAMETRI (Somma = 1.0)
     # -------------------------------------------------------------
-    if not flat_data:
-        # Mock scores per day
-# Test payload with 35 matchdays
-        mock_raw = [
-            {
-                'team_id': 20,
-                'team': 'FLUMINENSE_FC',
-                'daily_scores': [{'day': d, 'pts': round(0.700 + (d * 0.005), 3)} for d in range(1, 36)]
-            },
-            {
-                'team_id': 21,
-                'team': 'FC_SRT',
-                'daily_scores': [{'day': d, 'pts': round(0.650 + (d * 0.004), 3)} for d in range(1, 36)]
-            }
-        ]
-        # Calculate averages and build table structures
-        for item in mock_raw:
-            scores = item['daily_scores']
-            total_pts = sum(s['pts'] for s in scores)
-            avg_score = round(total_pts / len(scores), 3)
+    WEIGHTS = (0.5, 0.3, 0.2)  # (Peso P1, Peso P2, Peso P3)
 
-            flat_data.append({
-                'team_id': item['team_id'],
-                'team': item['team'],
-                'pdoav': avg_score,      # Average used for main ranking
-                'total_pts': round(total_pts, 3),
-                'daily_scores': scores   # List for expandable drawer
+    curr_season = get_current_season()
+    try:
+        current_day = int(get_current_day())
+    except (ValueError, TypeError):
+        current_day = 1
+
+    teams = team.Team.objects.all().order_by('Name')
+
+    for t in teams:
+        daily_scores = []
+        total_pdo_pts = 0.0
+
+        my_series = get_my_series(t.id, competitionid=1)
+
+        # Cicla fino alla giornata precedente a quella corrente
+        for day in range(1, current_day):
+            # -------------------------------------------------------------
+            # PARAMETRO 1: FP / B11_FP (Efficienza schieramento titolari)
+            # -------------------------------------------------------------
+            camp_res = matches_results.MatchesResults.objects.filter(
+                Team_id=t.id,
+                MatchesCalendar__Series__in=my_series,
+                MatchesCalendar__CompetitionCalendar__Day=day
+            ).values('Fp').first()
+
+            b11_res = b11_results.B11Results.objects.filter(
+                Team_id=t.id,
+                Day=day
+            ).values('B11Fp').first()
+
+            fp = float(camp_res['Fp']) if camp_res and camp_res['Fp'] is not None else 0.0
+            b11_fp = float(b11_res['B11Fp']) if b11_res and b11_res['B11Fp'] is not None else 0.0
+
+            param1 = round(fp / b11_fp, 3) if b11_fp > 0 else 0.0
+
+            # -------------------------------------------------------------
+            # PARAMETRO 2: Profondità rosa (Giocatori movimento con voto / 22)
+            # -------------------------------------------------------------
+            field_players_with_vote = 0
+
+            lineup_obj = lineup.Lineup.objects.filter(
+                Team_id=t.id,
+                Series__in=my_series,
+                Day=day
+            ).order_by('-Version').first()
+
+            if lineup_obj and lineup_obj.Line:
+                try:
+                    line_data = json.loads(cleanJSON(lineup_obj.Line))
+                    
+                    player_ids = [
+                        int(v) for k, v in line_data.items() 
+                        if k not in ['mod', 'captain', 'ot', 'penalties'] and str(v).isdigit()
+                    ]
+
+                    if player_ids:
+                        voted_count = vote.Vote.objects.filter(
+                            Player_id__in=player_ids,
+                            Day=day,
+                            Player__Role__in=['D', 'C', 'A']
+                        ).exclude(
+                            Q(Vote__isnull=True) | Q(Vote=0)
+                        ).values('Player_id').distinct().count()
+
+                        field_players_with_vote = voted_count
+
+                except Exception as e:
+                    logger.error(f"Error parsing lineup for team {t.id} day {day}: {e}")
+
+            param2 = round(min(field_players_with_vote / 22.0, 1.0), 3)
+
+            # -------------------------------------------------------------
+            # PARAMETRO 3: Prestazione B11 Relativa di Serie (Min-Max Scaling)
+            # (b11_fp - b11_low) / (b11_high - b11_low)
+            # -------------------------------------------------------------
+            param3 = 1.0
+
+            # Recupera tutti i B11 della stessa Serie per la giornata corrente
+            series_teams = team.Team.objects.filter(Series__in=my_series).values_list('id', flat=True)
+            
+            series_b11_qs = b11_results.B11Results.objects.filter(
+                Team_id__in=series_teams,
+                Day=day
+            ).values_list('B11Fp', flat=True)
+
+            series_b11s = [float(score) for score in series_b11_qs if score is not None]
+
+            if series_b11s:
+                high_b11 = max(series_b11s)
+                low_b11 = min(series_b11s)
+
+                if high_b11 > low_b11:
+                    param3 = round((b11_fp - low_b11) / (high_b11 - low_b11), 3)
+                else:
+                    param3 = 1.0
+
+            # -------------------------------------------------------------
+            # PUNTEGGIO DI GIORNATA: SOMMA PESATA CON 3 PESI
+            # -------------------------------------------------------------
+            w1, w2, w3 = WEIGHTS
+            day_pdo_score = round((param1 * w1) + (param2 * w2) + (param3 * w3), 3)
+            total_pdo_pts += day_pdo_score
+
+            daily_scores.append({
+                'day': day,
+                'pts': day_pdo_score,
+                'param1': param1,
+                'param2': param2,
+                'param3': param3,
+                'fp': fp,
+                'b11_fp': b11_fp,
+                'field_votes': field_players_with_vote
             })
 
-        # Rank descending by average score
-        flat_data.sort(key=lambda x: x['pdoav'], reverse=True)
+        avg_score = round(total_pdo_pts / len(daily_scores), 3) if daily_scores else 0.0
 
-    return flat_data
+        flat_data.append({
+            'team_id': t.id,
+            'team': t.Name,
+            'pdoav': avg_score,
+            'total_pts': round(total_pdo_pts, 3),
+            'daily_scores': daily_scores
+        })
+
+    flat_data.sort(key=lambda x: x['pdoav'], reverse=True)
+
+    return flat_data    
     
+
 def get_bracket_data_for_competition(competition_id):
     bracket_data = []
     final_calendars = list(get_all_final_stages(competition_id).order_by('Num_Matches').reverse())

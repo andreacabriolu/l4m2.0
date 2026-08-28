@@ -4,6 +4,7 @@
             <th class="col-pos">#</th>
             <th class="col-team text-start">Squadra</th>
             <th class="text-center">Coeff Avg <small class="text-muted">(Click per dettagli)</small></th>
+            <th class="text-center">Totale</th>
         </tr>
     </thead>
     <tbody>
@@ -15,7 +16,7 @@
                 <span class="team-name">{{ record.team }}</span>
             </td>
             <!-- Clickable Average Cell formatted to 3 decimal places -->
-            <td class="text-center toggle-drawer-cell" data-target="#drawer-{{ record.team_id }}">
+            <td class="text-center toggle-drawer-cell" data-target="#drawer-{{ record.team_id }}" style="cursor: pointer;">
                 <span class="badge bg-primary fs-6 pdo-avg-badge">
                     {{ record.pdoav|floatformat:3 }} <i class="bi bi-chevron-down ms-1"></i>
                 </span>
@@ -27,14 +28,20 @@
         <tr id="drawer-{{ record.team_id }}" class="daily-detail-drawer d-none">
             <td colspan="4" class="p-0">
                 <div class="daily-breakdown-container p-3">
-                    <div class="small fw-bold text-muted uppercase mb-2">Punteggi Giornata per Giornata:</div>
+                    <div class="small fw-bold text-muted uppercase mb-2">Dettaglio Giornata per Giornata (Pesi 0.5,0.3,0.2):</div>
                     
                     <div class="day-grid-7">
                         {% for day_stat in record.daily_scores %}
                             <div class="day-score-pill">
-                                <span class="day-label">G.{{ day_stat.day }}:</span>
-                                <!-- Individual Matchday Score formatted to 3 decimal places -->
-                                <span class="score-val">{{ day_stat.pts|floatformat:3 }}</span>
+                                <div class="pill-header">
+                                    <span class="day-label">G.{{ day_stat.day }}</span>
+                                    <span class="score-val">{{ day_stat.pts|floatformat:3 }}</span>
+                                </div>
+                                <div class="pill-params-stacked">
+                                    <div title="P1: FP / B11 Score">P1: {{ day_stat.param1|floatformat:3 }}</div>
+                                    <div title="Parametro 2">P2: {{ day_stat.param2|floatformat:3 }}</div>
+                                    <div title="Parametro 3">P3: {{ day_stat.param3|floatformat:3 }}</div>
+                                </div>
                             </div>
                         {% endfor %}
                     </div>
@@ -55,34 +62,41 @@
 /* Container forcing exactly 7 equal columns */
 .day-grid-7 {
     display: grid;
-    grid-template-columns: repeat(7, 1fr); /* 7 items per row */
-    gap: 0.5rem; /* Space between pills */
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.5rem;
 }
 
 /* Responsive adjustment for mobile screens */
-@media (max-width: 768px) {
+@media (max-width: 992px) {
     .day-grid-7 {
-        grid-template-columns: repeat(4, 1fr); /* 4 per row on mobile */
+        grid-template-columns: repeat(4, 1fr);
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 576px) {
     .day-grid-7 {
-        grid-template-columns: repeat(2, 1fr); /* 2 per row on small phones */
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
-/* Individual Pill Adjustments */
+/* Individual Pill Card Styling */
 .day-score-pill {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.35rem 0.55rem;
+    flex-direction: column;
+    padding: 0.45rem 0.55rem;
     border-radius: 8px;
     background: #262c37;
     border: 1px solid rgba(255, 255, 255, 0.08);
-    font-size: 0.8rem;
-    text-align: center;
+    font-size: 0.78rem;
+}
+
+.day-score-pill .pill-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 0.25rem;
+    margin-bottom: 0.3rem;
 }
 
 .day-score-pill .day-label {
@@ -91,8 +105,19 @@
 }
 
 .day-score-pill .score-val {
-    color: #edf2f7;
+    color: #38bdf8;
     font-weight: 700;
+}
+
+/* Stacked parameters format */
+.day-score-pill .pill-params-stacked {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    color: #cbd5e1;
+    font-size: 0.72rem;
+    font-family: monospace;
+    text-align: left;
 }
 </style>
 
