@@ -1,42 +1,61 @@
 import io
+import os
+import sys
+from pathlib import Path
+
+CURRENT_FILE = Path(__file__).resolve()
+
+for parent in CURRENT_FILE.parents:
+    if (parent / "manage.py").exists():
+        PROJECT_ROOT = parent
+        break
+else:
+    raise RuntimeError(
+        "Django project root not found"
+    )
+
+sys.path.insert(0, str(PROJECT_ROOT))
+
+os.environ.setdefault(
+    "DJANGO_SETTINGS_MODULE",
+    "l4m20.settings"
+)
+
+import django
+django.setup()
 
 import pandas as pd
 import requests
 import utilities as U
 import math
-
-from db_connector import DB_Connector
+from l4m_app.single_models import config, real_team, player
 
 def _round(value):
-    return math.floor((value * 0.5) + 0.5) #round to nearest integer 
+    wage_multiplier = config.Config.objects.filter(Name="WageMultiplier").first()
 
-# 1. Carica il file Excel
-file_path = "live_parser/listone_26_27.xlsx"
+    if wage_multiplier is not None:
+        wage_multiplier = float(wage_multiplier.Value)
+    else:
+        wage_multiplier = 1.0  # Default value if not found in the database
+
+    return math.floor((value * wage_multiplier) + 0.5) #round to nearest integer 
+
 url = "https://apicdn.fantamaster.it/export/?format=excel&sort=name"
-
-# Saltiamo la prima riga di titolo dell'Excel per prendere la vera intestazione ('Surname', 'Squadra', 'Ruolo', ...)
-# df = pd.read_excel(file_path, sheet_name="Tutti", skiprows=1)
 
 response = requests.get(url)
 response.raise_for_status()  # Controlla se la richiesta ha avuto successo
 
 df = pd.read_excel(io.BytesIO(response.content), sheet_name="Tutti", skiprows=1, skipfooter=2)
 
-# Rimuove eventuali righe vuote o senza Surname
 df = df.dropna(subset=["Nome"])
 
-# 2. Connessione al Database (sostituisci db.sqlite3 con il percorso del tuo DB o con la stringa di connessione)
-conn = DB_Connector()
-
-# 3. Query di Upsert (Inserisce se nuovo, aggiorna se il Surname esiste già)
 count_updated = 0
 count_inserted = 0
 
-realteams_cache = dict(U.get_realteams(conn))
+realteams = real_team.RealTeam.objects.all()
 
-# Clean the JustModified flag for all players before the upsert operation
-conn.update("l4m_app_player", "\"JustModified\" = FALSE", "1=1", ())
-conn.commit()
+players = player.Player.objects.all()
+players.update(JustModified=False)  # Clean the JustModified flag for all players before the upsert operation
 
 for _, row in df.iterrows():
     nome = U.clean_name(str(row["Nome"]).strip())
@@ -44,15 +63,17 @@ for _, row in df.iterrows():
     ruolo = str(row["Ruolo"]).strip() if pd.notna(row["Ruolo"]) else ""
     quotazione = int(_round(row["Quotazione"])) if pd.notna(row["Quotazione"]) else 0
 
-    conn.upsert_player(nome, ruolo, realteams_cache.get(squadra), quotazione)  # Inserisce il giocatore se non esiste già
+    player.Player.objects.update_or_create(
+        Surname=nome,
+        defaults={
+            "Role": ruolo,
+            "RealTeam_id": realteams.filter(Name=squadra).first().id if realteams.filter(Name=squadra).exists() else None,
+            "Quotation": quotazione,
+            "JustModified": True
+        }
+    )
 
-conn.commit()
-
-#Imposta estero i giocatori non modificati dall'inserimento
-conn.update("l4m_app_player", "\"Status\" = 'E'", "\"JustModified\" = FALSE", ())
-
-# Salva le modifiche e chiudi
-conn.commit()
-conn.close()
+# Imposta estero i giocatori non modificati dall'inserimento
+player.Player.objects.filter(JustModified=False).update(Status='E')
 
 print(f"Processati con successo {len(df)} giocatori nella tabella 'l4m_app_players'.")
