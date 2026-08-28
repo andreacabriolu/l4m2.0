@@ -8,7 +8,7 @@ import utilities as U
 import logging
 logger = logging.getLogger("live_scraper")
 
-logging.basicConfig(filename='scarper.log', level=logging.INFO)
+logging.basicConfig(filename='log/scarper.log', level=logging.CRITICAL)
 
 TEST = False
 

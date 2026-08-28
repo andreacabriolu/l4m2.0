@@ -808,8 +808,9 @@ def get_live_votes(day, comp=1):
 
         #check if match has been set as over by the batch
         real_match = real_calendar.Real_calendar.objects.filter(
-            Q(Day=current_day) & \
-            (Q(RealTeamHome_id=U.get_real_team_by_name(score['home_name'])) & Q(RealTeamAway_id=U.get_real_team_by_name(score['away_name']))))
+            Q(Day=current_day) & Q(Season__Active=True) &
+            (Q(RealTeamHome_id=U.get_real_team_by_name(score['home_name'])) & 
+             Q(RealTeamAway_id=U.get_real_team_by_name(score['away_name']))))
         if real_match and real_match[0].FT:
             isLive = False
             already_played_teams.append(score['home_name'])
@@ -1232,7 +1233,7 @@ def get_votes(lineup, current_day, live_votes, live_teams, already_played_teams=
             # else:
             _vote = vote.Vote.objects.filter(Q(Player_id=pl.id) & 
                                              Q(Day=current_day) &
-                                             Q(Season=None))
+                                             Q(Season__Active=True))
             if(l[0].endswith('tit')):
                 votes_tit.append(make_vote_obj(_vote[0], cap_id) if isValid(_vote) else \
                                 make_empty_vote_obj(pl.id, cap_id, already_played, current_day))
