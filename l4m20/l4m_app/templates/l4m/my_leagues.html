@@ -38,10 +38,12 @@
             {% include "l4m/competitions/stage_tabs.html" %}
 
             <div class="stage-content">
-
-                {% include "l4m/competitions/gironi.html" %}
-                {% include "l4m/competitions/fase_finale.html" %}
-            
+                {% if comp.id == 4 %} <!-- bruttino? si potrebbe mettere il nome casomai cambiassimo gli id per qualsiasi motivo -->
+                   {% include "l4m/competitions/pdoro_table.html" %}
+                {% else %}   
+                   {% include "l4m/competitions/gironi.html" %}
+                   {% include "l4m/competitions/fase_finale.html" %}                                
+                {% endif %}            
             </div>
             
         </div>

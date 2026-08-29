@@ -1484,3 +1484,127 @@ def pick_best_11(keepers, defenders, midfielders, attackers):
             continue
 
     return best_lineup
+    
+def pick_worst_11(keepers, defenders, midfielders, attackers):
+    worst_lineup = None
+    worst_score = float('inf')
+
+    ALLOWED_MODULES = [
+        (3, 4, 3),
+        (3, 5, 2),
+        (4, 3, 3),
+        (4, 4, 2),
+        (4, 5, 1),
+        (5, 4, 1),
+        (5, 3, 2),
+    ]
+
+    for d, m, a in ALLOWED_MODULES:
+        try:
+            lineup = [keepers[0]] + defenders[:d] + midfielders[:m] + attackers[:a]
+            lineup_bench = keepers[1:] + defenders[d:] + midfielders[m:] + attackers[a:]
+
+            # 1. Somma dei Fantavoti (TotVote)
+            score = sum((p.votes.TotVote if p.votes.TotVote is not None else 0.0) for p in lineup)
+
+            # 2. Modificatore Difesa (seleziona il peggiore/più penalizzante)
+            gk_vote = [keepers[0].votes.Vote] if keepers[0].votes.Vote is not None else []
+            def_votes = [p.votes.Vote for p in defenders[:d] if p.votes.Vote is not None]
+
+            if d > 3 and len(def_votes) > 3:
+                mod_k, mod_score_k = calculate_modifier(gk_vote, def_votes, modNoGk=False)
+                mod_nok, mod_score_nok = calculate_modifier(gk_vote, def_votes, modNoGk=True)
+                
+                mod, mod_score, modNoGk_used = min(
+                    [(mod_k, mod_score_k, False), (mod_nok, mod_score_nok, True)],
+                    key=lambda x: x[1]
+                )
+            else:
+                mod, mod_score, modNoGk_used = 0., 0., False
+
+            # 3. Capitano W11 (Assegnato al giocatore con il VOTO PIÙ BASSO)
+            captain = None
+            malus_cap = 0.
+            
+            # Troviamo il giocatore con voto più basso (escludendo i Senza Voto)
+            voted_players = [p for p in lineup if p.votes.Vote is not None]
+            if voted_players:
+                # Ordina per Vote crescente
+                voted_players.sort(key=lambda p: p.votes.Vote)
+                worst_player = voted_players[0]
+                
+                # Se il voto è insufficiente (<= 5.5 o < 6.0), subisce la penalità capitano
+                if worst_player.votes.Vote < 6.0:
+                    captain = worst_player
+                    malus_cap = -0.5  # Penalità per il peggior capitano
+
+            # 4. Bonus "Tutti 6" (Ovviamente 0 per il Worst 11 se c'è anche solo una insufficienza)
+            bonus_six = 0.5 if all(p.votes.Vote is not None and p.votes.Vote >= 6 for p in lineup) else 0.0
+
+            # 5. Controllo Cartellini Robusto (Verifica sia YellowCard/RedCard che Yel/Red)
+            has_cards = False
+            for p in lineup:
+                v = p.votes
+                yellow = getattr(v, 'YellowCard', False) or getattr(v, 'Yel', 0) == 1 or getattr(v, 'YelRed', 0) == 1
+                red = getattr(v, 'RedCard', False) or getattr(v, 'Red', 0) == 1
+                if yellow or red:
+                    has_cards = True
+                    break
+
+            no_yellow_bonus = 0.5 if not has_cards else 0.0
+
+            # Punteggio totale Worst 11
+            total_score = score + mod_score + malus_cap + bonus_six + no_yellow_bonus
+
+            if total_score < worst_score:
+                players_list = []
+                for p in lineup + lineup_bench:
+                    players_list.append({
+                        "player_id": p.id,
+                        "player_rt": p.RealTeam,
+                        "player_role": p.Role,
+                        "player_surname": getattr(p, "surname", getattr(p, "name", str(p))),
+                        "player_vote": p.votes.Vote,
+                        "player_totvote": p.votes.TotVote,
+                        "player_stats": p.votes
+                    })
+
+                worst_score = total_score
+                worst_lineup = {
+                    "module": f"{d}{m}{a}",
+                    "modif": mod_score,
+                    "modif_tot": mod,
+                    "players": players_list,
+                    "modifier_from_no_gk": modNoGk_used,
+                    "captain": captain,
+                    "bcaptain": malus_cap,
+                    "all_six_bonus": bonus_six,
+                    "no_yellow_bonus": no_yellow_bonus,
+                    "score": total_score,
+                    "partial_score": score
+                }
+
+        except IndexError:
+            continue
+
+    return worst_lineup
+    
+    
+def pick_w11(keepers, defenders, midfielders, attackers):
+    """
+    Esegue il calcolo sia del Best 11 che del Worst 11 per una squadra e giornata.
+    """
+
+    # 2. Preparazione vettori per il WORST 11 (crescente)
+    k_w = sorted(keepers, key=lambda p: (p.votes.TotVote if p.votes.TotVote is not None else 999))
+    d_w = sorted(defenders, key=lambda p: (p.votes.TotVote if p.votes.TotVote is not None else 999))
+    m_w = sorted(midfielders, key=lambda p: (p.votes.TotVote if p.votes.TotVote is not None else 999))
+    a_w = sorted(attackers, key=lambda p: (p.votes.TotVote if p.votes.TotVote is not None else 999))
+
+    # 3. Calcolo parallelo
+    worst_res = pick_worst_11(k_w, d_w, m_w, a_w)
+
+    return {
+        "w11_score": worst_res["score"] if worst_res else 0.0,
+        "worst_lineup": worst_res
+    }    

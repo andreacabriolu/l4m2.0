@@ -48,6 +48,7 @@ urlpatterns = [
     path("l4m/getTeamSeriesByCompetition/", dashboard_views.GetTeamSeriesByCompetitionView.as_view(), name="get_team_series_by_competition"),
     path("l4m/getDaysByCompetition/", dashboard_views.GetDaysByCompetitionView.as_view(), name="get_days_by_competition"),
     path("l4m/myleagues/<int:competition_id>/", my_leagues_views.MyLeaguesView.as_view(), name="my_leagues"),
+    path("l4m/myleagues_no_match/<int:competition_id>/", my_leagues_views.MyLeaguesNoMatchView.as_view(), name="my_leagues_no_match"),
     path("l4m/retrieveCalendarInfo/", my_leagues_views.RetrieveCalendarInfoView.as_view(), name="retrieve_calendar_info"),
     path("l4m/calculate/getMissingLineups/", admin_views.GetMissingLineupsView.as_view(), name="get_missing_lineups"),
     path("l4m/get_live_ranking/", live_views.GetLiveRankingView.as_view(), name="get_live_ranking"),

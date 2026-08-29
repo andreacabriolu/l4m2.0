@@ -2,7 +2,7 @@ import math
 
 from .models import *
 from django.db.models import Q, Sum, Count, Case, When, Value, F, OuterRef, Subquery, Exists
-import json
+from .live_utilities import pick_worst_11  
 import datetime
 from django.shortcuts import get_object_or_404
 from django.db.models.functions import Coalesce
@@ -182,19 +182,206 @@ def get_winner(home_data, away_data):
         
     return (False, False) #DRAW, IMPOSSIBLE TO DECIDE WINNER
 
-def get_all_final_stages(competition_id):
-    return competition_calendar.CompetitionCalendar.objects.filter(Q(Competition=competition_id) &\
-                ~Q(Stage='Girone')).values('Stage','id','Overtime','Num_Matches').distinct()
+import json
 
-def get_et_outcome(home_data, away_data):
-    if home_data is None or away_data is None:
-        return False
-    return home_data['ET_Winner'] or away_data['ET_Winner'] and not (home_data['Pen_Winner'] or away_data['Pen_Winner'])
+def get_panchina_doro_flat_data(competition_id):
+    flat_data = []
 
-def get_pen_outcome(home_data, away_data):
-    if home_data is None or away_data is None:
-        return False
-    return home_data['Pen_Winner'] or away_data['Pen_Winner']
+    # Configurazioni Pesi (P1, P2, P3)
+    WEIGHTS = (0.5, 0.3, 0.2)
+
+    curr_season = get_current_season()
+    try:
+        current_day = int(get_current_day())
+    except (ValueError, TypeError):
+        current_day = 1
+
+    # Squadre della Serie di Campionato (Competition=1) per Stagione 2
+    teams = team.Team.objects.filter(
+        Series__Competition_id=1,
+        Series__Season_id=2
+    ).distinct().order_by('Name')
+
+    for t in teams:
+        daily_scores = []
+        total_pdo_pts = 0.0
+
+        my_series = get_my_series(t.id, competitionid=1)
+
+        # Cicla fino alla giornata precedente a quella corrente
+        for day in range(1, current_day):
+            # -------------------------------------------------------------
+            # FP Campionato e B11 da Database
+            # -------------------------------------------------------------
+            camp_res = matches_results.MatchesResults.objects.filter(
+                Team_id=t.id,
+                MatchesCalendar__Series__in=my_series,
+                MatchesCalendar__CompetitionCalendar__Day=day
+            ).values('Fp').first()
+
+            b11_res = b11_results.B11Results.objects.filter(
+                Team_id=t.id,
+                Day=day
+            ).values('B11Fp').first()
+
+            fp = float(camp_res['Fp']) if camp_res and camp_res['Fp'] is not None else 0.0
+            b11_fp = float(b11_res['B11Fp']) if b11_res and b11_res['B11Fp'] is not None else 0.0
+
+            # -------------------------------------------------------------
+            # CALCOLO W11 AL VOLO
+            # -------------------------------------------------------------
+            w11_fp = 0.0
+            
+            # Recuperiamo i giocatori in rosa per la squadra nella stagione corrente
+            squad_players = squads.Squads.objects.filter(
+                Team_id=t.id,
+                Quarantine=False,
+                Season=curr_season
+            ).select_related('Player')
+
+            player_ids = [s.Player_id for s in squad_players]
+
+            # Recuperiamo i voti per la giornata 'day'
+            votes_qs = vote.Vote.objects.filter(
+                Player_id__in=player_ids,
+                Day=day
+            )
+            votes_dict = {v.Player_id: v for v in votes_qs}
+
+            # Suddividiamo per ruolo ed associamo l'oggetto voti
+            keepers, defenders, midfielders, attackers = [], [], [], []
+
+            for s in squad_players:
+                p = s.Player
+                # Assegniamo l'oggetto voti al giocatore (o un mock vuoto se svincolato/senza voto)
+                p.votes = votes_dict.get(p.id, vote.Vote(Vote=None, TotVote=None))
+
+                if p.Role == 'P':
+                    keepers.append(p)
+                elif p.Role == 'D':
+                    defenders.append(p)
+                elif p.Role == 'C':
+                    midfielders.append(p)
+                elif p.Role == 'A':
+                    attackers.append(p)
+
+            # Ordiniamo in senso CRESCENTE per W11
+            k_w = sorted(keepers, key=lambda p: (p.votes.TotVote if p.votes.TotVote is not None else 999))
+            d_w = sorted(defenders, key=lambda p: (p.votes.TotVote if p.votes.TotVote is not None else 999))
+            m_w = sorted(midfielders, key=lambda p: (p.votes.TotVote if p.votes.TotVote is not None else 999))
+            a_w = sorted(attackers, key=lambda p: (p.votes.TotVote if p.votes.TotVote is not None else 999))
+
+            worst_res = pick_worst_11(k_w, d_w, m_w, a_w)
+            w11_fp = float(worst_res['score']) if worst_res else 0.0
+            
+            # ~ # Stampa di debug condizionale per team id
+            # ~ if t.id == 34:
+                # ~ print(f"\n================ WORST 11 - {t.Name} (PUNT {w11_fp}) ================", flush=True)
+                # ~ print(f"Punteggio W11 Totale: {w11_fp}", flush=True)
+                # ~ if worst_res and "players" in worst_res:
+                    # ~ print("Giocatori (Titolari + Panchina):", flush=True)
+                    # ~ for p in worst_res["players"]:
+                        # ~ print(
+                            # ~ f" - [{p['player_role']}] {p['player_surname']} ({p['player_rt']}): "
+                            # ~ f"Voto={p['player_vote']}, TotVoto={p['player_totvote']}", 
+                            # ~ flush=True
+                        # ~ )
+                # ~ else:
+                    # ~ print("Nessuna formazione W11 calcolata.", flush=True)
+                # ~ print("=====================================================================\n", flush=True)
+    
+    
+            # ~ # -------------------------------------------------------------
+            # PARAMETRO 1: (FP - W11) / (B11 - W11)
+            # -------------------------------------------------------------
+            if (b11_fp - w11_fp) > 0:
+                param1 = round((fp - w11_fp) / (b11_fp - w11_fp), 3)
+                param1 = max(0.0, min(param1, 1.0))
+            else:
+                param1 = 1.0
+
+            # -------------------------------------------------------------
+            # PARAMETRO 2: Profondità rosa (Voti movimento / 22)
+            # -------------------------------------------------------------
+            field_players_with_vote = 0
+            lineup_obj = lineup.Lineup.objects.filter(
+                Team_id=t.id,
+                Series__in=my_series,
+                Day=day
+            ).order_by('-Version').first()
+
+            if lineup_obj and lineup_obj.Line:
+                try:
+                    line_data = json.loads(cleanJSON(lineup_obj.Line))
+                    l_player_ids = [
+                        int(v) for k, v in line_data.items() 
+                        if k not in ['mod', 'captain', 'ot', 'penalties'] and str(v).isdigit()
+                    ]
+                    if l_player_ids:
+                        field_players_with_vote = vote.Vote.objects.filter(
+                            Player_id__in=l_player_ids,
+                            Day=day,
+                            Player__Role__in=['D', 'C', 'A']
+                        ).exclude(
+                            Q(Vote__isnull=True) | Q(Vote=0)
+                        ).values('Player_id').distinct().count()
+                except Exception as e:
+                    logger.error(f"Error parsing lineup: {e}")
+
+            param2 = round(min(field_players_with_vote / 22.0, 1.0), 3)
+
+            # -------------------------------------------------------------
+            # PARAMETRO 3: Relative B11 Scaling nella Serie
+            # -------------------------------------------------------------
+            param3 = 1.0
+            series_teams = team.Team.objects.filter(Series__in=my_series).values_list('id', flat=True)
+            series_b11_qs = b11_results.B11Results.objects.filter(
+                Team_id__in=series_teams,
+                Day=day
+            ).values_list('B11Fp', flat=True)
+
+            series_b11s = [float(score) for score in series_b11_qs if score is not None]
+
+            if series_b11s:
+                high_b11, low_b11 = max(series_b11s), min(series_b11s)
+                if high_b11 > low_b11:
+                    param3 = round((b11_fp - low_b11) / (high_b11 - low_b11), 3)
+
+            # -------------------------------------------------------------
+            # PUNTEGGIO DI GIORNATA
+            # -------------------------------------------------------------
+            w1, w2, w3 = WEIGHTS
+            day_pdo_score = round((param1 * w1) + (param2 * w2) + (param3 * w3), 3)
+            total_pdo_pts += day_pdo_score
+
+            daily_scores.append({
+                'day': day,
+                'pts': day_pdo_score,
+                'param1': param1,
+                'param2': param2,
+                'param3': param3,
+                'fp': fp,
+                'b11_fp': b11_fp,
+                'w11_fp': w11_fp,
+                'field_votes': field_players_with_vote,  # <-- Numero giocatori con voto
+                'b11_low': low_b11,                      # <-- Minimo B11 di giornata nella Serie
+                'b11_high': high_b11,                    # <-- Massimo B11 di giornata nella Serie
+            })
+            
+
+        avg_score = round(total_pdo_pts / len(daily_scores), 3) if daily_scores else 0.0
+
+        flat_data.append({
+            'team_id': t.id,
+            'team': t.Name,
+            'pdoav': avg_score,
+            'total_pts': round(total_pdo_pts, 3),
+            'daily_scores': daily_scores
+        })
+
+    flat_data.sort(key=lambda x: x['pdoav'], reverse=True)
+    return flat_data
+        
 
 def get_bracket_data_for_competition(competition_id):
     bracket_data = []
@@ -434,15 +621,39 @@ def get_matchdays_info(series):
     return matchdays_info
 
 
+def get_groups_data_no_competition(competition_id):
+	# Strcture for competitions that do not have an actual match (pdoro, r4m, b11 etc)
+    groups_data = []
+    series_girone = get_all_series_girone(competition_id)
+
+    print('ciao')
+    print(series_girone)
+
+
 def get_groups_data_for_competition(competition_id):
     groups_data = []
     series_girone = get_all_series_girone(competition_id)
 
     for s in series_girone:
-        group_teams = team.Team.objects.filter(Series__id=s.id).values('id','Name')
+# Rimuoviamo le restrizioni in .values(...) per estrarre TUTTI i campi del DB
+        group_teams = team.Team.objects.filter(Series__id=s.id).values()
         group_matchdays = get_matchdays_info(s)
         ranking_line = ranking.Ranking.objects.filter(Q(Series_id=s.id)).values_list('RankingLine', flat=True).order_by('-Day').first()
         group_ranking = parse_ranking_line(ranking_line) if ranking_line else []
+        
+        group_teams = team.Team.objects.filter(Series__id=s.id).values('id','Name')
+        group_matchdays = get_matchdays_info(s)
+        # 3. STAMPA DETTAGLIATA DI OGNI SQUADRA CON TUTTI GLI ATTRIBUTI
+        import pprint
+        for index, t in enumerate(group_matchdays, start=1):
+            print(f"\n--- matchdays {index} ---", flush=True)
+            pprint.pprint(dict(t))
+            
+        print("="*60 + "\n", flush=True)
+
+        ranking_line = ranking.Ranking.objects.filter(Q(Series_id=s.id)).values_list('RankingLine', flat=True).order_by('-Day').first()
+        group_ranking = parse_ranking_line(ranking_line) if ranking_line else []
+        
 
         groups_data.append({
             'id': s.id,
