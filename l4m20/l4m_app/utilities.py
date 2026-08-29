@@ -167,7 +167,7 @@ def get_panchina_doro_flat_data(competition_id):
     flat_data = []
 
     # Configurazioni Pesi (P1, P2, P3)
-    WEIGHTS = (1/3, 1/3, 1/3)
+    WEIGHTS = (0.5, 0.3, 0.2)
 
     curr_season = get_current_season()
     try:
