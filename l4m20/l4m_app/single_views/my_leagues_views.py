@@ -15,12 +15,8 @@ class MyLeaguesView(LoginRequiredMixin, View):
     template_name = 'l4m/my_leagues.html'
 
     def get(self,request, competition_id=None):
-        my_team = U.get_user_team(request.user.id)
         comp = competition.Competition.objects.get(id=competition_id)
         logo_path = comp.LogoPath
-        
-        groups_data = U.get_groups_data_for_competition(competition_id)
-        bracket_data = U.get_bracket_data_for_competition(competition_id)
 
         params = {
             'comp' : comp,
@@ -33,23 +29,13 @@ class MyLeaguesView(LoginRequiredMixin, View):
         return render(request, self.template_name, params)
 
 class MyLeaguesNoMatchView(LoginRequiredMixin, View):
-    template_name = 'l4m/my_leagues.html'
+    template_name = 'l4m/my_leagues_no_match.html'
 
     def get(self,request, competition_id=None):
-        my_team = U.get_user_team(request.user.id)
         comp = competition.Competition.objects.get(id=competition_id)
-        logo_path = comp.LogoPath
-        
-        # ~ bracket_data = U.get_bracket_data_no_competition(competition_id)
-
-        # ~ groups_data = U.get_groups_data_for_competition(competition_id)
-        # ~ bracket_data = U.get_bracket_data_for_competition(competition_id)
- 
+         
         # Retrieve the flat matchday records
         league_records = U.get_panchina_doro_flat_data(competition_id)
-        
-        print("AAA")
-        print(league_records)
 
         params = {
             'comp': comp,

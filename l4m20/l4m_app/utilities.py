@@ -382,7 +382,20 @@ def get_panchina_doro_flat_data(competition_id):
 
     flat_data.sort(key=lambda x: x['pdoav'], reverse=True)
     return flat_data
-        
+
+def get_et_outcome(home_data, away_data):
+    if home_data is None or away_data is None:
+        return False
+    return home_data['ET_Winner'] or away_data['ET_Winner'] and not (home_data['Pen_Winner'] or away_data['Pen_Winner'])
+
+def get_pen_outcome(home_data, away_data):
+    if home_data is None or away_data is None:
+        return False
+    return home_data['Pen_Winner'] or away_data['Pen_Winner']
+
+def get_all_final_stages(competition_id):
+    return competition_calendar.CompetitionCalendar.objects.filter(Q(Competition=competition_id) &\
+                ~Q(Stage='Girone')).values('Stage','id','Overtime','Num_Matches').distinct()
 
 def get_bracket_data_for_competition(competition_id):
     bracket_data = []
