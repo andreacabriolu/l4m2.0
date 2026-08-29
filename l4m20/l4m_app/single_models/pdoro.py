@@ -10,6 +10,8 @@ class Pdoro(models.Model):
     C1 = models.FloatField()
     C2 = models.FloatField()
     C3 = models.FloatField()
+    w11 = models.FloatField(default=0.0)
+    v22 = models.IntegerField(default=0)
     Pts = models.FloatField()
 
 
