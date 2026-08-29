@@ -221,11 +221,13 @@ def get_winner(home_data, away_data):
     return (False, False) #DRAW, IMPOSSIBLE TO DECIDE WINNER
 
 
-def get_panchina_doro_flat_data(competition_id):
+def get_panchina_doro_flat_data(day=None, getForCalculation=False):
     flat_data = []
 
     # Configurazioni Pesi (P1, P2, P3)
-    WEIGHTS = (0.5, 0.3, 0.2)
+    WEIGHTS = (C.Pdoro.WEIGHTS['P1'], 
+               C.Pdoro.WEIGHTS['P2'], 
+               C.Pdoro.WEIGHTS['P3'])
 
     try:
         current_day = int(get_current_day())
@@ -242,7 +244,10 @@ def get_panchina_doro_flat_data(competition_id):
         daily_scores = []
         total_pdo_pts = 0.0
 
-        my_series = get_my_series(t.id, competitionid=1)
+        _series = get_my_series(t.id, competitionid=1)
+
+        #Prendi TUTTE le giornate dal database
+        pdoro_team_results = pdoro.Pdoro.objects.filter(Team=t.id, Season__Active=True).order_by('Day')
 
         # Cicla fino alla giornata precedente a quella corrente
         for day in range(1, current_day):
@@ -251,7 +256,7 @@ def get_panchina_doro_flat_data(competition_id):
             # -------------------------------------------------------------
             camp_res = matches_results.MatchesResults.objects.filter(
                 Team_id=t.id,
-                MatchesCalendar__Series__in=my_series,
+                MatchesCalendar__Series__in=_series,
                 MatchesCalendar__CompetitionCalendar__Day=day
             ).values('Fp').first()
             
@@ -370,7 +375,7 @@ def get_panchina_doro_flat_data(competition_id):
             # -------------------------------------------------------------
             param3 = 1.0
             low_b11, high_b11 = 0.0, 0.0
-            series_teams = team.Team.objects.filter(Series__in=my_series).values_list('id', flat=True)
+            series_teams = team.Team.objects.filter(Series__in=_series).values_list('id', flat=True)
             series_b11_qs = b11_results.B11Results.objects.filter(
                 Team_id__in=series_teams,
                 Day=day,

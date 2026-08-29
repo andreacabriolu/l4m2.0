@@ -35,7 +35,7 @@ class MyLeaguesNoMatchView(LoginRequiredMixin, View):
         comp = competition.Competition.objects.get(id=competition_id)
          
         # Retrieve the flat matchday records
-        league_records = U.get_panchina_doro_flat_data(competition_id)
+        league_records = U.get_panchina_doro_flat_data(day=U.get_current_day())
 
         params = {
             'comp': comp,

@@ -36,6 +36,20 @@ def LineupView_(request):
     players_cc = U.get_my_players_filtered("C", teamid)
     players_fw = U.get_my_players_filtered("A", teamid)
 
+    ##### INCLUDE THIS
+    # svincoli_current_day = U.get_svincoli_current_day(current_day_boundaries, teamid)
+    # new_official_current_day = U.get_official_current_day(current_day_boundaries, teamid)
+
+    # if len(svincoli_current_day) > 0:
+    #     additional_players = player.Player.objects.filter(id__in=svincoli_current_day)\
+    #         .values('id','Surname','Role','RealTeam')
+    #     players = players.union(additional_players)
+    
+    # if len(new_official_current_day) > 0:
+    #     official_players = player.Player.objects.filter(id__in=new_official_current_day)\
+    #         .values('id','Surname','Role','RealTeam')
+    #     players = players.difference(official_players)
+
     for gk in players_gk:
         pl_realteamid = gk['Player__RealTeam__id']
         real_match = real_calendar.Real_calendar.objects.filter(Q(Day=current_day) & Q(Season__Active=True) & \

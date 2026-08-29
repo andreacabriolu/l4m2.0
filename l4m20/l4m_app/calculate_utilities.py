@@ -5,6 +5,33 @@ from . import live_utilities as LU
 from django.db.models import Q
 from l4m20 import constants as C
 
+def save_pdoro_results(results, day):
+    for result in results:
+        if result is not None:
+            pdoro_result = pdoro.Pdoro(
+                Team = team.Team.objects.get(pk=result['team_id']),
+                Day = day,
+                Score = result['score'],
+                Param1 = result['param1'],
+                Param2 = result['param2'],
+                Param3 = result['param3'],
+                Season = season.Season.objects.get(Active=True)
+            )
+            pdoro_result.save()
+
+def calculate_pdoro(pdoro_competition, day):
+    pdoro_series = U.get_unica_series(pdoro_competition)
+    if len(pdoro_series) > 0: 
+        team_ids_names = team.Team.objects.filter(Active=True).values_list("id", "Name")
+
+        curr_day = U.get_current_day() 
+        days_to_calculate = range(int(day), int(curr_day)) if (int(day) < int(curr_day)) else [int(curr_day)]
+        
+        for _day in days_to_calculate:
+            pdoro_results = LU.get_best_11(team_ids_names, _day, live_teams=[], live_votes=[], already_played_teams=[], getForCalculation=True)
+            save_pdoro_results(pdoro_results, _day)
+            # write_pdoro_ranking(all_best, pdoro_competition.id, pdoro_series[0].id, _day)
+
 def write_league_rankings(vote_per_series, competition_id, day, seriesid, noLineup=False):
     last_ranking = U.get_last_available_ranking_by_day(competition_id, seriesid, int(day))
     
@@ -598,7 +625,3 @@ def save_results_for_total(votes_per_series):
         
         mr_home.save()
         mr_away.save()
-        
-        
-def calculate_panchina_doro(competition, day):
-    print('ciao') 

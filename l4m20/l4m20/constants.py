@@ -76,12 +76,18 @@ MAX_NON_SCHIERATE = 1
 WIN_PT = 3
 DRAW_PT = 1
 LOSE_PT = 0
-# WAGE_MULTIPLIER = 0.5
 MAX_TRIENNAL_CONTRACTS_PER_ROLE = 1
 MIN_ANNUAL_CONTRACTS_PER_ROLE = 1
 BID_CANCEL_TIMEOUT = 20
 NUM_DAYS_AUCTION = 2
 MAX_QUARANTINES = 1
+
+class Pdoro:
+    WEIGHTS = {
+        'P1': .5,
+        'P2': .3,
+        'P3': .2,
+    }
 
 class CancelBidResult:
     CANCEL_OK = 0

@@ -46,8 +46,10 @@
                                                 <span>B: {{ day_stat.b11_fp|floatformat:1 }}</span>
                                             </div>
                                             <div class="gauge-track">
-                                                <div class="gauge-fill fill-p1" style="width: {% widthratio day_stat.param1 1 100 %}%;"></div>
-                                                <div class="gauge-pin pin-fp" style="left: {% widthratio day_stat.param1 1 100 %}%;"></div>
+                                                {% widthratio day_stat.param1 1 100 as width_val %}
+                                                <div class="gauge-fill fill-p1" style="--gauge-width: {{ width_val }}%;"></div>
+                                                {% widthratio day_stat.param1 1 100 as width_val %}
+                                                <div class="gauge-pin pin-fp" style="--gauge-pin-left: {{ width_val }}%;"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -64,8 +66,10 @@
                                                 <span>22</span>
                                             </div>
                                             <div class="gauge-track">
-                                                <div class="gauge-fill fill-p2" style="width: {% widthratio day_stat.param2 1 100 %}%;"></div>
-                                                <div class="gauge-pin pin-p2" style="left: {% widthratio day_stat.param2 1 100 %}%;"></div>
+                                                {% widthratio day_stat.param2 1 100 as width_val %}
+                                                <div class="gauge-fill fill-p2" style="--gauge-width: {{ width_val }}%;"></div>
+                                                {% widthratio day_stat.param2 1 100 as width_val %}
+                                                <div class="gauge-pin pin-p2" style="--gauge-pin-left: {{ width_val }}%;"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -82,8 +86,10 @@
                                                 <span>Max: {{ day_stat.b11_high|floatformat:1 }}</span>
                                             </div>
                                             <div class="gauge-track">
-                                                <div class="gauge-fill fill-p3" style="width: {% widthratio day_stat.param3 1 100 %}%;"></div>
-                                                <div class="gauge-pin pin-p3" style="left: {% widthratio day_stat.param3 1 100 %}%;"></div>
+                                                {% widthratio day_stat.param3 1 100 as width_val %}
+                                                <div class="gauge-fill fill-p3" style="--gauge-width: {{ width_val }}%;"></div>
+                                                {% widthratio day_stat.param3 1 100 as width_val %}
+                                                <div class="gauge-pin pin-p3" style="--gauge-pin-left: {{ width_val }}%;"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -103,140 +109,3 @@
         {% endfor %}
     </tbody>
 </table>
-
-<!-- CSS Aggiornato -->
-<style>
-.main-team-row:hover {
-    background-color: rgba(255, 255, 255, 0.04);
-}
-
-/* Griglia auto-adattabile con larghezza minima garantita per scheda (min 180px) */
-.day-grid-responsive {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 0.85rem;
-}
-
-.day-score-card {
-    background: #1e232d;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 10px;
-    padding: 0.85rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
-}
-
-.card-header-sm {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding-bottom: 0.35rem;
-    margin-bottom: 0.5rem;
-}
-
-.day-badge {
-    color: #94a3b8;
-    font-weight: 700;
-    font-size: 0.85rem;
-}
-
-.pts-val {
-    color: #38bdf8;
-    font-weight: 800;
-    font-size: 0.95rem;
-}
-
-.params-graphic-container {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-}
-
-.param-block {
-    display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
-}
-
-.param-header {
-    font-family: monospace;
-    font-size: 0.76rem;
-    line-height: 1.2;
-}
-
-.param-eff-val {
-    font-weight: 700;
-}
-
-.param-coeff {
-    color: #f8fafc;
-    font-weight: 800;
-}
-
-.color-fp { color: #f59e0b; }
-.color-p2 { color: #38bdf8; }
-.color-p3 { color: #a78bfa; }
-
-.gauge-wrapper {
-    position: relative;
-    margin-top: 0.15rem;
-}
-
-.gauge-ext-labels {
-    font-size: 0.65rem;
-    color: #64748b;
-    font-family: monospace;
-    margin-bottom: 0.1rem;
-}
-
-.gauge-track {
-    position: relative;
-    height: 6px;
-    background: #334155;
-    border-radius: 3px;
-    overflow: visible;
-}
-
-/* Riempimento Barre */
-.fill-p1 { height: 100%; background: linear-gradient(90deg, #ef4444 0%, #f59e0b 50%, #10b981 100%); border-radius: 3px; }
-.fill-p2 { height: 100%; background: #0284c7; border-radius: 3px; }
-.fill-p3 { height: 100%; background: #8b5cf6; border-radius: 3px; }
-
-/* Pallini Mobili */
-.gauge-pin {
-    position: absolute;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 10px;
-    height: 10px;
-    background-color: #ffffff;
-    border-radius: 50%;
-    box-shadow: 0 0 4px rgba(0,0,0,0.8);
-    z-index: 2;
-}
-
-.pin-fp { border: 2px solid #f59e0b; }
-.pin-p2 { border: 2px solid #0284c7; }
-.pin-p3 { border: 2px solid #8b5cf6; }
-</style>
-
-<!-- JavaScript Toggle Drawer -->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.clickable-row').forEach(function(row) {
-            row.addEventListener('click', function() {
-                const targetId = this.getAttribute('data-target');
-                const drawerRow = document.querySelector(targetId);
-                const chevron = this.querySelector('.toggle-icon');
-
-                if (drawerRow) {
-                    drawerRow.classList.toggle('d-none');
-                    if (chevron) {
-                        chevron.classList.toggle('bi-chevron-down');
-                        chevron.classList.toggle('bi-chevron-up');
-                    }
-                }
-            });
-        });
-    });
-</script>
