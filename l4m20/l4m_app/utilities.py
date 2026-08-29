@@ -352,7 +352,8 @@ def get_panchina_doro_flat_data(competition_id):
             # -------------------------------------------------------------
             w1, w2, w3 = WEIGHTS
             day_pdo_score = round((param1 * w1) + (param2 * w2) + (param3 * w3), 3)
-            total_pdo_pts += day_pdo_score
+            dday = min(current_day-1,35)
+            total_pdo_pts += day_pdo_score/dday
 
             daily_scores.append({
                 'day': day,

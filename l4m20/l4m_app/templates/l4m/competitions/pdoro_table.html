@@ -3,8 +3,7 @@
         <tr>
             <th class="col-pos">#</th>
             <th class="col-team text-start">Squadra</th>
-            <th class="text-center">Coeff Avg <small class="text-muted">(Click per dettagli)</small></th>
-            <th class="text-center">Totale</th>
+            <th class="text-center">Punteggio (click per le grionate)</th>
         </tr>
     </thead>
     <tbody>
@@ -14,11 +13,6 @@
             <td class="col-pos">{{ forloop.counter }}</td>
             <td class="col-team text-start">
                 <span class="team-name fw-bold text-primary">{{ record.team }}</span>
-            </td>
-            <td class="text-center">
-                <span class="badge bg-primary fs-6 pdo-avg-badge">
-                    {{ record.pdoav|floatformat:3 }} <i class="bi bi-chevron-down ms-1 toggle-icon"></i>
-                </span>
             </td>
             <td class="text-center"><strong>{{ record.total_pts|floatformat:3 }}</strong></td>
         </tr>
