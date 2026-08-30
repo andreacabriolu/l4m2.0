@@ -8,6 +8,7 @@ import json
 from django.db.models import Q
 
 from .. import utilities as U
+from .. import my_leagues_utilities as MLU
 from ..models import *
 from l4m20 import constants as C
 
@@ -34,8 +35,9 @@ class MyLeaguesNoMatchView(LoginRequiredMixin, View):
     def get(self,request, competition_id=None):
         comp = competition.Competition.objects.get(id=competition_id)
          
-        # Retrieve the flat matchday records
-        league_records = U.get_panchina_doro_flat_data(day=U.get_current_day())
+        # Retrieve the flat matchday records from DB
+        league_records = MLU.retrieve_pdoro_data(day=U.get_current_day(), competition_id=competition_id)
+        # league_records = U.get_panchina_doro_flat_data(day=U.get_current_day())
 
         params = {
             'comp': comp,

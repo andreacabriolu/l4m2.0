@@ -88,6 +88,7 @@ class Pdoro:
         'P2': .3,
         'P3': .2,
     }
+    MAX_VAL = 999
 
 class CancelBidResult:
     CANCEL_OK = 0

@@ -3,8 +3,7 @@ import pprint
 import json
 
 from .models import *
-from django.db.models import Q, Sum, Count, Case, When, Value, F, OuterRef, Subquery, Exists
-from .live_utilities import pick_worst_11  
+from django.db.models import Q, Sum, Count, Value, OuterRef, Subquery, Exists
 import datetime
 from django.shortcuts import get_object_or_404
 from django.db.models.functions import Coalesce
@@ -12,6 +11,7 @@ from zoneinfo import ZoneInfo
 from l4m20 import constants as C
 import requests as req
 from .libs import *
+from .live_utilities import pick_worst_11
 
 def quarantine_player(data):
     player_id = data['player_id']
@@ -51,9 +51,9 @@ def quarantine_player(data):
 
 def get_signed_contracts(teamid):
     _squads = squads.Squads.objects.filter(
-        Q(Team_id=teamid) & 
+        Q(Team_id=teamid) &
         Q(Season_id=get_current_season().id)).values('Player_id','Years')
-    
+
     signed_contracts_per_role = {
         'P': {'1': 0, '2': 0, '3': 0},
         'D': {'1': 0, '2': 0, '3': 0},
@@ -74,7 +74,7 @@ def get_bids_history(market):
 
     bids_history = []
     #group by player and get the last bid for each player
-    
+
     for player_id in set([b['Player_id'] for b in history]):
         last_bids = history.filter(Player_id=player_id).order_by('-Time')
         p = get_object_or_404(player.Player, pk=player_id)
@@ -97,12 +97,12 @@ def undo_bet(data, team):
     logger.debug(f"UNDOING BET: {data['bet_id']} FOR TEAM: {team['id']} AND PLAYER: {data['player_id']}")
 
     teamid = team['id']
-    
+
     #check for existing bet
     existing_bet = bet.Bet.objects.filter(Q(id=data['bet_id']) & Q(Team_id=teamid)).first()
     if not existing_bet:
         return C.CancelBidResult.CANCEL_NOT_FOUND
-    
+
     existing_bet_time = existing_bet.Time
 
     #check if a new bet has been placed for the same player after the bet to be undone
@@ -124,9 +124,9 @@ def undo_bet(data, team):
 
     #restore old bet, if existing
     last_bet = bet_history.Bet_History.objects.filter(
-        Player_id=data['player_id'], 
+        Player_id=data['player_id'],
         Session_id=get_current_session(existing_bet.Market).id).order_by('-Time').first()
-    
+
     if last_bet:
         old_bet = bet.Bet(
             Amount=last_bet.Amount,
@@ -149,7 +149,7 @@ def get_current_season():
 def parse_ranking_line(ranking_line):
     json_l = json.loads(ranking_line)
     lines = []
-    
+
     for l in json_l:
         line = {}
         for k,v in l.items():
@@ -158,7 +158,7 @@ def parse_ranking_line(ranking_line):
                 line[_k] = float(_v)
 
         lines.append(line)
-    
+
     #sort by pt and then by fpt
     lines.sort(key=lambda x: (x.get('pt', 0), x.get('fpt', 0)), reverse=True)
 
@@ -185,7 +185,7 @@ def get_layer_name_by_matches_count(matches_count):
             return 'Finale'
         case _:
             return f'round_of_{matches_count*2}'
-        
+
 def get_matches_results_for_bracket(calendar_id):
     return list(matches_results.MatchesResults.objects.\
                         filter(MatchesCalendar__CompetitionCalendar_id=calendar_id).\
@@ -217,7 +217,7 @@ def get_winner(home_data, away_data):
             return (True, False)
         elif away_data['pen_winner']:
             return (False, True)
-        
+
     return (False, False) #DRAW, IMPOSSIBLE TO DECIDE WINNER
 
 
@@ -463,14 +463,14 @@ def get_bracket_data_for_competition(competition_id):
 
             results_first_leg = get_matches_results_for_bracket(first_leg['id'])
             results_second_leg = get_matches_results_for_bracket(second_leg['id'])
-            
+
             grouped_results_first_leg = {}
             for result in results_first_leg:
                 mc_id = result['MatchesCalendar_id']
                 if mc_id not in grouped_results_first_leg:
                     grouped_results_first_leg[mc_id] = []
                 grouped_results_first_leg[mc_id].append(result)
-            
+
             grouped_results_second_leg = {}
             for result in results_second_leg:
                 mc_id = result['MatchesCalendar_id']
@@ -497,17 +497,17 @@ def get_bracket_data_for_competition(competition_id):
                         'away': '-',
                         "is_final": False,
                         "legs" : [
-                            {                    
+                            {
                                 'home_score': '-' ,
                                 'away_score': '-' ,
                                 'played': False
                             },
-                            {                    
+                            {
                                 'home_score': '-' ,
                                 'away_score': '-' ,
                                 'played': False
                             },
-                        ], 
+                        ],
                         "aggregate_home": '-',
                         "aggregate_away": '-',
                         "winner": None
@@ -520,18 +520,18 @@ def get_bracket_data_for_competition(competition_id):
                 leg_result[1].sort(key=lambda x: x['MatchesCalendar__HomeTeam_id'] == x['Team_id'], reverse=True) if leg_result[1] else None #sort second leg results to have home team first
                 result_home_first_leg, result_away_first_leg = leg_result[0][0], leg_result[0][1]
                 result_home_second_leg, result_away_second_leg = leg_result[1][0] if leg_result[1] else None, leg_result[1][1] if leg_result[1] else None
-            
+
                 layer_results[layer_name].append({
                     'home': get_team_name_by_id(result_home_first_leg['Team_id']),
                     'away': get_team_name_by_id(result_away_first_leg['Team_id']),
                     "is_final": False,
                     "legs" : [
-                        {                    
+                        {
                             'home_score': result_home_first_leg['NGoals'] ,
                             'away_score': result_away_first_leg['NGoals'] ,
                             'played': True
                         },
-                        {                    
+                        {
                             'home_score': result_away_second_leg['NGoals'] if result_away_second_leg is not None else '-',
                             'away_score': result_home_second_leg['NGoals'] if result_home_second_leg is not None else '-',
                             'played': True if result_home_second_leg is not None and result_away_second_leg is not None else False,
@@ -542,7 +542,7 @@ def get_bracket_data_for_competition(competition_id):
                                 "away_penalties": result_home_second_leg['Pen'] if result_home_second_leg is not None else 0
                             }
                         },
-                    ], 
+                    ],
                     "aggregate_home": result_home_first_leg['NGoals'] + (result_away_second_leg['NGoals'] if result_away_second_leg is not None else 0),
                     "aggregate_away": result_away_first_leg['NGoals'] + (result_home_second_leg['NGoals'] if result_home_second_leg is not None else 0),
                     "winner": None
@@ -575,7 +575,7 @@ def get_bracket_data_for_competition(competition_id):
                         },
                         "winner": None
                     })
-            
+
     #update winners
     for _,v in layer_results.items():
         for match_result in v:
@@ -617,7 +617,7 @@ def get_bracket_data_for_competition(competition_id):
             'stage': layer_name,
             'matches': list(layer_results[layer_name]),
         })
-        
+
     return bracket_data
 
 def get_matchdays_info(series):
@@ -634,7 +634,7 @@ def get_matchdays_info(series):
         results = list(matches_results.MatchesResults.objects.\
                     filter(MatchesCalendar__Series_id=series.id, MatchesCalendar__CompetitionCalendar__Day=day).\
                     values('MatchesCalendar_id','Team_id','NGoals','MatchesCalendar__HomeTeam_id','MatchesCalendar__AwayTeam_id'))
-            
+
         if len(results) == 0: # match yet to be played
             empty_results = matches_calendar.MatchesCalendar.objects.filter(Series_id=series.id, CompetitionCalendar__Day=day)\
                 .values('id','HomeTeam_id','AwayTeam_id')
@@ -667,13 +667,13 @@ def get_matchdays_info(series):
                 'played': True
             })
 
-            
+
         matchdays_info.append({
                 'number': day,
                 'is_live': False,
                 'matches': list(match_results.values())
             })
-        
+
         matchdays_info.sort(key=lambda x: x['number'])
 
     return matchdays_info
@@ -698,19 +698,19 @@ def get_groups_data_for_competition(competition_id):
         group_matchdays = get_matchdays_info(s)
         ranking_line = ranking.Ranking.objects.filter(Q(Series_id=s.id)).values_list('RankingLine', flat=True).order_by('-Day').first()
         group_ranking = parse_ranking_line(ranking_line) if ranking_line else []
-        
+
         group_teams = team.Team.objects.filter(Series__id=s.id).values('id','Name')
         group_matchdays = get_matchdays_info(s)
         # 3. STAMPA DETTAGLIATA DI OGNI SQUADRA CON TUTTI GLI ATTRIBUTI
         for index, t in enumerate(group_matchdays, start=1):
             print(f"\n--- matchdays {index} ---", flush=True)
             pprint.pprint(dict(t))
-            
+
         print("="*60 + "\n", flush=True)
 
         ranking_line = ranking.Ranking.objects.filter(Q(Series_id=s.id)).values_list('RankingLine', flat=True).order_by('-Day').first()
         group_ranking = parse_ranking_line(ranking_line) if ranking_line else []
-        
+
 
         groups_data.append({
             'id': s.id,
@@ -775,7 +775,7 @@ def get_official_current_day(day_time_boundaries, teamid):
         Q(Expiration_Date__lte=day_time_boundaries[1]) &
         Q(Market=_market.id)
     ).values('Player_id')
-    
+
     return [o['Player_id'] for o in official]
 
 def is_live_day():
@@ -794,7 +794,7 @@ def get_svincoli_current_day(day_time_boundaries, teamid):
         Q(Time__lte=day_time_boundaries[1]) &
         Q(Market=_market.id)
     ).values('Player_id')
-    
+
     return [s['Player_id'] for s in svincoli]
 
 def get_current_day_boundaries(current_day):
@@ -812,7 +812,7 @@ def check_day_suspended(day):
 
 def get_competition_calendar_entry(competition_id, day):
     cc = competition_calendar.CompetitionCalendar.objects.filter(
-        Q(Competition=competition_id) & 
+        Q(Competition=competition_id) &
         Q(Day=day) &
         Q(Season__Active=True)
     )
@@ -837,12 +837,12 @@ def check_late_lineup(teamid, day, competition_id):
 
     if len(_series) > 0:
         lin = lineup.Lineup.objects.filter(
-            Q(Day=day) & 
-            Q(Team=teamid) & 
+            Q(Day=day) &
+            Q(Team=teamid) &
             Q(Series=_series[0])).values('Version').order_by('Version')
 
     return not (lin.first()['Version'] > (-1)) if len(lin) > 0 else False
- 
+
 
 def get_day_comps_lineups(day):
     teams = team.Team.objects.filter(Active=True).values('id','Name')
@@ -851,7 +851,7 @@ def get_day_comps_lineups(day):
     for t in teams:
         t_nlineups = get_my_lineups_by_day_distinct(t['id'], day)
         t_comps = get_my_lineup_competitions_from_calendar(t['id'], day)
-        
+
         team_lups_comps[t['id']] = {'tname':t['Name'], \
                                     'nlineups': t_nlineups['nlin'], \
                                     'ncomps': len(t_comps), \
@@ -880,8 +880,8 @@ def get_my_active_competitions_filtered(teamid, day):
 
 def get_results_calendar(series_id, day):
     results = []
-    mcs = matches_calendar.MatchesCalendar.objects.filter(Q(Series_id=series_id) ) 
-    
+    mcs = matches_calendar.MatchesCalendar.objects.filter(Q(Series_id=series_id) )
+
     for mc in mcs:
         ngoals_home = matches_results.MatchesResults.objects.filter(Q(MatchesCalendar_id=mc.id) & Q(Team_id=mc.HomeTeam.id)).values('NGoals')
         ngoals_away = matches_results.MatchesResults.objects.filter(Q(MatchesCalendar_id=mc.id) & Q(Team_id=mc.AwayTeam.id)).values('NGoals')
@@ -893,7 +893,7 @@ def get_results_calendar(series_id, day):
             ngoals_away[0]['NGoals'] if len(ngoals_away) > 0 else '-',
             mc.AwayTeam.Name,
             ])
-    
+
     return results
 
 def is_current_day_completed():
@@ -947,7 +947,7 @@ def get_ranking(c_id, s_id, day):
 def get_days(c_id):
     return competition_calendar.CompetitionCalendar.objects.filter(
         Q(Competition=c_id)&
-        Q(Suspended=False) & 
+        Q(Suspended=False) &
         Q(Season__Active=True)
     ).values('Day')
 
@@ -1033,7 +1033,7 @@ def get_all_series_from_calendar(competitionid, day):
 
 def get_unica_series(competitionid):
     return series.Series.objects.filter(
-        Q(Name='Unica') & 
+        Q(Name='Unica') &
         Q(Competition_id=competitionid))
 
 def get_my_series_from_calendar(teamid, competitionid, day):
@@ -1091,13 +1091,13 @@ def get_players_by_lups(l_ups):
 def is_any_market_active(current_day_boundaries=None):
     if current_day_boundaries == (None,None):
         return False
-    
+
     _time = datetime.datetime.now(ZoneInfo('Europe/Rome')) if current_day_boundaries is None else \
         current_day_boundaries[0] #start of the day
 
     session_ = session.Session.objects.filter(Q(Begin__lte=_time) &
                                            Q(End__gte=_time))
-    
+
     return len(session_) > 0
 
 def get_current_session(marketid):
@@ -1106,10 +1106,10 @@ def get_current_session(marketid):
     session_ = session.Session.objects.filter(Q(Market_id=marketid) &
                                           Q(Begin__lte=nowtime) &
                                           Q(End__gte=nowtime))
-    
-    if(len(session_) <=0): 
+
+    if(len(session_) <=0):
         return None
-    
+
     return session_[0]
 
 def get_my_market(teamid=None, userid=None):
@@ -1119,10 +1119,10 @@ def get_my_market(teamid=None, userid=None):
         teamid = get_user_team(userid)['id']
 
     myseries = get_my_series(teamid)
-    if(len(myseries) <= 0): 
+    if(len(myseries) <= 0):
         return
     mymarkets = get_my_markets(myseries[0].id)
-    if(len(mymarkets) <= 0): 
+    if(len(mymarkets) <= 0):
         return
     return mymarkets[0]
 
@@ -1130,7 +1130,7 @@ def get_my_svincolati(team, session=None):
     svincoli_list = \
         bet_history.Bet_History.objects.filter(Q(Team=team) & Q(Svincolo=True) & Q(Session_svincolo=session)) if session is not None else \
         bet_history.Bet_History.objects.filter(Q(Team=team) & Q(Svincolo=True))
-    
+
     return [s.Player_id for s in svincoli_list]
 
 def get_all_players_my_series(teamid, filtered_teams_ids, my_svincoli_current_session, my_market):
@@ -1185,7 +1185,7 @@ def get_players_my_series(filter_role, teamid, filtered_teams_ids, my_svincoli_c
         Team_id__in=filtered_teams_ids,
         Market_id=my_market
     ).order_by('id')
-    
+
     return player.Player.objects.filter(
         Role=filter_role,
         RealTeam__isnull=False,
@@ -1208,7 +1208,7 @@ def get_players_my_series(filter_role, teamid, filtered_teams_ids, my_svincoli_c
         'bet__Amount', 'bet__Team_id__Name', 'bet__IsExpired','bet__Carognata','bet__Expiration_Date'
     ).distinct('id')
 
-        
+
 def check_max_n_bets(teamid, role):
     qplayer = squads.Squads.objects.\
       filter(Q(Team_id=teamid) & 
@@ -1216,7 +1216,7 @@ def check_max_n_bets(teamid, role):
              Q(Season__Active=True)).first()
     
     if(qplayer):
-        idq = qplayer.Player_id   
+        idq = qplayer.Player_id
     else:
         idq = -1
 
@@ -1224,13 +1224,13 @@ def check_max_n_bets(teamid, role):
         filter(Q(Team_id=teamid) & Q(Market_id=get_my_market(teamid).id) & Q(Player__Role=role)).\
         exclude(Q(Player_id = idq)).\
         aggregate(Count('id'))
-        
+
     max_num = \
             C.NUM_GK if role == "P" else \
             C.NUM_DEF if role == "D" else \
             C.NUM_CC if role == "C" else \
             C.NUM_FW if role == "A" else -1
-    
+
     return (
         True if num_bets['id__count'] < max_num else False
     )
@@ -1263,7 +1263,7 @@ def get_balance_for_bets(teamid, balance_max, marketid=None):
     return ((balance_max - sum['Amount__sum'] - num_missing_slots) if sum['Amount__sum'] is not None else balance_max - num_missing_slots)
 
 def get_my_best_bets(teamid, marketid):
-	
+
     qplayer = squads.Squads.objects.\
       filter(Q(Team_id=teamid) & 
              Q(Quarantine=True) & 
@@ -1272,17 +1272,17 @@ def get_my_best_bets(teamid, marketid):
     bets = bet.Bet.objects.\
         filter(Q(Team_id=teamid) & Q(Market_id=marketid)).\
         values('Amount','Expiration_Date', 'Session_id',
-               'IsExpired','id','Team_id','IsOfficial','Carognata', 
-               'Player_id__Role', 'Player_id__RealTeam__Name', 
+               'IsExpired','id','Team_id','IsOfficial','Carognata',
+               'Player_id__Role', 'Player_id__RealTeam__Name',
                'Player_id__Quotation', 'Player_id__Status', 'Player_id','Player_id__Surname',
                'squads__Years', 'squads__Quarantine', 'Player__quarantine__QuarantinableUntil').distinct('Player_id')
                
     # if(qplayer is not None):
     #    bets = bets.exclude(Q(Player_id=qplayer.Player_id))
 
-    return bets   
-       
-       
+    return bets
+
+
 def list_my_best_bets(mbb):
     ls = list(mbb).__str__()
     lsr = ls.replace('\'','"')
@@ -1304,7 +1304,7 @@ def get_all_team_players():
         values('id','Surname','Name','Role','bet__Team_id','bet__Amount',\
                'bet__IsExpired','bet__Carognata','bet__Expiration_Date')
 
-                
+
 def send_bet(data):
     bet_obj =  bet.Bet_Obj()
     bet_obj.Amount = int(data['betamount'])
@@ -1314,11 +1314,11 @@ def send_bet(data):
     bet_obj.Slot = data['slot']
     bet_obj.Market = data['market']
     bet_obj.Session = data['session']
-    
+
     carognata = data['carognata']
     balance_max = data['balancemax']
     exp_date_obj = datetime.datetime.strptime(bet_obj.Expiration_Date, '%d/%m/%Y, %H:%M:%S').\
-        replace(tzinfo=datetime.timezone.utc)   
+        replace(tzinfo=datetime.timezone.utc)
 
     player_ = get_object_or_404(player.Player, id=bet_obj.Player)
     user_team = get_object_or_404(team.Team, id=bet_obj.Team) #TODO: how to avoid this double fetch?
@@ -1372,25 +1372,25 @@ def send_bet(data):
         bet_new.save()
 
         if(carognata == True):
-            
+
             my_bal.N_carognate = ncarognate + 1
 
             if(my_bal.N_carognate > session_.Ncarognate): #penalty
                 my_bal.Wages_max = my_bal.Wages_max - 1
 
             my_bal.save()
-    
+
     except Exception as e:
         # if(bet_new is not None):
         #     bet_new.delete() #rollback
         #RESCUE OLD BET FROM BET_HISTORY TODO
-        raise Exception(e) 
+        raise Exception(e)
 
     new_balance_for_bets = get_balance_for_bets(bet_obj.Team, int(my_bal.Purchases_max), marketid=market_.id)
     new_bets_amount = get_current_bets_amount(bet_obj.Team, marketid=market_.id)
 
     return C.SendBetReturnValues(
-            bet_result=C.SendBetResult.BET_OK, 
+            bet_result=C.SendBetResult.BET_OK,
             bet_id=bet_new.id,
             residual=(my_bal.Purchases_max  - new_bets_amount),
             spent=new_bets_amount,
@@ -1413,10 +1413,10 @@ def finalize_bet(data):
 
     if(len(last_bet) <= 0): #very rare case, only during tests
         return
-    
+
     if(last_bet[0].IsOfficial == True):
         return C.ErrorCodes.ALREADY_OFFICIAL
-    
+
     last_bet.update(IsOfficial=True)
 
     fin_new = squads.Squads(
@@ -1426,9 +1426,9 @@ def finalize_bet(data):
         Last_bet = last_bet[0],
         Season = get_current_season()
     )
-    fin_new.save()            
+    fin_new.save()
 
-    
+
 def get_user_team(userid):
     return team.Team.objects.filter(Users__id=userid).values('id','Name','LogoPath')[0]
 
@@ -1448,16 +1448,16 @@ def get_my_players_filtered(filter_role, teamid):
             'Player__RealTeam__id',
             'Years',
             'Player__Quotation',
-            'Salary'  
+            'Salary'
         ).\
         order_by('Player__Surname')
-        
-        
+
+
 def complete_list(l, num_max, role):
     if(len(l) < num_max):
         for _ in range(num_max - len(l)):
             l.append({"id": "-1", "Role":role})
-    
+
     return l
 
 def get_current_day(competition_id=""):
@@ -1484,7 +1484,7 @@ def get_last_valid_lineup(teamid, comp_id=1):
     all_lups = lineup.Lineup.objects.filter(Team=teamid, Series__in=my_series).order_by('-Version').order_by('-Day')
     if len(all_lups) <= 0:
         return None
-    
+
     return list(all_lups)[0]
 
 def get_last_lineup(teamid, day, comp_id=1):
@@ -1526,7 +1526,7 @@ def cleanJSON(jsonData):
     jsonData = jsonData.replace("\"{","{").replace("}\"","}") #remove extra " with {
     jsonData = jsonData.replace("\\","") #remove extra \
 
-    return jsonData    
+    return jsonData
 
 def check_day_already_started(day):
     today_matches = real_calendar.Real_calendar.objects.filter(Q(Day=day) & Q(Season__Active=True)).values('Date').order_by('Date')
@@ -1543,7 +1543,7 @@ def free_player(data):
     if player_id is None or team_id is None or market is None or session_svincolo is None:
         return C.ErrorCodes.INVALID_PARAMETERS
 
-    _bet = bet.Bet.objects.filter(Q(Player=player_id) & 
+    _bet = bet.Bet.objects.filter(Q(Player=player_id) &
                                   Q(Team=team_id) &
                                   Q(Market=market) &
                                   Q(IsOfficial=True)).first()
@@ -1552,7 +1552,7 @@ def free_player(data):
         return C.ErrorCodes.BET_NOT_FOUND
 
     _squad = squads.Squads.objects.filter(
-        Q(Team=_bet.Team_id) & 
+        Q(Team=_bet.Team_id) &
         Q(Player=_bet.Player) &
         Q(Season__Active=True)
     ).first()
@@ -1580,7 +1580,7 @@ def free_player(data):
             Session_svincolo = session.Session.objects.get(pk=session_svincolo),
             Expiration_Date=_bet.Expiration_Date
             )
-    
+
     bet_history_new.save()
 
     my_bal = get_balance_obj(_bet.Team_id)
@@ -1613,15 +1613,15 @@ def calculate_n_goals(fp_total): #replicate of live utilities method to avoid ci
     diff = fp_total - C.Various.BASE_SCORE
     if (diff < 0):
         return 0
-    
-    return int(diff / C.Various.THRESHOLD_GOL) + 1    
+
+    return int(diff / C.Various.THRESHOLD_GOL) + 1
 
 def get_scores(t_id):
     results_fp = matches_results.MatchesResults.objects.filter(Team=t_id).order_by('id').values('Fp')
     fps = []
     for res in list(results_fp):
         fps.append(res['Fp'])
-    
+
     return fps
 
 def count_non_schierate(t_id):
@@ -1633,13 +1633,13 @@ def check_penalties(t_id, day, comp_id):
 
     if l.Version > 0:
         return 3, 1, 0 #standard
-    
+
     if l.Version < 0: #TODO: in case of recalculation this counter is wrong! use march_result instead
         n_non_schierate = count_non_schierate(t_id)
         if n_non_schierate <= C.MAX_NON_SCHIERATE:
             return 0, 0, 0 #0 pt
         else:
-            return -1, -1, -1 #-1 pt 
+            return -1, -1, -1 #-1 pt
 
 def check_contract(squad_contracts, role, years_signed):
 
@@ -1674,8 +1674,8 @@ def sign_contract(contract_data):
     existing_squad = squads.Squads.objects.filter(Q(Player=player_) & Q(Team=team_) & Q(Season=season))
 
     if existing_squad.exists():
-        existing_squad.update(Years=years_signed, 
-                              Salary=total_wage, 
+        existing_squad.update(Years=years_signed,
+                              Salary=total_wage,
                               Quot=player_.Quotation)
     else:
         return C.ErrorCodes.PLAYER_NOT_IN_SQUAD
@@ -1692,7 +1692,7 @@ def sign_contract(contract_data):
     balance_.Wages_amount = wages_amount
     balance_.save(update_fields=['Wages_amount'])
 
-    return {'wages_amount': wages_amount, 
+    return {'wages_amount': wages_amount,
             'wages_residual': balance_.Wages_max - wages_amount,
             'player_wage': total_wage}
 

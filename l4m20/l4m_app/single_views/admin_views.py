@@ -49,7 +49,8 @@ class CalculateDayView(View):
             is_day_completed, json_day = U.is_current_day_completed()
             curr_day = U.get_current_day()
 
-            if day == curr_day and not is_day_completed:
+            if day == curr_day and not is_day_completed\
+            and False:
                 return HttpResponse(f'error GIORNATA {day} ANCORA IN CORSO!')
             
             if day == curr_day and int(day) > int(json_day):
@@ -83,6 +84,10 @@ class CalculateDayView(View):
                 if int(competitionid) == total_league.id:
                     CU.calculate_total_league(total_league, day)
                     return HttpResponse(f'GIORNATA CALCOLATA PER {total_league.Name}')
+
+                if int(competitionid) == pdoro.id:
+                    CU.calculate_pdoro(pdoro, day)
+                    return HttpResponse(f'GIORNATA CALCOLATA PER {pdoro.Name}')
                 
                 _competition = competition.Competition.objects.get(pk=competitionid)
                 if _competition is not None:
