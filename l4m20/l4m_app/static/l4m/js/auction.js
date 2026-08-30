@@ -550,7 +550,7 @@ const AuctionAPI = {
             player = AuctionState.getPlayer(AuctionState.currentPlayer.id);
             player.squads__Years = parseInt(document.querySelector(".contract-option.active").dataset.years);
 
-            AuctionState.balance.wages_residual = response.wages_residual;
+            AuctionState.balance.wages = response.wages_amount;
 
 
             Auction.refreshPlayer(player);
@@ -582,7 +582,9 @@ const AuctionAPI = {
             player = AuctionState.getPlayer(AuctionState.currentPlayer.id);
             player.IsOfficial = false;
             player.flags = Auction.getPlayerFlags(player);
+            AuctionState.balance.wages = response.wages_amount;
 
+            Auction.renderSummary();
             Auction.renderPlayerActions(player.flags);
             Auction.removePlayerFromRoster();
 
@@ -608,7 +610,7 @@ const AuctionAPI = {
             player = AuctionState.getPlayer(AuctionState.currentPlayer.id);
             player.squads__Years = parseInt(document.querySelector(".edit-contract-options .contract-option.active").dataset.years);
 
-            AuctionState.balance.wages_residual = response.wages_residual;
+            AuctionState.balance.wages = response.wages_amount;
 
             Auction.refreshPlayer(player);
             Auction.renderSummary();
@@ -1118,7 +1120,7 @@ const Auction = {
             .text(AuctionState.balance.residual + "/" + AuctionState.balance.total + " FML");
 
         $("#main-wages")
-            .text(AuctionState.balance.wages_residual + "/" + AuctionState.balance.wages_total + " FML");
+            .text(AuctionState.balance.wages + "/" + AuctionState.balance.wages_total + " FML");
 
         $("#main-max_bid")
             .text(AuctionState.balance.maxBid + " FML");

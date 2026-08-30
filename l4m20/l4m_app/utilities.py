@@ -1509,6 +1509,12 @@ def free_player(data):
         return C.ErrorCodes.PLAYER_NOT_IN_SQUAD
     _squad.delete()
 
+    #calculate new wages amount for the team
+    wages_amount = squads.Squads.objects.filter(
+        Q(Team=team_id) & 
+        Q(Season__Active=True)).aggregate(
+    Sum('Salary'))['Salary__sum'] or 0
+
     bet_history_new = bet_history.Bet_History(
             Amount=_bet.Amount,
             Player=_bet.Player,
@@ -1517,21 +1523,26 @@ def free_player(data):
             Session=_bet.Session,
             Carognata = True if _bet.Carognata==True else False,
             Svincolo = True,
-            Session_svincolo = session.Session.objects.get(pk=session_svincolo)
+            Session_svincolo = session.Session.objects.get(pk=session_svincolo),
+            Expiration_Date=_bet.Expiration_Date
             )
     
     bet_history_new.save()
 
-    #if player estero/B, do not count svincolo
-    if _bet.Player.Status != 'A':
-        _bet.delete()
-        return
-
     my_bal = get_balance_obj(_bet.Team_id)
     if len(my_bal) <= 0:
         return
-    
+
     my_bal = my_bal[0]
+
+    my_bal.Wages_amount = wages_amount
+
+    #if player estero/B, do not count svincolo
+    if _bet.Player.Status != 'A':
+        my_bal.save()
+        _bet.delete()
+        return {'wages_amount': my_bal.Wages_amount}
+    
     my_bal.N_svincoli = my_bal.N_svincoli + 1
 
     max_svincoli = _bet.Session.Nsvincoli
@@ -1540,8 +1551,9 @@ def free_player(data):
         my_bal.Purchases_max = my_bal.Purchases_max - 1
 
     my_bal.save()
-
     _bet.delete()
+
+    return {'wages_amount': my_bal.Wages_amount}
 
 def calculate_n_goals(fp_total): #replicate of live utilities method to avoid circular ref
     diff = fp_total - C.Various.BASE_SCORE

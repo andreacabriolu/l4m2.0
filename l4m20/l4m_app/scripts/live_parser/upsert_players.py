@@ -68,6 +68,7 @@ for _, row in df.iterrows():
         defaults={
             "Role": ruolo,
             "RealTeam_id": realteams.filter(Name=squadra).first().id if realteams.filter(Name=squadra).exists() else None,
+            "Status": "A",
             "Quotation": quotazione,
             "JustModified": True
         }

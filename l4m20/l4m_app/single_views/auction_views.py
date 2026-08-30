@@ -206,7 +206,7 @@ class FreePlayerView(View):
             elif (msg == C.ErrorCodes.PLAYER_NOT_IN_SQUAD):
                 return JsonResponse({'error': 'GIOCATORE NON NELLA SQUADRA'}, status=400)
 
-            return JsonResponse({'message': msg})
+            return JsonResponse(msg)
         except Exception as e:
             return JsonResponse({'error': f'error freeing player: {e}'}, status=500)
 
