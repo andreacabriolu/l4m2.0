@@ -442,6 +442,7 @@ const AuctionAPI = {
             AuctionState.balance.maxBid = response.balance_for_bets;
             AuctionState.balance.total = response.total;
             AuctionState.balance.residual = response.residual;
+            AuctionState.balance.spent = response.spent;
             AuctionState.balance.carognate = response.n_carognate;
             AuctionState.roster = response.roster;
             AuctionState.currentPlayer.Roster = true;
@@ -659,6 +660,7 @@ const AuctionState = {
     balance: {
         total: 0,
         residual: 0,
+        spent: 0,
         maxBid: 0,
         carognate: 0,
         wages: 0,
@@ -1117,7 +1119,7 @@ const Auction = {
     renderSummary(){
 
         $("#main-residual")
-            .text(AuctionState.balance.residual + "/" + AuctionState.balance.total + " FML");
+            .text(AuctionState.balance.spent + "/" + AuctionState.balance.total + " FML");
 
         $("#main-wages")
             .text(AuctionState.balance.wages + "/" + AuctionState.balance.wages_total + " FML");

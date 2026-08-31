@@ -99,6 +99,7 @@ class SendBetResult:
 @dataclass
 class SendBetReturnValues:
     bet_result: int
+    spent: Optional[int] = None
     bet_id: Optional[int] = None
     residual: Optional[int] = None
     new_balance_for_bets: Optional[int] = None

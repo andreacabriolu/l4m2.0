@@ -63,6 +63,7 @@ class AuctionView(LoginRequiredMixin, View):
                     'wages_residual': balance['Wages_max'] - balance['Wages_amount'],
                     'wages_total': balance['Wages_max'],
                     'residual': balance['Purchases_max'] - current_bets_amount,
+                    'spent': current_bets_amount,
                     'carognate': n_carognate,
                     'maxBid': balance_for_bets,
                     'n_svincoli': n_svincoli,
@@ -128,6 +129,7 @@ class SendBetView(View):
                              'bet_id': bet_return.bet_id, 
                              'residual': bet_return.residual,
                              'total': bet_return.total, 
+                             'spent': bet_return.spent,
                              'balance_for_bets': bet_return.new_balance_for_bets,
                              'n_carognate': bet_return.n_carognate,
                              'roster': list(U.get_my_best_bets(data['userteamid'], data['market']))

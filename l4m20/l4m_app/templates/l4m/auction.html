@@ -38,14 +38,14 @@
         <section class="auction-summary container">
 
             <div class="summary-card">
-                <span class="summary-label">Monte acquisti</span>
+                <span class="summary-label">Monte acquisti (spesi / totale)</span>
                 <span class="summary-value" id="main-residual">
-                    {{ balance.residual }}/{{ balance.total }} FML
+                    {{ balance.spent }}/{{ balance.total }} FML
                 </span>
             </div>
 
             <div class="summary-card">
-                <span class="summary-label">Monte ingaggi</span>
+                <span class="summary-label">Monte ingaggi (spesi / totale)</span>
                 <span class="summary-value" id="main-wages">
                     {{ balance.wages_residual }}/{{ balance.wages_max }} FML
                 </span>

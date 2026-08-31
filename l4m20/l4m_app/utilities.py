@@ -1341,7 +1341,8 @@ def send_bet(data):
     return C.SendBetReturnValues(
             bet_result=C.SendBetResult.BET_OK, 
             bet_id=bet_new.id,
-            residual=(my_bal.Purchases_max  - new_bets_amount),  
+            residual=(my_bal.Purchases_max  - new_bets_amount),
+            spent=new_bets_amount,
             new_balance_for_bets=new_balance_for_bets, 
             n_carognate=ncarognate + 1 if (carognata == True) else ncarognate, 
             total=my_bal.Purchases_max)
