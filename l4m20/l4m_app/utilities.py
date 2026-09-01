@@ -1,4 +1,6 @@
 import math
+import pprint
+import json
 
 from .models import *
 from django.db.models import Q, Sum, Count, Case, When, Value, F, OuterRef, Subquery, Exists
@@ -690,7 +692,6 @@ def get_groups_data_for_competition(competition_id):
         group_teams = team.Team.objects.filter(Series__id=s.id).values('id','Name')
         group_matchdays = get_matchdays_info(s)
         # 3. STAMPA DETTAGLIATA DI OGNI SQUADRA CON TUTTI GLI ATTRIBUTI
-        import pprint
         for index, t in enumerate(group_matchdays, start=1):
             print(f"\n--- matchdays {index} ---", flush=True)
             pprint.pprint(dict(t))
