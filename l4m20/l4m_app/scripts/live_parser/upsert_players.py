@@ -28,7 +28,7 @@ import pandas as pd
 import requests
 import utilities as U
 import math
-from l4m_app.single_models import config, real_team, player
+from l4m_app.single_models import config, real_team, player, quarantine
 
 def _round(value):
     wage_multiplier = config.Config.objects.filter(Name="WageMultiplier").first()
@@ -76,5 +76,9 @@ for _, row in df.iterrows():
 
 # Imposta estero i giocatori non modificati dall'inserimento
 player.Player.objects.filter(JustModified=False).update(Status='E')
+
+# Reimposta i flag di quarantena
+qPlayers = quarantine.Quarantine.objects.all().values_list('Player_id', flat=True)
+player.Player.objects.filter(id__in=qPlayers).update(Status='Q')
 
 print(f"Processati con successo {len(df)} giocatori nella tabella 'l4m_app_players'.")
