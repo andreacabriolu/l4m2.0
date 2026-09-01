@@ -60,8 +60,8 @@ class CalculateDayView(View):
             cdl_league = U.get_competition(name='Coppa di Lega')[0]
             total_league = U.get_competition(name='Total League')[0]
             cds_seriea_league = U.get_competition(name='Coppa Serie A')[0]
-            cds_bundesliga_league = U.get_competition(name='Coppa Bundesliga')[0]
-            cds_liga_league = U.get_competition(name='Coppa Liga')[0]
+            cds_serieb_league = U.get_competition(name='Coppa Serie B')[0]
+            cds_seriec_league = U.get_competition(name='Coppa Serie C')[0]
 
             if all_comp:
                 CU.calculate_league(main_league, day)
@@ -69,8 +69,8 @@ class CalculateDayView(View):
                 CU.calculate_b11_league(b11_league, day)
                 CU.calculate_total_league(total_league, day)
                 CU.calculate_league(cds_seriea_league, day)
-                CU.calculate_league(cds_bundesliga_league, day)
-                CU.calculate_league(cds_liga_league, day)
+                CU.calculate_league(cds_serieb_league, day)
+                CU.calculate_league(cds_seriec_league, day)
                 return HttpResponse('GIORNATA CALCOLATA PER TUTTE LE COMPETIZIONI')
 
             else: 

@@ -314,6 +314,7 @@ function buildQData(){
     return {
         player_id: AuctionState.currentPlayer.id,
         team_id: AuctionState.userTeam.id,
+        session_id: AuctionState.currentPlayer.bet__Session_id,
     }
 }
 
@@ -680,7 +681,9 @@ const AuctionAPI = {
             AuctionState.balance.wages = response.wages_amount;
 
             Auction.renderSummary();
+            Auction.refreshPlayer(player);
             Auction.renderPlayerActions(player.flags);
+            Auction.renderSummary();
 
             showPopupErrorAlert(response.message);
 
@@ -798,7 +801,7 @@ const Auction = {
             expired: player.IsExpired ?? false,
             official: player.IsOfficial ?? false,
             carognata: player.Carognata ?? false,
-            canQuarantine: (player.Status == "Q") ?? false,
+            canQuarantine: (player.Status == "Q" && new Date(player.Player__quarantine__QuarantinableUntil) > new Date()) ?? false,
             quarantined: player.Quarantined ?? false,
             signed: (player.squads__Years != null) ?? false,
             freeable: (player.Status == "E" || player.Session_id != AuctionState.currentSession.id), //cannot free if bought in the current session
@@ -1116,7 +1119,7 @@ const Auction = {
         const grid = container.querySelector(".roster-grid");
         grid.innerHTML = "";
 
-        const roster_players=AuctionState.roster.filter(
+        let roster_players=AuctionState.roster.filter(
             p=>p.Player_id__Role===role
         ).sort((a,b)=>b.Amount-a.Amount);
 
@@ -1126,6 +1129,10 @@ const Auction = {
         let total = ROSTER_LIMITS[role];
 
         const quarantinedPlayers = roster_players.filter(p => p.squads__Quarantine === true);
+
+        if (quarantinedPlayers.length > 0) {
+            roster_players = roster_players.filter(p => p.squads__Quarantine !== true);
+        }
 
         for (let i = 0; i < total; i++) {
 
@@ -1142,12 +1149,7 @@ const Auction = {
             qPlayer = AuctionState.getPlayer(qPlayer.Player_id);
             qPlayer.Quarantined = true;
 
-            // total += 1;
-            
-            if (roster_players.length < total+1) {
-                grid.appendChild(this.createEmptyCard(role));
-            }
-
+            grid.appendChild(this.createRosterCard(qPlayer, role));
         }
     },
 

@@ -17,6 +17,7 @@ class Bet(models.Model):
     IsExpired = models.BooleanField(default=False)
     IsRaised = models.BooleanField(default=False) #TODO move to Bet_history
     IsOfficial = models.BooleanField(default=False)
+    IsQuarantine = models.BooleanField(default=False)
 
     def __str__(self):
         return f"bet_{self.Team.Name}_{self.Player.Surname}_{self.Market.Name}"
@@ -36,3 +37,4 @@ class Bet_Obj():
     IsExpired=bool
     IsRaised=bool
     IsOfficial=bool
+    IsQuarantine=bool

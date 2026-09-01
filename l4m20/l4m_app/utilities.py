@@ -14,6 +14,7 @@ from .libs import *
 def quarantine_player(data):
     player_id = data['player_id']
     team_id = data['team_id']
+    session_id = data['session_id']
     player_ = get_object_or_404(player.Player, pk=player_id)
     team_ = get_object_or_404(team.Team, pk=team_id)
 
@@ -27,6 +28,15 @@ def quarantine_player(data):
 
     squad_entry.Quarantine = True
     squad_entry.save()
+
+    #update the bet
+    bet_entry = bet.Bet.objects.filter(
+        Player_id=player_id, 
+        Team_id=team_id,
+        Session_id=session_id).first()
+    if bet_entry:
+        bet_entry.IsQuarantine = True
+        bet_entry.save()
 
     #free the wage
     wages_amount = squads.Squads.objects.filter(
@@ -1232,7 +1242,8 @@ def check_max_n_bets(teamid, role):
 
 def get_current_bets_amount(teamid, marketid):
     sum = bet.Bet.objects.filter(Q(Team_id=teamid) & \
-                                 Q(Market_id=marketid)).aggregate(Sum('Amount'))['Amount__sum']
+                                 Q(Market_id=marketid) & \
+                                 Q(IsQuarantine=False)).aggregate(Sum('Amount'))['Amount__sum']
     return sum if sum is not None else 0
 
 def update_balance_latelineup(bal):
@@ -1245,9 +1256,14 @@ def get_balance_for_bets(teamid, balance_max, marketid=None):
         my_market = get_my_market(teamid)
         marketid = my_market.id
 
-    sum = bet.Bet.objects.filter(Q(Team_id=teamid) & Q(Market_id=marketid)).aggregate(Sum('Amount'))
+    sum = bet.Bet.objects.filter(
+        Q(Team_id=teamid) & 
+        Q(Market_id=marketid) & 
+        Q(IsQuarantine=False)).aggregate(Sum('Amount'))
     #missing slot count
-    num_active_bets = bet.Bet.objects.filter(Q(Team_id=teamid) & Q(Market_id=marketid)).aggregate(Count('id'))
+    num_active_bets = bet.Bet.objects.filter(Q(Team_id=teamid) & 
+                                             Q(Market_id=marketid ) & 
+                                             Q(IsQuarantine=False)).aggregate(Count('id'))
     num_missing_slots = (C.NUM_SLOTS - num_active_bets['id__count']) - 1
 
     return ((balance_max - sum['Amount__sum'] - num_missing_slots) if sum['Amount__sum'] is not None else balance_max - num_missing_slots)
@@ -1265,7 +1281,7 @@ def get_my_best_bets(teamid, marketid):
                'IsExpired','id','Team_id','IsOfficial','Carognata', 
                'Player_id__Role', 'Player_id__RealTeam__Name', 
                'Player_id__Quotation', 'Player_id__Status', 'Player_id','Player_id__Surname',
-               'squads__Years', 'squads__Quarantine').distinct('Player_id')
+               'squads__Years', 'squads__Quarantine', 'Player__quarantine__QuarantinableUntil').distinct('Player_id')
                
     # if(qplayer is not None):
     #    bets = bets.exclude(Q(Player_id=qplayer.Player_id))
