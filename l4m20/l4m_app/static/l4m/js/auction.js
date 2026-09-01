@@ -238,13 +238,13 @@ function validateBet(bet){
 
     }
 
-    if (AuctionState.roster.filter(p => p.Player_id__Role === role).length >= ROSTER_LIMITS[role]) {
+    // if (AuctionState.roster.filter(p => p.Player_id__Role === role).length >= ROSTER_LIMITS[role]) {
 
-        showPopupErrorAlert("Numero massimo di giocatori per ruolo raggiunto");
+    //     showPopupErrorAlert("Numero massimo di giocatori per ruolo raggiunto");
 
-        return false;
+    //     return false;
 
-    }
+    // }
 
     return true;
 
@@ -347,6 +347,7 @@ function getPlayerStatus(player, flags = null, expiration_date = null) {
     if (flags.roster === true &&
         flags.official === true &&
         flags.signed === true &&
+        flags.canQuarantine === false &&
         flags.quarantined === false) {
         return ["SOTTO CONTRATTO", "state-contract"];
     }
@@ -354,6 +355,15 @@ function getPlayerStatus(player, flags = null, expiration_date = null) {
     if (flags.roster === true &&
         flags.official === true &&
         flags.signed === true &&
+        flags.canQuarantine === true &&
+        flags.quarantined === false) {
+        return ["INFORTUNATO", "state-injuried"];
+    }
+
+    if (flags.roster === true &&
+        flags.official === true &&
+        flags.signed === true &&
+        flags.canQuarantine === true &&
         flags.quarantined === true) {
         return ["IN QUARANTENA", "state-quarantine"];
     }
@@ -1065,6 +1075,7 @@ const Auction = {
         card.dataset.id = player.Player_id;
         card.dataset.role = role;
         player.Quarantined = player.squads__Quarantine ?? false;
+        player.Status = player.Player_id__Status ?? "-";
 
         const [playerStatus, playerClass] = getPlayerStatus(player, this.getPlayerFlags(player));
         card.classList.add(playerClass);
@@ -1112,7 +1123,9 @@ const Auction = {
         container.querySelector(".roster-counter").textContent = 
             `${roster_players.length}/${ROSTER_LIMITS[role]}`;
 
-        const total = ROSTER_LIMITS[role];
+        let total = ROSTER_LIMITS[role];
+
+        const quarantinedPlayers = roster_players.filter(p => p.squads__Quarantine === true);
 
         for (let i = 0; i < total; i++) {
 
@@ -1122,18 +1135,20 @@ const Auction = {
                 grid.appendChild(this.createEmptyCard(role));
             }
         }
-
-        const quarantinedPlayers = roster_players.filter(p => p.Player_id__Status === "Q");
         
         if (quarantinedPlayers.length > 0) {
             let qPlayer;
             qPlayer = quarantinedPlayers[0];
             qPlayer = AuctionState.getPlayer(qPlayer.Player_id);
             qPlayer.Quarantined = true;
+
+            // total += 1;
             
-            grid.appendChild(this.createEmptyCard(role));
+            if (roster_players.length < total+1) {
+                grid.appendChild(this.createEmptyCard(role));
+            }
+
         }
-        
     },
 
     renderPlayers(searchText = "", init = false) {

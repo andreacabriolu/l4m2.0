@@ -1205,7 +1205,9 @@ def get_players_my_series(filter_role, teamid, filtered_teams_ids, my_svincoli_c
         
 def check_max_n_bets(teamid, role):
     qplayer = squads.Squads.objects.\
-      filter(Q(Team_id=teamid) & Q(Quarantine=True)).first()
+      filter(Q(Team_id=teamid) & 
+             Q(Quarantine=True) & 
+             Q(Season__Active=True)).first()
     
     if(qplayer):
         idq = qplayer.Player_id   

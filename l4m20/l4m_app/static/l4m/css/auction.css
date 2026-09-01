@@ -1308,7 +1308,7 @@
 }
 
 .roster-card.state-expired{
-    border-left:4px solid #ef4444;
+    border-left:4px solid #2a5f06;
 }
 
 .roster-card.state-official{
@@ -1322,6 +1322,10 @@
 .roster-card.state-quarantine{
     border-left:4px solid #f59e0b;
     background:linear-gradient(90deg,rgba(245,158,11,.15),transparent);
+}
+
+.roster-card.state-injuried{
+    border-left:4px solid #ff0022;
 }
 
 .state-bidding{
