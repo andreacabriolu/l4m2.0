@@ -1334,14 +1334,9 @@ def get_votes(lineup, current_day, live_votes, live_teams, already_played_teams=
 
     return [votes_tit, _items, votes_ris]
     
-    
-def enrich_and_sort_players(role, teamid, current_day, cap_id=-1, already_played_teams=[]):
+    def enrich_and_sort_players(role, teamid, current_day, cap_id=-1, already_played_teams=[]):
     # needed by b11 (associates votes to pl, sorts by totvote and then vote)
     
-    # 1. Recuperiamo la stagione corrente
-    curr_season = get_current_season()
-    
-    # Assicurati che get_my_players_filtered accetti o gestisca la stagione corrente
     players = U.get_my_players_filtered(role, teamid)
     enriched_players = []
 
@@ -1350,9 +1345,9 @@ def enrich_and_sort_players(role, teamid, current_day, cap_id=-1, already_played
         pl = player.Player.objects.get(pk=idpl)
         already_played = check_already_played(pl.RealTeam, already_played_teams, current_day)
 
-        # 2. FILTRO FONDAMENTALE: Aggiunto Season=curr_season
+        # Filtro sulla stagione attiva tramite relazione ORM
         _vote = vote.Vote.objects.filter(
-            Q(Player_id=idpl) & Q(Day=current_day) & Q(Season=curr_season)
+            Q(Player_id=idpl) & Q(Day=current_day) & Q(Season__Active=True)
         )
         
         votes_pl = make_vote_obj(_vote[0], cap_id) if len(_vote) > 0 else \
@@ -1371,7 +1366,7 @@ def enrich_and_sort_players(role, teamid, current_day, cap_id=-1, already_played
     )
 
     return sorted_players
-
+    
 def pick_best_11(keepers, defenders, midfielders, attackers, team_id=None, day=None):
     best_lineup = None
     best_score = -1
