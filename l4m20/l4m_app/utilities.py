@@ -229,8 +229,6 @@ def get_winner(home_data, away_data):
         
     return (False, False) #DRAW, IMPOSSIBLE TO DECIDE WINNER
 
-import json
-
 def get_panchina_doro_flat_data(competition_id):
     flat_data = []
 
@@ -258,19 +256,20 @@ def get_panchina_doro_flat_data(competition_id):
         # Cicla fino alla giornata precedente a quella corrente
         for day in range(1, current_day):
             # -------------------------------------------------------------
-            # FP Campionato e B11 da Database
+            # FP Campionato e B11 da Database FILTRATI PER STAGIONE
             # -------------------------------------------------------------
             camp_res = matches_results.MatchesResults.objects.filter(
                 Team_id=t.id,
                 MatchesCalendar__Series__in=my_series,
                 MatchesCalendar__CompetitionCalendar__Day=day
             ).values('Fp').first()
-
+            
             b11_res = b11_results.B11Results.objects.filter(
                 Team_id=t.id,
-                Day=day
+                Day=day,
+                Season=curr_season  # <-- FILTRO FONDAMENTALE MANCANTE!
             ).values('B11Fp').first()
-
+            
             fp = float(camp_res['Fp']) if camp_res and camp_res['Fp'] is not None else 0.0
             b11_fp = float(b11_res['B11Fp']) if b11_res and b11_res['B11Fp'] is not None else 0.0
 
@@ -288,19 +287,19 @@ def get_panchina_doro_flat_data(competition_id):
 
             player_ids = [s.Player_id for s in squad_players]
 
-            # Recuperiamo i voti per la giornata 'day'
+            # Recuperiamo i voti per la giornata 'day' FILTRATI PER STAGIONE CORRENTE
             votes_qs = vote.Vote.objects.filter(
                 Player_id__in=player_ids,
-                Day=day
+                Day=day,
+                Season=curr_season
             )
             votes_dict = {v.Player_id: v for v in votes_qs}
 
-            # Suddividiamo per ruolo ed associamo l'oggetto voti
             keepers, defenders, midfielders, attackers = [], [], [], []
 
             for s in squad_players:
                 p = s.Player
-                # Assegniamo l'oggetto voti al giocatore (o un mock vuoto se svincolato/senza voto)
+                # Assegniamo l'oggetto voti al giocatore (o mock nullo se svincolato/senza voto)
                 p.votes = votes_dict.get(p.id, vote.Vote(Vote=None, TotVote=None))
 
                 if p.Role == 'P':
@@ -312,33 +311,71 @@ def get_panchina_doro_flat_data(competition_id):
                 elif p.Role == 'A':
                     attackers.append(p)
 
-            # Ordiniamo in senso CRESCENTE per W11
-            k_w = sorted(keepers, key=lambda p: (p.votes.TotVote if p.votes.TotVote is not None else 999))
-            d_w = sorted(defenders, key=lambda p: (p.votes.TotVote if p.votes.TotVote is not None else 999))
-            m_w = sorted(midfielders, key=lambda p: (p.votes.TotVote if p.votes.TotVote is not None else 999))
-            a_w = sorted(attackers, key=lambda p: (p.votes.TotVote if p.votes.TotVote is not None else 999))
+            # -------------------------------------------------------------
+            # KEY DI ORDINAMENTO W11 (Priorità assoluta a chi ha giocato)
+            # -------------------------------------------------------------
+            def w11_sort_key(p):
+                tv = p.votes.TotVote if (p.votes and p.votes.TotVote is not None) else None
+                # Se il giocatore ha un voto effettivo (> 0), lo ordiniamo dal peggiore al migliore
+                if tv is not None and float(tv) > 0:
+                    return float(tv)
+                # Se ha 0.0 o None, lo mandiamo in coda (999.0) per non occupare la W11
+                return 999.0
+
+            # Ordiniamo i ruoli per W11
+            k_w = sorted(keepers, key=w11_sort_key)
+            d_w = sorted(defenders, key=w11_sort_key)
+            m_w = sorted(midfielders, key=w11_sort_key)
+            a_w = sorted(attackers, key=w11_sort_key)
 
             worst_res = pick_worst_11(k_w, d_w, m_w, a_w)
             w11_fp = float(worst_res['score']) if worst_res else 0.0
             
-            # ~ # Stampa di debug condizionale per team id
-            # ~ if t.id == 34:
-                # ~ print(f"\n================ WORST 11 - {t.Name} (PUNT {w11_fp}) ================", flush=True)
-                # ~ print(f"Punteggio W11 Totale: {w11_fp}", flush=True)
-                # ~ if worst_res and "players" in worst_res:
-                    # ~ print("Giocatori (Titolari + Panchina):", flush=True)
-                    # ~ for p in worst_res["players"]:
-                        # ~ print(
-                            # ~ f" - [{p['player_role']}] {p['player_surname']} ({p['player_rt']}): "
-                            # ~ f"Voto={p['player_vote']}, TotVoto={p['player_totvote']}", 
-                            # ~ flush=True
-                        # ~ )
-                # ~ else:
-                    # ~ print("Nessuna formazione W11 calcolata.", flush=True)
-                # ~ print("=====================================================================\n", flush=True)
-    
-    
-            # ~ # -------------------------------------------------------------
+            # Stampa di debug condizionale per team id (es. 20)
+            if t.id == 20:
+                print(f"\n=====================================================================", flush=True)
+                print(f" DEBUG FORMAZIONI B11 e W11 - {t.Name} (Giornata {day})", flush=True)
+                print(f"=====================================================================", flush=True)
+                
+                # --- BEST 11 (B11) ---
+                print(f"\n---> BEST 11 (B11) | Punteggio DB: {b11_fp}", flush=True)
+                b11_obj = b11_results.B11Results.objects.filter(Team_id=t.id, Day=day, Season=curr_season).first()
+                if b11_obj:
+                    mod_b11 = getattr(b11_obj, 'Module', 'N/D')
+                    print(f"Modulo B11: {mod_b11}", flush=True)
+                else:
+                    print("Dettagli B11 non trovati a DB per questa giornata.", flush=True)
+
+                # --- WORST 11 (W11) ---
+                w11_module = worst_res.get('module', 'N/D') if worst_res else 'N/D'
+                print(f"\n---> WORST 11 (W11) | Punteggio Calcolato: {w11_fp} | Modulo: {w11_module}", flush=True)
+                
+                if worst_res and "players" in worst_res:
+                    players_list = worst_res["players"]
+                    starters = players_list[:11]
+                    bench = players_list[11:]
+
+                    print("\n  [ TITOLARI W11 ]", flush=True)
+                    for p in starters:
+                        print(
+                            f"   * [{p['player_role']}] {p['player_surname']} ({p['player_rt']}): "
+                            f"Voto={p['player_vote']}, TotVoto={p['player_totvote']}",
+                            flush=True
+                        )
+
+                    if bench:
+                        print("\n  [ PANCHINA W11 ]", flush=True)
+                        for p in bench:
+                            print(
+                                f"   - [{p['player_role']}] {p['player_surname']} ({p['player_rt']}): "
+                                f"Voto={p['player_vote']}, TotVoto={p['player_totvote']}",
+                                flush=True
+                            )
+                else:
+                    print("Nessuna formazione W11 calcolata.", flush=True)
+                    
+                print("=====================================================================\n", flush=True)
+            # -------------------------------------------------------------
             # PARAMETRO 1: (FP - W11) / (B11 - W11)
             # -------------------------------------------------------------
             if (b11_fp - w11_fp) > 0:
@@ -368,6 +405,7 @@ def get_panchina_doro_flat_data(competition_id):
                         field_players_with_vote = vote.Vote.objects.filter(
                             Player_id__in=l_player_ids,
                             Day=day,
+                            Season=curr_season,
                             Player__Role__in=['D', 'C', 'A']
                         ).exclude(
                             Q(Vote__isnull=True) | Q(Vote=0)
@@ -381,6 +419,7 @@ def get_panchina_doro_flat_data(competition_id):
             # PARAMETRO 3: Relative B11 Scaling nella Serie
             # -------------------------------------------------------------
             param3 = 1.0
+            low_b11, high_b11 = 0.0, 0.0
             series_teams = team.Team.objects.filter(Series__in=my_series).values_list('id', flat=True)
             series_b11_qs = b11_results.B11Results.objects.filter(
                 Team_id__in=series_teams,
@@ -399,8 +438,8 @@ def get_panchina_doro_flat_data(competition_id):
             # -------------------------------------------------------------
             w1, w2, w3 = WEIGHTS
             day_pdo_score = round((param1 * w1) + (param2 * w2) + (param3 * w3), 3)
-            dday = min(current_day-1,35)
-            total_pdo_pts += day_pdo_score/dday
+            dday = min(current_day - 1, 35) if current_day > 1 else 1
+            total_pdo_pts += day_pdo_score / dday
 
             daily_scores.append({
                 'day': day,
@@ -411,11 +450,10 @@ def get_panchina_doro_flat_data(competition_id):
                 'fp': fp,
                 'b11_fp': b11_fp,
                 'w11_fp': w11_fp,
-                'field_votes': field_players_with_vote,  # <-- Numero giocatori con voto
-                'b11_low': low_b11,                      # <-- Minimo B11 di giornata nella Serie
-                'b11_high': high_b11,                    # <-- Massimo B11 di giornata nella Serie
+                'field_votes': field_players_with_vote,
+                'b11_low': low_b11,
+                'b11_high': high_b11,
             })
-            
 
         avg_score = round(total_pdo_pts / len(daily_scores), 3) if daily_scores else 0.0
 
@@ -428,8 +466,10 @@ def get_panchina_doro_flat_data(competition_id):
         })
 
     flat_data.sort(key=lambda x: x['pdoav'], reverse=True)
-    return flat_data
-
+    return flat_data    
+    
+    
+    
 def get_et_outcome(home_data, away_data):
     if home_data is None or away_data is None:
         return False
