@@ -256,6 +256,7 @@ class QuarantinePlayerView(View):
             if (data is None): return
             
             msg = U.quarantine_player(data)
+            
             if(msg == C.ErrorCodes.PLAYER_NOT_IN_SQUAD):
                 return JsonResponse({'error': 'GIOCATORE NON NELLA SQUADRA'}, status=400)
 

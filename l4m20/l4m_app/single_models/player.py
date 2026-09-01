@@ -11,6 +11,7 @@ class Player(models.Model):
     
     STATUSES = (("A", _("Active")),
                 ("E", _("Estero")),
+                ("Q", _("Quarantena")),
                 )
     
     Name = models.CharField(max_length=100, null=True)

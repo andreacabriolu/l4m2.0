@@ -678,12 +678,8 @@ const AuctionAPI = {
             player.Quarantined = true;
             player.flags = Auction.getPlayerFlags(player);
 
-            AuctionState.balance.wages = response.wages_amount;
-
-            Auction.renderSummary();
             Auction.refreshPlayer(player);
             Auction.renderPlayerActions(player.flags);
-            Auction.renderSummary();
 
             showPopupErrorAlert(response.message);
 

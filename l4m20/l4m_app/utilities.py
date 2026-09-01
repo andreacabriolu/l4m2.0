@@ -38,25 +38,9 @@ def quarantine_player(data):
         bet_entry.IsQuarantine = True
         bet_entry.save()
 
-    #free the wage
-    wages_amount = squads.Squads.objects.filter(
-            Q(Team=team_id) & 
-            Q(Season__Active=True) &
-            Q(Quarantine=False)
-            ).aggregate(
-        Sum('Salary'))['Salary__sum'] or 0
-
-    my_bal = get_balance_obj(team_id)
-    if len(my_bal) <= 0:
-        return C.ErrorCodes.BALANCE_NOT_FOUND
-    my_bal = my_bal[0]
-    my_bal.Wages_amount = wages_amount
-    my_bal.save()
-
     logger.info(f"Player {player_.Surname} (ID: {player_.id}) has been put in quarantine by Team {team_.Name} (ID: {team_.id}).")
 
-    return {'message': "GIOCATORE MESSO IN QUARANTENA CON SUCCESSO", 
-            'wages_amount': wages_amount}
+    return {'message': "GIOCATORE MESSO IN QUARANTENA CON SUCCESSO"}
 
 def get_signed_contracts(teamid):
     _squads = squads.Squads.objects.filter(
@@ -1242,8 +1226,7 @@ def check_max_n_bets(teamid, role):
 
 def get_current_bets_amount(teamid, marketid):
     sum = bet.Bet.objects.filter(Q(Team_id=teamid) & \
-                                 Q(Market_id=marketid) & \
-                                 Q(IsQuarantine=False)).aggregate(Sum('Amount'))['Amount__sum']
+                                 Q(Market_id=marketid)).aggregate(Sum('Amount'))['Amount__sum']
     return sum if sum is not None else 0
 
 def update_balance_latelineup(bal):
@@ -1258,12 +1241,10 @@ def get_balance_for_bets(teamid, balance_max, marketid=None):
 
     sum = bet.Bet.objects.filter(
         Q(Team_id=teamid) & 
-        Q(Market_id=marketid) & 
-        Q(IsQuarantine=False)).aggregate(Sum('Amount'))
+        Q(Market_id=marketid)).aggregate(Sum('Amount'))
     #missing slot count
     num_active_bets = bet.Bet.objects.filter(Q(Team_id=teamid) & 
-                                             Q(Market_id=marketid ) & 
-                                             Q(IsQuarantine=False)).aggregate(Count('id'))
+                                             Q(Market_id=marketid )).aggregate(Count('id'))
     num_missing_slots = (C.NUM_SLOTS - num_active_bets['id__count']) - 1
 
     return ((balance_max - sum['Amount__sum'] - num_missing_slots) if sum['Amount__sum'] is not None else balance_max - num_missing_slots)
