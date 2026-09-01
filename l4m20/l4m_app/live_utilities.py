@@ -1470,34 +1470,34 @@ def pick_best_11(keepers, defenders, midfielders, attackers, team_id=None, day=N
             continue
 
     # --- PRINT DI DEBUG FORMATTATO PER TEAM ID 20 ---
-    if team_id == 20 and best_lineup is not None:
-        print(f"\n=====================================================================", flush=True)
-        print(f" DEBUG BEST 11 (B11) CALCOLATO AL VOLO - Team ID: {team_id} (Giornata {day})", flush=True)
-        print(f"=====================================================================", flush=True)
-        print(f"Punteggio B11 Totale: {best_lineup['score']} | Modulo: {best_lineup['module']}", flush=True)
-        print(f"Punteggio Parziale (Voti): {best_lineup['partial_score']}", flush=True)
-        print(f"Bonus/Modificatori -> Modificatore: {best_lineup['modif']} | Capitano: {best_lineup['bcaptain']} | Tutti >= 6: {best_lineup['all_six_bonus']} | No Cartellini: {best_lineup['no_yellow_bonus']}", flush=True)
+    # ~ if team_id == 20 and best_lineup is not None:
+        # ~ print(f"\n=====================================================================", flush=True)
+        # ~ print(f" DEBUG BEST 11 (B11) CALCOLATO AL VOLO - Team ID: {team_id} (Giornata {day})", flush=True)
+        # ~ print(f"=====================================================================", flush=True)
+        # ~ print(f"Punteggio B11 Totale: {best_lineup['score']} | Modulo: {best_lineup['module']}", flush=True)
+        # ~ print(f"Punteggio Parziale (Voti): {best_lineup['partial_score']}", flush=True)
+        # ~ print(f"Bonus/Modificatori -> Modificatore: {best_lineup['modif']} | Capitano: {best_lineup['bcaptain']} | Tutti >= 6: {best_lineup['all_six_bonus']} | No Cartellini: {best_lineup['no_yellow_bonus']}", flush=True)
         
-        starters = best_lineup['players'][:11]
-        bench = best_lineup['players'][11:]
+        # ~ starters = best_lineup['players'][:11]
+        # ~ bench = best_lineup['players'][11:]
 
-        print("\n  [ TITOLARI B11 ]", flush=True)
-        for p in starters:
-            print(
-                f"   * [{p['player_role']}] {p['player_surname']} ({p['player_rt']}): "
-                f"Voto={p['player_vote']}, TotVoto={p['player_totvote']}",
-                flush=True
-            )
+        # ~ print("\n  [ TITOLARI B11 ]", flush=True)
+        # ~ for p in starters:
+            # ~ print(
+                # ~ f"   * [{p['player_role']}] {p['player_surname']} ({p['player_rt']}): "
+                # ~ f"Voto={p['player_vote']}, TotVoto={p['player_totvote']}",
+                # ~ flush=True
+            # ~ )
 
-        if bench:
-            print("\n  [ PANCHINA B11 ]", flush=True)
-            for p in bench:
-                print(
-                    f"   - [{p['player_role']}] {p['player_surname']} ({p['player_rt']}): "
-                    f"Voto={p['player_vote']}, TotVoto={p['player_totvote']}",
-                    flush=True
-                )
-        print("=====================================================================\n", flush=True)
+        # ~ if bench:
+            # ~ print("\n  [ PANCHINA B11 ]", flush=True)
+            # ~ for p in bench:
+                # ~ print(
+                    # ~ f"   - [{p['player_role']}] {p['player_surname']} ({p['player_rt']}): "
+                    # ~ f"Voto={p['player_vote']}, TotVoto={p['player_totvote']}",
+                    # ~ flush=True
+                # ~ )
+        # ~ print("=====================================================================\n", flush=True)
 
     return best_lineup
     
