@@ -516,15 +516,19 @@ def enrich_and_sort_players_live(teamid, current_day, live_votes, live_teams, al
         if pl.id in live_votes:
             _live_vote = live_votes[pl.id]
             votes = (adjust_vote_obj(_live_vote, cap_id) if _live_vote.Vote > 0 else \
-                         adjust_vote_obj(_live_vote, cap_id, empty=True))
+                     adjust_vote_obj(_live_vote, cap_id, empty=True))
         #CASE player not called
         elif(pl.id not in live_votes and pl.RealTeam.Name in live_teams):
             votes = (make_not_called_vote_obj(pl.id, cap_id))
         else:
-        #player NOT LIVE
-            _vote = vote.Vote.objects.filter(Q(Player_id=pl.id) & Q(Day=current_day))
+        #player NOT LIVE - FILTRATO PER STAGIONE ATTIVA
+            _vote = vote.Vote.objects.filter(
+                Q(Player_id=pl.id) & 
+                Q(Day=current_day) & 
+                Q(Season__Active=True)  # <-- CORRETTO
+            )
             votes = (make_vote_obj(_vote[0], cap_id) if isValid(_vote) else \
-                         make_empty_vote_obj(pl.id, cap_id, already_played, current_day))
+                     make_empty_vote_obj(pl.id, cap_id, already_played, current_day))
 
         pl.votes = votes
         enriched_players.append(pl)
@@ -538,41 +542,42 @@ def enrich_and_sort_players_live(teamid, current_day, live_votes, live_teams, al
 
     sorted_players = {
         'P': sorted(
-        keepers,
-        key=lambda p: (
-            p.votes.TotVote if p.votes.TotVote is not None else -1,
-            p.votes.Vote if p.votes.Vote is not None else -1
-        ),
-        reverse=True
+            keepers,
+            key=lambda p: (
+                p.votes.TotVote if p.votes.TotVote is not None else -1,
+                p.votes.Vote if p.votes.Vote is not None else -1
+            ),
+            reverse=True
         ),
         'D': sorted(
-        defs,
-        key=lambda p: (
-            p.votes.TotVote if p.votes.TotVote is not None else -1,
-            p.votes.Vote if p.votes.Vote is not None else -1
-        ),
-        reverse=True
+            defs,
+            key=lambda p: (
+                p.votes.TotVote if p.votes.TotVote is not None else -1,
+                p.votes.Vote if p.votes.Vote is not None else -1
+            ),
+            reverse=True
         ),
         'C': sorted(
-        ccs,
-        key=lambda p: (
-            p.votes.TotVote if p.votes.TotVote is not None else -1,
-            p.votes.Vote if p.votes.Vote is not None else -1
-        ),
-        reverse=True
+            ccs,
+            key=lambda p: (
+                p.votes.TotVote if p.votes.TotVote is not None else -1,
+                p.votes.Vote if p.votes.Vote is not None else -1
+            ),
+            reverse=True
         ),
         'A': sorted(
-        fws,
-        key=lambda p: (
-            p.votes.TotVote if p.votes.TotVote is not None else -1,
-            p.votes.Vote if p.votes.Vote is not None else -1
-        ),
-        reverse=True
+            fws,
+            key=lambda p: (
+                p.votes.TotVote if p.votes.TotVote is not None else -1,
+                p.votes.Vote if p.votes.Vote is not None else -1
+            ),
+            reverse=True
         )
     }
 
     return sorted_players
-
+    
+    
 
 def get_b11_lineup(teamid, day, live_votes, live_teams, already_played_teams, getForCalculation=False):
     players = enrich_and_sort_players_live(teamid, day, live_votes, live_teams, already_played_teams, getForCalculation)
@@ -1329,9 +1334,9 @@ def get_votes(lineup, current_day, live_votes, live_teams, already_played_teams=
 
     return [votes_tit, _items, votes_ris]
     
-    
 def enrich_and_sort_players(role, teamid, current_day, cap_id=-1, already_played_teams=[]):
     # needed by b11 (associates votes to pl, sorts by totvote and then vote)
+    
     players = U.get_my_players_filtered(role, teamid)
     enriched_players = []
 
@@ -1340,7 +1345,11 @@ def enrich_and_sort_players(role, teamid, current_day, cap_id=-1, already_played
         pl = player.Player.objects.get(pk=idpl)
         already_played = check_already_played(pl.RealTeam, already_played_teams, current_day)
 
-        _vote = vote.Vote.objects.filter(Q(Player_id=idpl) & Q(Day=current_day))
+        # Filtro sulla stagione attiva tramite relazione ORM
+        _vote = vote.Vote.objects.filter(
+            Q(Player_id=idpl) & Q(Day=current_day) & Q(Season__Active=True)
+        )
+        
         votes_pl = make_vote_obj(_vote[0], cap_id) if len(_vote) > 0 else \
                    make_empty_vote_obj(pl.id, cap_id, already_played, current_day)
 
@@ -1357,10 +1366,8 @@ def enrich_and_sort_players(role, teamid, current_day, cap_id=-1, already_played
     )
 
     return sorted_players
-
-
-
-def pick_best_11(keepers, defenders, midfielders, attackers):
+    
+def pick_best_11(keepers, defenders, midfielders, attackers, team_id=None, day=None):
     best_lineup = None
     best_score = -1
 
@@ -1381,25 +1388,6 @@ def pick_best_11(keepers, defenders, midfielders, attackers):
 
             # bench slice
             lineup_bench = keepers[1:] + defenders[d:] + midfielders[m:] + attackers[a:]
-            
-            ## --- Yellow-card swap ---
-            #for i, p in enumerate(lineup):
-            #    if getattr(p.votes, "YellowCard", False):
-            #        if p.role == "P":
-            #            role_list = keepers
-            #        elif p.role == "D":
-            #            role_list = defenders
-            #        elif p.role == "C":
-            #            role_list = midfielders
-            #        else:
-            #            role_list = attackers
-			#
-            #        for candidate in role_list:
-            #            if (candidate.votes.TotVote == p.votes.TotVote and
-            #                not getattr(candidate.votes, "YellowCard", False) and
-            #                candidate not in lineup):
-            #                lineup[i] = candidate
-            #                break
 
             # sum TotVote
             score = sum((p.votes.TotVote or -1) for p in lineup)
@@ -1418,8 +1406,6 @@ def pick_best_11(keepers, defenders, midfielders, attackers):
             else:
                 mod, mod_score, modNoGk_used = 0., 0., False
 
-            # score += mod_score
-
             # captain bonus
             captain = None
             bonus_cap = 0.
@@ -1432,7 +1418,7 @@ def pick_best_11(keepers, defenders, midfielders, attackers):
             # all-six bonus
             bonus_six = 0.5 if all(p.votes.Vote is not None and p.votes.Vote >= 6 for p in lineup) else 0
 
-            _noCards =  len([v for v in lineup if (v.votes.Red==1 or v.votes.Yel==1 or v.votes.YelRed==1)]) == 0
+            _noCards = len([v for v in lineup if (v.votes.Red==1 or v.votes.Yel==1 or v.votes.YelRed==1)]) == 0
             no_yellow_bonus = 0.5 if _noCards else 0
             
             total_score = score + mod_score + bonus_cap + bonus_six + no_yellow_bonus
@@ -1483,128 +1469,104 @@ def pick_best_11(keepers, defenders, midfielders, attackers):
         except IndexError:
             continue
 
+    # --- PRINT DI DEBUG FORMATTATO PER TEAM ID 20 ---
+    # ~ if team_id == 20 and best_lineup is not None:
+        # ~ print(f"\n=====================================================================", flush=True)
+        # ~ print(f" DEBUG BEST 11 (B11) CALCOLATO AL VOLO - Team ID: {team_id} (Giornata {day})", flush=True)
+        # ~ print(f"=====================================================================", flush=True)
+        # ~ print(f"Punteggio B11 Totale: {best_lineup['score']} | Modulo: {best_lineup['module']}", flush=True)
+        # ~ print(f"Punteggio Parziale (Voti): {best_lineup['partial_score']}", flush=True)
+        # ~ print(f"Bonus/Modificatori -> Modificatore: {best_lineup['modif']} | Capitano: {best_lineup['bcaptain']} | Tutti >= 6: {best_lineup['all_six_bonus']} | No Cartellini: {best_lineup['no_yellow_bonus']}", flush=True)
+        
+        # ~ starters = best_lineup['players'][:11]
+        # ~ bench = best_lineup['players'][11:]
+
+        # ~ print("\n  [ TITOLARI B11 ]", flush=True)
+        # ~ for p in starters:
+            # ~ print(
+                # ~ f"   * [{p['player_role']}] {p['player_surname']} ({p['player_rt']}): "
+                # ~ f"Voto={p['player_vote']}, TotVoto={p['player_totvote']}",
+                # ~ flush=True
+            # ~ )
+
+        # ~ if bench:
+            # ~ print("\n  [ PANCHINA B11 ]", flush=True)
+            # ~ for p in bench:
+                # ~ print(
+                    # ~ f"   - [{p['player_role']}] {p['player_surname']} ({p['player_rt']}): "
+                    # ~ f"Voto={p['player_vote']}, TotVoto={p['player_totvote']}",
+                    # ~ flush=True
+                # ~ )
+        # ~ print("=====================================================================\n", flush=True)
+
     return best_lineup
     
+    
 def pick_worst_11(keepers, defenders, midfielders, attackers):
-    worst_lineup = None
-    worst_score = float('inf')
-
-    ALLOWED_MODULES = [
-        (3, 4, 3),
-        (3, 5, 2),
-        (4, 3, 3),
-        (4, 4, 2),
-        (4, 5, 1),
-        (5, 4, 1),
-        (5, 3, 2),
+    """
+    Calcola la Worst 11 valutando i moduli consentiti.
+    Dà precedenza assoluta ai moduli che NON contengono giocatori senza voto (TotVote <= 0 o None).
+    A parità di copertura voti, sceglie il modulo con lo score totale minore.
+    """
+    MODULES = [
+        {'P': 1, 'D': 3, 'C': 4, 'A': 3},  # 3-4-3
+        {'P': 1, 'D': 3, 'C': 5, 'A': 2},  # 3-5-2
+        {'P': 1, 'D': 4, 'C': 3, 'A': 3},  # 4-3-3
+        {'P': 1, 'D': 4, 'C': 4, 'A': 2},  # 4-4-2
+        {'P': 1, 'D': 4, 'C': 5, 'A': 1},  # 4-5-1
+        {'P': 1, 'D': 5, 'C': 3, 'A': 2},  # 5-3-2
+        {'P': 1, 'D': 5, 'C': 4, 'A': 1},  # 5-4-1
     ]
 
-    for d, m, a in ALLOWED_MODULES:
-        try:
-            lineup = [keepers[0]] + defenders[:d] + midfielders[:m] + attackers[:a]
-            lineup_bench = keepers[1:] + defenders[d:] + midfielders[m:] + attackers[a:]
+    best_worst_lineup = None
 
-            # 1. Somma dei Fantavoti (TotVote)
-            score = sum((p.votes.TotVote if p.votes.TotVote is not None else 0.0) for p in lineup)
+    for mod in MODULES:
+        # Prendiamo i titolari in base alle disponibilità già ordinate da pick_w11
+        st_k = keepers[:mod['P']]
+        st_d = defenders[:mod['D']]
+        st_m = midfielders[:mod['C']]
+        st_a = attackers[:mod['A']]
 
-            # 2. Modificatore Difesa (seleziona il peggiore/più penalizzante)
-            gk_vote = [keepers[0].votes.Vote] if keepers[0].votes.Vote is not None else []
-            def_votes = [p.votes.Vote for p in defenders[:d] if p.votes.Vote is not None]
+        starters = st_k + st_d + st_m + st_a
 
-            if d > 3 and len(def_votes) > 3:
-                mod_k, mod_score_k = calculate_modifier(gk_vote, def_votes, modNoGk=False)
-                mod_nok, mod_score_nok = calculate_modifier(gk_vote, def_votes, modNoGk=True)
-                
-                mod, mod_score, modNoGk_used = min(
-                    [(mod_k, mod_score_k, False), (mod_nok, mod_score_nok, True)],
-                    key=lambda x: x[1]
-                )
+        # 1. Contiamo quanti giocatori nel modulo NON hanno un voto reale (> 0)
+        unvoted_count = 0
+        total_score = 0.0
+
+        for p in starters:
+            tv = p.votes.TotVote if (p.votes and p.votes.TotVote is not None) else 0.0
+            if float(tv) > 0:
+                total_score += float(tv)
             else:
-                mod, mod_score, modNoGk_used = 0., 0., False
+                unvoted_count += 1
 
-            # 3. Capitano W11 (Assegnato al giocatore con il VOTO PIÙ BASSO)
-            captain = None
-            malus_cap = 0.
-            
-            # Troviamo il giocatore con voto più basso (escludendo i Senza Voto)
-            voted_players = [p for p in lineup if p.votes.Vote is not None]
-            if voted_players:
-                # Ordina per Vote crescente
-                voted_players.sort(key=lambda p: p.votes.Vote)
-                worst_player = voted_players[0]
-                
-                # Se il voto è insufficiente (<= 5.5 o < 6.0), subisce la penalità capitano
-                if worst_player.votes.Vote < 6.0:
-                    captain = worst_player
-                    malus_cap = -0.5  # Penalità per il peggior capitano
-
-            # 4. Bonus "Tutti 6" (Ovviamente 0 per il Worst 11 se c'è anche solo una insufficienza)
-            bonus_six = 0.5 if all(p.votes.Vote is not None and p.votes.Vote >= 6 for p in lineup) else 0.0
-
-            # 5. Controllo Cartellini Robusto (Verifica sia YellowCard/RedCard che Yel/Red)
-            has_cards = False
-            for p in lineup:
-                v = p.votes
-                yellow = getattr(v, 'YellowCard', False) or getattr(v, 'Yel', 0) == 1 or getattr(v, 'YelRed', 0) == 1
-                red = getattr(v, 'RedCard', False) or getattr(v, 'Red', 0) == 1
-                if yellow or red:
-                    has_cards = True
-                    break
-
-            no_yellow_bonus = 0.5 if not has_cards else 0.0
-
-            # Punteggio totale Worst 11
-            total_score = score + mod_score + malus_cap + bonus_six + no_yellow_bonus
-
-            if total_score < worst_score:
-                players_list = []
-                for p in lineup + lineup_bench:
-                    players_list.append({
-                        "player_id": p.id,
-                        "player_rt": p.RealTeam,
-                        "player_role": p.Role,
-                        "player_surname": getattr(p, "surname", getattr(p, "name", str(p))),
-                        "player_vote": p.votes.Vote,
-                        "player_totvote": p.votes.TotVote,
-                        "player_stats": p.votes
-                    })
-
-                worst_score = total_score
-                worst_lineup = {
-                    "module": f"{d}{m}{a}",
-                    "modif": mod_score,
-                    "modif_tot": mod,
-                    "players": players_list,
-                    "modifier_from_no_gk": modNoGk_used,
-                    "captain": captain,
-                    "bcaptain": malus_cap,
-                    "all_six_bonus": bonus_six,
-                    "no_yellow_bonus": no_yellow_bonus,
-                    "score": total_score,
-                    "partial_score": score
+        # Preparamione struttura dati risultato
+        candidate = {
+            "score": round(total_score, 2),
+            "unvoted_count": unvoted_count,
+            "players": [
+                {
+                    "player_role": p.Role,
+                    "player_surname": p.Surname if hasattr(p, 'Surname') else str(p),
+                    "player_rt": p.Rt if hasattr(p, 'Rt') else '',
+                    "player_vote": p.votes.Vote if (p.votes and p.votes.Vote is not None) else None,
+                    "player_totvote": p.votes.TotVote if (p.votes and p.votes.TotVote is not None) else None,
                 }
+                for p in starters
+            ]
+        }
 
-        except IndexError:
-            continue
+        # 2. SELEZIONE DEL MODULO WORST:
+        # - Meno buchi ha il modulo (unvoted_count più basso), meglio è.
+        # - A parità di buchi, sceglie lo score più BASSO.
+        if best_worst_lineup is None:
+            best_worst_lineup = candidate
+        else:
+            if candidate['unvoted_count'] < best_worst_lineup['unvoted_count']:
+                best_worst_lineup = candidate
+            elif candidate['unvoted_count'] == best_worst_lineup['unvoted_count']:
+                if candidate['score'] < best_worst_lineup['score']:
+                    best_worst_lineup = candidate
 
-    return worst_lineup
+    return best_worst_lineup
     
-    
-def pick_w11(keepers, defenders, midfielders, attackers):
-    """
-    Esegue il calcolo sia del Best 11 che del Worst 11 per una squadra e giornata.
-    """
-
-    # 2. Preparazione vettori per il WORST 11 (crescente)
-    k_w = sorted(keepers, key=lambda p: (p.votes.TotVote if p.votes.TotVote is not None else 999))
-    d_w = sorted(defenders, key=lambda p: (p.votes.TotVote if p.votes.TotVote is not None else 999))
-    m_w = sorted(midfielders, key=lambda p: (p.votes.TotVote if p.votes.TotVote is not None else 999))
-    a_w = sorted(attackers, key=lambda p: (p.votes.TotVote if p.votes.TotVote is not None else 999))
-
-    # 3. Calcolo parallelo
-    worst_res = pick_worst_11(k_w, d_w, m_w, a_w)
-
-    return {
-        "w11_score": worst_res["score"] if worst_res else 0.0,
-        "worst_lineup": worst_res
-    }    
