@@ -248,3 +248,17 @@ class UndoBetView(View):
             return JsonResponse({'message': 'PUNTATA ANNULLATA CON SUCCESSO'})
         except Exception as e:
             return JsonResponse({'error': f'error undoing bet: {e}'}, status=500)
+
+class QuarantinePlayerView(View):
+    def post(self, request):
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+            if (data is None): return
+            
+            msg = U.quarantine_player(data)
+            if(msg == C.ErrorCodes.PLAYER_NOT_IN_SQUAD):
+                return JsonResponse({'error': 'GIOCATORE NON NELLA SQUADRA'}, status=400)
+
+            return JsonResponse(msg)
+        except Exception as e:
+            return JsonResponse({'error': f'error quarantining player: {e}'}, status=500)

@@ -89,6 +89,15 @@ const ACTIONS = {
         clause: {
             visible: f =>
                 false //TODO: implement clause logic
+        },
+
+        quarantine: {
+            visible: f =>
+                f.roster === true &&
+                f.official === true &&
+                f.signed === true &&
+                f.canQuarantine === true &&
+                f.quarantined === false
         }
 
 };
@@ -301,6 +310,13 @@ function buildFreeData(){
     }
 }
 
+function buildQData(){
+    return {
+        player_id: AuctionState.currentPlayer.id,
+        team_id: AuctionState.userTeam.id,
+    }
+}
+
 function getPlayerStatus(player, flags = null, expiration_date = null) {    
 
     if (flags.expired === false) {
@@ -330,9 +346,18 @@ function getPlayerStatus(player, flags = null, expiration_date = null) {
         
     if (flags.roster === true &&
         flags.official === true &&
-        flags.signed === true) {
+        flags.signed === true &&
+        flags.quarantined === false) {
         return ["SOTTO CONTRATTO", "state-contract"];
     }
+
+    if (flags.roster === true &&
+        flags.official === true &&
+        flags.signed === true &&
+        flags.quarantined === true) {
+        return ["IN QUARANTENA", "state-quarantine"];
+    }
+
     
     return [getRemainingTime(expiration_date ?? player.bet__Expiration_Date ?? "-"), "state-bidding"]; //default
 }
@@ -633,6 +658,31 @@ const AuctionAPI = {
 
     },
 
+    async quarantinePlayer() {
+        const qData = buildQData();
+        try {
+            const response = await apiExecute("/l4m/auction/quarantinePlayer/", qData);
+
+            player = AuctionState.getPlayer(AuctionState.currentPlayer.id);
+            player.Quarantined = true;
+            player.flags = Auction.getPlayerFlags(player);
+
+            AuctionState.balance.wages = response.wages_amount;
+
+            Auction.renderSummary();
+            Auction.renderPlayerActions(player.flags);
+
+            showPopupErrorAlert(response.message);
+
+            bootstrap.Modal
+                .getInstance(document.getElementById("playerModal"))
+                ?.hide();
+
+        } catch (err) {
+            showPopupErrorAlert(err);
+        }
+    }
+
 };
 
 /* ==========================================================
@@ -738,9 +788,11 @@ const Auction = {
             expired: player.IsExpired ?? false,
             official: player.IsOfficial ?? false,
             carognata: player.Carognata ?? false,
+            canQuarantine: (player.Status == "Q") ?? false,
+            quarantined: player.Quarantined ?? false,
             signed: (player.squads__Years != null) ?? false,
             freeable: (player.Status == "E" || player.Session_id != AuctionState.currentSession.id), //cannot free if bought in the current session
-            editable: (player.EditableUntil && player.EditableUntil > Date.now()) ?? false
+            editable: (player.EditableUntil && player.EditableUntil > Date.now()) ?? false,
         };
     },
 
@@ -1012,6 +1064,7 @@ const Auction = {
 
         card.dataset.id = player.Player_id;
         card.dataset.role = role;
+        player.Quarantined = player.squads__Quarantine ?? false;
 
         const [playerStatus, playerClass] = getPlayerStatus(player, this.getPlayerFlags(player));
         card.classList.add(playerClass);
@@ -1059,7 +1112,6 @@ const Auction = {
         container.querySelector(".roster-counter").textContent = 
             `${roster_players.length}/${ROSTER_LIMITS[role]}`;
 
-        
         const total = ROSTER_LIMITS[role];
 
         for (let i = 0; i < total; i++) {
@@ -1069,8 +1121,19 @@ const Auction = {
             } else {
                 grid.appendChild(this.createEmptyCard(role));
             }
-        }    
+        }
 
+        const quarantinedPlayers = roster_players.filter(p => p.Player_id__Status === "Q");
+        
+        if (quarantinedPlayers.length > 0) {
+            let qPlayer;
+            qPlayer = quarantinedPlayers[0];
+            qPlayer = AuctionState.getPlayer(qPlayer.Player_id);
+            qPlayer.Quarantined = true;
+            
+            grid.appendChild(this.createEmptyCard(role));
+        }
+        
     },
 
     renderPlayers(searchText = "", init = false) {
@@ -1349,6 +1412,10 @@ const Auction = {
 
             .on("click", "#btnFree",
                 AuctionAPI.freePlayer.bind(AuctionAPI)
+            )
+
+            .on("click", "#btnQuarantine",
+                AuctionAPI.quarantinePlayer.bind(AuctionAPI)
             )
 
             ;

@@ -11,6 +11,43 @@ from l4m20 import constants as C
 import requests as req
 from .libs import *
 
+def quarantine_player(data):
+    player_id = data['player_id']
+    team_id = data['team_id']
+    player_ = get_object_or_404(player.Player, pk=player_id)
+    team_ = get_object_or_404(team.Team, pk=team_id)
+
+    # Put the squad in quarantine
+    squad_entry = squads.Squads.objects.filter(Team_id=team_.id, 
+                                               Player_id=player_.id,
+                                               Season__Active=True).first()
+
+    if squad_entry is None:
+        return C.ErrorCodes.PLAYER_NOT_IN_SQUAD
+
+    squad_entry.Quarantine = True
+    squad_entry.save()
+
+    #free the wage
+    wages_amount = squads.Squads.objects.filter(
+            Q(Team=team_id) & 
+            Q(Season__Active=True) &
+            Q(Quarantine=False)
+            ).aggregate(
+        Sum('Salary'))['Salary__sum'] or 0
+
+    my_bal = get_balance_obj(team_id)
+    if len(my_bal) <= 0:
+        return C.ErrorCodes.BALANCE_NOT_FOUND
+    my_bal = my_bal[0]
+    my_bal.Wages_amount = wages_amount
+    my_bal.save()
+
+    logger.info(f"Player {player_.Surname} (ID: {player_.id}) has been put in quarantine by Team {team_.Name} (ID: {team_.id}).")
+
+    return {'message': "GIOCATORE MESSO IN QUARANTENA CON SUCCESSO", 
+            'wages_amount': wages_amount}
+
 def get_signed_contracts(teamid):
     _squads = squads.Squads.objects.filter(
         Q(Team_id=teamid) & 
@@ -1216,7 +1253,9 @@ def get_balance_for_bets(teamid, balance_max, marketid=None):
 def get_my_best_bets(teamid, marketid):
 	
     qplayer = squads.Squads.objects.\
-      filter(Q(Team_id=teamid) & Q(Quarantine=True)).first()
+      filter(Q(Team_id=teamid) & 
+             Q(Quarantine=True) & 
+             Q(Season__Active=True)).first()
     
     bets = bet.Bet.objects.\
         filter(Q(Team_id=teamid) & Q(Market_id=marketid)).\
@@ -1224,10 +1263,10 @@ def get_my_best_bets(teamid, marketid):
                'IsExpired','id','Team_id','IsOfficial','Carognata', 
                'Player_id__Role', 'Player_id__RealTeam__Name', 
                'Player_id__Quotation', 'Player_id__Status', 'Player_id','Player_id__Surname',
-               'squads__Years').distinct('Player_id')
+               'squads__Years', 'squads__Quarantine').distinct('Player_id')
                
-    if(qplayer is not None):
-       bets = bets.exclude(Q(Player_id=qplayer.Player_id))
+    # if(qplayer is not None):
+    #    bets = bets.exclude(Q(Player_id=qplayer.Player_id))
 
     return bets   
        
@@ -1513,7 +1552,9 @@ def free_player(data):
     #calculate new wages amount for the team
     wages_amount = squads.Squads.objects.filter(
         Q(Team=team_id) & 
-        Q(Season__Active=True)).aggregate(
+        Q(Season__Active=True) &
+        Q(Quarantine=False)
+    ).aggregate(
     Sum('Salary'))['Salary__sum'] or 0
 
     bet_history_new = bet_history.Bet_History(
@@ -1539,7 +1580,7 @@ def free_player(data):
     my_bal.Wages_amount = wages_amount
 
     #if player estero/B, do not count svincolo
-    if _bet.Player.Status != 'A':
+    if _bet.Player.Status == 'E':
         my_bal.save()
         _bet.delete()
         return {'wages_amount': my_bal.Wages_amount}

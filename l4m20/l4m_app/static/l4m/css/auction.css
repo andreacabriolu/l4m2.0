@@ -1094,6 +1094,14 @@
 
 }
 
+.player-action.quarantine{
+
+    background:#472e02;
+
+    color:white;
+
+}
+
 .player-action:hover{
 
     transform:translateY(-2px);
@@ -1309,6 +1317,11 @@
 
 .roster-card.state-contract{
     border-left:4px solid #d8d2e1;
+}
+
+.roster-card.state-quarantine{
+    border-left:4px solid #f59e0b;
+    background:linear-gradient(90deg,rgba(245,158,11,.15),transparent);
 }
 
 .state-bidding{
