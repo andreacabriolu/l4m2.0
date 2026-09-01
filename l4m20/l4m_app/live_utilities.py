@@ -1334,7 +1334,7 @@ def get_votes(lineup, current_day, live_votes, live_teams, already_played_teams=
 
     return [votes_tit, _items, votes_ris]
     
-    def enrich_and_sort_players(role, teamid, current_day, cap_id=-1, already_played_teams=[]):
+def enrich_and_sort_players(role, teamid, current_day, cap_id=-1, already_played_teams=[]):
     # needed by b11 (associates votes to pl, sorts by totvote and then vote)
     
     players = U.get_my_players_filtered(role, teamid)
