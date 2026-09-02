@@ -20,6 +20,11 @@ def quarantine_player(data):
     player_ = get_object_or_404(player.Player, pk=player_id)
     team_ = get_object_or_404(team.Team, pk=team_id)
 
+    if squads.Squads.objects.filter(Team_id=team_.id, 
+                                    Quarantine=True,
+                                    Season__Active=True).count() >= C.MAX_QUARANTINES:
+        return C.ErrorCodes.MAX_QUARANTINE_EXCEEDED
+
     # Put the squad in quarantine
     squad_entry = squads.Squads.objects.filter(Team_id=team_.id, 
                                                Player_id=player_.id,
@@ -1246,7 +1251,8 @@ def get_balance_for_bets(teamid, balance_max, marketid=None):
         Q(Market_id=marketid)).aggregate(Sum('Amount'))
     #missing slot count
     num_active_bets = bet.Bet.objects.filter(Q(Team_id=teamid) & 
-                                             Q(Market_id=marketid )).aggregate(Count('id'))
+                                             Q(Market_id=marketid ) &
+                                             Q(IsQuarantine=False)).aggregate(Count('id'))
     num_missing_slots = (C.NUM_SLOTS - num_active_bets['id__count']) - 1
 
     return ((balance_max - sum['Amount__sum'] - num_missing_slots) if sum['Amount__sum'] is not None else balance_max - num_missing_slots)

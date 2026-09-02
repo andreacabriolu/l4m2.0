@@ -259,6 +259,8 @@ class QuarantinePlayerView(View):
             
             if(msg == C.ErrorCodes.PLAYER_NOT_IN_SQUAD):
                 return JsonResponse({'error': 'GIOCATORE NON NELLA SQUADRA'}, status=400)
+            elif(msg == C.ErrorCodes.MAX_QUARANTINE_EXCEEDED):
+                return JsonResponse({'error': 'NUMERO MASSIMO DI QUARANTENE RAGGIUNTO'}, status=400)
 
             return JsonResponse(msg)
         except Exception as e:
