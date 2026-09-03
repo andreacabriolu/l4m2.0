@@ -97,7 +97,7 @@ def get_route66_data():
 
         r66_data.append(team_data)
 
-    return r66_data
+    return sorted(r66_data, key=lambda x: x['perfect'], reverse=True)
         
 class Route66View(LoginRequiredMixin, View):
     template_name = "l4m/route66.html"
