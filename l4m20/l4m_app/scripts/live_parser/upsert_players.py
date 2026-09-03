@@ -97,7 +97,7 @@ for _, row in df.iterrows():
         created_players.append(player.Player(
             Surname=nome,
             Role=ruolo,
-            RealTeam=team_id,
+            RealTeam=real_team.RealTeam.objects.get(id=team_id) if team_id else None,
             Status='A',
             Quotation=quotazione,
             JustModified=True
