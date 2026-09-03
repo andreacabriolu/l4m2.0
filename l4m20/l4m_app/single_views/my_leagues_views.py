@@ -32,11 +32,11 @@ class MyLeaguesView(LoginRequiredMixin, View):
 class MyLeaguesNoMatchView(LoginRequiredMixin, View):
     template_name = 'l4m/my_leagues_no_match.html'
 
-    def get(self,request, competition_id=None):
+    def get(self,request, competition_id):
         comp = competition.Competition.objects.get(id=competition_id)
          
         # Retrieve the flat matchday records from DB
-        league_records = MLU.retrieve_pdoro_data(day=U.get_current_day(), competition_id=competition_id)
+        league_records = MLU.retrieve_pdoro_data(day=U.get_current_day())
         # league_records = U.get_panchina_doro_flat_data(day=U.get_current_day())
 
         params = {

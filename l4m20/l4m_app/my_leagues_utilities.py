@@ -183,14 +183,51 @@ def get_panchina_doro_flat_data(day=None):
 
 def retrieve_pdoro_data(day=None):
     """
-    Retrieves Panchina d'Oro data for a specific day and competition.
+    Retrieves Panchina d'Oro data for a specific day
     """
     if day is None:
         day = int(get_current_day())
 
+    teams = team.Team.objects.filter(
+        Active=True,
+    )
+
     results = pdoro.Pdoro.objects.filter(
-        Day__lte=day,
+        Day__lte=int(day),
         Season__Active=True,
         )
 
-    return results
+    ordered_results = []
+    daily_scores = []
+    for t in teams:
+        team_results = results.filter(Team_id=t.id).order_by('Day')
+        if team_results.exists():
+
+            for t_result in team_results:
+                daily_scores.append({
+                    'day': t_result.Day,
+                    'pts': t_result.Pts,
+                    'param1': t_result.C1,
+                    'param2': t_result.C2,
+                    'param3': t_result.C3,
+                    'w11_fp': t_result.w11,
+                    'v22_fp': t_result.v22,
+                    'b11_fp': t_result.b11,
+                    'b11_low': t_result.b11_low,
+                    'b11_high': t_result.b11_high,
+                    'fp': t_result.Fp,
+                })
+
+            ordered_results.append({
+                'team': t.Name,
+                'total_pts': sum(score['pts'] for score in daily_scores),
+                'daily_scores': daily_scores,})
+        else:
+            # If no result exists for the team, append a default entry
+            ordered_results.append({
+                'team': t.Name,
+                'total_pts': 0.0,
+                'daily_scores': [],
+            })
+
+    return ordered_results

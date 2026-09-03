@@ -26,6 +26,10 @@ def save_pdoro_results(results, day):
                     C3 = daily_score.get('param3', 0),
                     v22 = daily_score.get('field_votes', 0),
                     w11 = daily_score.get('w11_fp', 0),
+                    Fp = daily_score.get('fp', 0),
+                    b11 = daily_score.get('b11_fp', 0),
+                    b11_low = daily_score.get('b11_low', 0),
+                    b11_high = daily_score.get('b11_high', 0),
                     Season = season.Season.objects.get(Active=True)
                 )
                 pdoro_result.save()
@@ -99,7 +103,7 @@ def calculate_pdoro(pdoro_competition, day):
         for _day in days_to_calculate:
             pdoro_results = MLU.get_panchina_doro_flat_data(day=_day)
             save_pdoro_results(pdoro_results, _day)
-            write_pdoro_ranking(pdoro_competition.id, pdoro_series[0].id, _day)
+            # write_pdoro_ranking(pdoro_competition.id, pdoro_series[0].id, _day)
 
 def write_league_rankings(vote_per_series, competition_id, day, seriesid, noLineup=False):
     last_ranking = U.get_last_available_ranking_by_day(competition_id, seriesid, int(day))
