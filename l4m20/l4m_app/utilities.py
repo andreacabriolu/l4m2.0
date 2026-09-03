@@ -1108,9 +1108,11 @@ def get_current_session(marketid):
                                           Q(End__gte=nowtime))
 
     if(len(session_) <=0):
-        return None
+        #take the last session
+        session_ = session.Session.objects.filter(
+            Q(Market_id=marketid)).order_by('-End')
 
-    return session_[0]
+    return session_.first() if len(session_) > 0 else None
 
 def get_my_market(teamid=None, userid=None):
     if teamid is None and userid is None:
@@ -1313,7 +1315,7 @@ def send_bet(data):
     bet_obj.Team = data['userteamid']
     bet_obj.Slot = data['slot']
     bet_obj.Market = data['market']
-    bet_obj.Session = data['session']
+    bet_obj.Session = data['session']    
 
     carognata = data['carognata']
     balance_max = data['balancemax']
@@ -1324,6 +1326,10 @@ def send_bet(data):
     user_team = get_object_or_404(team.Team, id=bet_obj.Team) #TODO: how to avoid this double fetch?
     market_ = get_object_or_404(market.Market, id=int(bet_obj.Market))
     session_ = session.Session.objects.get(pk=bet_obj.Session)
+
+    #forbid bid if market session is closed
+    if(session_.End < datetime.datetime.now(ZoneInfo('Europe/Rome'))):
+        return C.SendBetReturnValues(C.SendBetResult.BET_SESSION_CLOSED)
 
     my_bal = get_balance_obj(bet_obj.Team)[0]
     ncarognate = my_bal.N_carognate
@@ -1542,6 +1548,11 @@ def free_player(data):
     session_svincolo = get_current_session(market).id if get_current_session(market) is not None else None
     if player_id is None or team_id is None or market is None or session_svincolo is None:
         return C.ErrorCodes.INVALID_PARAMETERS
+
+    #forbid if market session is closed
+    session_ = get_current_session(market)
+    if(session_ is None or session_.End < datetime.datetime.now(ZoneInfo('Europe/Rome'))):
+        return C.ErrorCodes.BET_SESSION_CLOSED
 
     _bet = bet.Bet.objects.filter(Q(Player=player_id) &
                                   Q(Team=team_id) &

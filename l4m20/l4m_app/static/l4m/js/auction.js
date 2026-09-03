@@ -47,17 +47,20 @@ const ACTIONS = {
 
         bid: {
             visible: f => 
-                (f.roster === false && 
+                ((f.roster === false && 
                 f.expired === false) ||
                 (f.roster === true &&
-                f.editable === true)
+                f.editable === true)) &&
+                AuctionState.currentSession.is_open === true
         },
 
         finalize: {
             visible: f =>
                 f.roster === true && 
                 f.expired === true &&
-                f.official === false
+                f.official === false &&
+                AuctionState.currentSession.is_open === true
+
         },
 
         contract: {
@@ -78,12 +81,14 @@ const ACTIONS = {
             visible: f =>
                 f.roster === true &&
                 f.official === true &&
-                f.freeable === true
+                f.freeable === true &&
+                AuctionState.currentSession.is_open === true
         },
 
         cancelBid: {
             visible: f =>
-                f.editable === true
+                f.editable === true &&
+                AuctionState.currentSession.is_open === true
         },
 
         clause: {
@@ -707,7 +712,8 @@ const AuctionState = {
         name: "",
         max_nsvincoli: 0,
         max_ncarognate: 0,
-        expiration: 0
+        expiration: 0,
+        is_open: false
     },
 
     roster: [],

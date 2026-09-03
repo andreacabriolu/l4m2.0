@@ -102,6 +102,7 @@ class SendBetResult:
     BET_UNDERFLOW = -2
     BET_EXPIRED = -3
     BET_SLOT_EXCEED = -4
+    BET_SESSION_CLOSED = -5
 
 @dataclass
 class SendBetReturnValues:
@@ -122,6 +123,7 @@ class ErrorCodes:
     MIN_ANNUAL_CONTRACTS_PER_ROLE_NEEDED = -7
     BALANCE_NOT_FOUND = -8
     MAX_QUARANTINE_EXCEEDED = -9
+    BET_SESSION_CLOSED = -10
 
 class Events:
     GOAL_TAKEN = 'GG'

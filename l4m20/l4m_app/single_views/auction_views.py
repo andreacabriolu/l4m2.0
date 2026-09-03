@@ -1,4 +1,7 @@
+from zoneinfo import ZoneInfo
+
 from django.shortcuts import render
+from django.template.backends import django
 from django.views import View
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -78,9 +81,9 @@ class AuctionView(LoginRequiredMixin, View):
                     'max_nsvincoli': current_session.Nsvincoli,
                     'max_ncarognate': current_session.Ncarognate,
                     'expiration': current_session.Expiration,
-                    'start': current_session.Begin,
-                    'end': current_session.End,
-                    'is_open': current_session.Begin <= datetime.datetime.now(datetime.timezone.utc) <= current_session.End,
+                    'start': current_session.Begin.astimezone(ZoneInfo(key='Europe/Rome')).strftime('%d-%m-%Y %H:%M'),
+                    'end': current_session.End.astimezone(ZoneInfo(key='Europe/Rome')).strftime('%d-%m-%Y %H:%M'),
+                    'is_open': current_session.Begin <= datetime.datetime.now(ZoneInfo(key='Europe/Rome')) <= current_session.End,
                 },
                 'market': my_market,
 
@@ -109,6 +112,9 @@ class SendBetView(View):
             logger.debug(f"{uname} : SENDING BET: {data}")
 
             bet_return = U.send_bet(data)
+
+            if(bet_return.bet_result == C.SendBetResult.BET_SESSION_CLOSED):
+                return JsonResponse({'error': 'SESSIONE DI MERCATO CHIUSA!'}, status=400)
 
             if(bet_return.bet_result == C.SendBetResult.BET_OVERFLOW):
                 return JsonResponse({'error': 'PUNTATA TROPPO ALTA!'}, status=400)
@@ -203,6 +209,8 @@ class FreePlayerView(View):
 
             if (msg == C.ErrorCodes.BET_NOT_FOUND):
                 return JsonResponse({'error': 'PUNTATA NON TROVATA'}, status=400)
+            elif (msg == C.ErrorCodes.BET_SESSION_CLOSED):
+                return JsonResponse({'error': 'SESSIONE DI MERCATO CHIUSA!'}, status=400)
             elif (msg == C.ErrorCodes.INVALID_PARAMETERS):
                 return JsonResponse({'error': 'PARAMETRI NON VALIDI'}, status=400)
             elif (msg == C.ErrorCodes.PLAYER_NOT_IN_SQUAD):
