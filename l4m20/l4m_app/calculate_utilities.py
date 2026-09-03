@@ -38,59 +38,7 @@ def save_pdoro_results(results, day):
 
 def write_pdoro_ranking(competition_id, seriesid, day):
 
-    new_ranking_line = {}
-
-    #get all results from DB
-    teams = team.Team.objects.filter(Active=True)
-    pdoro_data = MLU.retrieve_pdoro_data(day=day)
-
-    if pdoro_data is None:
-        return None
-
-    results = {}
-
-    for _team in teams:
-        t = _team
-        team_results = pdoro_data.filter(Team=_team)
-        if len(team_results) == 0:
-            continue
-
-        tot_pts = team_results.aggregate(total_pts=Sum('Pts'))['total_pts'] or 0
-
-        results[t.id] = {
-            'pdoav' : round(tot_pts / len(team_results), 3),
-            'total_pts' : round(tot_pts, 3)
-        }
-        # daily_score = team_result['daily_score']
-        # b11_fp = daily_score.get('b11_fp', 0)
-        # fp = daily_score.get('fp', 0)
-        # w11_fp = daily_score.get('w11_fp', 0)
-        # field_players_with_vote = daily_score.get('field_votes', 0)
-        # low_b11 = daily_score.get('b11_low', 0)
-        # high_b11 = daily_score.get('b11_high', 0)
-
-        # param1 = daily_score.get('param1', 0)
-        # param2 = daily_score.get('param2', 0)
-        # param3 = daily_score.get('param3', 0)
-
-    for result in results.items():
-        if result is not None:
-            new_ranking_line[result[0]] = result[1]
-
-    existing_rank = ranking.Ranking.objects.filter(Q(Day=day) & 
-                                                   Q(Competition=competition_id) & 
-                                                   Q(Series=seriesid))
-    if len(existing_rank) > 0:
-        existing_rank[0].delete()
-
-    new_rank = ranking.Ranking(
-        RankingLine = json.dumps(new_ranking_line),
-        Competition = competition.Competition.objects.get(pk=competition_id),
-        Series = series.Series.objects.get(pk=seriesid),
-        Day= day
-    )
-        
-    new_rank.save()
+    pass
 
 def calculate_pdoro(pdoro_competition, day):
     pdoro_series = U.get_unica_series(pdoro_competition)
