@@ -198,8 +198,9 @@ def retrieve_pdoro_data(day=None):
         )
 
     ordered_results = []
-    daily_scores = []
     for t in teams:
+        daily_scores = []
+
         team_results = results.filter(Team_id=t.id).order_by('Day')
         if team_results.exists():
 
@@ -211,17 +212,12 @@ def retrieve_pdoro_data(day=None):
                     'param2': t_result.C2,
                     'param3': t_result.C3,
                     'w11_fp': t_result.w11,
-                    'v22_fp': t_result.v22,
+                    'field_votes': t_result.v22,
                     'b11_fp': t_result.b11,
                     'b11_low': t_result.b11_low,
                     'b11_high': t_result.b11_high,
                     'fp': t_result.Fp,
                 })
-
-            ordered_results.append({
-                'team': t.Name,
-                'total_pts': sum(score['pts'] for score in daily_scores),
-                'daily_scores': daily_scores,})
         else:
             # If no result exists for the team, append a default entry
             ordered_results.append({
@@ -230,4 +226,10 @@ def retrieve_pdoro_data(day=None):
                 'daily_scores': [],
             })
 
-    return ordered_results
+        ordered_results.append({
+                        'team_id': t.id,
+                        'team': t.Name,
+                        'total_pts': sum(score['pts'] for score in daily_scores) / len(daily_scores) if daily_scores else 0.0,
+                        'daily_scores': daily_scores,})
+
+    return sorted(ordered_results, key=lambda x: x['total_pts'], reverse=True)
