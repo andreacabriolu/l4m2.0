@@ -58,7 +58,8 @@ def get_panchina_doro_flat_data(day=None):
         # Recuperiamo i voti per la giornata 'day'
         votes_qs = vote.Vote.objects.filter(
             Player_id__in=player_ids,
-            Day=day
+            Day=day,
+            Season__Active=True
         )
         votes_dict = {v.Player_id: v for v in votes_qs}
 
@@ -79,11 +80,16 @@ def get_panchina_doro_flat_data(day=None):
             elif p.Role == 'A':
                 attackers.append(p)
 
-        # Ordiniamo in senso CRESCENTE per W11
-        k_w = sorted(keepers, key=lambda p: (p.votes.TotVote if p.votes.TotVote is not None else C.Pdoro.MAX_VAL))
-        d_w = sorted(defenders, key=lambda p: (p.votes.TotVote if p.votes.TotVote is not None else C.Pdoro.MAX_VAL))
-        m_w = sorted(midfielders, key=lambda p: (p.votes.TotVote if p.votes.TotVote is not None else C.Pdoro.MAX_VAL))
-        a_w = sorted(attackers, key=lambda p: (p.votes.TotVote if p.votes.TotVote is not None else C.Pdoro.MAX_VAL))
+        def w11_sort_key(p):
+                        tv = p.votes.TotVote if (p.votes and p.votes.TotVote is not None) else None
+                        if tv is not None and float(tv) > 0:
+                            return float(tv)
+                        return 999.0
+        
+        k_w = sorted(keepers, key=w11_sort_key)
+        d_w = sorted(defenders, key=w11_sort_key)
+        m_w = sorted(midfielders, key=w11_sort_key)
+        a_w = sorted(attackers, key=w11_sort_key)
 
         worst_res = pick_worst_11(k_w, d_w, m_w, a_w)
         w11_fp = float(worst_res['score']) if worst_res else 0.0
@@ -101,29 +107,40 @@ def get_panchina_doro_flat_data(day=None):
         # PARAMETRO 2: Profondità rosa (Voti movimento / 22)
         # -------------------------------------------------------------
         field_players_with_vote = 0
-        lineup_obj = lineup.Lineup.objects.filter(
+                    
+        # 1. Recuperiamo tutti gli ID dei giocatori in rosa per la squadra nella stagione attiva
+        squad_player_ids = squads.Squads.objects.filter(
             Team_id=t.id,
-            Series__in=_series,
-            Day=day
-        ).order_by('-Version').first()
+            Quarantine=False,
+            Season__Active=True
+        ).values_list('Player_id', flat=True)
 
-        if lineup_obj and lineup_obj.Line:
-            try:
-                line_data = json.loads(cleanJSON(lineup_obj.Line))
-                l_player_ids = [
-                    int(v) for k, v in line_data.items()
-                    if k not in ['mod', 'captain', 'ot', 'penalties'] and str(v).isdigit()
-                ]
-                if l_player_ids:
-                    field_players_with_vote = vote.Vote.objects.filter(
-                        Player_id__in=l_player_ids,
-                        Day=day,
-                        Player__Role__in=['D', 'C', 'A']
-                    ).exclude(
-                        Q(Vote__isnull=True) | Q(Vote=0)
-                    ).values('Player_id').distinct().count()
-            except Exception as e:
-                logger.error(f"Error parsing lineup: {e}")
+        if squad_player_ids:
+            # 2. Query sui voti validi per i giocatori di movimento (D, C, A)
+            votes_qs = vote.Vote.objects.filter(
+                Player_id__in=squad_player_ids,
+                Day=day,
+                Season__Active=True,
+                Player__Role__in=['D', 'C', 'A']
+            ).filter(
+                Q(Vote__gt=0) | Q(TotVote__gt=0)
+            ).select_related('Player')
+
+            field_players_with_vote = votes_qs.values('Player_id').distinct().count()
+
+            # ~ # Stampa dettagliata per il team_id 20
+            # ~ if t.id == 20:
+                # ~ print(f"\n--- [DEBUG PARAMETRO 2] {t.Name} - Giornata {day} ---", flush=True)
+                # ~ print(f"Totale giocatori di movimento a voto: {field_players_with_vote}/22", flush=True)
+                
+                # ~ for idx, v in enumerate(votes_qs, start=1):
+                    # ~ surname = getattr(v.Player, 'Surname', getattr(v.Player, 'Name', str(v.Player_id)))
+                    # ~ role = getattr(v.Player, 'Role', 'N/D')
+                    # ~ print(
+                        # ~ f"  {idx}. [{role}] {surname} -> Voto: {v.Vote}, TotVoto: {v.TotVote}",
+                        # ~ flush=True
+                    # ~ )
+                # ~ print("-----------------------------------------------------\n", flush=True)
 
         param2 = round(min(field_players_with_vote / 22.0, 1.0), 3)
 
@@ -134,7 +151,8 @@ def get_panchina_doro_flat_data(day=None):
         series_teams = team.Team.objects.filter(Series__in=_series).values_list('id', flat=True)
         series_b11_qs = b11_results.B11Results.objects.filter(
             Team_id__in=series_teams,
-            Day=day
+            Day=day,
+            Season__Active=True
         ).values_list('B11Fp', flat=True)
 
         series_b11s = [float(score) for score in series_b11_qs if score is not None]

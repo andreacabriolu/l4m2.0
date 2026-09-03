@@ -221,208 +221,208 @@ def get_winner(home_data, away_data):
     return (False, False) #DRAW, IMPOSSIBLE TO DECIDE WINNER
 
 
-def get_panchina_doro_flat_data(day=None, getForCalculation=False):
-    flat_data = []
+# def get_panchina_doro_flat_data(day=None, getForCalculation=False):
+#     flat_data = []
 
-    # Configurazioni Pesi (P1, P2, P3)
-    WEIGHTS = (C.Pdoro.WEIGHTS['P1'], 
-               C.Pdoro.WEIGHTS['P2'], 
-               C.Pdoro.WEIGHTS['P3'])
+#     # Configurazioni Pesi (P1, P2, P3)
+#     WEIGHTS = (C.Pdoro.WEIGHTS['P1'], 
+#                C.Pdoro.WEIGHTS['P2'], 
+#                C.Pdoro.WEIGHTS['P3'])
 
-    try:
-        current_day = int(get_current_day())
-    except (ValueError, TypeError):
-        current_day = 1
+#     try:
+#         current_day = int(get_current_day())
+#     except (ValueError, TypeError):
+#         current_day = 1
 
-    # Squadre della Serie di Campionato (Competition=1) per Stagione Attiva
-    teams = team.Team.objects.filter(
-        Series__Competition_id=1,
-        Series__Season__Active=True
-    ).distinct().order_by('Name')
+#     # Squadre della Serie di Campionato (Competition=1) per Stagione Attiva
+#     teams = team.Team.objects.filter(
+#         Series__Competition_id=1,
+#         Series__Season__Active=True
+#     ).distinct().order_by('Name')
 
-    for t in teams:
-        daily_scores = []
-        total_pdo_pts = 0.0
+#     for t in teams:
+#         daily_scores = []
+#         total_pdo_pts = 0.0
 
-        _series = get_my_series(t.id, competitionid=1)
+#         _series = get_my_series(t.id, competitionid=1)
 
-        #Prendi TUTTE le giornate dal database
-        pdoro_team_results = pdoro.Pdoro.objects.filter(Team=t.id, Season__Active=True).order_by('Day')
+#         #Prendi TUTTE le giornate dal database
+#         pdoro_team_results = pdoro.Pdoro.objects.filter(Team=t.id, Season__Active=True).order_by('Day')
 
-        # Cicla fino alla giornata precedente a quella corrente
-        for day in range(1, current_day):
-            # -------------------------------------------------------------
-            # FP Campionato e B11 da Database FILTRATI PER STAGIONE ATTIVA
-            # -------------------------------------------------------------
-            camp_res = matches_results.MatchesResults.objects.filter(
-                Team_id=t.id,
-                MatchesCalendar__Series__in=_series,
-                MatchesCalendar__CompetitionCalendar__Day=day
-            ).values('Fp').first()
+#         # Cicla fino alla giornata precedente a quella corrente
+#         for day in range(1, current_day):
+#             # -------------------------------------------------------------
+#             # FP Campionato e B11 da Database FILTRATI PER STAGIONE ATTIVA
+#             # -------------------------------------------------------------
+#             camp_res = matches_results.MatchesResults.objects.filter(
+#                 Team_id=t.id,
+#                 MatchesCalendar__Series__in=_series,
+#                 MatchesCalendar__CompetitionCalendar__Day=day
+#             ).values('Fp').first()
             
-            b11_res = b11_results.B11Results.objects.filter(
-                Team_id=t.id,
-                Day=day,
-                Season__Active=True
-            ).values('B11Fp').first()
+#             b11_res = b11_results.B11Results.objects.filter(
+#                 Team_id=t.id,
+#                 Day=day,
+#                 Season__Active=True
+#             ).values('B11Fp').first()
             
-            fp = float(camp_res['Fp']) if camp_res and camp_res['Fp'] is not None else 0.0
-            b11_fp = float(b11_res['B11Fp']) if b11_res and b11_res['B11Fp'] is not None else 0.0
+#             fp = float(camp_res['Fp']) if camp_res and camp_res['Fp'] is not None else 0.0
+#             b11_fp = float(b11_res['B11Fp']) if b11_res and b11_res['B11Fp'] is not None else 0.0
 
-            # -------------------------------------------------------------
-            # CALCOLO W11 AL VOLO
-            # -------------------------------------------------------------
-            w11_fp = 0.0
+#             # -------------------------------------------------------------
+#             # CALCOLO W11 AL VOLO
+#             # -------------------------------------------------------------
+#             w11_fp = 0.0
             
-            # Recuperiamo i giocatori in rosa per la squadra nella stagione attiva
-            squad_players = squads.Squads.objects.filter(
-                Team_id=t.id,
-                Quarantine=False,
-                Season__Active=True
-            ).select_related('Player')
+#             # Recuperiamo i giocatori in rosa per la squadra nella stagione attiva
+#             squad_players = squads.Squads.objects.filter(
+#                 Team_id=t.id,
+#                 Quarantine=False,
+#                 Season__Active=True
+#             ).select_related('Player')
 
-            player_ids = [s.Player_id for s in squad_players]
+#             player_ids = [s.Player_id for s in squad_players]
 
-            # Recuperiamo i voti per la giornata 'day' FILTRATI PER STAGIONE ATTIVA
-            votes_qs = vote.Vote.objects.filter(
-                Player_id__in=player_ids,
-                Day=day,
-                Season__Active=True
-            )
-            votes_dict = {v.Player_id: v for v in votes_qs}
+#             # Recuperiamo i voti per la giornata 'day' FILTRATI PER STAGIONE ATTIVA
+#             votes_qs = vote.Vote.objects.filter(
+#                 Player_id__in=player_ids,
+#                 Day=day,
+#                 Season__Active=True
+#             )
+#             votes_dict = {v.Player_id: v for v in votes_qs}
 
-            keepers, defenders, midfielders, attackers = [], [], [], []
+#             keepers, defenders, midfielders, attackers = [], [], [], []
 
-            for s in squad_players:
-                p = s.Player
-                p.votes = votes_dict.get(p.id, vote.Vote(Vote=None, TotVote=None))
+#             for s in squad_players:
+#                 p = s.Player
+#                 p.votes = votes_dict.get(p.id, vote.Vote(Vote=None, TotVote=None))
 
-                if p.Role == 'P':
-                    keepers.append(p)
-                elif p.Role == 'D':
-                    defenders.append(p)
-                elif p.Role == 'C':
-                    midfielders.append(p)
-                elif p.Role == 'A':
-                    attackers.append(p)
+#                 if p.Role == 'P':
+#                     keepers.append(p)
+#                 elif p.Role == 'D':
+#                     defenders.append(p)
+#                 elif p.Role == 'C':
+#                     midfielders.append(p)
+#                 elif p.Role == 'A':
+#                     attackers.append(p)
 
-            def w11_sort_key(p):
-                tv = p.votes.TotVote if (p.votes and p.votes.TotVote is not None) else None
-                if tv is not None and float(tv) > 0:
-                    return float(tv)
-                return 999.0
+#             def w11_sort_key(p):
+#                 tv = p.votes.TotVote if (p.votes and p.votes.TotVote is not None) else None
+#                 if tv is not None and float(tv) > 0:
+#                     return float(tv)
+#                 return 999.0
 
-            k_w = sorted(keepers, key=w11_sort_key)
-            d_w = sorted(defenders, key=w11_sort_key)
-            m_w = sorted(midfielders, key=w11_sort_key)
-            a_w = sorted(attackers, key=w11_sort_key)
+#             k_w = sorted(keepers, key=w11_sort_key)
+#             d_w = sorted(defenders, key=w11_sort_key)
+#             m_w = sorted(midfielders, key=w11_sort_key)
+#             a_w = sorted(attackers, key=w11_sort_key)
 
-            worst_res = pick_worst_11(k_w, d_w, m_w, a_w)
-            w11_fp = float(worst_res['score']) if worst_res else 0.0
+#             worst_res = pick_worst_11(k_w, d_w, m_w, a_w)
+#             w11_fp = float(worst_res['score']) if worst_res else 0.0
             
-            # -------------------------------------------------------------
-            # PARAMETRO 1: (FP - W11) / (B11 - W11)
-            # -------------------------------------------------------------
-            if (b11_fp - w11_fp) > 0:
-                param1 = round((fp - w11_fp) / (b11_fp - w11_fp), 3)
-                param1 = max(0.0, min(param1, 1.0))
-            else:
-                param1 = 1.0
+#             # -------------------------------------------------------------
+#             # PARAMETRO 1: (FP - W11) / (B11 - W11)
+#             # -------------------------------------------------------------
+#             if (b11_fp - w11_fp) > 0:
+#                 param1 = round((fp - w11_fp) / (b11_fp - w11_fp), 3)
+#                 param1 = max(0.0, min(param1, 1.0))
+#             else:
+#                 param1 = 1.0
 
-# -------------------------------------------------------------
-            # PARAMETRO 2: Profondità rosa (Giocatori di movimento a voto / 22)
-            # -------------------------------------------------------------
-            field_players_with_vote = 0
+# # -------------------------------------------------------------
+#             # PARAMETRO 2: Profondità rosa (Giocatori di movimento a voto / 22)
+#             # -------------------------------------------------------------
+#             field_players_with_vote = 0
             
-            # 1. Recuperiamo tutti gli ID dei giocatori in rosa per la squadra nella stagione attiva
-            squad_player_ids = squads.Squads.objects.filter(
-                Team_id=t.id,
-                Quarantine=False,
-                Season__Active=True
-            ).values_list('Player_id', flat=True)
+#             # 1. Recuperiamo tutti gli ID dei giocatori in rosa per la squadra nella stagione attiva
+#             squad_player_ids = squads.Squads.objects.filter(
+#                 Team_id=t.id,
+#                 Quarantine=False,
+#                 Season__Active=True
+#             ).values_list('Player_id', flat=True)
 
-            if squad_player_ids:
-                # 2. Query sui voti validi per i giocatori di movimento (D, C, A)
-                votes_qs = vote.Vote.objects.filter(
-                    Player_id__in=squad_player_ids,
-                    Day=day,
-                    Season__Active=True,
-                    Player__Role__in=['D', 'C', 'A']
-                ).filter(
-                    Q(Vote__gt=0) | Q(TotVote__gt=0)
-                ).select_related('Player')
+#             if squad_player_ids:
+#                 # 2. Query sui voti validi per i giocatori di movimento (D, C, A)
+#                 votes_qs = vote.Vote.objects.filter(
+#                     Player_id__in=squad_player_ids,
+#                     Day=day,
+#                     Season__Active=True,
+#                     Player__Role__in=['D', 'C', 'A']
+#                 ).filter(
+#                     Q(Vote__gt=0) | Q(TotVote__gt=0)
+#                 ).select_related('Player')
 
-                field_players_with_vote = votes_qs.values('Player_id').distinct().count()
+#                 field_players_with_vote = votes_qs.values('Player_id').distinct().count()
 
-                # ~ # Stampa dettagliata per il team_id 20
-                # ~ if t.id == 20:
-                    # ~ print(f"\n--- [DEBUG PARAMETRO 2] {t.Name} - Giornata {day} ---", flush=True)
-                    # ~ print(f"Totale giocatori di movimento a voto: {field_players_with_vote}/22", flush=True)
+#                 # ~ # Stampa dettagliata per il team_id 20
+#                 # ~ if t.id == 20:
+#                     # ~ print(f"\n--- [DEBUG PARAMETRO 2] {t.Name} - Giornata {day} ---", flush=True)
+#                     # ~ print(f"Totale giocatori di movimento a voto: {field_players_with_vote}/22", flush=True)
                     
-                    # ~ for idx, v in enumerate(votes_qs, start=1):
-                        # ~ surname = getattr(v.Player, 'Surname', getattr(v.Player, 'Name', str(v.Player_id)))
-                        # ~ role = getattr(v.Player, 'Role', 'N/D')
-                        # ~ print(
-                            # ~ f"  {idx}. [{role}] {surname} -> Voto: {v.Vote}, TotVoto: {v.TotVote}",
-                            # ~ flush=True
-                        # ~ )
-                    # ~ print("-----------------------------------------------------\n", flush=True)
+#                     # ~ for idx, v in enumerate(votes_qs, start=1):
+#                         # ~ surname = getattr(v.Player, 'Surname', getattr(v.Player, 'Name', str(v.Player_id)))
+#                         # ~ role = getattr(v.Player, 'Role', 'N/D')
+#                         # ~ print(
+#                             # ~ f"  {idx}. [{role}] {surname} -> Voto: {v.Vote}, TotVoto: {v.TotVote}",
+#                             # ~ flush=True
+#                         # ~ )
+#                     # ~ print("-----------------------------------------------------\n", flush=True)
 
-            param2 = round(min(field_players_with_vote / 22.0, 1.0), 3)
+#             param2 = round(min(field_players_with_vote / 22.0, 1.0), 3)
                         
-            # -------------------------------------------------------------
-            # PARAMETRO 3: Relative B11 Scaling nella Serie
-            # -------------------------------------------------------------
-            param3 = 1.0
-            low_b11, high_b11 = 0.0, 0.0
-            series_teams = team.Team.objects.filter(Series__in=_series).values_list('id', flat=True)
-            series_b11_qs = b11_results.B11Results.objects.filter(
-                Team_id__in=series_teams,
-                Day=day,
-                Season__Active=True
-            ).values_list('B11Fp', flat=True)
+#             # -------------------------------------------------------------
+#             # PARAMETRO 3: Relative B11 Scaling nella Serie
+#             # -------------------------------------------------------------
+#             param3 = 1.0
+#             low_b11, high_b11 = 0.0, 0.0
+#             series_teams = team.Team.objects.filter(Series__in=_series).values_list('id', flat=True)
+#             series_b11_qs = b11_results.B11Results.objects.filter(
+#                 Team_id__in=series_teams,
+#                 Day=day,
+#                 Season__Active=True
+#             ).values_list('B11Fp', flat=True)
 
-            series_b11s = [float(score) for score in series_b11_qs if score is not None]
+#             series_b11s = [float(score) for score in series_b11_qs if score is not None]
 
-            if series_b11s:
-                high_b11, low_b11 = max(series_b11s), min(series_b11s)
-                if high_b11 > low_b11:
-                    param3 = round((b11_fp - low_b11) / (high_b11 - low_b11), 3)
+#             if series_b11s:
+#                 high_b11, low_b11 = max(series_b11s), min(series_b11s)
+#                 if high_b11 > low_b11:
+#                     param3 = round((b11_fp - low_b11) / (high_b11 - low_b11), 3)
 
-            # -------------------------------------------------------------
-            # PUNTEGGIO DI GIORNATA
-            # -------------------------------------------------------------
-            w1, w2, w3 = WEIGHTS
-            day_pdo_score = round((param1 * w1) + (param2 * w2) + (param3 * w3), 3)
-            dday = min(current_day - 1, 35) if current_day > 1 else 1
-            total_pdo_pts += day_pdo_score / dday
+#             # -------------------------------------------------------------
+#             # PUNTEGGIO DI GIORNATA
+#             # -------------------------------------------------------------
+#             w1, w2, w3 = WEIGHTS
+#             day_pdo_score = round((param1 * w1) + (param2 * w2) + (param3 * w3), 3)
+#             dday = min(current_day - 1, 35) if current_day > 1 else 1
+#             total_pdo_pts += day_pdo_score / dday
 
-            daily_scores.append({
-                'day': day,
-                'pts': day_pdo_score,
-                'param1': param1,
-                'param2': param2,
-                'param3': param3,
-                'fp': fp,
-                'b11_fp': b11_fp,
-                'w11_fp': w11_fp,
-                'field_votes': field_players_with_vote,
-                'b11_low': low_b11,
-                'b11_high': high_b11,
-            })
+#             daily_scores.append({
+#                 'day': day,
+#                 'pts': day_pdo_score,
+#                 'param1': param1,
+#                 'param2': param2,
+#                 'param3': param3,
+#                 'fp': fp,
+#                 'b11_fp': b11_fp,
+#                 'w11_fp': w11_fp,
+#                 'field_votes': field_players_with_vote,
+#                 'b11_low': low_b11,
+#                 'b11_high': high_b11,
+#             })
 
-        avg_score = round(total_pdo_pts / len(daily_scores), 3) if daily_scores else 0.0
+#         avg_score = round(total_pdo_pts / len(daily_scores), 3) if daily_scores else 0.0
 
-        flat_data.append({
-            'team_id': t.id,
-            'team': t.Name,
-            'pdoav': avg_score,
-            'total_pts': round(total_pdo_pts, 3),
-            'daily_scores': daily_scores
-        })
+#         flat_data.append({
+#             'team_id': t.id,
+#             'team': t.Name,
+#             'pdoav': avg_score,
+#             'total_pts': round(total_pdo_pts, 3),
+#             'daily_scores': daily_scores
+#         })
 
-    flat_data.sort(key=lambda x: x['pdoav'], reverse=True)
-    return flat_data
+#     flat_data.sort(key=lambda x: x['pdoav'], reverse=True)
+#     return flat_data
     
         
     
