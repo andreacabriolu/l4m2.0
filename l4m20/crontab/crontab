@@ -2,7 +2,8 @@
 
 0,30 * * * * /home/django/l4m20/l4m20_venv/bin/python /home/django/l4m20/l4m2.0/l4m20/l4m_app/scripts/live_parser/live_scraper.py /dev/null 2>&1
 
-0 7,13,19 * * * cd /home/django/l4m20/l4m2.0/l4m20 && /home/django/l4m20/l4m20_venv/bin/python l4m_app/scripts/live_parser/upsert_players.py > /dev/null 2>&1
+#0 7,13,19 * * * cd /home/django/l4m20/l4m2.0/l4m20 && /home/django/l4m20/l4m20_venv/bin/python l4m_app/scripts/live_parser/upsert_players.py > /dev/null 2>&1
+0 12 * * * cd /home/django/l4m20/l4m2.0/l4m20 && /home/django/l4m20/l4m20_venv/bin/python l4m_app/scripts/live_parser/upsert_players.py > /dev/null 2>&1
 
 59 23 * * 1 sh /home/dump.sh > /dev/null 2>&1
 
