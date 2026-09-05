@@ -58,8 +58,7 @@ const ACTIONS = {
             visible: f =>
                 f.roster === true && 
                 f.expired === true &&
-                f.official === false &&
-                AuctionState.currentSession.is_open === true
+                f.official === false
 
         },
 
@@ -369,7 +368,6 @@ function getPlayerStatus(player, flags = null, expiration_date = null) {
     if (flags.roster === true &&
         flags.official === true &&
         flags.signed === true &&
-        flags.canQuarantine === true &&
         flags.quarantined === true) {
         return ["IN QUARANTENA", "state-quarantine"];
     }
@@ -908,6 +906,7 @@ const Auction = {
                 player.bet__Team_id__Name = player.Player_id__Team_id__Name; //TODO: value this?
                 player.bet__Expiration_Date = player.Expiration_Date;
                 player.bet__Session_id = player.Session_id;
+                player.InitialQuotation = player.Player_id__InitialQuotation;
                 player.Quotation = player.Player_id__Quotation;
                 player.Status = player.Player_id__Status;
             }
@@ -930,7 +929,7 @@ const Auction = {
             .textContent = player.RealTeam__Name;
 
         modal.querySelector(".card-player-wage")
-            .textContent = "INGAGGIO: " + (Math.round(player.Quotation) ?? "-") + " FML";
+            .textContent = "INGAGGIO: " + (Math.round(player.InitialQuotation) ?? "-") + " FML";
 
         role_className = `role-${player.Role}`;
         modal.querySelector(".player-role").className = `role-badge ${role_className} player-role`;

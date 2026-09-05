@@ -1174,7 +1174,7 @@ def get_all_players_my_series(teamid, filtered_teams_ids, my_svincoli_current_se
         has_expired_bet=False,
         has_my_team_bet=False
     ).order_by('id').values(
-        'id', 'Surname', 'Name', 'Role', 'RealTeam__Name', 'Quotation',
+        'id', 'Surname', 'Name', 'Role', 'RealTeam__Name', 'Quotation', 'InitialQuotation',
         'bet__Amount', 'bet__Team_id__Name', 'bet__IsExpired',
         'bet__Carognata', 'bet__Expiration_Date',
         'squads__Years', 'Status'
@@ -1276,7 +1276,8 @@ def get_my_best_bets(teamid, marketid):
         values('Amount','Expiration_Date', 'Session_id',
                'IsExpired','id','Team_id','IsOfficial','Carognata',
                'Player_id__Role', 'Player_id__RealTeam__Name',
-               'Player_id__Quotation', 'Player_id__Status', 'Player_id','Player_id__Surname',
+               'Player_id__Quotation', 'Player_id__InitialQuotation',
+               'Player_id__Status', 'Player_id','Player_id__Surname',
                'squads__Years', 'squads__Quarantine', 'Player__quarantine__QuarantinableUntil').distinct('Player_id')
                
     # if(qplayer is not None):
