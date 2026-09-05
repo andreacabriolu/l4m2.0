@@ -40,12 +40,14 @@ def _round(value):
 
     return math.floor((value * wage_multiplier) + 0.5) #round to nearest integer 
 
-url = "https://apicdn.fantamaster.it/export/?format=excel&sort=name"
+# url = "https://apicdn.fantamaster.it/export/?format=excel&sort=name"
+filename = "l4m_app/scripts/live_parser/listone_26_27.xlsx"
 
-response = requests.get(url)
-response.raise_for_status()  # Controlla se la richiesta ha avuto successo
+# response = requests.get(url)
+# response.raise_for_status()  # Controlla se la richiesta ha avuto successo
 
-df = pd.read_excel(io.BytesIO(response.content), sheet_name="Tutti", skiprows=1, skipfooter=2)
+df = pd.read_excel(filename, sheet_name="Tutti", skiprows=1, skipfooter=2)
+# df = pd.read_excel(io.BytesIO(response.content), sheet_name="Tutti", skiprows=1, skipfooter=2)
 
 df = df.dropna(subset=["Nome"])
 
@@ -79,39 +81,11 @@ for _, row in df.iterrows():
         
         new_status = 'Q' if p.id in q_player_ids else 'A'
         
-        # AGGIORNA IN MEMORIA SOLO SE QUALCOSA È CAMBIATO
-        if (p.Role != ruolo or 
-            p.RealTeam.id != team_id or 
-            p.Quotation != quotazione or 
-            p.Status != new_status or 
-            not p.JustModified):
-            
-            p.Role = ruolo
-            p.RealTeam.id = team_id
-            p.Quotation = quotazione
-            p.Status = new_status
-            p.JustModified = True
-            updated_players.append(p)
-    else:
-        # Giocatore nuovo
-        created_players.append(player.Player(
-            Surname=nome,
-            Role=ruolo,
-            RealTeam=real_team.RealTeam.objects.get(id=team_id) if team_id else None,
-            Status='A',
-            Quotation=quotazione,
-            JustModified=True
-        ))
-
-# 3. Gestisci i giocatori non presenti nel file (Estero)
-for p in existing_players.values():
-    if p.id not in processed_ids:
-        # Imposta lo status a 'E' (Estero) per i giocatori non presenti nel file
-        new_status = 'Q' if p.id in q_player_ids else 'E'
-        if p.Status != new_status or p.JustModified:
-            p.Status = new_status
-            p.JustModified = False
-            updated_players.append(p)
+        # AGGIORNA IN MEMORIA LE QUOTAZIONI    
+        p.InitialQuotation = quotazione            
+        p.Quotation = quotazione
+        p.Status = new_status
+        updated_players.append(p)
 
 # 4. Esegui le operazioni sul DB in BULK (uniche 2 query veloci!)
 if created_players:
@@ -120,7 +94,7 @@ if created_players:
 if updated_players:
     player.Player.objects.bulk_update(
         updated_players, 
-        fields=['Role', 'RealTeam_id', 'Status', 'Quotation', 'JustModified']
+        fields=['Role', 'RealTeam_id', 'InitialQuotation', 'Status', 'Quotation', 'JustModified']
     )
 
 print(f"Processati con successo {len(df)} giocatori nella tabella 'l4m_app_players'.")

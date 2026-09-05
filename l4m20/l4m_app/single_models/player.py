@@ -19,6 +19,7 @@ class Player(models.Model):
     Role = models.CharField(max_length=10, choices=ROLES)
     Status = models.CharField(max_length=1, choices=STATUSES)
     RealTeam = models.ForeignKey(on_delete=models.CASCADE,to=C.Constant_Strings.real_team, null=True)
+    InitialQuotation = models.IntegerField(null=True)
     Quotation = models.IntegerField(null=True)
     ModifiedOn = models.DateTimeField(auto_now=True, null=True)
     JustModified = models.BooleanField(default=False, null=True)
