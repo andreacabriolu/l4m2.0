@@ -898,8 +898,8 @@ def make_empty_vote_obj(pl_id, cap_id, already_played, current_day):
     v_obj.TotVote = 6 if not already_played else None
     v_obj.Status = C.PlayerStatus.YET_TO_PLAY if not already_played else C.PlayerStatus.NOT_PLAYED
     real_match = real_calendar.Real_calendar.objects.filter(Q(Day=current_day) & \
-                                                            (Q(RealTeamHome_id=pl.RealTeam) | Q(RealTeamAway_id=pl.RealTeam) &
-                                                             Q(Season__Active=True)))
+                                                            (Q(RealTeamHome_id=pl.RealTeam) | Q(RealTeamAway_id=pl.RealTeam)) & \
+                                                             Q(Season__Active=True))
     v_obj.Msg = real_match[0].Date.astimezone(ZoneInfo(key='Europe/Rome')).strftime('%d-%m-%Y alle %H:%M') if real_match else ""
 
     return v_obj
