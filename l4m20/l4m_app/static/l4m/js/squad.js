@@ -125,8 +125,8 @@ function fillSingleTeamTable() {
                 ? `${player.Years} ${numYears === 1 ? 'anno' : 'anni'}` 
                 : '';
 
-            const quotationText = (player.Player__Quotation !== null && player.Player__Quotation !== undefined && player.Player__Quotation !== '')
-                ? `${Math.round(player.Player__Quotation)} fml` 
+            const quotationText = (player.Player__InitialQuotation !== null && player.Player__InitialQuotation !== undefined && player.Player__InitialQuotation !== '')
+                ? `${Math.round(player.Player__InitialQuotation)} fml` 
                 : '';
 
             const salaryText = (hasContract && player.Salary !== null && player.Salary !== undefined && player.Salary !== '') 

@@ -1454,6 +1454,7 @@ def get_my_players_filtered(filter_role, teamid):
             'Player__Role',
             'Player__RealTeam__id',
             'Years',
+            'Player__InitialQuotation',
             'Player__Quotation',
             'Salary'
         ).\
