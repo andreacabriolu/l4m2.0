@@ -1677,7 +1677,7 @@ def sign_contract(contract_data):
     team_ = get_object_or_404(team.Team, id=contract_data['teamid'])
     season = get_current_season()
     years_signed = contract_data['years']
-    total_wage = player_.Quotation * years_signed
+    total_wage = player_.InitialQuotation * years_signed
 
     squad_contracts = get_signed_contracts(team_.id)
     check_result = check_contract(squad_contracts, player_.Role, years_signed)
@@ -1689,7 +1689,7 @@ def sign_contract(contract_data):
     if existing_squad.exists():
         existing_squad.update(Years=years_signed,
                               Salary=total_wage,
-                              Quot=player_.Quotation)
+                              Quot=player_.InitialQuotation)
     else:
         return C.ErrorCodes.PLAYER_NOT_IN_SQUAD
 
