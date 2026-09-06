@@ -75,7 +75,7 @@ try:
         if (isLive): 
             U.set_live(score, votes, players)
         else:
-            U.set_final(conn, score, real_teams, current_day)
+            U.set_final(conn, score, real_teams, current_day, season)
         match_events = score['events']
         U.fill_with_events(match_events, players, votes, players_realteam)
 

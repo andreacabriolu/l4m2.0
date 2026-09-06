@@ -25,7 +25,7 @@ def get_today_competitions(conn:DB_Connector, current_day, current_season):
     except Exception as e:
         raise e
 
-def set_final(conn:DB_Connector, score, real_teams, current_day):
+def set_final(conn:DB_Connector, score, real_teams, current_day, current_season):
     if score['time'] == C.Events.END_MATCH:
         team_home = real_teams[score['home_name']]
         team_away = real_teams[score['away_name']]
@@ -34,8 +34,8 @@ def set_final(conn:DB_Connector, score, real_teams, current_day):
             return
         
         conn.update(table="l4m_app_real_calendar", set='"FT"=true', 
-                    conditions='"Day"=%s AND "RealTeamHome_id"=%s AND "RealTeamAway_id"=%s', 
-                    data=(current_day, team_home, team_away))
+                    conditions='"Day"=%s AND "RealTeamHome_id"=%s AND "RealTeamAway_id"=%s AND "Season_id"=%s', 
+                    data=(current_day, team_home, team_away, current_season))
         pass
 
 def report_old_players_missing_from_csv(players_db, players_csv):
