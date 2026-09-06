@@ -166,7 +166,7 @@ def make_vote_for_player(pl_id, votes, players_realteam):
 
     votes[pl_id] = vote
 
-def fill_with_events(events, players, votes, players_realteam):
+def fill_with_events(events, players, votes):
     for event in events:
         
         #TODO: absolutely improve
