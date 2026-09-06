@@ -82,7 +82,7 @@ try:
     #complete votes
     for _,vote in votes.items():
         vote.Day = int(current_day)
-        vote.AssP = U.get_current_assp(conn, vote)
+        vote.AssP = U.get_current_assp(conn, vote, season)
         vote.TotVote = U.calculate_totvote(vote)
         vote.Season = season
 

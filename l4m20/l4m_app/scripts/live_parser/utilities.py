@@ -339,7 +339,10 @@ def get_players(conn:DB_Connector):
     
 def get_current_assp(conn:DB_Connector, vote):
     try:
-        rows = conn.select(table="l4m_app_vote", cols='\"AssP\"', conditions='"Day"=%s and "Player_id"=%s', data=(vote.Day, vote.Player))
+        rows = conn.select(table="l4m_app_vote", 
+                           cols='\"AssP\"', 
+                           conditions='"Day"=%s and "Player_id"=%s and "Season_id"=%s', 
+                           data=(vote.Day, vote.Player, vote.Season))
         if len(rows) <= 0:
             return 0
         return rows[0][0]
