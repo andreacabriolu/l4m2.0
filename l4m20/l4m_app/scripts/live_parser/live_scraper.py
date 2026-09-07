@@ -39,7 +39,7 @@ from l4m_app.utilities import get_current_season
 
 logging.basicConfig(filename='scarper.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s') #TODO: check path
 
-TEST = False
+TEST = True
 
 if(not TEST):
     url = "https://publicapi.fantamaster.it/livescores/?tcache=1756165942189"
@@ -48,7 +48,8 @@ if(not TEST):
 
     resp_json = json.loads(resp_content)
 else:
-    f = open('live_parser/fake.json','r')
+    # f = open('fake.json','r')
+    f = open(CURRENT_FILE.parents[0] / 'fake.json', 'r')
     resp_json = json.loads(f.read())
     f.close()
 
@@ -64,8 +65,8 @@ try:
     current_day = resp_json['day']
     grades = resp_json['marks']
 
-    players = player.Player.objects.all().values_list('Surname', 'id')
-    real_teams = real_team.RealTeam.objects.filter(Status='A').values_list('Name', 'id')
+    players = player.Player.objects.all().only('Surname', 'id', 'RealTeam_id')
+    real_teams = real_team.RealTeam.objects.filter(Status='A').only('Name', 'id')
     _season = get_current_season()
     today_competitions = competition_calendar.CompetitionCalendar.objects.filter(Day=current_day, Season=_season).values_list('Competition_id', flat=True)
     # players = dict(U.get_players(conn))
@@ -79,13 +80,18 @@ try:
     #creating votes ONLY for playing players, warning!
     for name, grade in grades.items():
         name = U.clean_name(name)
-        if name not in players:
+        pl = players.filter(Surname=name).first()
+        
+        if pl is None:
             continue
+        # if name not in players:
+        #     continue
         # _vote = Vote_Live_Obj()
         _vote = vote.Vote()
-        _player = players.filter(Surname=name).first()
-        _vote.Player = _player
-        _vote.RealTeam = _player.RealTeam
+        # _player = pl
+        _vote.Player = pl
+        # _vote.Player_id = pl.id
+        _vote.RealTeam = real_teams.filter(id=pl.RealTeam_id).first()
         _vote.Vote = float(grade)
         _vote.TotVote = 0.0
         _vote.GoalSc = 0
@@ -103,35 +109,33 @@ try:
         _vote.Sub = 0
         _vote.Season = _season
 
-        votes[_player.id] = _vote
+        votes[pl.id] = _vote
 
     for score in resp_json['scores']:
         isLive = score['time'] != C.Events.END_MATCH
         if (isLive): 
             U.set_live(score, votes, players)
         else:
-            U.set_final(conn, score, real_teams, current_day, _season)
+            U.set_final(score, real_teams, current_day, _season)
         match_events = score['events']
-        U.fill_with_events(match_events, players, votes)
+        U.fill_with_events(match_events, players, votes, real_teams)
 
     #complete votes
-    for _,vote in votes.items():
-        vote.Day = int(current_day)
-        vote.AssP = U.get_current_assp(conn, vote)
-        vote.TotVote = U.calculate_totvote(vote)
-        vote.Season = _season
+    for _vote in votes.values():
+        _vote.Day = int(current_day)
+        _vote.AssP = U.get_current_assp(_vote)
+        _vote.TotVote = U.calculate_totvote(_vote)
 
     #clean up the table
     U.delete_votes_of_day(conn, current_day, _season)
 
-    #write ONLY final votes
+    #write ONLY final votesName
     U.insert_votes(conn, votes, today_competitions)
     conn.commit()
     logger.log(logging.INFO, f'executed at {datetime.datetime.now()}')
 
 except Exception as e:
     logger.log(logging.CRITICAL, f'ERROR {e}')
-    pass
 
 
 
