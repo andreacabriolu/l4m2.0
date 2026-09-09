@@ -8,6 +8,39 @@ from django.db.models import Q
 
 from l4m_app.single_models import matches_results, other_competition, team
 
+def get_b11_data():
+    b11_data = []
+
+    pass
+
+class Best11View(LoginRequiredMixin, View):
+    template_name = "l4m/b11.html"
+
+    def get(self, request):
+        best11_comp = other_competition.OtherCompetition.objects.filter(Name="Best 11").first()
+
+        if best11_comp is not None:
+            comp_info = {
+                'logo_path': best11_comp.LogoPath,
+                'name': best11_comp.Name,
+                'description': best11_comp.Description,
+            }
+        else:
+            comp_info = {
+                'logo_path': '',
+                'name': 'Best 11',
+                'description': 'Descrizione Best 11.'
+            }
+
+        b11_data = get_b11_data()
+
+        params = {
+            'comp_info': comp_info,
+            'b11_data': b11_data,
+        }
+
+        return render(request, self.template_name, params)
+
 def get_angel_butcher_data():
     angel_butcher_data = []
     teams = team.Team.objects.filter(Active=True).values('id','Name')
