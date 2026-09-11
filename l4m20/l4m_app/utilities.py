@@ -690,8 +690,8 @@ def get_groups_data_for_competition(competition_id):
         ranking_line = ranking.Ranking.objects.filter(Q(Series_id=s.id)).values_list('RankingLine', flat=True).order_by('-Day').first()
         group_ranking = parse_ranking_line(ranking_line) if ranking_line else []
 
-        group_teams = team.Team.objects.filter(Series__id=s.id).values('id','Name')
-        group_matchdays = get_matchdays_info(s)
+        # group_teams = team.Team.objects.filter(Series__id=s.id).values('id','Name')
+        # group_matchdays = get_matchdays_info(s)
 
         # for index, t in enumerate(group_matchdays, start=1):
         #     print(f"\n--- matchdays {index} ---", flush=True)
@@ -699,8 +699,8 @@ def get_groups_data_for_competition(competition_id):
 
         # print("="*60 + "\n", flush=True)
 
-        ranking_line = ranking.Ranking.objects.filter(Q(Series_id=s.id)).values_list('RankingLine', flat=True).order_by('-Day').first()
-        group_ranking = parse_ranking_line(ranking_line) if ranking_line else []
+        # ranking_line = ranking.Ranking.objects.filter(Q(Series_id=s.id)).values_list('RankingLine', flat=True).order_by('-Day').first()
+        # group_ranking = parse_ranking_line(ranking_line) if ranking_line else []
 
 
         groups_data.append({
@@ -711,7 +711,7 @@ def get_groups_data_for_competition(competition_id):
             'ranking': list(group_ranking)
         })
 
-    return groups_data
+    return sorted(groups_data, key=lambda x: x['name'])
 
 def check_lineup_exists(teamid, day, comp_id=1):
     my_series = get_my_series(teamid, comp_id)

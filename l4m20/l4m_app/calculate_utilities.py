@@ -356,7 +356,7 @@ def calculate_league(competition, day):
                 lineup_to_show = l[0]
                 last_lineups_d[t.id] = lineup_to_show
 
-            if not last_lineups_d: continue #no valid lineup, current day still not available, skipping
+            if not last_lineups_d: continue #no valid lineup, current day still not available, skipping TODO: fix HERE case when some lineup is available
 
             couples = LU.get_couples_and_matches_from_calendar(series.id, _day, competition_id=competition.id)
             lineup_couples = [ (last_lineups_d[c[0]], last_lineups_d[c[1]], c[2]) for c in couples ]
