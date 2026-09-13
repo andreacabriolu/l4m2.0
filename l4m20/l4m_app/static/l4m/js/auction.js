@@ -73,7 +73,8 @@ const ACTIONS = {
             visible: f =>
                 f.roster === true &&
                 f.official === true &&
-                f.signed === true
+                f.signed === true &&
+                AuctionState.currentSession.is_open === true
         },
 
         free: {
