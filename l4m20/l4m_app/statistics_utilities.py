@@ -65,13 +65,12 @@ def get_showcase_items(teamid, seasonid=None):
 
 def get_real_match_string(day, real_team_id):
     match = real_calendar.Real_calendar.objects.filter(Q(Day=day) & 
-                                               (Q(RealTeamAway_id=real_team_id) | Q(RealTeamHome_id=real_team_id)))
+                                               (Q(RealTeamAway_id=real_team_id) | Q(RealTeamHome_id=real_team_id)) &
+                                                Q(Season__Active=True))
 
     match_name = ""
     if match.exists():
-        match = match.first().__str__()
-        match_name = match
-    
+        match_name = match.first().RealTeamHome.Name + " - " + match.first().RealTeamAway.Name
     return match_name
 
 def get_player_statistics_per_day(player_id):
