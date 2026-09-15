@@ -13,6 +13,9 @@ import requests as req
 from .libs import *
 from .live_utilities import pick_worst_11
 
+def get_season(season_id):
+    return season.Season.objects.filter(id=season_id).first()
+
 def quarantine_player(data):
     player_id = data['player_id']
     team_id = data['team_id']

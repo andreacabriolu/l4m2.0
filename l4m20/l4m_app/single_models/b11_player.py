@@ -19,6 +19,6 @@ class B11Player(models.Model):
     Vote = models.FloatField(null=True, blank=True)
     TotVote = models.FloatField(null=True, blank=True)
 
-    Position = models.PositiveSmallIntegerField() #?
+    Position = models.PositiveSmallIntegerField(null=True, blank=True) #?
 
     Captain = models.BooleanField(default=False)
