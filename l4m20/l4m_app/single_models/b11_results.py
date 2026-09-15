@@ -7,7 +7,7 @@ class B11Results(models.Model):
     Day = models.IntegerField()
     Team = models.ForeignKey(on_delete=models.CASCADE,to=C.Constant_Strings.team, null=True)    
     B11Fp = models.FloatField()
-    Lineup = models.TextField()
+    Lineup = models.TextField(null=True, blank=True)
     Module = models.CharField(max_length=3, null=True, blank=True)
     PartialScore = models.FloatField(null=True, blank=True)
     ModifierScore = models.FloatField(null=True, blank=True)

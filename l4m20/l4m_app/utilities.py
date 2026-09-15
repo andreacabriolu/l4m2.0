@@ -28,6 +28,9 @@ def get_six_politico_items(day):
 
     return list(suspended_cc), [r for pair in suspended_real for r in pair]
 
+def get_season(season_id):
+    return season.Season.objects.filter(id=season_id).first()
+
 def quarantine_player(data):
     player_id = data['player_id']
     team_id = data['team_id']

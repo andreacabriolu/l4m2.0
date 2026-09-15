@@ -1,18 +1,102 @@
 import json
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.views import View
+
+from l4m_app.single_models.b11_results import B11Results
 from .. import utilities as U
 from django.db.models import Q
 
 from l4m_app.single_models import matches_results, other_competition, team
 
-def get_b11_data():
-    b11_data = []
+def get_b11_data_by_day_view(request, day, season=None):
 
-    pass
+    season_obj = U.get_current_season() if season is None else U.get_season(season)
 
+    results = (
+        B11Results.objects
+        .filter(
+            Day=day,
+            Season__Active=True,
+        )
+        .select_related("Team")
+        .prefetch_related("players__Player")
+        .order_by("-B11Fp")
+    )
+
+    teams = []
+
+    for rank, result in enumerate(results, start=1):
+
+        players = []
+
+        for p in result.players.all():
+
+            players.append({
+                "player_id": p.Player_id,
+                "surname": p.Player.Surname,
+                "role": p.Role,
+                "real_team": p.Player.RealTeam,
+                "vote": p.Vote,
+                "totvote": p.TotVote,
+                "position": p.Position,
+                "captain": p.Captain,
+            })
+
+        teams.append({
+            "team_id": result.Team_id,
+            "team_name": result.Team.Name,
+            "team_logo": getattr(result.Team, "Logo", None),
+
+            "rank": rank,
+            "score": result.B11Fp,
+
+            "module": result.Module,
+
+            "partial_score": result.PartialScore,
+
+            "modifier": result.ModifierScore,
+            "modifier_total": result.ModifierTotal,
+            "modifier_from_no_gk": result.ModifierFromNoGk,
+
+            "captain": {
+                "player_id": result.captain_id if hasattr(result, "captain_id") else None,
+                "bonus": result.CaptainBonus or 0
+            },
+
+            "bonuses": {
+                "captain": result.CaptainBonus or 0,
+                "all_six": result.AllSixBonus or 0,
+                "no_yellow": result.NoYellowBonus or 0,
+            },
+
+            "players": players,
+        })
+
+    scores = [float(t["score"]) for t in teams]
+
+    return JsonResponse({
+        "day": day,
+
+        "season": {
+            "id": season_obj.id,
+            "name": str(season_obj),
+        },
+
+        "summary": {
+            "best_score": max(scores) if scores else None,
+            "best_team_id": teams[0]["team_id"] if teams else None,
+            "average_score": (
+                sum(scores) / len(scores)
+                if scores else None
+            ),
+        },
+
+        "teams": teams,
+    })
+    
 class Best11View(LoginRequiredMixin, View):
     template_name = "l4m/b11.html"
 
@@ -32,11 +116,13 @@ class Best11View(LoginRequiredMixin, View):
                 'description': 'Descrizione Best 11.'
             }
 
-        b11_data = get_b11_data()
+        day = int(U.get_current_day())
+
+        # b11_data = get_b11_data(day)
 
         params = {
             'comp_info': comp_info,
-            'b11_data': b11_data,
+            'day': day,
         }
 
         return render(request, self.template_name, params)
