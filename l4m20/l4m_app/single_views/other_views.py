@@ -63,7 +63,7 @@ def get_b11_data_by_day_view(request, day, season=None):
 
             "captain": {
                 "player_id": result.captain_id if hasattr(result, "captain_id") else None,
-                "bonus": result.CaptainBonus or 0
+                # "bonus": result.CaptainBonus or 0
             },
 
             "bonuses": {

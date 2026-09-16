@@ -4,13 +4,13 @@
 {% block title %} L4M2.0 - BEST 11 {% endblock %}
 
 {% block links %}
-<link href="{% static 'l4m/css/best11.css' %}" rel="stylesheet">
+<link href="{% static 'l4m/css/b11.css' %}" rel="stylesheet">
 <link href="{% static 'l4m/css/generic.css' %}" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 {% endblock %}
 
 {% block scripts %}
-<script type="text/javascript" src="{% static 'l4m/js/other.js' %}"></script>
+<script type="text/javascript" src="{% static 'l4m/js/b11.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -27,15 +27,189 @@
 
     <div class="main-div">
 
-        {% include "l4m/generic/generic_hero.html" with hero_title=comp_info.name hero_subtitle=comp_info.description hero_logo=comp_info.logo_path %}
 
-        <div class="b11-grid">
-            <article class="b11-team-card">
-                ...
-            </article>
+        <section class="best11-hero mb-3">
+
+            {% include "l4m/generic/generic_hero.html" with hero_title=comp_info.name hero_subtitle=comp_info.description hero_logo=comp_info.logo_path %}
+
+        </section>
+
+        <!-- DAY SELECTOR -->
+        <section class="best11-day-selector mb-3">
+
+            <button type="button" class="best11-day-arrow" id="btnPrevDay" aria-label="Giornata precedente">
+                <i class="bi bi-chevron-left"></i>
+            </button>
+
+            <div class="best11-days" id="best11Days">
+            </div>
+
+            <button type="button" class="best11-day-arrow" id="btnNextDay" aria-label="Giornata successiva">
+                <i class="bi bi-chevron-right"></i>
+            </button>
+
+        </section>
+
+
+        <!-- LOADING -->
+        <div id="best11Loading" class="best11-loading" hidden>
+
+            <div class="spinner-border spinner-border-sm"></div>
+            <span>Caricamento Best11...</span>
+
+        </div>
+
+
+        <!-- ERROR -->
+        <div id="best11Error" class="best11-error" hidden>
+
+            <i class="bi bi-exclamation-triangle-fill"></i>
+
+            <div>
+                <strong>Errore</strong>
+                <span id="best11ErrorMessage">
+                    Impossibile caricare i dati.
+                </span>
+            </div>
+
+        </div>
+
+
+        <!-- DAY SUMMARY -->
+        <section id="best11Summary" class="best11-summary mb-3" hidden>
+
+            <div class="best11-summary-header">
+                <div>
+                    <span class="best11-section-kicker">
+                        GIORNATA <span id="summaryDay"></span>
+                    </span>
+
+                    <h2>
+                        Classifica Best11
+                    </h2>
+                </div>
+            </div>
+
+
+            <div class="best11-summary-grid">
+
+                <div class="best11-stat-card best11-stat-highlight">
+                    <span class="best11-stat-label">
+                        MIGLIOR PUNTEGGIO
+                    </span>
+
+                    <strong class="best11-stat-value" id="summaryBestScore">
+                        -
+                    </strong>
+
+                    <span class="best11-stat-team" id="summaryBestTeam">
+                        -
+                    </span>
+                </div>
+
+
+                <div class="best11-stat-card">
+                    <span class="best11-stat-label">
+                        MEDIA GIORNATA
+                    </span>
+
+                    <strong class="best11-stat-value" id="summaryAverage">
+                        -
+                    </strong>
+
+                    <span class="best11-stat-team">
+                        FP
+                    </span>
+                </div>
+
+
+                <div class="best11-stat-card">
+                    <span class="best11-stat-label">
+                        SQUADRE
+                    </span>
+
+                    <strong class="best11-stat-value" id="summaryTeams">
+                        -
+                    </strong>
+
+                    <span class="best11-stat-team">
+                        partecipanti
+                    </span>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- TEAMS -->
+        <section id="best11TeamsSection" hidden>
+
+            <div class="best11-section-header">
+
+                <div>
+                    <span class="best11-section-kicker">
+                        BEST11
+                    </span>
+
+                    <h2>
+                        Giornata <span id="teamsDay"></span>
+                    </h2>
+                </div>
+
+                <div class="best11-sort">
+                    <button type="button" class="best11-sort-btn active" data-sort="score">
+                        Punteggio
+                        <i class="bi bi-sort-down"></i>
+                    </button>
+                </div>
+
+            </div>
+
+
+            <div id="best11Teams" class="best11-teams-grid">
+            </div>
+
+        </section>
+
+
+        <!-- TEAM DETAIL -->
+        <div class="modal fade" id="best11TeamModal" tabindex="-1" aria-hidden="true">
+
+            <div class="modal-dialog modal-dialog-centered modal-xl">
+                <div class="modal-content best11-detail-modal">
+
+                    <div class="modal-header">
+
+                        <div>
+                            <span class="best11-modal-kicker">
+                                BEST11 · GIORNATA
+                                <span id="modalDay"></span>
+                            </span>
+
+                            <h5 class="modal-title" id="modalTeamName">
+                                Team
+                            </h5>
+                        </div>
+
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Chiudi">
+                        </button>
+
+                    </div>
+
+
+                    <div class="modal-body" id="best11TeamModalBody">
+
+                        <!-- JS -->
+
+                    </div>
+
+                </div>
+            </div>
         </div>
 
 
     </div>
+
 </div>
 {% endblock %}
