@@ -24,3 +24,835 @@
     }
 }
 
+/* =========================================================
+   BEST11
+   ========================================================= */
+
+.best11-page {
+    max-width: 1800px;
+    margin: 0 auto;
+}
+
+
+/* ---------------------------------------------------------
+   HERO
+   --------------------------------------------------------- */
+
+.best11-hero {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 1rem;
+
+    padding: 1.25rem 1.5rem;
+
+    border-radius: 1rem;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.045),
+            rgba(255,255,255,.018)
+        );
+
+    border: 1px solid rgba(255,255,255,.08);
+}
+
+.best11-kicker,
+.best11-section-kicker,
+.best11-modal-kicker {
+    display: block;
+
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+
+    opacity: .65;
+}
+
+.best11-title {
+    margin: .15rem 0 .4rem;
+
+    font-size: clamp(1.35rem, 3vw, 2rem);
+    font-weight: 700;
+}
+
+.best11-description {
+    margin: 0;
+
+    font-size: .9rem;
+    opacity: .7;
+}
+
+.best11-day-indicator {
+    flex: 0 0 auto;
+
+    min-width: 85px;
+
+    text-align: center;
+}
+
+.best11-day-indicator span {
+    display: block;
+
+    font-size: .65rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    opacity: .6;
+}
+
+.best11-day-indicator strong {
+    display: inline-block;
+
+    font-size: 2.5rem;
+    line-height: 1;
+}
+
+.best11-day-indicator small {
+    opacity: .5;
+}
+
+
+/* ---------------------------------------------------------
+   DAY SELECTOR
+   --------------------------------------------------------- */
+
+.best11-day-selector {
+    display: flex;
+    align-items: center;
+    gap: .45rem;
+
+    padding: .5rem;
+
+    border-radius: .9rem;
+
+    background: rgba(0,0,0,.15);
+    border: 1px solid rgba(255,255,255,.07);
+}
+
+.best11-days {
+    display: flex;
+    align-items: center;
+    gap: .3rem;
+
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+
+    flex: 1;
+}
+
+.best11-days::-webkit-scrollbar {
+    display: none;
+}
+
+.best11-day-btn {
+    flex: 0 0 auto;
+
+    min-width: 39px;
+    height: 39px;
+
+    border: 0;
+    border-radius: .6rem;
+
+    background: transparent;
+    color: inherit;
+
+    font-size: .8rem;
+    font-weight: 600;
+
+    opacity: .65;
+
+    transition:
+        background .15s ease,
+        opacity .15s ease,
+        transform .15s ease;
+}
+
+.best11-day-btn:hover {
+    opacity: 1;
+}
+
+.best11-day-btn.active {
+    background: rgba(255,255,255,.12);
+    opacity: 1;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.08);
+}
+
+.best11-day-btn.current {
+    font-weight: 800;
+}
+
+.best11-day-arrow {
+    flex: 0 0 auto;
+
+    width: 36px;
+    height: 36px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 0;
+    border-radius: .55rem;
+
+    background: rgba(255,255,255,.06);
+    color: inherit;
+}
+
+.best11-day-arrow:disabled {
+    opacity: .3;
+}
+
+
+/* ---------------------------------------------------------
+   SUMMARY
+   --------------------------------------------------------- */
+
+.best11-summary,
+.best11-teams-grid,
+.best11-section-header {
+    animation: best11FadeIn .2s ease;
+}
+
+@keyframes best11FadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.best11-summary-header,
+.best11-section-header {
+    margin-bottom: .8rem;
+}
+
+.best11-summary-header h2,
+.best11-section-header h2 {
+    margin: .15rem 0 0;
+
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.best11-summary-grid {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 1.5fr)
+        repeat(2, minmax(0, 1fr));
+
+    gap: .75rem;
+}
+
+.best11-stat-card {
+    padding: 1rem;
+
+    border-radius: .85rem;
+
+    background: rgba(255,255,255,.035);
+    border: 1px solid rgba(255,255,255,.07);
+}
+
+.best11-stat-highlight {
+    border-color: rgba(255,255,255,.13);
+}
+
+.best11-stat-label {
+    display: block;
+
+    font-size: .65rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+
+    opacity: .6;
+}
+
+.best11-stat-value {
+    display: block;
+
+    margin-top: .15rem;
+
+    font-size: 1.55rem;
+    line-height: 1.2;
+}
+
+.best11-stat-team {
+    display: block;
+
+    margin-top: .15rem;
+
+    font-size: .78rem;
+    opacity: .65;
+}
+
+
+/* ---------------------------------------------------------
+   TEAM GRID
+   --------------------------------------------------------- */
+
+.best11-section-header {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+
+    gap: 1rem;
+}
+
+.best11-sort-btn {
+    border: 0;
+
+    padding: .4rem .65rem;
+
+    border-radius: .5rem;
+
+    background: rgba(255,255,255,.05);
+    color: inherit;
+
+    font-size: .75rem;
+}
+
+.best11-teams-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: .75rem;
+}
+
+
+/* ---------------------------------------------------------
+   TEAM CARD
+   --------------------------------------------------------- */
+
+.best11-team-card {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+
+    min-width: 0;
+
+    padding: .9rem;
+
+    border-radius: .9rem;
+
+    background: rgba(255,255,255,.035);
+    border: 1px solid rgba(255,255,255,.07);
+
+    cursor: pointer;
+
+    transition:
+        transform .15s ease,
+        border-color .15s ease,
+        background .15s ease;
+}
+
+.best11-team-card:hover {
+    transform: translateY(-2px);
+
+    border-color: rgba(255,255,255,.15);
+    background: rgba(255,255,255,.05);
+}
+
+.best11-team-card:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+}
+
+.best11-rank {
+    position: absolute;
+
+    top: .75rem;
+    left: .75rem;
+
+    width: 25px;
+    height: 25px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    font-size: .68rem;
+    font-weight: 800;
+
+    background: rgba(255,255,255,.07);
+}
+
+.best11-team-header {
+    display: flex;
+    align-items: center;
+
+    gap: .65rem;
+
+    padding-left: 2rem;
+}
+
+.best11-team-logo {
+    width: 34px;
+    height: 34px;
+
+    object-fit: contain;
+
+    border-radius: 50%;
+}
+
+.best11-team-name {
+    min-width: 0;
+
+    font-size: .9rem;
+    font-weight: 700;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.best11-score {
+    margin-top: .8rem;
+
+    font-size: 1.65rem;
+    font-weight: 800;
+
+    line-height: 1;
+}
+
+.best11-score-label {
+    margin-left: .2rem;
+
+    font-size: .7rem;
+    font-weight: 600;
+
+    opacity: .5;
+}
+
+.best11-module {
+    margin-top: .25rem;
+
+    font-size: .72rem;
+    font-weight: 700;
+
+    opacity: .6;
+}
+
+
+/* ---------------------------------------------------------
+   MINI FORMATION
+   --------------------------------------------------------- */
+
+.best11-mini-field {
+    margin-top: .85rem;
+
+    padding: .6rem;
+
+    border-radius: .65rem;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(255,255,255,.025),
+            rgba(255,255,255,.01)
+        );
+
+    border: 1px solid rgba(255,255,255,.04);
+}
+
+.best11-mini-line {
+    display: flex;
+    justify-content: center;
+
+    gap: .28rem;
+
+    min-height: 26px;
+}
+
+.best11-mini-player {
+    width: 29px;
+    height: 23px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: .35rem;
+
+    font-size: .56rem;
+    font-weight: 700;
+
+    background: rgba(255,255,255,.07);
+}
+
+.best11-mini-player.captain {
+    box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.25);
+}
+
+
+/* ---------------------------------------------------------
+   BONUS ROW
+   --------------------------------------------------------- */
+
+.best11-bonus-row {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: .3rem;
+
+    margin-top: .7rem;
+}
+
+.best11-bonus {
+    display: inline-flex;
+    align-items: center;
+    gap: .2rem;
+
+    padding: .2rem .38rem;
+
+    border-radius: .35rem;
+
+    background: rgba(255,255,255,.05);
+
+    font-size: .61rem;
+    font-weight: 600;
+
+    opacity: .75;
+}
+
+.best11-bonus strong {
+    font-weight: 800;
+}
+
+
+/* ---------------------------------------------------------
+   MODAL
+   --------------------------------------------------------- */
+
+.best11-detail-modal {
+    border-radius: 1rem;
+
+    border: 1px solid rgba(255,255,255,.08);
+}
+
+.best11-detail-modal .modal-header {
+    padding: 1rem 1.1rem;
+
+    border-bottom: 1px solid rgba(255,255,255,.07);
+}
+
+.best11-detail-modal .modal-body {
+    padding: 1rem;
+}
+
+.best11-detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 1rem;
+
+    margin-bottom: 1rem;
+}
+
+.best11-detail-score {
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.best11-detail-module {
+    font-size: .8rem;
+    font-weight: 700;
+    opacity: .55;
+}
+
+
+/* ---------------------------------------------------------
+   DETAIL FIELD
+   --------------------------------------------------------- */
+
+.best11-field {
+    padding: 1rem;
+
+    border-radius: .9rem;
+
+    background:
+        linear-gradient(
+            rgba(255,255,255,.035),
+            rgba(255,255,255,.015)
+        );
+
+    border: 1px solid rgba(255,255,255,.07);
+}
+
+.best11-field-line {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    gap: clamp(.3rem, 1vw, .9rem);
+
+    margin-bottom: 1.3rem;
+}
+
+.best11-field-line:last-child {
+    margin-bottom: 0;
+}
+
+.best11-player {
+    width: clamp(72px, 11vw, 105px);
+
+    text-align: center;
+}
+
+.best11-player-dot {
+    width: 42px;
+    height: 42px;
+
+    margin: 0 auto .35rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,.08);
+
+    font-size: .75rem;
+    font-weight: 800;
+
+    border: 1px solid rgba(255,255,255,.08);
+}
+
+.best11-player.captain .best11-player-dot {
+    box-shadow:
+        0 0 0 2px rgba(255,255,255,.13);
+}
+
+.best11-player-name {
+    font-size: .7rem;
+    font-weight: 700;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.best11-player-vote {
+    margin-top: .1rem;
+
+    font-size: .68rem;
+
+    opacity: .65;
+}
+
+.best11-captain-label {
+    display: block;
+
+    margin-top: .1rem;
+
+    font-size: .55rem;
+    font-weight: 800;
+
+    opacity: .7;
+}
+
+
+/* ---------------------------------------------------------
+   BREAKDOWN
+   --------------------------------------------------------- */
+
+.best11-breakdown {
+    margin-top: 1rem;
+
+    padding: 1rem;
+
+    border-radius: .85rem;
+
+    border: 1px solid rgba(255,255,255,.07);
+
+    background: rgba(255,255,255,.025);
+}
+
+.best11-breakdown h3 {
+    margin: 0 0 .7rem;
+
+    font-size: .8rem;
+    font-weight: 800;
+
+    text-transform: uppercase;
+    letter-spacing: .08em;
+
+    opacity: .65;
+}
+
+.best11-breakdown-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: .35rem 0;
+
+    font-size: .78rem;
+}
+
+.best11-breakdown-row.total {
+    margin-top: .35rem;
+    padding-top: .65rem;
+
+    border-top: 1px solid rgba(255,255,255,.08);
+
+    font-size: .9rem;
+    font-weight: 800;
+}
+
+
+/* ---------------------------------------------------------
+   LOADING / ERROR
+   --------------------------------------------------------- */
+
+.best11-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: .5rem;
+
+    padding: 2rem;
+
+    opacity: .65;
+}
+
+.best11-error {
+    display: flex;
+    align-items: center;
+
+    gap: .7rem;
+
+    padding: 1rem;
+
+    border-radius: .8rem;
+
+    background: rgba(255,0,0,.06);
+    border: 1px solid rgba(255,0,0,.12);
+}
+
+.best11-error strong,
+.best11-error span {
+    display: block;
+}
+
+.best11-error strong {
+    font-size: .8rem;
+}
+
+.best11-error span {
+    margin-top: .1rem;
+    font-size: .75rem;
+    opacity: .7;
+}
+
+
+/* ---------------------------------------------------------
+   RESPONSIVE
+   --------------------------------------------------------- */
+
+@media (max-width: 1200px) {
+
+    .best11-teams-grid {
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+    }
+}
+
+
+@media (max-width: 900px) {
+
+    .best11-summary-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .best11-stat-highlight {
+        grid-column: 1 / -1;
+    }
+
+    .best11-teams-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+}
+
+
+@media (max-width: 576px) {
+
+    .best11-hero {
+        padding: 1rem;
+
+        align-items: flex-start;
+    }
+
+    .best11-title {
+        font-size: 1.3rem;
+    }
+
+    .best11-description {
+        font-size: .8rem;
+    }
+
+    .best11-day-indicator {
+        min-width: 60px;
+    }
+
+    .best11-day-indicator strong {
+        font-size: 2rem;
+    }
+
+    .best11-summary-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .best11-stat-highlight {
+        grid-column: 1 / -1;
+    }
+
+    .best11-teams-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .best11-team-card {
+        padding: .8rem;
+    }
+
+    .best11-detail-modal {
+        margin: .4rem;
+    }
+
+    .best11-field {
+        padding: .65rem;
+    }
+
+    .best11-player {
+        width: 62px;
+    }
+
+    .best11-player-dot {
+        width: 36px;
+        height: 36px;
+    }
+
+    .best11-player-name {
+        font-size: .6rem;
+    }
+
+    .best11-field-line {
+        gap: .2rem;
+    }
+}
