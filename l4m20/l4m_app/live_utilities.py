@@ -439,7 +439,7 @@ def format_votes(mr):
     return votes_tit, items, votes_ris
 
 def get_matches_results(couples):
-    return [matches_results.MatchesResults.objects.filter(MatchesCalendar=couple[2]) for couple in couples]
+    return [matches_results.MatchesResults.objects.filter(MatchesCalendar=couple[2]).order_by('Home') for couple in couples]
 
 def get_match_result(mc, teamid):
     return matches_results.MatchesResults.objects.filter(Q(MatchesCalendar=mc) & (Q(Team_id=teamid)))
