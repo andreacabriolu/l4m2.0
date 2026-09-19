@@ -1,5 +1,6 @@
 .main-div {
-    background-color: #0f172a
+    background-color: #0f172a;
+    padding: 1rem;
 }
 
 .custom-layout {
@@ -636,7 +637,7 @@
         0 0 0 2px rgba(255,255,255,.13);
 }
 
-.best11-player-name {
+/* .best11-player-name {
     font-size: .7rem;
     font-weight: 700;
 
@@ -662,7 +663,7 @@
     font-weight: 800;
 
     opacity: .7;
-}
+} */
 
 
 /* ---------------------------------------------------------
@@ -854,5 +855,772 @@
 
     .best11-field-line {
         gap: .2rem;
+    }
+}
+
+/* =========================================================
+   BEST11 - DETTAGLIO SQUADRA
+   ========================================================= */
+
+.best11-detail-modal {
+    background: #212529 !important;
+    color: var(--bs-body-color, #fff);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+.best11-detail-modal .modal-header {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.best11-detail-modal .modal-body {
+    padding: 1.25rem;
+}
+
+
+/* ---------------------------------------------------------
+   HEADER DETTAGLIO
+   --------------------------------------------------------- */
+
+.best11-detail-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.best11-detail-score {
+    font-size: 2.4rem;
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: -.03em;
+}
+
+.best11-detail-score .best11-score-label {
+    font-size: .8rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    opacity: .5;
+}
+
+.best11-detail-module {
+    margin-top: .3rem;
+    font-size: .8rem;
+    font-weight: 700;
+    opacity: .6;
+}
+
+
+/* ---------------------------------------------------------
+   CAMPO
+   --------------------------------------------------------- */
+
+.best11-field {
+    position: relative;
+
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+
+    padding: 1.5rem 1rem;
+
+    border-radius: 1rem;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,.04),
+            rgba(255,255,255,.018)
+        );
+
+    border: 1px solid rgba(255,255,255,.08);
+}
+
+
+/* piccola griglia decorativa */
+
+.best11-field::before {
+    content: "";
+    position: absolute;
+    inset: 1rem;
+
+    border: 1px solid rgba(255,255,255,.045);
+    border-radius: .7rem;
+
+    pointer-events: none;
+}
+
+
+/* ---------------------------------------------------------
+   LINEE DELLA FORMAZIONE
+   --------------------------------------------------------- */
+
+.best11-field-line {
+    position: relative;
+    z-index: 1;
+
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+
+    gap: clamp(.45rem, 1.4vw, 1rem);
+
+    margin-bottom: 1.55rem;
+}
+
+.best11-field-line:last-child {
+    margin-bottom: 0;
+}
+
+
+/* ---------------------------------------------------------
+   PLAYER
+   --------------------------------------------------------- */
+
+.best11-player {
+    width: clamp(70px, 10vw, 105px);
+    min-width: 0;
+
+    text-align: center;
+}
+
+.best11-player-dot {
+    width: 46px;
+    height: 46px;
+
+    margin: 0 auto .4rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.1);
+
+    font-size: .72rem;
+    font-weight: 800;
+
+    box-shadow:
+        0 3px 10px rgba(0,0,0,.2);
+}
+
+.best11-player-name {
+    width: 100%;
+
+    font-size: .72rem;
+    line-height: 1.15;
+    font-weight: 700;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: white;
+}
+
+.best11-player-vote {
+    margin-top: .18rem;
+
+    font-size: .68rem;
+    font-weight: 600;
+
+    opacity: .65;
+}
+
+.best11-captain-label {
+    display: block;
+
+    margin-top: .2rem;
+
+    font-size: .52rem;
+    line-height: 1;
+
+    font-weight: 800;
+    letter-spacing: .03em;
+
+    opacity: .75;
+}
+
+
+/* capitano */
+
+.best11-player.captain .best11-player-dot {
+    border-color: rgba(255,255,255,.24);
+
+    box-shadow:
+        0 0 0 2px rgba(255,255,255,.05),
+        0 4px 12px rgba(0,0,0,.25);
+}
+
+
+/* ---------------------------------------------------------
+   BREAKDOWN
+   --------------------------------------------------------- */
+
+.best11-breakdown {
+    width: 100%;
+    max-width: 900px;
+
+    margin: 1rem auto 0;
+
+    padding: 1rem;
+
+    border-radius: .9rem;
+
+    background: rgba(255,255,255,.025);
+    border: 1px solid rgba(255,255,255,.07);
+}
+
+.best11-breakdown h3 {
+    margin: 0 0 .7rem;
+
+    font-size: .72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+
+    opacity: .6;
+}
+
+.best11-breakdown-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 1rem;
+
+    padding: .4rem 0;
+
+    font-size: .8rem;
+}
+
+.best11-breakdown-row span {
+    opacity: .72;
+}
+
+.best11-breakdown-row strong {
+    font-weight: 800;
+}
+
+.best11-breakdown-row.total {
+    margin-top: .35rem;
+    padding-top: .7rem;
+
+    border-top: 1px solid rgba(255,255,255,.08);
+
+    font-size: .95rem;
+}
+
+.best11-breakdown-row.total span {
+    opacity: 1;
+}
+
+.best11-breakdown-row.total strong {
+    font-size: 1.15rem;
+}
+
+
+/* ---------------------------------------------------------
+   ICONA RUOLO
+   --------------------------------------------------------- */
+
+.best11-player-dot.role-P {
+    border-color: rgba(59,130,246,.25);
+}
+
+.best11-player-dot.role-D {
+    border-color: rgba(16,185,129,.25);
+}
+
+.best11-player-dot.role-C {
+    border-color: rgba(245,158,11,.25);
+}
+
+.best11-player-dot.role-A {
+    border-color: rgba(239,68,68,.25);
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 576px) {
+
+    .best11-page {
+        padding-left: .65rem !important;
+        padding-right: .65rem !important;
+    }
+
+
+    /* HERO */
+
+    .best11-hero {
+        display: grid;
+        grid-template-columns: 1fr auto;
+
+        gap: .75rem;
+
+        padding: .9rem;
+    }
+
+    .best11-title {
+        font-size: 1.2rem;
+        line-height: 1.15;
+    }
+
+    .best11-description {
+        margin-top: .35rem;
+        font-size: .74rem;
+        line-height: 1.35;
+    }
+
+
+    /* DAY SELECTOR */
+
+    .best11-day-selector {
+        padding: .35rem;
+    }
+
+    .best11-day-btn {
+        min-width: 36px;
+        height: 36px;
+
+        font-size: .75rem;
+    }
+
+    .best11-day-arrow {
+        width: 32px;
+        height: 32px;
+    }
+
+
+    /* SUMMARY */
+
+    .best11-summary-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: .5rem;
+    }
+
+    .best11-stat-card {
+        padding: .75rem;
+    }
+
+    .best11-stat-value {
+        font-size: 1.25rem;
+    }
+
+    .best11-stat-label {
+        font-size: .58rem;
+    }
+
+    .best11-stat-team {
+        font-size: .68rem;
+    }
+
+
+    /* TEAM CARDS */
+
+    .best11-teams-grid {
+        grid-template-columns: 1fr;
+        gap: .55rem;
+    }
+
+    .best11-team-card {
+        padding: .75rem;
+    }
+
+    .best11-score {
+        font-size: 1.45rem;
+    }
+
+    .best11-mini-field {
+        margin-top: .65rem;
+        padding: .45rem;
+    }
+
+    .best11-mini-player {
+        width: 27px;
+        height: 21px;
+
+        font-size: .5rem;
+    }
+
+
+    /* MODAL */
+
+    .best11-detail-modal {
+        margin: .35rem;
+
+        border-radius: .9rem;
+    }
+
+    .best11-detail-modal .modal-header {
+        padding: .8rem .9rem;
+    }
+
+    .best11-detail-modal .modal-body {
+        padding: .75rem;
+    }
+
+
+    /* DETAIL HEADER */
+
+    .best11-detail-header {
+        margin-bottom: .75rem;
+    }
+
+    .best11-detail-score {
+        font-size: 2rem;
+    }
+
+
+    /* FIELD */
+
+    .best11-field {
+        padding: 1rem .3rem;
+
+        border-radius: .8rem;
+    }
+
+    .best11-field::before {
+        inset: .65rem;
+    }
+
+
+    .best11-field-line {
+        gap: .15rem;
+        margin-bottom: 1.25rem;
+    }
+
+
+    /* PLAYER */
+
+    .best11-player {
+        width: calc(
+            (100vw - 4.2rem) / 4
+        );
+
+        max-width: 72px;
+    }
+
+    .best11-player-dot {
+        width: 36px;
+        height: 36px;
+
+        margin-bottom: .3rem;
+
+        font-size: .62rem;
+    }
+
+    .best11-player-name {
+        font-size: .58rem;
+    }
+
+    .best11-player-vote {
+        font-size: .62rem;
+    }
+
+    .best11-captain-label {
+        font-size: .47rem;
+    }
+
+
+    /* BREAKDOWN */
+
+    .best11-breakdown {
+        padding: .75rem;
+        border-radius: .75rem;
+    }
+
+    .best11-breakdown-row {
+        padding: .32rem 0;
+        font-size: .72rem;
+    }
+
+    .best11-breakdown-row.total {
+        font-size: .82rem;
+    }
+
+    .best11-breakdown-row.total strong {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 380px) {
+
+    .best11-player {
+        width: 55px;
+    }
+
+    .best11-player-dot {
+        width: 32px;
+        height: 32px;
+    }
+
+    .best11-player-name {
+        font-size: .53rem;
+    }
+
+    .best11-player-vote {
+        font-size: .58rem;
+    }
+
+    .best11-field-line {
+        gap: .05rem;
+    }
+}
+
+/* =========================================================
+   BEST11 - CUMULATIVO
+   ========================================================= */
+
+.best11-section-subtitle {
+    display: block;
+    margin-top: .15rem;
+
+    font-size: .72rem;
+    opacity: .55;
+}
+
+
+/* ---------------------------------------------------------
+   LEADER
+   --------------------------------------------------------- */
+
+.best11-leader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 1rem;
+
+    margin-bottom: .75rem;
+    padding: 1rem 1.1rem;
+
+    border-radius: .9rem;
+
+    background: rgba(255,255,255,.045);
+    border: 1px solid rgba(255,255,255,.1);
+}
+
+.best11-leader-label {
+    display: block;
+
+    font-size: .63rem;
+    font-weight: 800;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+
+    opacity: .55;
+}
+
+.best11-leader-team {
+    margin-top: .15rem;
+
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+.best11-leader-daily {
+    margin-top: .2rem;
+
+    font-size: .7rem;
+    opacity: .55;
+}
+
+.best11-leader-score {
+    flex: 0 0 auto;
+
+    text-align: right;
+}
+
+.best11-leader-score-value {
+    font-size: 1.8rem;
+    line-height: 1;
+    font-weight: 800;
+}
+
+.best11-leader-score-label {
+    margin-top: .2rem;
+
+    font-size: .62rem;
+    font-weight: 700;
+    opacity: .45;
+}
+
+
+/* ---------------------------------------------------------
+   RANKING
+   --------------------------------------------------------- */
+
+.best11-cumulative-list {
+    display: flex;
+    flex-direction: column;
+    gap: .4rem;
+}
+
+.best11-cumulative-row {
+    display: grid;
+
+    grid-template-columns:
+        2.2rem
+        minmax(0, 1fr)
+        auto
+        auto;
+
+    align-items: center;
+
+    gap: .75rem;
+
+    padding: .7rem .8rem;
+
+    border-radius: .7rem;
+
+    background: rgba(255,255,255,.025);
+    border: 1px solid rgba(255,255,255,.055);
+
+    transition:
+        background .15s ease,
+        border-color .15s ease;
+}
+
+.best11-cumulative-row:hover {
+    background: rgba(255,255,255,.04);
+    border-color: rgba(255,255,255,.1);
+}
+
+
+.best11-cumulative-rank {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 28px;
+    height: 28px;
+
+    border-radius: 50%;
+
+    font-size: .68rem;
+    font-weight: 800;
+
+    background: rgba(255,255,255,.06);
+}
+
+
+.best11-cumulative-team {
+    min-width: 0;
+}
+
+.best11-cumulative-team-name {
+    display: block;
+
+    font-size: .82rem;
+    font-weight: 700;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.best11-cumulative-daily {
+    display: block;
+
+    margin-top: .1rem;
+
+    font-size: .62rem;
+    opacity: .5;
+}
+
+
+.best11-cumulative-score {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.best11-cumulative-score-value {
+    font-size: .95rem;
+    font-weight: 800;
+}
+
+.best11-cumulative-score-label {
+    margin-left: .15rem;
+
+    font-size: .55rem;
+    opacity: .45;
+}
+
+
+.best11-rank-delta {
+    min-width: 32px;
+
+    text-align: center;
+
+    font-size: .66rem;
+    font-weight: 800;
+}
+
+.best11-rank-delta.up {
+    opacity: .85;
+}
+
+.best11-rank-delta.down {
+    opacity: .55;
+}
+
+.best11-rank-delta.same {
+    opacity: .3;
+}
+
+@media (max-width: 576px) {
+
+    .best11-leader {
+        padding: .8rem;
+    }
+
+    .best11-leader-team {
+        font-size: .9rem;
+    }
+
+    .best11-leader-score-value {
+        font-size: 1.55rem;
+    }
+
+    .best11-cumulative-row {
+        grid-template-columns:
+            2rem
+            minmax(0, 1fr)
+            auto
+            26px;
+
+        gap: .55rem;
+
+        padding: .6rem .65rem;
+    }
+
+    .best11-cumulative-rank {
+        width: 25px;
+        height: 25px;
+
+        font-size: .62rem;
+    }
+
+    .best11-cumulative-team-name {
+        font-size: .76rem;
+    }
+
+    .best11-cumulative-score-value {
+        font-size: .88rem;
+    }
+
+    .best11-cumulative-daily {
+        font-size: .57rem;
+    }
+
+    .best11-rank-delta {
+        font-size: .6rem;
     }
 }
