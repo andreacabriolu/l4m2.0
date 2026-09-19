@@ -3,12 +3,13 @@ const Best11State = {
     maxDay: 35,
 
     teams: [],
+    cumulative: [],
     selectedTeam: null,
 
     sort: "score"
 };
 
-async function apiExecute(url, data){
+async function apiExecute(url, data) {
     const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -26,14 +27,14 @@ async function apiExecute(url, data){
     return json;
 }
 
- async function apiGetExecute(url){
-    const response = await fetch(url, 
-    {
-        method: "GET",
-        headers: {
-            "Accept": "application/json"
+async function apiGetExecute(url) {
+    const response = await fetch(url,
+        {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
         }
-    }
     );
 
     const json = await response.json();
@@ -43,7 +44,7 @@ async function apiExecute(url, data){
     }
 
     return json;
-}                   
+}
 
 
 
@@ -301,6 +302,167 @@ const Best11 = {
         }
     },
 
+    renderRankDelta(delta) {
+
+        const value = Number(delta);
+
+        if (!Number.isFinite(value) || value === 0) {
+            return `
+                <span class="best11-rank-delta same">
+                    —
+                </span>
+            `;
+        }
+
+        if (value > 0) {
+            return `
+                <span class="best11-rank-delta up">
+                    ↑ ${value}
+                </span>
+            `;
+        }
+
+        return `
+            <span class="best11-rank-delta down">
+                ↓ ${Math.abs(value)}
+            </span>
+        `;
+    },
+
+    renderCumulative(cumulative, summary) {
+
+        const section =
+            document.getElementById("best11Cumulative");
+
+        const leaderContainer =
+            document.getElementById("best11Leader");
+
+        const list =
+            document.getElementById("best11CumulativeList");
+
+        if (!section || !leaderContainer || !list) {
+            return;
+        }
+
+        if (!cumulative.length) {
+            section.hidden = true;
+            return;
+        }
+
+
+        /* ----------------------------------------------
+           LEADER
+           ---------------------------------------------- */
+
+        const leader =
+            cumulative[0];
+
+        leaderContainer.innerHTML = `
+
+        <div>
+            <span class="best11-leader-label">
+                🏆 Leader Best11
+            </span>
+
+            <div class="best11-leader-team">
+                ${this.escapeHtml(
+            leader.team_name
+        )}
+            </div>
+
+            <div class="best11-leader-daily">
+                Giornata ${Best11State.day}:
+                ${this.formatScore(
+            leader.daily_score
+        )} FP
+            </div>
+        </div>
+
+        <div class="best11-leader-score">
+
+            <div class="best11-leader-score-value">
+                ${this.formatScore(
+            leader.score
+        )}
+            </div>
+
+            <div class="best11-leader-score-label">
+                FP CUMULATIVI
+            </div>
+
+        </div>
+    `;
+
+
+        /* ----------------------------------------------
+           CLASSIFICA
+           ---------------------------------------------- */
+
+        list.innerHTML = "";
+
+        cumulative.forEach(team => {
+
+            const row =
+                document.createElement("div");
+
+            row.className =
+                "best11-cumulative-row";
+
+            row.dataset.teamId =
+                team.team_id;
+
+            row.innerHTML = `
+
+            <div class="best11-cumulative-rank">
+                ${team.rank}
+            </div>
+
+
+            <div class="best11-cumulative-team">
+
+                <span class="best11-cumulative-team-name">
+                    ${this.escapeHtml(
+                team.team_name
+            )}
+                </span>
+
+                <span class="best11-cumulative-daily">
+                    G${Best11State.day}:
+                    ${this.formatScore(
+                team.daily_score
+            )} FP
+                </span>
+
+            </div>
+
+
+            <div class="best11-cumulative-score">
+
+                <span class="best11-cumulative-score-value">
+                    ${this.formatScore(
+                team.score
+            )}
+                </span>
+
+                <span class="best11-cumulative-score-label">
+                    FP
+                </span>
+
+            </div>
+
+
+            ${this.renderRankDelta(
+                team.rank_delta
+            )}
+
+        `;
+
+            list.appendChild(row);
+        });
+
+
+        section.hidden = false;
+    },
 
     applyData(data) {
 
@@ -312,6 +474,18 @@ const Best11 = {
                 ? data.teams
                 : [];
 
+        Best11State.cumulative =
+            Array.isArray(data.cumulative)
+                ? data.cumulative
+                : [];
+
+
+        this.renderCumulative(
+            Best11State.cumulative,
+            data.summary ?? {}
+        );
+
+
         this.renderSummary(
             data.summary ?? {}
         );
@@ -320,21 +494,19 @@ const Best11 = {
 
         this.updateDaySelector();
 
-        // document
-        //     .getElementById("currentDayLabel")
-        //     .textContent =
-        //     Best11State.day;
+        document.getElementById("cumulativeDay")
+            .textContent = Best11State.day;
 
-        document
-            .getElementById("summaryDay")
-            .textContent =
-            Best11State.day;
+            document
+                .getElementById("summaryDay")
+                .textContent =
+                Best11State.day;
 
-        document
-            .getElementById("teamsDay")
-            .textContent =
-            Best11State.day;
-    },
+            document
+                .getElementById("teamsDay")
+                .textContent =
+                Best11State.day;
+        },
 
 
     renderSummary(summary) {
@@ -481,11 +653,10 @@ const Best11 = {
             </div>
 
             <div class="best11-score">
-                ${
-                    Number.isFinite(score)
-                        ? score.toFixed(1)
-                        : "-"
-                }
+                ${Number.isFinite(score)
+                ? score.toFixed(1)
+                : "-"
+            }
 
                 <span class="best11-score-label">
                     FP
@@ -498,35 +669,35 @@ const Best11 = {
 
             <div class="best11-mini-field">
                 ${this.renderMiniFormation(
-                    team.players
-                )}
+                team.players
+            )}
             </div>
 
             <div class="best11-bonus-row">
 
                 ${this.renderBonus(
-                    "🛡",
-                    team.modifier,
-                    "+"
-                )}
+                "🛡",
+                team.modifier,
+                "+"
+            )}
 
                 ${this.renderBonus(
-                    "⭐",
-                    team.captain_bonus,
-                    "+"
-                )}
+                "⭐",
+                team.captain_bonus,
+                "+"
+            )}
 
                 ${this.renderBonus(
-                    "✓",
-                    team.all_six_bonus,
-                    "+"
-                )}
+                "✓",
+                team.all_six_bonus,
+                "+"
+            )}
 
                 ${this.renderBonus(
-                    "✓",
-                    team.no_yellow_bonus,
-                    "+"
-                )}
+                "✓",
+                team.no_yellow_bonus,
+                "+"
+            )}
 
             </div>
         `;
@@ -562,34 +733,35 @@ const Best11 = {
             .map(
                 line => `
                     <div class="best11-mini-line">
-                        ${
-                            line.map(
-                                player => {
+                        ${line.map(
+                    player => {
 
-                                    const captain =
-                                        player.captain
-                                            ? " captain"
-                                            : "";
+                        const captain =
+                            player.captain
+                                ? " captain"
+                                : "";
 
-                                    return `
+                        return `
                                         <span
                                             class="best11-mini-player${captain}"
                                             title="${this.escapeAttribute(
-                                                player.surname ?? ""
-                                            )}"
+                            player.surname ?? ""
+                        )}"
                                         >
-                                            ${
-                                                this.escapeHtml(
-                                                    this.shortName(
-                                                        player.surname
-                                                    )
-                                                )
-                                            }
+                                            ${this.escapeHtml(
+                            // this.shortName(
+                            //     player.surname
+                            // )
+                            player.totvote ??
+                            player.vote ??
+                            "-"
+                        )
+                            }
                                         </span>
                                     `;
-                                }
-                            ).join("")
-                        }
+                    }
+                ).join("")
+                    }
                     </div>
                 `
             )
@@ -659,11 +831,10 @@ const Best11 = {
 
                 <div>
                     <div class="best11-detail-score">
-                        ${
-                            Number.isFinite(score)
-                                ? score.toFixed(1)
-                                : "-"
-                        }
+                        ${Number.isFinite(score)
+                ? score.toFixed(1)
+                : "-"
+            }
                         <span class="best11-score-label">
                             FP
                         </span>
@@ -680,8 +851,8 @@ const Best11 = {
             <div class="best11-field">
 
                 ${this.renderDetailFormation(
-                    team.players
-                )}
+                team.players
+            )}
 
             </div>
 
@@ -721,48 +892,45 @@ const Best11 = {
                     <div class="best11-field-line">
 
                         ${line.map(
-                            player => `
+                    player => `
                                 <div
-                                    class="best11-player${
-                                        player.captain
-                                            ? " captain"
-                                            : ""
-                                    }"
+                                    class="best11-player${player.captain
+                            ? " captain"
+                            : ""
+                        }"
                                 >
 
-                                    <div class="best11-player-dot">
+                                    <div class="best11-player-dot role-${player.role}">
                                         ${this.roleLabel(
-                                            player.role
-                                        )}
+                            player.role
+                        )}
                                     </div>
 
                                     <div class="best11-player-name">
                                         ${this.escapeHtml(
-                                            player.surname
-                                        )}
+                            player.surname
+                        )}
                                     </div>
 
                                     <div class="best11-player-vote">
-                                        ${
-                                            player.totvote ??
-                                            player.vote ??
-                                            "-"
-                                        }
+                                        ${player.totvote ??
+                        player.vote ??
+                        "-"
+                        }
                                     </div>
 
-                                    ${
-                                        player.captain
-                                            ? `
+                                    ${player.captain
+                            ? `
                                                 <span class="best11-captain-label">
                                                     ⭐ CAPITANO
                                                 </span>
                                               `
-                                            : ""
-                                    }
+                            : ""
+                        }
 
                                 </div>
                             `
-                        ).join("")}
+                ).join("")}
 
                     </div>
                 `
@@ -785,8 +953,8 @@ const Best11 = {
                     <span>Voti giocatori</span>
                     <strong>
                         ${this.formatScore(
-                            team.partial_score
-                        )}
+            team.partial_score
+        )}
                     </strong>
                 </div>
 
@@ -794,8 +962,8 @@ const Best11 = {
                     <span>Modificatore</span>
                     <strong>
                         ${this.formatBonus(
-                            team.modifier
-                        )}
+            team.modifier
+        )}
                     </strong>
                 </div>
 
@@ -803,8 +971,8 @@ const Best11 = {
                     <span>Capitano</span>
                     <strong>
                         ${this.formatBonus(
-                            team.captain_bonus
-                        )}
+            team.captain_bonus
+        )}
                     </strong>
                 </div>
 
@@ -812,8 +980,8 @@ const Best11 = {
                     <span>Tutti ≥ 6</span>
                     <strong>
                         ${this.formatBonus(
-                            team.all_six_bonus
-                        )}
+            team.all_six_bonus
+        )}
                     </strong>
                 </div>
 
@@ -821,8 +989,8 @@ const Best11 = {
                     <span>Nessun cartellino</span>
                     <strong>
                         ${this.formatBonus(
-                            team.no_yellow_bonus
-                        )}
+            team.no_yellow_bonus
+        )}
                     </strong>
                 </div>
 
@@ -830,8 +998,8 @@ const Best11 = {
                     <span>BEST11</span>
                     <strong>
                         ${this.formatScore(
-                            team.score
-                        )}
+            team.score
+        )}
                     </strong>
                 </div>
 
