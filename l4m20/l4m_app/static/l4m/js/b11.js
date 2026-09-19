@@ -320,10 +320,10 @@ const Best11 = {
 
         this.updateDaySelector();
 
-        document
-            .getElementById("currentDayLabel")
-            .textContent =
-            Best11State.day;
+        // document
+        //     .getElementById("currentDayLabel")
+        //     .textContent =
+        //     Best11State.day;
 
         document
             .getElementById("summaryDay")
@@ -380,10 +380,10 @@ const Best11 = {
                 ? average.toFixed(1)
                 : "-";
 
-        document
-            .getElementById("summaryTeams")
-            .textContent =
-            Best11State.teams.length;
+        // document
+        //     .getElementById("summaryTeams")
+        //     .textContent =
+        //     Best11State.teams.length;
 
         section.hidden = false;
     },
@@ -456,7 +456,7 @@ const Best11 = {
                 ? `
                     <img
                         class="best11-team-logo"
-                        src="${this.escapeAttribute(team.team_logo)}"
+                        src="/static/l4m/images/logos/${this.escapeAttribute(team.team_logo)}"
                         alt=""
                     >
                   `
