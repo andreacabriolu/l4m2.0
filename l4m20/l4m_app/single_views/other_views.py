@@ -22,7 +22,6 @@ def get_b11_data_by_day_view(request, day, season=None):
             Season__Active=True,
         )
         .select_related("Team")
-        .prefetch_related("players__Player")
         .order_by("-B11Fp")
     )
 
@@ -31,24 +30,25 @@ def get_b11_data_by_day_view(request, day, season=None):
     for rank, result in enumerate(results, start=1):
 
         players = []
+        _lineup = json.loads(result.Lineup) if result.Lineup else []
 
-        for p in result.players.all():
+        for p in _lineup:
 
             players.append({
-                "player_id": p.Player_id,
-                "surname": p.Player.Surname,
-                "role": p.Role,
-                "real_team": p.Player.RealTeam,
-                "vote": p.Vote,
-                "totvote": p.TotVote,
-                "position": p.Position,
-                "captain": p.Captain,
+                "player_id": p['id'],
+                "surname": p['surname'],
+                "role": p['role'],
+                "real_team": p['rt'],
+                "vote": p['vote'],
+                "totvote": p['totvote'],
+                "position": None,
+                "captain": None,
             })
 
         teams.append({
             "team_id": result.Team_id,
             "team_name": result.Team.Name,
-            "team_logo": getattr(result.Team, "Logo", None),
+            "team_logo": getattr(result.Team, "LogoPath", None),
 
             "rank": rank,
             "score": result.B11Fp,
@@ -82,7 +82,7 @@ def get_b11_data_by_day_view(request, day, season=None):
 
         "season": {
             "id": season_obj.id,
-            "name": str(season_obj),
+            "name": season_obj.Name,
         },
 
         "summary": {

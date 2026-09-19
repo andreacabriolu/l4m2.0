@@ -475,7 +475,23 @@ def save_b11_results(all_best, day):
                 Day = day,
                 Team = team.Team.objects.get(pk=best['team_id']),
                 B11Fp = best['score'],
-                Season = season.Season.objects.get(Active=True)
+                Season = season.Season.objects.get(Active=True),
+                Module = best['module'],
+                PartialScore = best['partial_score'],
+                ModifierScore = best['modif'],
+                ModifierTotal = best['modif_tot'],
+                ModifierFromNoGk = best['modifier_from_no_gk'],
+                CaptainBonus = best['bcaptain'],
+                AllSixBonus = best['all_six_bonus'],
+                NoYellowBonus = best['no_yellow_bonus'],
+                Lineup = json.dumps([{ #TODO: add other player stats HERE
+                    'id':p['player_id'],
+                    'surname':p['player_surname'],
+                    'rt':p['player_rt'].Name,
+                    'role':p['player_role'],
+                    'vote':p['player_vote'],
+                    'totvote':p['player_totvote']
+                        } for p in best['players']])
             )
             
             b11_result.save()
