@@ -43,6 +43,12 @@ const ROSTER_LIMITS = Object.freeze({
     A: 6
 });
 
+const FREE_PENALTIES = Object.freeze({
+    1: -1,
+    2: -2,
+    3: -5
+});
+
 const ACTIONS = {
 
         bid: {
@@ -74,7 +80,8 @@ const ACTIONS = {
                 f.roster === true &&
                 f.official === true &&
                 f.signed === true &&
-                AuctionState.currentSession.is_open === true
+                AuctionState.currentSession.is_open === true &&
+                f.contractEditable === true
         },
 
         free: {
@@ -483,7 +490,7 @@ const AuctionAPI = {
             AuctionState.balance.total = response.total;
             AuctionState.balance.residual = response.residual;
             AuctionState.balance.spent = response.spent;
-            AuctionState.balance.carognate = response.n_carognate;
+            AuctionState.balance.n_carognate = response.n_carognate;
             AuctionState.roster = response.roster;
             AuctionState.currentPlayer.Roster = true;
             AuctionState.currentPlayer.EditableUntil = Date.now() + CANCEL_BID_TIMER;
@@ -613,6 +620,153 @@ const AuctionAPI = {
         }
     },
 
+    renderFreePenalty(player, years) {
+
+        const penaltyBox =
+            document.getElementById(
+                "freeContractPenaltyBox"
+            );
+
+        const penaltyText =
+            document.getElementById(
+                "freeContractPenaltyText"
+            );
+
+        const details =
+            document.getElementById(
+                "freeContractPenaltyDetails"
+            );
+
+        let overSvincoli = false;
+
+        if (AuctionState.balance.n_svincoli >= AuctionState.currentSession.max_nsvincoli) {
+            overSvincoli = true; 
+        }
+
+        if (years <= 1 && !overSvincoli) {
+
+            penaltyBox.classList.remove(
+                "multi-year"
+            );
+
+            penaltyText.textContent =
+                "Lo svincolo di questo contratto non comporta penalità pluriennali.";
+
+            details.innerHTML = "";
+
+            return;
+        }
+
+        //in caso di annuale over svincoli, scala -1
+        let penalty = FREE_PENALTIES[years] ?? 0;
+
+        penaltyBox.classList.add(
+            "multi-year"
+        );
+
+        penaltyText.textContent =
+            `Il contratto ha una durata residua di ${years} anni. `
+            + "Lo svincolo comporta una penalità.";
+
+
+        details.innerHTML = `
+
+            <div class="free-contract-detail-row">
+                <span>Durata contratto</span>
+                <strong>
+                    ${years} anni
+                </strong>
+            </div>
+
+            <div class="free-contract-detail-row">
+                <span>Penalità svincolo</span>
+                <strong>
+                    ${penalty} FML
+                </strong>
+            </div>
+
+            <div class="free-contract-detail-row total">
+                <span>Costo complessivo</span>
+                <strong>
+                    ${penalty} FML
+                </strong>
+            </div>
+
+        `;
+    },
+
+    showFreeContractModal() {
+        const modalElement =
+            document.getElementById("freeContractModal");
+
+        if (!modalElement) {
+            return;
+        }
+
+        player = AuctionState.getPlayer(AuctionState.currentPlayer.id);
+
+        const years =
+            Number(player.squads__Years ?? 1);
+
+        const wage =
+            Number(player.Quotation ?? 0);
+
+        const amount =
+            Number(player.Amount ?? 0);
+
+
+        document.getElementById(
+            "freeContractPlayerName"
+        ).textContent =
+            player.Surname ??
+            "—";
+
+
+        document.getElementById(
+            "freeContractPlayerTeam"
+        ).textContent =
+            player.RealTeam__Name ??
+            "—";
+
+
+        document.getElementById(
+            "freeContractPlayerRole"
+        ).textContent =
+            player.Role ??
+            "—";
+
+
+        document.getElementById(
+            "freeContractYears"
+        ).textContent =
+            years === 1
+                ? "1 anno"
+                : `${years} anni`;
+
+
+        document.getElementById(
+            "freeContractWage"
+        ).textContent =
+            `${wage} FML`;
+
+
+        document.getElementById(
+            "freeContractAmount"
+        ).textContent =
+            `${amount} FML`;
+
+
+        this.renderFreePenalty(player, years);
+
+        const modal =
+            bootstrap.Modal.getOrCreateInstance(
+                modalElement
+            );
+
+        modal.show();
+
+    },
+
     async freePlayer(){
         const freeData = buildFreeData();
 
@@ -624,10 +778,16 @@ const AuctionAPI = {
             player.IsOfficial = false;
             player.flags = Auction.getPlayerFlags(player);
             AuctionState.balance.wages = response.wages_amount;
+            AuctionState.balance.n_svincoli = response.n_svincoli;
+            AuctionState.balance.wages_total = response.wages_max;
 
             Auction.renderSummary();
             Auction.renderPlayerActions(player.flags);
             Auction.removePlayerFromRoster();
+
+            bootstrap.Modal
+                .getInstance(document.getElementById("freeContractModal"))
+                ?.hide();
 
             bootstrap.Modal
                 .getInstance(document.getElementById("playerModal"))
@@ -726,7 +886,8 @@ const AuctionState = {
         residual: 0,
         spent: 0,
         maxBid: 0,
-        carognate: 0,
+        n_carognate: 0,
+        n_svincoli: 0,
         wages: 0,
         wages_total: 0,
         wages_residual: 0
@@ -807,6 +968,7 @@ const Auction = {
             signed: (player.squads__Years != null) ?? false,
             freeable: (player.Status == "E" || player.Session_id != AuctionState.currentSession.id), //cannot free if bought in the current session
             editable: (player.EditableUntil && player.EditableUntil > Date.now()) ?? false,
+            contractEditable: player.Session_id === AuctionState.currentSession.id
         };
     },
 
@@ -1210,7 +1372,10 @@ const Auction = {
             .text(AuctionState.balance.maxBid + " FML");
 
         $("#main-carognate")
-            .text(AuctionState.balance.carognate + "/" + AuctionState.currentSession.max_ncarognate);
+            .text(AuctionState.balance.n_carognate + "/" + AuctionState.currentSession.max_ncarognate);
+
+        $("#main-svincoli")
+            .text(AuctionState.balance.n_svincoli + "/" + AuctionState.currentSession.max_nsvincoli);
 
     },
 
@@ -1430,8 +1595,10 @@ const Auction = {
                 this.onExpandBidHistory.bind(this))
 
             .on("click", "#btnFree",
-                AuctionAPI.freePlayer.bind(AuctionAPI)
-            )
+                AuctionAPI.showFreeContractModal.bind(AuctionAPI))
+
+            .on("click", "#btnConfirmFreeContract",
+                AuctionAPI.freePlayer.bind(AuctionAPI))
 
             .on("click", "#btnQuarantine",
                 AuctionAPI.quarantinePlayer.bind(AuctionAPI)

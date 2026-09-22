@@ -2010,3 +2010,365 @@
 
 }
 
+/* =========================================================
+   FREE CONTRACT MODAL
+   ========================================================= */
+
+.free-contract-modal {
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 1rem;
+    overflow: hidden;
+
+    background: #212529 !important;
+    color:  #fff !important;
+}
+
+
+/* ---------------------------------------------------------
+   HEADER
+   --------------------------------------------------------- */
+
+.free-contract-header {
+    padding: 1rem 1.1rem;
+
+    border-bottom: 1px solid rgba(255,255,255,.07);
+}
+
+.free-contract-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+}
+
+.free-contract-icon {
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 auto;
+
+    border-radius: .7rem;
+
+    background: rgba(220,53,69,.12);
+    color: #dc3545;
+
+    font-size: 1rem;
+}
+
+.free-contract-kicker {
+    font-size: .62rem;
+    font-weight: 800;
+    letter-spacing: .1em;
+
+    opacity: .55;
+}
+
+.free-contract-header .modal-title {
+    margin-top: .1rem;
+
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+
+/* ---------------------------------------------------------
+   PLAYER
+   --------------------------------------------------------- */
+
+.free-contract-player {
+    display: flex;
+    align-items: center;
+
+    gap: .75rem;
+
+    padding: .8rem;
+
+    border-radius: .8rem;
+
+    background: rgba(255,255,255,.035);
+    border: 1px solid rgba(255,255,255,.06);
+}
+
+.free-contract-player-avatar {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 auto;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,.07);
+
+    font-size: 1rem;
+}
+
+.free-contract-player-info {
+    min-width: 0;
+}
+
+.free-contract-player-name {
+    font-size: .95rem;
+    font-weight: 800;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.free-contract-player-meta {
+    display: flex;
+    align-items: center;
+    gap: .35rem;
+
+    margin-top: .15rem;
+
+    font-size: .68rem;
+    opacity: .55;
+}
+
+
+/* ---------------------------------------------------------
+   CURRENT CONTRACT
+   --------------------------------------------------------- */
+
+.free-contract-current {
+    margin-top: .75rem;
+
+    padding: .85rem;
+
+    border-radius: .8rem;
+
+    background: rgba(255,255,255,.025);
+    border: 1px solid rgba(255,255,255,.06);
+}
+
+.free-contract-current-label {
+    margin-bottom: .65rem;
+
+    font-size: .62rem;
+    font-weight: 800;
+    letter-spacing: .09em;
+
+    opacity: .55;
+}
+
+.free-contract-current-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: .5rem;
+}
+
+.free-contract-current-grid > div {
+    min-width: 0;
+}
+
+.free-contract-current-grid span {
+    display: block;
+
+    font-size: .61rem;
+
+    opacity: .5;
+}
+
+.free-contract-current-grid strong {
+    display: block;
+
+    margin-top: .15rem;
+
+    font-size: .82rem;
+    font-weight: 800;
+}
+
+
+/* ---------------------------------------------------------
+   PENALTY
+   --------------------------------------------------------- */
+
+.free-contract-penalty {
+    display: flex;
+    align-items: flex-start;
+
+    gap: .7rem;
+
+    margin-top: .75rem;
+    padding: .85rem;
+
+    border-radius: .8rem;
+
+    background: rgba(220,53,69,.07);
+    border: 1px solid rgba(220,53,69,.18);
+}
+
+.free-contract-penalty-icon {
+    flex: 0 0 auto;
+
+    color: #dc3545;
+    font-size: 1rem;
+}
+
+.free-contract-penalty-title {
+    font-size: .7rem;
+    font-weight: 900;
+    letter-spacing: .06em;
+
+    color: #dc3545;
+}
+
+.free-contract-penalty-text {
+    margin-top: .18rem;
+
+    font-size: .76rem;
+    line-height: 1.4;
+
+    opacity: .82;
+}
+
+
+/* ---------------------------------------------------------
+   PENALTY DETAILS
+   --------------------------------------------------------- */
+
+.free-contract-details {
+    margin-top: .65rem;
+
+    border-top: 1px solid rgba(255,255,255,.06);
+}
+
+.free-contract-detail-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: .8rem;
+
+    padding: .55rem 0;
+
+    font-size: .73rem;
+}
+
+.free-contract-detail-row + .free-contract-detail-row {
+    border-top: 1px solid rgba(255,255,255,.045);
+}
+
+.free-contract-detail-row span {
+    opacity: .62;
+}
+
+.free-contract-detail-row strong {
+    font-weight: 800;
+}
+
+.free-contract-detail-row.total {
+    font-size: .82rem;
+}
+
+.free-contract-detail-row.total strong {
+    color: #dc3545;
+    font-size: .95rem;
+}
+
+
+/* ---------------------------------------------------------
+   QUESTION
+   --------------------------------------------------------- */
+
+.free-contract-question {
+    margin-top: .9rem;
+
+    text-align: center;
+
+    font-size: .76rem;
+    font-weight: 700;
+
+    opacity: .7;
+}
+
+
+/* ---------------------------------------------------------
+   FOOTER
+   --------------------------------------------------------- */
+
+.free-contract-footer {
+    display: flex;
+    justify-content: flex-end;
+
+    gap: .5rem;
+
+    padding: .8rem 1rem;
+
+    border-top: 1px solid rgba(255,255,255,.07);
+}
+
+.free-contract-footer .btn {
+    font-size: .75rem;
+    font-weight: 700;
+}
+
+
+/* ---------------------------------------------------------
+   MOBILE
+   --------------------------------------------------------- */
+
+@media (max-width: 576px) {
+
+    .free-contract-modal {
+        margin: .5rem;
+        border-radius: .85rem;
+    }
+
+    .free-contract-header {
+        padding: .8rem .9rem;
+    }
+
+    .free-contract-player {
+        padding: .7rem;
+    }
+
+    .free-contract-player-avatar {
+        width: 38px;
+        height: 38px;
+    }
+
+    .free-contract-player-name {
+        font-size: .88rem;
+    }
+
+    .free-contract-current {
+        padding: .7rem;
+    }
+
+    .free-contract-current-grid strong {
+        font-size: .76rem;
+    }
+
+    .free-contract-penalty {
+        padding: .7rem;
+    }
+
+    .free-contract-penalty-text {
+        font-size: .7rem;
+    }
+
+    .free-contract-question {
+        font-size: .7rem;
+    }
+
+    .free-contract-footer {
+        display: grid;
+        grid-template-columns: 1fr 1.3fr;
+
+        padding: .7rem .8rem;
+    }
+
+    .free-contract-footer .btn {
+        width: 100%;
+    }
+}

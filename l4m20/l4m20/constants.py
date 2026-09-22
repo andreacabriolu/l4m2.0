@@ -82,6 +82,12 @@ BID_CANCEL_TIMEOUT = 20
 NUM_DAYS_AUCTION = 2
 MAX_QUARANTINES = 1
 
+class FreePenalties:
+    PENALTIES = {
+        2: 2,
+        3: 5
+    }
+
 class Pdoro:
     WEIGHTS = {
         'P1': .5,
@@ -124,6 +130,7 @@ class ErrorCodes:
     BALANCE_NOT_FOUND = -8
     MAX_QUARANTINE_EXCEEDED = -9
     BET_SESSION_CLOSED = -10
+    WAGES_AMOUNT_EXCEEDED = -11
 
 class Events:
     GOAL_TAKEN = 'GG'

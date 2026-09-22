@@ -1563,6 +1563,42 @@ def free_player(data):
 
     if(_squad is None):
         return C.ErrorCodes.PLAYER_NOT_IN_SQUAD
+
+    my_bal = get_balance_obj(_bet.Team_id)
+    if len(my_bal) <= 0:
+        return C.ErrorCodes.BALANCE_NOT_FOUND
+    my_bal = my_bal[0]
+
+    #if player estero/B, do not count svincolo
+    if _bet.Player.Status == 'E':
+        my_bal.save()
+        _bet.delete()
+        return {'wages_amount': my_bal.Wages_amount,
+                'wages_max': my_bal.Wages_max,
+                'n_svincoli': my_bal.N_svincoli}
+
+    my_bal.N_svincoli = my_bal.N_svincoli + 1
+    max_svincoli = session_.Nsvincoli
+    over_svincoli = False
+
+    if(my_bal.N_svincoli > max_svincoli): #penalty
+        over_svincoli = True
+
+    #evaluate years for penalty
+    if _squad is not None:
+        years = _squad.Years
+
+        if years > 1:
+            penalty = C.FreePenalties.PENALTIES.get(years, 0)
+            my_bal.Wages_max = my_bal.Wages_max - penalty
+        elif years == 1 and over_svincoli:
+            penalty = 1
+            my_bal.Wages_max = my_bal.Wages_max - penalty
+
+    if my_bal.Wages_max < (my_bal.Wages_amount - _squad.Salary): #wages_max cannot be lower than wages_amount
+        return C.ErrorCodes.WAGES_AMOUNT_EXCEEDED
+
+    #delete player from squad
     _squad.delete()
 
     #calculate new wages amount for the team
@@ -1587,31 +1623,13 @@ def free_player(data):
 
     bet_history_new.save()
 
-    my_bal = get_balance_obj(_bet.Team_id)
-    if len(my_bal) <= 0:
-        return
-
-    my_bal = my_bal[0]
-
     my_bal.Wages_amount = wages_amount
-
-    #if player estero/B, do not count svincolo
-    if _bet.Player.Status == 'E':
-        my_bal.save()
-        _bet.delete()
-        return {'wages_amount': my_bal.Wages_amount}
-    
-    my_bal.N_svincoli = my_bal.N_svincoli + 1
-
-    max_svincoli = _bet.Session.Nsvincoli
-
-    if(my_bal.N_svincoli > max_svincoli): #penalty
-        my_bal.Purchases_max = my_bal.Purchases_max - 1
-
     my_bal.save()
     _bet.delete()
 
-    return {'wages_amount': my_bal.Wages_amount}
+    return {'wages_amount': my_bal.Wages_amount,
+            'wages_max': my_bal.Wages_max,
+            'n_svincoli': my_bal.N_svincoli}
 
 def calculate_n_goals(fp_total): #replicate of live utilities method to avoid circular ref
     diff = fp_total - C.Various.BASE_SCORE

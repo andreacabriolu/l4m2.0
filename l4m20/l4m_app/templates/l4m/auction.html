@@ -66,6 +66,13 @@
             </div>
 
             <div class="summary-card">
+                <span class="summary-label">Svincoli</span>
+                <span class="summary-value" id="main-svincoli">
+                    {{ n_svincoli }}/{{max_svincoli}}
+                </span>
+            </div>
+
+            <div class="summary-card">
                 <span class="summary-label">Aste in corso</span>
                 <span class="summary-value">
                     {{ auction_data.summary.active_auctions }}
@@ -627,6 +634,191 @@
             </div>
         </div>
 
+        <div
+            class="modal fade"
+            id="freeContractModal"
+            tabindex="-1"
+            aria-labelledby="freeContractModalLabel"
+            aria-hidden="true">
+
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content free-contract-modal">
+
+                    <div class="modal-header free-contract-header">
+
+                        <div class="free-contract-title-wrap">
+
+                            <div class="free-contract-icon">
+                                <i class="bi bi-person-dash-fill"></i>
+                            </div>
+
+                            <div>
+                                <div class="free-contract-kicker">
+                                    SVINCOLO
+                                </div>
+
+                                <h5
+                                    class="modal-title"
+                                    id="freeContractModalLabel">
+                                    Conferma svincolo
+                                </h5>
+                            </div>
+
+                        </div>
+
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Chiudi">
+                        </button>
+
+            </div>
+
+
+            <div class="modal-body">
+
+                <!-- PLAYER -->
+
+                <div class="free-contract-player">
+
+                    <div class="free-contract-player-avatar">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+
+                    <div class="free-contract-player-info">
+
+                        <div
+                            id="freeContractPlayerName"
+                            class="free-contract-player-name">
+                            —
+                        </div>
+
+                        <div class="free-contract-player-meta">
+
+                            <span id="freeContractPlayerTeam">
+                                —
+                            </span>
+
+                            <span class="free-contract-separator">
+                                •
+                            </span>
+
+                            <span id="freeContractPlayerRole">
+                                —
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CONTRACT -->
+
+                <div class="free-contract-current">
+
+                    <div class="free-contract-current-label">
+                        CONTRATTO ATTUALE
+                    </div>
+
+                    <div class="free-contract-current-grid">
+
+                        <div>
+                            <span>Durata</span>
+                            <strong id="freeContractYears">
+                                —
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span>Ingaggio</span>
+                            <strong id="freeContractWage">
+                                —
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span>Prezzo</span>
+                            <strong id="freeContractAmount">
+                                —
+                            </strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- WARNING -->
+
+                <div
+                    id="freeContractPenaltyBox"
+                    class="free-contract-penalty">
+
+                    <div class="free-contract-penalty-icon">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                    </div>
+
+                    <div>
+
+                        <div class="free-contract-penalty-title">
+                            ATTENZIONE
+                        </div>
+
+                        <div
+                            id="freeContractPenaltyText"
+                            class="free-contract-penalty-text">
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- BREAKDOWN -->
+
+                <div
+                    id="freeContractPenaltyDetails"
+                    class="free-contract-details">
+
+                    <!-- JS -->
+
+                </div>
+
+
+                <div class="free-contract-question">
+                    Vuoi davvero procedere con lo svincolo?
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer free-contract-footer">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+                    Annulla
+                </button>
+
+                <button
+                    type="button"
+                    class="btn btn-danger"
+                    id="btnConfirmFreeContract">
+
+                    <i class="bi bi-person-dash-fill me-1"></i>
+                    Conferma svincolo
+
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+</div>
 
     </div>
 </div>

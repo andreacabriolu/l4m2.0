@@ -67,7 +67,7 @@ class AuctionView(LoginRequiredMixin, View):
                     'wages_total': balance['Wages_max'],
                     'residual': balance['Purchases_max'] - current_bets_amount,
                     'spent': current_bets_amount,
-                    'carognate': n_carognate,
+                    'n_carognate': n_carognate,
                     'maxBid': balance_for_bets,
                     'n_svincoli': n_svincoli,
                 },
