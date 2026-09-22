@@ -215,6 +215,8 @@ class FreePlayerView(View):
                 return JsonResponse({'error': 'PARAMETRI NON VALIDI'}, status=400)
             elif (msg == C.ErrorCodes.PLAYER_NOT_IN_SQUAD):
                 return JsonResponse({'error': 'GIOCATORE NON NELLA SQUADRA'}, status=400)
+            elif (msg == C.ErrorCodes.WAGES_AMOUNT_EXCEEDED):
+                return JsonResponse({'error': 'IMPORTO STIPENDI SUPERIORE AL MASSIMO'}, status=400)
 
             return JsonResponse(msg)
         except Exception as e:
