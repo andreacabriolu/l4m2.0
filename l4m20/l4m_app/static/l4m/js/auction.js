@@ -638,12 +638,17 @@ const AuctionAPI = {
             );
 
         let overSvincoli = false;
+        let estero = false;
 
         if (AuctionState.balance.n_svincoli >= AuctionState.currentSession.max_nsvincoli) {
             overSvincoli = true; 
         }
 
-        if (years <= 1 && !overSvincoli) {
+        if (player.Status == "E") {
+            estero = true;
+        }
+
+        if ((years <= 1 && !overSvincoli) || estero) {
 
             penaltyBox.classList.remove(
                 "multi-year"

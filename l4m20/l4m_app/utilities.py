@@ -1570,33 +1570,27 @@ def free_player(data):
     my_bal = my_bal[0]
 
     #if player estero/B, do not count svincolo
-    if _bet.Player.Status == 'E':
-        my_bal.save()
-        _bet.delete()
-        return {'wages_amount': my_bal.Wages_amount,
-                'wages_max': my_bal.Wages_max,
-                'n_svincoli': my_bal.N_svincoli}
+    if _bet.Player.Status != 'E':
+        my_bal.N_svincoli = my_bal.N_svincoli + 1
+        max_svincoli = session_.Nsvincoli
+        over_svincoli = False
 
-    my_bal.N_svincoli = my_bal.N_svincoli + 1
-    max_svincoli = session_.Nsvincoli
-    over_svincoli = False
+        if(my_bal.N_svincoli > max_svincoli): #penalty
+            over_svincoli = True
 
-    if(my_bal.N_svincoli > max_svincoli): #penalty
-        over_svincoli = True
+        #evaluate years for penalty
+        if _squad is not None:
+            years = _squad.Years
 
-    #evaluate years for penalty
-    if _squad is not None:
-        years = _squad.Years
+            if years > 1:
+                penalty = C.FreePenalties.PENALTIES.get(years, 0)
+                my_bal.Wages_max = my_bal.Wages_max - penalty
+            elif years == 1 and over_svincoli:
+                penalty = 1
+                my_bal.Wages_max = my_bal.Wages_max - penalty
 
-        if years > 1:
-            penalty = C.FreePenalties.PENALTIES.get(years, 0)
-            my_bal.Wages_max = my_bal.Wages_max - penalty
-        elif years == 1 and over_svincoli:
-            penalty = 1
-            my_bal.Wages_max = my_bal.Wages_max - penalty
-
-    if my_bal.Wages_max < (my_bal.Wages_amount - _squad.Salary): #wages_max cannot be lower than wages_amount
-        return C.ErrorCodes.WAGES_AMOUNT_EXCEEDED
+        if my_bal.Wages_max < (my_bal.Wages_amount - _squad.Salary): #wages_max cannot be lower than wages_amount
+            return C.ErrorCodes.WAGES_AMOUNT_EXCEEDED
 
     #delete player from squad
     _squad.delete()
