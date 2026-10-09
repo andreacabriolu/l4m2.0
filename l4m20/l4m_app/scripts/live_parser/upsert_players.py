@@ -87,7 +87,7 @@ for _, row in df.iterrows():
             not p.JustModified):
             
             p.Role = ruolo
-            p.RealTeam.id = team_id
+            p.RealTeam = real_team.RealTeam.objects.get(id=team_id) if team_id else None
             p.Quotation = quotazione
             p.Status = new_status
             p.JustModified = True
@@ -120,7 +120,7 @@ if created_players:
 if updated_players:
     player.Player.objects.bulk_update(
         updated_players, 
-        fields=['Role', 'RealTeam_id', 'Status', 'Quotation', 'JustModified']
+        fields=['Role', 'RealTeam', 'Status', 'Quotation', 'JustModified']
     )
 
 print(f"Processati con successo {len(df)} giocatori nella tabella 'l4m_app_players'.")
