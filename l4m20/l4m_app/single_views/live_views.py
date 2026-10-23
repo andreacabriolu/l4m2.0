@@ -173,7 +173,8 @@ class MyLiveView(LoginRequiredMixin, View):
         my_today_couples = LU.get_my_couples_from_calendar(myteam['id'], current_day)
 
         live_votes, live_teams, already_played_teams = LU.get_live_votes(current_day)
-
+        my_today_couples = sorted(my_today_couples, key=lambda x: x.CompetitionCalendar.Competition_id)
+        
         for c in my_today_couples:
             comp_id = c.CompetitionCalendar.Competition_id
             comp = U.get_competition_by_id(comp_id)
