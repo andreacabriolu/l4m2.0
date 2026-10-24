@@ -3,6 +3,7 @@ import json
 from . import utilities as U
 from . import live_utilities as LU
 from . import my_leagues_utilities as MLU
+from .libs import logger
 from django.db.models import Q, Sum
 from l4m20 import constants as C
 
@@ -314,14 +315,22 @@ def calculate_total_league(competition, day):
                 # update_tournament_bracket(competition.id, k, _day)
                 pass #TODO bracket
 
-def calculate_b11_league(competition, day):
+def calculate_b11_league(competition, day, recalc_past=False):
     b11_series = U.get_unica_series(competition)
-    if len(b11_series) > 0: 
+    if len(b11_series) > 0:
         team_ids_names = team.Team.objects.filter(Active=True).values_list("id", "Name")
 
-        curr_day = U.get_current_day() 
-        days_to_calculate = range(int(day), int(curr_day)) if (int(day) < int(curr_day)) else [int(curr_day)]
-        
+        curr_day = U.get_current_day()
+        #The Best 11 is calculated only for the current day (squad). Past days are NOT recalculated, unless
+        #recalc_past=True: then every day from `day` on is rebuilt, past days from the lineup of that day
+        #(see enrich_and_sort_players_live) and the current day last, so the cumulative ranking stays consistent.
+        if recalc_past and int(day) < int(curr_day):
+            days_to_calculate = range(int(day), int(curr_day) + 1)
+        else:
+            if int(day) < int(curr_day):
+                logger.warning(f"B11: day {day} is in the past, not recalculated (current day {curr_day}); use recalc_past=True")
+            days_to_calculate = [int(curr_day)]
+
         for _day in days_to_calculate:
             all_best = LU.get_best_11(team_ids_names, _day, live_teams=[], live_votes=[], already_played_teams=[], getForCalculation=True)
             save_b11_results(all_best, _day)

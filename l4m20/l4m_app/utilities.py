@@ -1069,6 +1069,16 @@ def get_players_by_squad(_squads):
     pl_ids = [pl.Player_id for pl in _squads]
     return player.Player.objects.filter(id__in=pl_ids).values('id','Surname','Role','RealTeam')
 
+def get_players_by_day_lineup(teamid, day, comp_id=1):
+    """Players listed (starters and bench) in the team's last lineup of that day, in the same
+    shape as get_players_by_squad. None if the team has no lineup for that day."""
+    l_up = get_last_lineup(teamid, day, comp_id=comp_id)
+    if len(l_up) == 0:
+        return None
+    j = json.loads(cleanJSON(l_up[0].Line))
+    pl_ids = [v for k,v in j.items() if k not in ['mod','captain','ot','penalties']]
+    return player.Player.objects.filter(id__in=pl_ids).values('id','Surname','Role','RealTeam')
+
 def get_players_by_lups(l_ups):
     _lups = []
     for l_up in l_ups:

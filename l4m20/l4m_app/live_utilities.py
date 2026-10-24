@@ -5,6 +5,7 @@ import json
 from l4m20 import constants as C
 import statistics
 from . import utilities as U
+from .libs import logger
 from django.db.models import Q
 import requests as req
 from itertools import islice, cycle
@@ -485,8 +486,17 @@ def get_votes_total(b11_lineup, home=True, homeAway=False):
 
 def enrich_and_sort_players_live(teamid, current_day, live_votes, live_teams, already_played_teams, getForCalculation=False):
 
-    mysquads = U.get_squads(teamid)
-    players = U.get_players_by_squad(mysquads)
+    #PAST DAYS: the squad of that day is not stored, so the pool is the team's lineup of that day,
+    #never today's squad. Only the current day uses the squad.
+    players = None
+    if int(current_day) < int(U.get_current_day()):
+        players = U.get_players_by_day_lineup(teamid, current_day)
+        if players is None:
+            logger.warning(f"B11 pool: team {teamid} has no lineup for past day {current_day}, falling back to the squad")
+
+    if players is None:
+        mysquads = U.get_squads(teamid)
+        players = U.get_players_by_squad(mysquads)
 
     current_day_boundaries = U.get_current_day_boundaries(current_day)
     if U.is_any_market_active(current_day_boundaries): #include svincoli and exclude ufficializzazioni (now FORBIDDEN) for b11/total calculation
@@ -506,6 +516,10 @@ def enrich_and_sort_players_live(teamid, current_day, live_votes, live_teams, al
     enriched_players = []
     cap_id = -1 #not used for b11
 
+    #real teams whose lineup is already published (at least one of their players is in the live votes, as
+    #starter or bench): for those, a player in neither list was not called up
+    teams_with_lineup = {lv.Player.RealTeam_id for lv in live_votes.values() if lv.Player is not None}
+
     for squad_pl in players:
         votes = []
 
@@ -519,7 +533,9 @@ def enrich_and_sort_players_live(teamid, current_day, live_votes, live_teams, al
                      adjust_vote_obj(_live_vote, cap_id, empty=True))
         #CASE player not called
         elif(pl.id not in live_votes and pl.RealTeam.Name in live_teams):
-            votes = (make_not_called_vote_obj(pl.id, cap_id))
+            if pl.RealTeam_id in teams_with_lineup:
+                continue #not called (neither on the pitch nor on the bench): never in the best 11
+            votes = (make_not_called_vote_obj(pl.id, cap_id)) #lineup not published yet: default vote
         else:
         #player NOT LIVE - FILTRATO PER STAGIONE ATTIVA
             _vote = vote.Vote.objects.filter(
