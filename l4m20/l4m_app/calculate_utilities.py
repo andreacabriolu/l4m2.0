@@ -5,6 +5,7 @@ from . import live_utilities as LU
 from . import my_leagues_utilities as MLU
 from .libs import logger
 from django.db.models import Q, Sum
+from django.db import transaction
 from l4m20 import constants as C
 
 def save_pdoro_results(results, day):
@@ -472,22 +473,19 @@ def calculate_league(competition, day):
                 write_league_rankings(vote_per_series, competition.id, _day, seriesid=k)
 
 def save_b11_results(all_best, day):
-    for best in all_best:
-        if best is not None: #RECALCULATE
-            existing_b11 = b11_results.B11Results.objects.filter(Q(Day=day) & 
-                                                                 Q(Team__id=best['team_id']) &
-                                                                 Q(Season__Active=True))
-            if len(existing_b11) > 0:
-                existing_b11[0].delete()
+    bests = [best for best in all_best if best is not None] #RECALCULATE
+    if len(bests) == 0:
+        return
 
-            b11_result = b11_results.B11Results(
-                Day = day,
-                Team = team.Team.objects.get(pk=best['team_id']),
-                B11Fp = best['score'],
-                Season = season.Season.objects.get(Active=True)
-            )
-            
-            b11_result.save()
+    season_ = season.Season.objects.get(Active=True)
+    with transaction.atomic():
+        b11_results.B11Results.objects.filter(Q(Day=day) & 
+                                              Q(Team__id__in=[best['team_id'] for best in bests]) &
+                                              Q(Season__Active=True)).delete()
+        b11_results.B11Results.objects.bulk_create([
+            b11_results.B11Results(Day=day, Team_id=best['team_id'], B11Fp=best['score'], Season=season_)
+            for best in bests
+        ])
 
 def save_results(votes_per_series):
 

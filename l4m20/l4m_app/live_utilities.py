@@ -484,12 +484,30 @@ def get_votes_total(b11_lineup, home=True, homeAway=False):
 
     return votes_tit, _items, votes_ris
 
-def enrich_and_sort_players_live(teamid, current_day, live_votes, live_teams, already_played_teams, getForCalculation=False):
+def _b11_context(current_day):
+    """Day constants shared by all the teams of a Best 11 batch: get_best_11 computes them once."""
+    boundaries = U.get_current_day_boundaries(current_day)
+    return {'cfg_day': int(U.get_current_day()), 'boundaries': boundaries,
+            'market_active': U.is_any_market_active(boundaries)}
+
+def _real_match_msgs(day):
+    """real team id -> 'dd-mm-YYYY alle HH:MM' of its match of the day (what make_empty_vote_obj looked up per player)."""
+    out = {}
+    for rc in real_calendar.Real_calendar.objects.filter(Day=day, Season__Active=True).order_by('id'):
+        txt = rc.Date.astimezone(ZoneInfo(key='Europe/Rome')).strftime('%d-%m-%Y alle %H:%M')
+        out.setdefault(rc.RealTeamHome_id, txt)
+        out.setdefault(rc.RealTeamAway_id, txt)
+    return out
+
+def enrich_and_sort_players_live(teamid, current_day, live_votes, live_teams, already_played_teams, getForCalculation=False, ctx=None):
+
+    if ctx is None:
+        ctx = _b11_context(current_day)
 
     #PAST DAYS: the squad of that day is not stored, so the pool is the team's lineup of that day,
     #never today's squad. Only the current day uses the squad.
     players = None
-    if int(current_day) < int(U.get_current_day()):
+    if int(current_day) < ctx['cfg_day']:
         players = U.get_players_by_day_lineup(teamid, current_day)
         if players is None:
             logger.warning(f"B11 pool: team {teamid} has no lineup for past day {current_day}, falling back to the squad")
@@ -498,8 +516,8 @@ def enrich_and_sort_players_live(teamid, current_day, live_votes, live_teams, al
         mysquads = U.get_squads(teamid)
         players = U.get_players_by_squad(mysquads)
 
-    current_day_boundaries = U.get_current_day_boundaries(current_day)
-    if U.is_any_market_active(current_day_boundaries): #include svincoli and exclude ufficializzazioni (now FORBIDDEN) for b11/total calculation
+    current_day_boundaries = ctx['boundaries']
+    if ctx['market_active']: #include svincoli and exclude ufficializzazioni (now FORBIDDEN) for b11/total calculation
         svincoli_current_day = U.get_svincoli_current_day(current_day_boundaries, teamid)
         new_official_current_day = U.get_official_current_day(current_day_boundaries, teamid)
 
@@ -518,13 +536,27 @@ def enrich_and_sort_players_live(teamid, current_day, live_votes, live_teams, al
 
     #real teams whose lineup is already published (at least one of their players is in the live votes, as
     #starter or bench): for those, a player in neither list was not called up
-    teams_with_lineup = {lv.Player.RealTeam_id for lv in live_votes.values() if lv.Player is not None}
+    #(the calculation calls this with live_votes=[], a list, not a dict: no live data then)
+    teams_with_lineup = {lv.Player.RealTeam_id for lv in (live_votes.values() if isinstance(live_votes, dict) else [])
+                         if lv.Player is not None}
+
+    #players and DB votes in bulk (one query each) instead of one or two queries per player
+    ids = [sp['id'] for sp in players]
+    pls = {p.id: p for p in player.Player.objects.filter(id__in=ids).select_related('RealTeam')}
+    need_db = [i for i in ids if i not in live_votes and pls[i].RealTeam.Name not in live_teams]
+    db_votes = {}
+    if need_db:
+        for _v in vote.Vote.objects.filter(Player_id__in=need_db, Day=current_day, Season__Active=True)\
+                .select_related('Player', 'Competition').order_by('id'):
+            db_votes.setdefault(_v.Player_id, _v)
+    msg_by_team = None
 
     for squad_pl in players:
         votes = []
 
-        pl = player.Player.objects.get(pk=squad_pl['id'])
-        already_played = check_already_played(pl.RealTeam, already_played_teams, current_day) if getForCalculation == False else True
+        pl = pls[squad_pl['id']]
+        already_played = True if getForCalculation else \
+            (True if ctx['cfg_day'] != current_day else pl.RealTeam.Name in already_played_teams)
 
         #check if player is LIVE
         if pl.id in live_votes:
@@ -535,16 +567,16 @@ def enrich_and_sort_players_live(teamid, current_day, live_votes, live_teams, al
         elif(pl.id not in live_votes and pl.RealTeam.Name in live_teams):
             if pl.RealTeam_id in teams_with_lineup:
                 continue #not called (neither on the pitch nor on the bench): never in the best 11
-            votes = (make_not_called_vote_obj(pl.id, cap_id)) #lineup not published yet: default vote
+            votes = (make_not_called_vote_obj(pl.id, cap_id, pl=pl)) #lineup not published yet: default vote
         else:
-        #player NOT LIVE - FILTRATO PER STAGIONE ATTIVA
-            _vote = vote.Vote.objects.filter(
-                Q(Player_id=pl.id) & 
-                Q(Day=current_day) & 
-                Q(Season__Active=True)  # <-- CORRETTO
-            )
-            votes = (make_vote_obj(_vote[0], cap_id) if isValid(_vote) else \
-                     make_empty_vote_obj(pl.id, cap_id, already_played, current_day))
+        #player NOT LIVE - active season only
+            _v = db_votes.get(pl.id)
+            if _v is not None and _v.Vote > 0:
+                votes = make_vote_obj(_v, cap_id)
+            else:
+                if msg_by_team is None:
+                    msg_by_team = _real_match_msgs(current_day)
+                votes = make_empty_vote_obj(pl.id, cap_id, already_played, current_day, pl=pl, msg_by_team=msg_by_team)
 
         pl.votes = votes
         enriched_players.append(pl)
@@ -595,18 +627,19 @@ def enrich_and_sort_players_live(teamid, current_day, live_votes, live_teams, al
     
     
 
-def get_b11_lineup(teamid, day, live_votes, live_teams, already_played_teams, getForCalculation=False):
-    players = enrich_and_sort_players_live(teamid, day, live_votes, live_teams, already_played_teams, getForCalculation)
+def get_b11_lineup(teamid, day, live_votes, live_teams, already_played_teams, getForCalculation=False, ctx=None):
+    players = enrich_and_sort_players_live(teamid, day, live_votes, live_teams, already_played_teams, getForCalculation, ctx)
     b11_live = pick_best_11(players['P'],players['D'],players['C'],players['A'])
     
     return b11_live
 
 def get_best_11(team_ids_names, day, live_votes, live_teams, already_played_teams, getForCalculation=False):
     all_best = []
+    ctx = _b11_context(day) #day constants, once for all the teams
 
     # crea best 11 per ogni squadra
     for tid,name in team_ids_names:
-        best = get_b11_lineup(tid, day, live_votes, live_teams, already_played_teams, getForCalculation)
+        best = get_b11_lineup(tid, day, live_votes, live_teams, already_played_teams, getForCalculation, ctx)
         if(best):
             best["team_id"]=tid
             best["team_name"]=name
@@ -856,6 +889,181 @@ def get_live_votes(day, comp=1):
 
     return live_votes, live_teams, already_played_teams
 
+LIVE_URL = "https://publicapi.fantamaster.it/livescores/?tcache=1756165942189"
+LIVE_CACHE_SECONDS = 10
+
+def _live_json_cached():
+    """The live API answer, shared for a few seconds between requests: one HTTP call for everybody."""
+    from django.core.cache import cache
+    resp_json = cache.get("live_json_b11")
+    if resp_json is None:
+        resp_json = json.loads(req.get(LIVE_URL, timeout=10).content)
+        cache.set("live_json_b11", resp_json, LIVE_CACHE_SECONDS)
+    return resp_json
+
+def _players_by_surname():
+    """surname -> Player, one query (fill_live_votes does one query per name)."""
+    out = {}
+    for p in player.Player.objects.order_by('id'):
+        out.setdefault(p.Surname, p)
+    return out
+
+def fill_live_votes_b11(score, grades, live_votes, players):
+    """Same result as fill_live_votes, with the players taken from the `players` dict."""
+    for key, is_lineup in (('home_lineups', True), ('home_bench', False), ('away_lineups', True), ('away_bench', False)):
+        for p in score[key]:
+            pl = players.get(U.clean_name(p))
+            if pl is None:
+                continue
+            _vote = vote.Vote.Vote_Obj()
+            _vote.Player = pl
+            if p in grades:
+                _vote.Vote = float(grades[p])
+                _vote.LiveStatus = C.LiveStatus.STARTING if is_lineup else C.LiveStatus.NOTHING
+            else:
+                _vote.Vote = 6
+                _vote.LiveStatus = C.LiveStatus.NOTHING if is_lineup else C.LiveStatus.BENCH
+            live_votes[pl.id] = _vote
+
+def fill_with_events_b11(events, votes, players):
+    """Same result as fill_with_events, with the players taken from the `players` dict."""
+    for event in events:
+        _type = event['type']
+        if 'player' in event:
+            _player = U.clean_name(event['player'])
+        match _type:
+            case C.Events.YELLOW_RED_CARD:
+                pl = players.get(_player)
+                if pl is None:
+                    continue
+                v = votes[pl.id]
+                v.Yel = 0
+                v.YelRed = 1
+
+            case C.Events.YELLOW_CARD:
+                pl = players.get(_player)
+                if pl is None:
+                    continue
+                votes[pl.id].Yel = 1
+
+            case C.Events.RED_CARD:
+                pl = players.get(_player)
+                if pl is None:
+                    continue
+                v = votes[pl.id]
+                v.Yel = 0
+                v.Red = 1
+
+            case C.Events.GOAL:
+                pl = players.get(_player)
+                if pl is None:
+                    continue
+                if event['details'] != '':
+                    pl_assist = players.get(U.clean_name(event['details']))
+                    if pl_assist is not None:
+                        v = votes[pl_assist.id]
+                        v.AssS = v.AssS + 1
+                v = votes[pl.id]
+                v.GoalSc = v.GoalSc + 1
+
+            case C.Events.GOAL_TAKEN:
+                pl = players.get(_player)
+                if pl is None:
+                    continue
+                v = votes[pl.id]
+                v.GoalTa = v.GoalTa + 1
+
+            case C.Events.PENALTY_SCORED:
+                pl = players.get(_player)
+                if pl is None:
+                    continue
+                v = votes[pl.id]
+                v.PenSc = v.PenSc + 1
+
+            case C.Events.PENALTY_MISSED:
+                pl = players.get(_player)
+                if pl is None:
+                    continue
+                v = votes[pl.id]
+                v.PenMi = v.PenMi + 1
+
+            case C.Events.PENALTY_SAVED:
+                pl = players.get(_player)
+                if pl is None:
+                    continue
+                v = votes[pl.id]
+                v.PenSa = v.PenSa + 1
+
+            case C.Events.OWN_GOAL:
+                pl = players.get(_player)
+                if pl is None:
+                    continue
+                v = votes[pl.id]
+                v.Own = v.Own + 1
+
+            case C.Events.SUB:
+                pl_in = players.get(U.clean_name(event['in']))
+                pl_out = players.get(U.clean_name(event['out']))
+                if pl_in is None or pl_out is None:
+                    continue
+                votes[pl_in.id].Sub = int(event['minute'])
+                votes[pl_out.id].Sub = int(event['minute']) * (-1)
+
+def get_live_votes_b11(day, comp=1):
+    """Same result (same 3-tuple) as get_live_votes, built faster for the Best 11 pages:
+    the API answer is cached for a few seconds, and the player / real team / real match lookups are
+    done once for the whole answer instead of one query per name, event and match.
+    get_live_votes itself is untouched."""
+    resp_json = _live_json_cached()
+
+    live_votes = {}
+    live_teams = []
+    already_played_teams = []
+    current_day = resp_json['day']
+    grades = resp_json['marks']
+
+    if (day != int(current_day)):
+        return live_votes, live_teams, already_played_teams #empty
+
+    rt_ids = {}
+    for rt in real_team.RealTeam.objects.order_by('id'):
+        rt_ids.setdefault(rt.Name, rt.id)
+    real_matches = {}
+    for rc in real_calendar.Real_calendar.objects.filter(Day=current_day, Season__Active=True).order_by('id'):
+        real_matches.setdefault((rc.RealTeamHome_id, rc.RealTeamAway_id), rc)
+
+    players = None
+    for score in resp_json['scores']:
+
+        d_start = datetime.datetime.strptime(score['rawdate'], '%Y-%m-%d %H:%M').replace(tzinfo=ZoneInfo('Europe/Rome'))
+        delta_start = datetime.timedelta(minutes=5) #start live 5 minutes before the match
+
+        #check if match has been set as over by the batch
+        rc = real_matches.get((rt_ids.get(score['home_name']), rt_ids.get(score['away_name'])))
+        if rc is not None and rc.FT:
+            isLive = False
+            already_played_teams.append(score['home_name'])
+            already_played_teams.append(score['away_name'])
+        else:
+            isLive = d_start - delta_start < datetime.datetime.now(ZoneInfo('Europe/Rome'))
+
+        if (not isLive):
+            continue
+
+        live_teams.append(score['home_name'])
+        live_teams.append(score['away_name'])
+
+        if players is None:
+            players = _players_by_surname()
+        fill_live_votes_b11(score, grades, live_votes, players)
+        fill_with_events_b11(score['events'], live_votes, players)
+
+    for _, _vote in live_votes.items():
+        _vote.Day = int(current_day)
+        _vote.Competition = comp #TODO magic number: campionato
+
+    return live_votes, live_teams, already_played_teams
+
 def get_couples_and_matches_from_calendar(seriesid, day, competition_id=1):
     matches_ = matches_calendar.MatchesCalendar.objects.filter(
         # Q(CompetitionCalendar__Competition_id=competition_id) & 
@@ -904,15 +1112,19 @@ def make_null_vote_obj(pl_id, cap_id=None):
     
     return v_obj
 
-def make_empty_vote_obj(pl_id, cap_id, already_played, current_day):
+def make_empty_vote_obj(pl_id, cap_id, already_played, current_day, pl=None, msg_by_team=None):
     v_obj = vote.Vote.Vote_Obj()
-    pl = player.Player.objects.get(pk=pl_id)
+    if pl is None:
+        pl = player.Player.objects.get(pk=pl_id)
     v_obj.Player = pl if pl is not None else None
     if(pl_id == cap_id):
         v_obj.Cap = True
     v_obj.Vote = 6 if not already_played else None
     v_obj.TotVote = 6 if not already_played else None
     v_obj.Status = C.PlayerStatus.YET_TO_PLAY if not already_played else C.PlayerStatus.NOT_PLAYED
+    if msg_by_team is not None: #given by the caller (Best 11 batch): no query per player
+        v_obj.Msg = msg_by_team.get(pl.RealTeam_id, "")
+        return v_obj
     real_match = real_calendar.Real_calendar.objects.filter(Q(Day=current_day) & \
                                                             (Q(RealTeamHome_id=pl.RealTeam) | Q(RealTeamAway_id=pl.RealTeam)) & \
                                                              Q(Season__Active=True))
@@ -920,9 +1132,10 @@ def make_empty_vote_obj(pl_id, cap_id, already_played, current_day):
 
     return v_obj
 
-def make_not_called_vote_obj(pl_id, cap_id):
+def make_not_called_vote_obj(pl_id, cap_id, pl=None):
     v_obj = vote.Vote.Vote_Obj()
-    pl = player.Player.objects.get(pk=pl_id)
+    if pl is None:
+        pl = player.Player.objects.get(pk=pl_id)
     v_obj.Player = pl if pl is not None else None
     if(pl_id == cap_id):
         v_obj.Cap = True
