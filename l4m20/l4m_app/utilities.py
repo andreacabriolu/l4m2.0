@@ -165,9 +165,15 @@ def parse_ranking_line(ranking_line):
     return lines
 
 def get_current_stage(competition_id):
-    current_day = get_current_day(competition_id)
-    cc = competition_calendar.CompetitionCalendar.objects.filter(Q(Competition=competition_id) & Q(Day=current_day)).values('Stage')
-    return cc.first()['Stage'] if len(cc) > 0 else None
+    """Stage the competition is in, in the active season: the stage of its latest calendar day up to the
+    current day, so the group stage stays selected between two group days; before the competition starts,
+    the stage of its first calendar day. None if it has no calendar in the active season."""
+    current_day = int(get_current_day(competition_id))
+    rows = competition_calendar.CompetitionCalendar.objects.filter(Q(Competition=competition_id) & Q(Season__Active=True))
+    cc = rows.filter(Day__lte=current_day).order_by('-Day', 'id').values('Stage').first()
+    if cc is None:
+        cc = rows.order_by('Day', 'id').values('Stage').first()
+    return cc['Stage'] if cc is not None else None
 
 def get_layer_name_by_matches_count(matches_count):
     match matches_count:
