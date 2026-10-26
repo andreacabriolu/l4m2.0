@@ -8,7 +8,7 @@ from . import utilities as U
 from .libs import logger
 from django.db.models import Q
 import requests as req
-from itertools import islice, cycle
+from itertools import islice, cycle, combinations
 
 def check_fp_first_leg(home_team_id, away_team_id, day, comp_id):
     cc = U.get_competition_calendar_entry(comp_id, day)
@@ -1596,6 +1596,43 @@ def enrich_and_sort_players(role, teamid, current_day, cap_id=-1, already_played
 
     return sorted_players
     
+def _gk_def_variants(keepers, defenders, d):
+    """The (keeper, defenders) pairs to evaluate for a module with d defenders.
+
+    The first one is always the usual choice: the keeper and the d defenders with the best final votes
+    (TotVote). Other pairs are generated ONLY when a player has a higher vote but a lower final vote than
+    another one (V_y > V_x and FV_y < FV_x, y not chosen, x chosen): the defence modifier and the bonuses
+    are built from the votes, so the final votes alone can pick the wrong player. Then every voted keeper
+    (for the keepers) or every combination of d voted defenders (for the defenders) is tried.
+    The first pair wins ties, so nothing changes when no better pair exists."""
+    if len(keepers) == 0:
+        return
+    default_gk, default_defs = keepers[0], defenders[:d]
+    yield default_gk, default_defs
+
+    def voted(p):
+        return p.votes.Vote is not None and p.votes.TotVote is not None
+
+    def inverted(chosen, others):
+        return any(voted(x) and voted(y) and y.votes.Vote > x.votes.Vote and y.votes.TotVote < x.votes.TotVote
+                   for x in chosen for y in others)
+
+    gks = [default_gk]
+    if inverted([default_gk], keepers[1:]):
+        gks += [k for k in keepers[1:] if voted(k)]
+
+    def_sets = [default_defs]
+    if inverted(default_defs, defenders[d:]):
+        pool = [p for p in defenders if voted(p)]
+        if len(pool) >= d:
+            def_sets += [list(c) for c in combinations(pool, d) if list(c) != default_defs]
+
+    for gk in gks:
+        for defs in def_sets:
+            if gk is default_gk and defs is default_defs:
+                continue #already yielded
+            yield gk, defs
+
 def pick_best_11(keepers, defenders, midfielders, attackers, team_id=None, day=None):
     best_lineup = None
     best_score = -1
@@ -1610,20 +1647,22 @@ def pick_best_11(keepers, defenders, midfielders, attackers, team_id=None, day=N
         (5, 3, 2),
     ]
 
-    for d, m, a in ALLOWED_MODULES:
+    variants = ((d, m, a, gk, defs) for d, m, a in ALLOWED_MODULES for gk, defs in _gk_def_variants(keepers, defenders, d))
+    for d, m, a, gk, defs in variants:
         try:
-            # initial slice
-            lineup = [keepers[0]] + defenders[:d] + midfielders[:m] + attackers[:a]
+            # initial slice (keeper and defenders: see _gk_def_variants)
+            lineup = [gk] + defs + midfielders[:m] + attackers[:a]
 
             # bench slice
-            lineup_bench = keepers[1:] + defenders[d:] + midfielders[m:] + attackers[a:]
+            chosen = {id(p) for p in [gk] + defs}
+            lineup_bench = [p for p in keepers + defenders if id(p) not in chosen] + midfielders[m:] + attackers[a:]
 
             # sum TotVote
             score = sum((p.votes.TotVote or -1) for p in lineup)
 
             # modifier calc
-            gk_vote = [keepers[0].votes.Vote] if keepers[0].votes.Vote is not None else []
-            def_votes = [p.votes.Vote for p in defenders[:d] if p.votes.Vote is not None]
+            gk_vote = [gk.votes.Vote] if gk.votes.Vote is not None else []
+            def_votes = [p.votes.Vote for p in defs if p.votes.Vote is not None]
 
             if d > 3 and len(def_votes) > 3:
                 mod_k, mod_score_k = calculate_modifier(gk_vote, def_votes, modNoGk=False)
