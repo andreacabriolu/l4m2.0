@@ -6,7 +6,7 @@ from l4m20 import constants as C
 import statistics
 from . import utilities as U
 from .libs import logger
-from django.db.models import Q
+from django.db.models import Q, F
 import requests as req
 from itertools import islice, cycle, combinations
 
@@ -440,7 +440,8 @@ def format_votes(mr):
     return votes_tit, items, votes_ris
 
 def get_matches_results(couples):
-    return [matches_results.MatchesResults.objects.filter(MatchesCalendar=couple[2]).order_by('Home') for couple in couples]
+    #home team first: Home is True for the home team, False (competitions with home/away status) or NULL for the away team
+    return [matches_results.MatchesResults.objects.filter(MatchesCalendar=couple[2]).order_by(F('Home').desc(nulls_last=True)) for couple in couples]
 
 def get_match_result(mc, teamid):
     return matches_results.MatchesResults.objects.filter(Q(MatchesCalendar=mc) & (Q(Team_id=teamid)))
