@@ -181,6 +181,14 @@ def fill_with_events(events, players, votes, players_realteam):
         
         _type = event['type']
         match _type:
+            case C.Events.PENALTY_PROCURED:
+                pl_id = players[clean_name(event['player'])]
+                if pl_id is None:
+                    continue
+                if pl_id not in votes:
+                    make_vote_for_player(pl_id, votes, players_realteam)
+                vote = votes[pl_id]
+                vote.AssP = vote.AssP + 1
             case C.Events.YELLOW_CARD:
                 pl_id = players[clean_name(event['player'])]
                 if pl_id is None:

@@ -14,7 +14,7 @@ class Events:
     YELLOW_CARD = 'YC'
     RED_CARD = 'RC'
     YELLOW_RED_CARD = 'RYC'
-    PENALTY_PROCURED = ''
+    PENALTY_PROCURED = 'PW'
     SUB = 'S'
 
 class Scores:
