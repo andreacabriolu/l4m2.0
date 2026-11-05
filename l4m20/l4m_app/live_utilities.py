@@ -877,6 +877,8 @@ def get_live_votes(day, comp=1):
             continue 
         
         match_events = score['events']
+        match_extra_events = score['extra_events']
+        match_events.extend(match_extra_events)
 
         live_teams.append(score['home_name'])
         live_teams.append(score['away_name'])

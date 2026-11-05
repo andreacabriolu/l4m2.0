@@ -160,7 +160,6 @@ def set_live(score, votes, players):
         vote.Live = True
 
 def make_vote_for_player(pl, votes, real_teams):
-    # vote = Vote_Live_Obj()
     _vote = vote.Vote()
     _vote.Player = pl
     _vote.Vote = 0.0
@@ -182,17 +181,19 @@ def make_vote_for_player(pl, votes, real_teams):
 
     votes.append(_vote)
 
-def fill_with_events(events, players, votes, real_teams):
+def fill_with_events(events, extra_events, players, votes, real_teams):
 
     players_id_set = set()
     for pl_id, vote in votes.items():
         players_id_set.add(pl_id)
 
-    for event in events:
+    all_events = events + extra_events
+
+    for event in all_events:
 
         pl_name = event.get('player', None)
-        in_player_name = event.get('in', None)
-        out_player_name = event.get('out', None)
+        # in_player_name = event.get('in', None)
+        # out_player_name = event.get('out', None)
 
         if pl_name is not None:
             pl_name = clean_name(pl_name)
@@ -202,63 +203,21 @@ def fill_with_events(events, players, votes, real_teams):
             pl_id = pl_obj.id
             if pl_id not in players_id_set:
                 make_vote_for_player(pl_obj, votes, real_teams)
-            # if pl_id not in votes:
-            #     make_vote_for_player(pl_obj, votes, real_teams)
 
-        #SHOULD NOT HAPPEN, BUT JUST IN CASE
-        # if 'player' in event and clean_name(event['player']) not in players:
-        #     continue
-        # if 'in' in event and clean_name(event['in']) not in players:
-        #     continue
-        # if 'out' in event and clean_name(event['out']) not in players:
-        #     continue
-        # if 'in' in event and clean_name(event['in']) not in players:
-        #     continue
-        # if 'out' in event and clean_name(event['out']) not in players:
-        #     continue
-        # if 'details' in event and event['details'] != '' and clean_name(event['details']) not in players:
-        #     continue
-        
         _type = event['type']
         match _type:
             case C.Events.PENALTY_PROCURED:
-                pl_id = players[clean_name(event['player'])]
-                if pl_id is None:
-                    continue
-                if pl_id not in votes:
-                    make_vote_for_player(pl_id, votes, players_realteam)
                 vote = votes[pl_id]
                 vote.AssP = vote.AssP + 1
             case C.Events.YELLOW_CARD:
-                # pl_id = players[clean_name(event['player'])]
-                # if pl_id is None:
-                #     continue
-
-                # if pl_id not in votes:
-                #     make_vote_for_player(pl_id, votes, players_realteam)
-
                 vote = votes[pl_id]
                 vote.Yel = 1
             case C.Events.RED_CARD:
-                # pl_id = players[clean_name(event['player'])]
-                # if pl_id is None:
-                #     continue
-
-                # if pl_id not in votes:
-                #     make_vote_for_player(pl_id, votes, players_realteam)
-
                 vote = votes[pl_id]
                 vote.Red = 1
                 vote.Yel = 0
 
             case C.Events.YELLOW_RED_CARD:
-                # pl_id = players[clean_name(event['player'])]
-                # if pl_id is None:
-                #     continue
-
-                # if pl_id not in votes:
-                #     make_vote_for_player(pl_id, votes, players_realteam)
-
                 vote = votes[pl_id]
                 vote.YelRed = 1
                 vote.Yel = 0
@@ -273,88 +232,64 @@ def fill_with_events(events, players, votes, real_teams):
                 vote.GoalSc = vote.GoalSc + 1
 
             case C.Events.GOAL_TAKEN:
-                # pl_id = players[clean_name(event['player'])]
-                # if pl_id is None:
-                #     continue
-
                 vote = votes[pl_id]
                 vote.GoalTa = vote.GoalTa + 1
 
             case C.Events.OWN_GOAL:
-                # pl_id = players[clean_name(event['player'])]
-                # if pl_id is None:
-                #     continue
-
                 vote = votes[pl_id]
                 vote.Own = vote.Own + 1
 
             case C.Events.PENALTY_SCORED:
-                # pl_id = players[clean_name(event['player'])]
-                # if pl_id is None:
-                #     continue
-
                 vote = votes[pl_id]
                 vote.PenSc = vote.PenSc + 1
 
             case C.Events.PENALTY_MISSED:
-                # pl_id = players[clean_name(event['player'])]
-                # if pl_id is None:
-                #     continue
-
                 vote = votes[pl_id]
                 vote.PenMi = vote.PenMi + 1
 
             case C.Events.PENALTY_SAVED:
-                # pl_id = players[clean_name(event['player'])]
-                # if pl_id is None:
-                #     continue
-
                 vote = votes[pl_id]
                 vote.PenSa = vote.PenSa + 1
 
             case C.Events.SUB:
                 continue
 
-def delete_votes_of_day(conn:DB_Connector, day, season):
+def delete_votes_of_day(day, season):
     if day == "":
         return
     
     try:
-        conn.delete("l4m_app_vote", conditions=f"\"Day\"={day} AND \"Season_id\"={season}")
+        vote.Vote.objects.filter(Day=day, Season_id=season).delete()
     except Exception as e:
         raise e
 
-def insert_votes(conn:DB_Connector, votes, today_competitions=None):
+def insert_votes(votes, today_competitions=None):
     try:
-        for _,vote in votes.items():
-            if vote.Live:
+        for _,_vote in votes.items():
+            if _vote.Live:
                 continue
-            for comp in today_competitions:
-                data_vote = (vote.Day, 
-                            vote.Vote, 
-                            vote.TotVote,
-                            vote.GoalSc, 
-                            vote.GoalTa, 
-                            0, #GoalDe 
-                            vote.PenSc, 
-                            vote.PenMi,
-                            vote.PenSa,
-                            vote.Own, 
-                            vote.Yel, 
-                            vote.Red, 
-                            vote.YelRed, 
-                            vote.AssS,
-                            0, #vote.AssH,
-                            0, #vote.AssL,
-                            vote.AssP,
-                            0, #vote.SubJ,
-                            vote.Sub, 
-                            comp, #one vote per competition
-                            vote.Player,
-                            vote.RealTeam,
-                            vote.Live,
-                            vote.Season)
-                conn.insert(table="l4m_app_vote", data=data_vote)
+        
+            vote.Vote.objects.create(
+                Day=_vote.Day,
+                Vote=_vote.Vote,
+                TotVote=_vote.TotVote,
+                GoalSc=_vote.GoalSc,
+                GoalTa=_vote.GoalTa,
+                PenSc=_vote.PenSc,
+                PenMi=_vote.PenMi,
+                PenSa=_vote.PenSa,
+                Own=_vote.Own,
+                Yel=_vote.Yel,
+                Red=_vote.Red,
+                YelRed=_vote.YelRed,
+                AssS=_vote.AssS,
+                AssP=_vote.AssP,
+                Sub=_vote.Sub,
+                Player=_vote.Player,
+                RealTeam=_vote.RealTeam,
+                Live=_vote.Live,
+                Season=_vote.Season
+            )
     except Exception as e:
         raise e
     
@@ -389,14 +324,6 @@ def get_current_assp(_vote):
             return 0
         
         return n_assp
-
-        # rows = conn.select(table="l4m_app_vote", 
-        #                    cols='\"AssP\"', 
-        #                    conditions='"Day"=%s and "Player_id"=%s and "Season_id"=%s', 
-        #                    data=(vote.Day, vote.Player, vote.Season))
-        # if len(rows) <= 0:
-        #     return 0
-        # return rows[0][0]
 
     except Exception as e:
         raise e

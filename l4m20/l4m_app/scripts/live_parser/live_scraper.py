@@ -39,7 +39,7 @@ from l4m_app.utilities import get_current_season
 
 logging.basicConfig(filename='scarper.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s') #TODO: check path
 
-TEST = True
+TEST = False
 
 if(not TEST):
     url = "https://publicapi.fantamaster.it/livescores/?tcache=1756165942189"
@@ -60,7 +60,7 @@ else:
 #json scores: matches -> foreach json score general info, lineups and events
 try:
 
-    conn = DB_Connector()
+    # conn = DB_Connector()
 
     current_day = resp_json['day']
     grades = resp_json['marks']
@@ -68,7 +68,7 @@ try:
     players = player.Player.objects.all().only('Surname', 'id', 'RealTeam_id')
     real_teams = real_team.RealTeam.objects.filter(Status='A').only('Name', 'id')
     _season = get_current_season()
-    today_competitions = competition_calendar.CompetitionCalendar.objects.filter(Day=current_day, Season=_season).values_list('Competition_id', flat=True)
+    # today_competitions = competition_calendar.CompetitionCalendar.objects.filter(Day=current_day, Season=_season).values_list('Competition_id', flat=True)
     # players = dict(U.get_players(conn))
     # players_realteam = dict(U.get_players_realteam(conn))
     # real_teams = dict(U.get_realteams(conn))
@@ -118,20 +118,24 @@ try:
         else:
             U.set_final(score, real_teams, current_day, _season)
         match_events = score['events']
-        U.fill_with_events(match_events, players, votes, real_teams)
+        match_extra_events = score['extra_events']
+        U.fill_with_events(match_events, 
+                           match_extra_events, 
+                           players, 
+                           votes, 
+                           real_teams)
 
     #complete votes
     for _vote in votes.values():
         _vote.Day = int(current_day)
-        _vote.AssP = U.get_current_assp(_vote)
+        # _vote.AssP = U.get_current_assp(_vote)
         _vote.TotVote = U.calculate_totvote(_vote)
 
     #clean up the table
-    U.delete_votes_of_day(conn, current_day, _season)
+    U.delete_votes_of_day(current_day, _season)
 
     #write ONLY final votesName
-    U.insert_votes(conn, votes, today_competitions)
-    conn.commit()
+    U.insert_votes(votes)
     logger.log(logging.INFO, f'executed at {datetime.datetime.now()}')
 
 except Exception as e:
