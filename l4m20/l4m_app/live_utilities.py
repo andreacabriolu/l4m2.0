@@ -656,42 +656,31 @@ def fill_with_events(events, votes):
         _type = event['type']
         if 'player' in event: 
             _player = U.clean_name(event['player'])
+
+        pl = player.Player.objects.filter(Surname=_player)
+        if len(pl) == 0:
+            continue
+        pl = pl[0]
         match _type:
+            case C.Events.PENALTY_PROCURED:
+                vote = votes[pl.id]
+                vote.AssP = vote.AssP + 1
+
             case C.Events.YELLOW_RED_CARD:
-                pl = player.Player.objects.filter(Surname=_player)
-                if len(pl) == 0:
-                    continue
-                pl = pl[0]
-                
                 vote = votes[pl.id]
                 vote.Yel = 0
                 vote.YelRed = 1
 
             case C.Events.YELLOW_CARD:
-                pl = player.Player.objects.filter(Surname=_player)
-                if len(pl) == 0:
-                    continue
-                pl = pl[0]
-                
                 vote = votes[pl.id]
                 vote.Yel = 1
 
-            case C.Events.RED_CARD:
-                pl = player.Player.objects.filter(Surname=_player)
-                if len(pl) == 0:
-                    continue
-                pl = pl[0]
-                
+            case C.Events.RED_CARD:              
                 vote = votes[pl.id]
                 vote.Yel = 0
                 vote.Red = 1
 
-            case C.Events.GOAL:
-                pl = player.Player.objects.filter(Surname=_player)
-                if len(pl) == 0:
-                    continue
-                pl = pl[0]
-                
+            case C.Events.GOAL:              
                 if event['details'] != '':
                     _player_ass = U.clean_name(event['details'])
                     pl_assist = player.Player.objects.filter(Surname=_player_ass)
@@ -704,47 +693,22 @@ def fill_with_events(events, votes):
                 vote.GoalSc = vote.GoalSc + 1
 
             case C.Events.GOAL_TAKEN:
-                pl = player.Player.objects.filter(Surname=_player)
-                if len(pl) == 0:
-                    continue
-                pl = pl[0]
-
                 vote = votes[pl.id]
                 vote.GoalTa = vote.GoalTa + 1
 
             case C.Events.PENALTY_SCORED:
-                pl = player.Player.objects.filter(Surname=_player)
-                if len(pl) == 0:
-                    continue
-                pl = pl[0]
-
                 vote = votes[pl.id]
                 vote.PenSc = vote.PenSc + 1
 
             case C.Events.PENALTY_MISSED:
-                pl = player.Player.objects.filter(Surname=_player)
-                if len(pl) == 0:
-                    continue
-                pl = pl[0]
-
                 vote = votes[pl.id]
                 vote.PenMi = vote.PenMi + 1
 
             case C.Events.PENALTY_SAVED:
-                pl = player.Player.objects.filter(Surname=_player)
-                if len(pl) == 0:
-                    continue
-                pl = pl[0]
-
                 vote = votes[pl.id]
                 vote.PenSa = vote.PenSa + 1
 
             case C.Events.OWN_GOAL:
-                pl = player.Player.objects.filter(Surname=_player)
-                if len(pl) == 0:
-                    continue
-                pl = pl[0]
-
                 vote = votes[pl.id]
                 vote.Own = vote.Own + 1
 
