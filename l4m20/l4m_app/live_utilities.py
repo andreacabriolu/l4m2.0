@@ -1423,7 +1423,8 @@ def get_votes(lineup, current_day, live_votes, live_teams, already_played_teams=
                 cap_vote = 6
         else:
         #player NOT LIVE
-            #EXCEPTION for 6 politico -- next year a vote for each competition REQUIRED!
+            #EXCEPTION for 6 politico
+            
             # if current_day ==  16 and \
             #     lineup.Series.Competition.id in [7,8,9] and \
             #     pl.RealTeam.id in [14,31,8,11,20,2,25,12]: #triple HARD check !!!!!!!!!!!
