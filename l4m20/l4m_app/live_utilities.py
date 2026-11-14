@@ -895,86 +895,81 @@ def fill_live_votes_b11(score, grades, live_votes, players):
 def fill_with_events_b11(events, votes, players):
     """Same result as fill_with_events, with the players taken from the `players` dict."""
     for event in events:
+
         _type = event['type']
         if 'player' in event:
             _player = U.clean_name(event['player'])
+
+        pl = player.Player.objects.filter(Surname=_player)
+        if len(pl) == 0:
+            continue
+        pl = pl[0]
+
         match _type:
+            case C.Events.PENALTY_PROCURED:
+                vote = votes[pl.id]
+                vote.AssP = vote.AssP + 1
+
             case C.Events.YELLOW_RED_CARD:
-                pl = players.get(_player)
-                if pl is None:
-                    continue
-                v = votes[pl.id]
-                v.Yel = 0
-                v.YelRed = 1
+                vote = votes[pl.id]
+                vote.Yel = 0
+                vote.YelRed = 1
 
             case C.Events.YELLOW_CARD:
-                pl = players.get(_player)
-                if pl is None:
-                    continue
-                votes[pl.id].Yel = 1
+                vote = votes[pl.id]
+                vote.Yel = 1
 
-            case C.Events.RED_CARD:
-                pl = players.get(_player)
-                if pl is None:
-                    continue
-                v = votes[pl.id]
-                v.Yel = 0
-                v.Red = 1
+            case C.Events.RED_CARD:              
+                vote = votes[pl.id]
+                vote.Yel = 0
+                vote.Red = 1
 
-            case C.Events.GOAL:
-                pl = players.get(_player)
-                if pl is None:
-                    continue
+            case C.Events.GOAL:              
                 if event['details'] != '':
-                    pl_assist = players.get(U.clean_name(event['details']))
-                    if pl_assist is not None:
-                        v = votes[pl_assist.id]
-                        v.AssS = v.AssS + 1
-                v = votes[pl.id]
-                v.GoalSc = v.GoalSc + 1
+                    _player_ass = U.clean_name(event['details'])
+                    pl_assist = player.Player.objects.filter(Surname=_player_ass)
+                    if len(pl_assist) > 0:
+                        pl_assist = pl_assist[0]
+                        vote = votes[pl_assist.id]
+                        vote.AssS = vote.AssS + 1
+
+                vote = votes[pl.id]
+                vote.GoalSc = vote.GoalSc + 1
 
             case C.Events.GOAL_TAKEN:
-                pl = players.get(_player)
-                if pl is None:
-                    continue
-                v = votes[pl.id]
-                v.GoalTa = v.GoalTa + 1
+                vote = votes[pl.id]
+                vote.GoalTa = vote.GoalTa + 1
 
             case C.Events.PENALTY_SCORED:
-                pl = players.get(_player)
-                if pl is None:
-                    continue
-                v = votes[pl.id]
-                v.PenSc = v.PenSc + 1
+                vote = votes[pl.id]
+                vote.PenSc = vote.PenSc + 1
 
             case C.Events.PENALTY_MISSED:
-                pl = players.get(_player)
-                if pl is None:
-                    continue
-                v = votes[pl.id]
-                v.PenMi = v.PenMi + 1
+                vote = votes[pl.id]
+                vote.PenMi = vote.PenMi + 1
 
             case C.Events.PENALTY_SAVED:
-                pl = players.get(_player)
-                if pl is None:
-                    continue
-                v = votes[pl.id]
-                v.PenSa = v.PenSa + 1
+                vote = votes[pl.id]
+                vote.PenSa = vote.PenSa + 1
 
             case C.Events.OWN_GOAL:
-                pl = players.get(_player)
-                if pl is None:
-                    continue
-                v = votes[pl.id]
-                v.Own = v.Own + 1
+                vote = votes[pl.id]
+                vote.Own = vote.Own + 1
 
             case C.Events.SUB:
-                pl_in = players.get(U.clean_name(event['in']))
-                pl_out = players.get(U.clean_name(event['out']))
-                if pl_in is None or pl_out is None:
+                _player_in = U.clean_name(event['in'])
+                _player_out = U.clean_name(event['out'])
+                pl_in = player.Player.objects.filter(Surname=_player_in)
+                pl_out = player.Player.objects.filter(Surname=_player_out)
+                if len(pl_in) == 0 or len(pl_out) == 0:
                     continue
-                votes[pl_in.id].Sub = int(event['minute'])
-                votes[pl_out.id].Sub = int(event['minute']) * (-1)
+                pl_in = pl_in[0]
+                pl_out = pl_out[0]
+
+                vote_in = votes[pl_in.id]
+                vote_out = votes[pl_out.id]
+                vote_in.Sub = int(event['minute'])
+                vote_out.Sub = int(event['minute']) * (-1)
 
 def get_live_votes_b11(day, comp=1):
     """Same result (same 3-tuple) as get_live_votes, built faster for the Best 11 pages:
@@ -1023,7 +1018,12 @@ def get_live_votes_b11(day, comp=1):
         if players is None:
             players = _players_by_surname()
         fill_live_votes_b11(score, grades, live_votes, players)
-        fill_with_events_b11(score['events'], live_votes, players)
+
+        match_events = score['events']
+        match_extra_events = score['extra_events']
+        match_events.extend(match_extra_events)
+
+        fill_with_events_b11(match_events, live_votes, players)
 
     for _, _vote in live_votes.items():
         _vote.Day = int(current_day)

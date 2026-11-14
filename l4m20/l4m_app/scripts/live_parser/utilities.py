@@ -192,8 +192,6 @@ def fill_with_events(events, extra_events, players, votes, real_teams):
     for event in all_events:
 
         pl_name = event.get('player', None)
-        # in_player_name = event.get('in', None)
-        # out_player_name = event.get('out', None)
 
         if pl_name is not None:
             pl_name = clean_name(pl_name)
