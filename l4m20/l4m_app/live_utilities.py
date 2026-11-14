@@ -1361,8 +1361,16 @@ def get_bonus_home(homeaway, home):
         return 1 if home else (-1)
     return 0
 
-def get_votes(lineup, current_day, live_votes, live_teams, already_played_teams=[],\
-               my_teamid = None, home=True, get_for_calculation=False, homeAway=False):
+def get_votes(lineup, 
+              current_day, 
+              live_votes, 
+              live_teams, 
+              already_played_teams=[],
+              six_politico_items=[],
+              my_teamid = None, 
+              home=True, 
+              get_for_calculation=False, 
+              homeAway=False):
     votes_tit = []
     votes_ris = []
     module = C.Modules._442 #default
@@ -1382,6 +1390,12 @@ def get_votes(lineup, current_day, live_votes, live_teams, already_played_teams=
         _items.append("hidden")
         _items.append(lineup)
         return [votes_tit, _items, votes_ris]
+
+    if not six_politico_items:
+        suspended_cc = []
+        suspended_real = []
+    else:
+        suspended_cc, suspended_real = six_politico_items
 
     line = json.loads(U.cleanJSON(lineup.Line))
 
@@ -1433,19 +1447,26 @@ def get_votes(lineup, current_day, live_votes, live_teams, already_played_teams=
             #         else:
             #             votes_ris.append(make_political_vote_obj(pl, lineup.Series.Competition, current_day, cap_id))
             # else:
-            _vote = vote.Vote.objects.filter(Q(Player_id=pl.id) & 
-                                             Q(Day=current_day) &
-                                             Q(Season__Active=True))
-            if(l[0].endswith('tit')):
-                votes_tit.append(make_vote_obj(_vote[0], cap_id) if isValid(_vote) else \
-                                make_empty_vote_obj(pl.id, cap_id, already_played, current_day))
+            if pl.RealTeam.id in suspended_real and \
+                lineup.Series.Competition.id in suspended_cc:
+                if(l[0].endswith('tit')):
+                    votes_tit.append(make_political_vote_obj(pl, lineup.Series.Competition, current_day, cap_id))
+                else:
+                    votes_ris.append(make_political_vote_obj(pl, lineup.Series.Competition, current_day, cap_id))
             else:
-                votes_ris.append(make_vote_obj(_vote[0], cap_id) if isValid(_vote) else \
-                                make_empty_vote_obj(pl.id, cap_id, already_played, current_day))
+                _vote = vote.Vote.objects.filter(Q(Player_id=pl.id) & 
+                                                Q(Day=current_day) &
+                                                Q(Season__Active=True))
+                if(l[0].endswith('tit')):
+                    votes_tit.append(make_vote_obj(_vote[0], cap_id) if isValid(_vote) else \
+                                    make_empty_vote_obj(pl.id, cap_id, already_played, current_day))
+                else:
+                    votes_ris.append(make_vote_obj(_vote[0], cap_id) if isValid(_vote) else \
+                                    make_empty_vote_obj(pl.id, cap_id, already_played, current_day))
 
-            if len(_vote) > 0:
-                if(pl.id == cap_id):
-                    cap_vote = _vote[0].Vote
+                if len(_vote) > 0:
+                    if(pl.id == cap_id):
+                        cap_vote = _vote[0].Vote
     
     valid_votes = []
     n_subs = 0

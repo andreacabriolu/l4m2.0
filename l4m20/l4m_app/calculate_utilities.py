@@ -350,6 +350,7 @@ def calculate_league(competition, day):
             continue
         all_votes_per_series = {}
         homeAway=U.get_homeaway(competition.id, _day)
+        six_politico_items = U.get_six_politico_items(_day) #check for suspended matches to calculate with 6 politico
 
         for series in comp_series:
             series_teams = team.Team.objects.filter(Series__id=series.id)
@@ -372,8 +373,21 @@ def calculate_league(competition, day):
             lineup_couples = [ (last_lineups_d[c[0]], last_lineups_d[c[1]], c[2]) for c in couples ]
 
             for lineup_couple in lineup_couples:
-                votes_home = LU.get_votes(lineup_couple[0], _day, live_votes=[], live_teams=[], get_for_calculation=True, homeAway=homeAway)
-                votes_away = LU.get_votes(lineup_couple[1], _day, live_votes=[], live_teams=[], get_for_calculation=True, homeAway=homeAway, home=False if homeAway else None)
+                votes_home = LU.get_votes(lineup_couple[0], 
+                                          _day, 
+                                          live_votes=[], 
+                                          live_teams=[], 
+                                          get_for_calculation=True, 
+                                          homeAway=homeAway,
+                                          six_politico_items=six_politico_items)
+                
+                votes_away = LU.get_votes(lineup_couple[1], 
+                                          _day, live_votes=[], 
+                                          live_teams=[], 
+                                          six_politico_items=six_politico_items,
+                                          get_for_calculation=True, 
+                                          homeAway=homeAway, 
+                                          home=False if homeAway else None)
                 
                 is_et, (home_agg, away_agg) = LU.check_match_for_extratime(lineup_couple[0].Team.id, lineup_couple[1].Team.id, 
                                                  votes_home, votes_away, 

@@ -7,13 +7,14 @@ class CompetitionCalendar(models.Model):
 
     Competition = models.ForeignKey(on_delete=models.CASCADE,to=C.Constant_Strings.competition, null=True)
     Season = models.ForeignKey(on_delete=models.CASCADE,to=C.Constant_Strings.season, null=True)
-    Day = models.IntegerField()              # day of play
+    Day = models.IntegerField()
     Stage = models.CharField(max_length=50)
     HomeAway = models.BooleanField(default=False)
     Overtime = models.BooleanField(default=False)
     Penalties = models.BooleanField(default=False)
     Suspended = models.BooleanField(default=False)
     Num_Matches = models.IntegerField(default=None, null=True)
+    Six_politico = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.Competition} - Giornata {self.Day} - {self.Stage}"
