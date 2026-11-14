@@ -13,6 +13,21 @@ import requests as req
 from .libs import *
 from .live_utilities import pick_worst_11
 
+def get_six_politico_items(day):
+    suspended_cc = competition_calendar.CompetitionCalendar.objects.filter(
+        Season__Active=True,
+        Day=day,
+        Six_politico=True
+    ).values_list('Competition_id', flat=True)
+
+    suspended_real = real_calendar.Real_calendar.objects.filter(
+        Season__Active=True,
+        Day=day,
+        Suspended=True
+    ).values_list('RealTeamHome_id', 'RealTeamAway_id')
+
+    return list(suspended_cc), [r for pair in suspended_real for r in pair]
+
 def quarantine_player(data):
     player_id = data['player_id']
     team_id = data['team_id']
@@ -804,7 +819,11 @@ def get_current_day_boundaries(current_day):
     return (day_time_start, day_time_end)
 
 def check_day_suspended(day):
-    suspended = competition_calendar.CompetitionCalendar.objects.filter(Q(Day=day)&Q(Suspended=True)).values('Day')
+    suspended = competition_calendar.CompetitionCalendar.objects.filter(
+        Q(Day=day)&
+        Q(Suspended=True)&
+        Q(Season__Active=True)
+    ).values('Day')
     return len(suspended) > 0
 
 def get_competition_calendar_entry(competition_id, day):

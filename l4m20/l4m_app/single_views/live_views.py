@@ -203,8 +203,21 @@ class MyLiveView(LoginRequiredMixin, View):
                 votes_home = LU.get_votes_total(lineup_couple[0], home=True, homeAway=_homeaway)
                 votes_away = LU.get_votes_total(lineup_couple[1], home=False, homeAway=_homeaway)
             else: 
-                votes_home = LU.get_votes(lineup_couple[0], current_day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=myteam['id'], homeAway=_homeaway)
-                votes_away = LU.get_votes(lineup_couple[1], current_day, live_votes, live_teams, already_played_teams=already_played_teams, my_teamid=myteam['id'], home=False, homeAway=_homeaway)
+                votes_home = LU.get_votes(lineup_couple[0], 
+                                          current_day, 
+                                          live_votes, 
+                                          live_teams, 
+                                          already_played_teams=already_played_teams, 
+                                          my_teamid=myteam['id'], 
+                                          homeAway=_homeaway)
+                
+                votes_away = LU.get_votes(lineup_couple[1], 
+                                          current_day, 
+                                          live_votes, 
+                                          live_teams, 
+                                          already_played_teams=already_played_teams, 
+                                          my_teamid=myteam['id'], 
+                                          homeAway=_homeaway)
             
             if extratime_penalties: 
                 if isinstance(lineup_couple[0], str) or isinstance(lineup_couple[1], str):
@@ -287,6 +300,7 @@ def LiveView(request, competition_id, series_id, day):
     all_my_series_ids = [s.id for s in U.get_all_my_series(teamid)]
     homeAway=U.get_homeaway(competition_id, day)
     extratime_penalties = U.get_overtime_penalties(_competition_id, _day)
+    # six_politico_items = U.get_six_politico_items(_day) #check for suspended matches to calculate with 6 politico
 
     series_teams = team.Team.objects.filter(Series__id=_series_id)
     last_lineups_d = {}
@@ -296,7 +310,7 @@ def LiveView(request, competition_id, series_id, day):
     is_suspended_day = U.check_day_suspended(_day)
 
     #QUICK LOAD THE PAST
-    if int(day) < int(current_day) and not is_suspended_day:
+    if int(day) < int(current_day):
         couples = LU.get_couples_and_matches_from_calendar(_series_id, _day, competition_id=_competition_id)
         couples = [couples.pop(couples.index(i)) for i in couples if (i[0]==teamid or i[1]==teamid)]+couples #get user match as first
         
