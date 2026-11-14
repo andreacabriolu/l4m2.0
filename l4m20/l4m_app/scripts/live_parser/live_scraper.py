@@ -60,20 +60,12 @@ else:
 #json scores: matches -> foreach json score general info, lineups and events
 try:
 
-    # conn = DB_Connector()
-
     current_day = resp_json['day']
     grades = resp_json['marks']
 
     players = player.Player.objects.all().only('Surname', 'id', 'RealTeam_id')
     real_teams = real_team.RealTeam.objects.filter(Status='A').only('Name', 'id')
     _season = get_current_season()
-    # today_competitions = competition_calendar.CompetitionCalendar.objects.filter(Day=current_day, Season=_season).values_list('Competition_id', flat=True)
-    # players = dict(U.get_players(conn))
-    # players_realteam = dict(U.get_players_realteam(conn))
-    # real_teams = dict(U.get_realteams(conn))
-    # season = U.get_current_season(conn)
-    # today_competitions = U.get_today_competitions(conn, current_day, season)
 
     votes = {}
 
@@ -84,13 +76,8 @@ try:
         
         if pl is None:
             continue
-        # if name not in players:
-        #     continue
-        # _vote = Vote_Live_Obj()
         _vote = vote.Vote()
-        # _player = pl
         _vote.Player = pl
-        # _vote.Player_id = pl.id
         _vote.RealTeam = real_teams.filter(id=pl.RealTeam_id).first()
         _vote.Vote = float(grade)
         _vote.TotVote = 0.0
@@ -128,7 +115,6 @@ try:
     #complete votes
     for _vote in votes.values():
         _vote.Day = int(current_day)
-        # _vote.AssP = U.get_current_assp(_vote)
         _vote.TotVote = U.calculate_totvote(_vote)
 
     #clean up the table
