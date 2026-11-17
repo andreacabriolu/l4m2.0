@@ -487,46 +487,39 @@ def calculate_league(competition, day):
                 write_league_rankings(vote_per_series, competition.id, _day, seriesid=k)
 
 def save_b11_results(all_best, day):
-    bests = [best for best in all_best if best is not None] #RECALCULATE
+    bests = [best for best in all_best if best is not None]
     if len(bests) == 0:
         return
 
-<<<<<<< HEAD
-    season_ = season.Season.objects.get(Active=True)
-    with transaction.atomic():
-        b11_results.B11Results.objects.filter(Q(Day=day) & 
-                                              Q(Team__id__in=[best['team_id'] for best in bests]) &
-                                              Q(Season__Active=True)).delete()
-        b11_results.B11Results.objects.bulk_create([
-            b11_results.B11Results(Day=day, Team_id=best['team_id'], B11Fp=best['score'], Season=season_)
-            for best in bests
-        ])
-=======
-            b11_result = b11_results.B11Results(
-                Day = day,
-                Team = team.Team.objects.get(pk=best['team_id']),
-                B11Fp = best['score'],
-                Season = season.Season.objects.get(Active=True),
-                Module = best['module'],
-                PartialScore = best['partial_score'],
-                ModifierScore = best['modif'],
-                ModifierTotal = best['modif_tot'],
-                ModifierFromNoGk = best['modifier_from_no_gk'],
-                CaptainBonus = best['bcaptain'],
-                AllSixBonus = best['all_six_bonus'],
-                NoYellowBonus = best['no_yellow_bonus'],
-                Lineup = json.dumps([{ #TODO: add other player stats HERE
-                    'id':p['player_id'],
-                    'surname':p['player_surname'],
-                    'rt':p['player_rt'].Name,
-                    'role':p['player_role'],
-                    'vote':p['player_vote'],
-                    'totvote':p['player_totvote']
-                        } for p in best['players']])
-            )
-            
-            b11_result.save()
->>>>>>> 7ed8271 (put huge base on b11 page, modified calculation)
+    existing_results = b11_results.B11Results.objects.filter(Day=day, Season__Active=True)
+    if len(existing_results) > 0: #RECALCULATE
+        existing_results.delete()
+
+    for best in bests:
+        b11_result = b11_results.B11Results(
+            Day = day,
+            Team = team.Team.objects.get(pk=best['team_id']),
+            B11Fp = best['score'],
+            Season = season.Season.objects.get(Active=True),
+            Module = best['module'],
+            PartialScore = best['partial_score'],
+            ModifierScore = best['modif'],
+            ModifierTotal = best['modif_tot'],
+            ModifierFromNoGk = best['modifier_from_no_gk'],
+            CaptainBonus = best['bcaptain'],
+            AllSixBonus = best['all_six_bonus'],
+            NoYellowBonus = best['no_yellow_bonus'],
+            Lineup = json.dumps([{ #TODO: add other player stats HERE
+                'id':p['player_id'],
+                'surname':p['player_surname'],
+                'rt':p['player_rt'].Name,
+                'role':p['player_role'],
+                'vote':p['player_vote'],
+                'totvote':p['player_totvote']
+                    } for p in best['players']])
+        )
+
+        b11_result.save()
 
 def save_results(votes_per_series):
 
