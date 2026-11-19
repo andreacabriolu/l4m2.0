@@ -64,6 +64,7 @@ urlpatterns = [
     path("l4m/heartbeat/", statistics_views.heartbeat, name="heartbeat"),
     path("l4m/other/best11/", other_views.Best11View.as_view(), name="best11"),
     path("l4m/other/best11/day/<int:day>/", other_views.get_b11_data_by_day_view, name="get_best11_by_day"),
+    path("l4m/other/best11/cumulative/", other_views.get_b11_data_cumulative_view, name="get_best11_cumulative"),
 
 
 ]

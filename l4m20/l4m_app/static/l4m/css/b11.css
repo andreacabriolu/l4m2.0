@@ -4,7 +4,7 @@
 }
 
 .custom-layout {
-  background-color: #0f172a;
+    background-color: #0f172a;
 }
 
 .b11-grid {
@@ -50,13 +50,11 @@
     border-radius: 1rem;
 
     background:
-        linear-gradient(
-            135deg,
-            rgba(255,255,255,.045),
-            rgba(255,255,255,.018)
-        );
+        linear-gradient(135deg,
+            rgba(255, 255, 255, .045),
+            rgba(255, 255, 255, .018));
 
-    border: 1px solid rgba(255,255,255,.08);
+    border: 1px solid rgba(255, 255, 255, .08);
 }
 
 .best11-kicker,
@@ -128,8 +126,8 @@
 
     border-radius: .9rem;
 
-    background: rgba(0,0,0,.15);
-    border: 1px solid rgba(255,255,255,.07);
+    background: rgba(0, 0, 0, .15);
+    border: 1px solid rgba(255, 255, 255, .07);
 }
 
 .best11-days {
@@ -176,9 +174,9 @@
 }
 
 .best11-day-btn.active {
-    background: rgba(255,255,255,.12);
+    background: rgba(255, 255, 255, .12);
     opacity: 1;
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,.08);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08);
 }
 
 .best11-day-btn.current {
@@ -198,7 +196,7 @@
     border: 0;
     border-radius: .55rem;
 
-    background: rgba(255,255,255,.06);
+    background: rgba(255, 255, 255, .06);
     color: inherit;
 }
 
@@ -245,8 +243,7 @@
 .best11-summary-grid {
     display: grid;
     grid-template-columns:
-        minmax(0, 1.5fr)
-        repeat(2, minmax(0, 1fr));
+        minmax(0, 1.5fr) repeat(2, minmax(0, 1fr));
 
     gap: .75rem;
 }
@@ -256,12 +253,12 @@
 
     border-radius: .85rem;
 
-    background: rgba(255,255,255,.035);
-    border: 1px solid rgba(255,255,255,.07);
+    background: rgba(255, 255, 255, .035);
+    border: 1px solid rgba(255, 255, 255, .07);
 }
 
 .best11-stat-highlight {
-    border-color: rgba(255,255,255,.13);
+    border-color: rgba(255, 255, 255, .13);
 }
 
 .best11-stat-label {
@@ -312,7 +309,7 @@
 
     border-radius: .5rem;
 
-    background: rgba(255,255,255,.05);
+    background: rgba(255, 255, 255, .05);
     color: inherit;
 
     font-size: .75rem;
@@ -344,8 +341,8 @@
 
     border-radius: .9rem;
 
-    background: rgba(255,255,255,.035);
-    border: 1px solid rgba(255,255,255,.07);
+    background: rgba(255, 255, 255, .035);
+    border: 1px solid rgba(255, 255, 255, .07);
 
     cursor: pointer;
 
@@ -358,8 +355,8 @@
 .best11-team-card:hover {
     transform: translateY(-2px);
 
-    border-color: rgba(255,255,255,.15);
-    background: rgba(255,255,255,.05);
+    border-color: rgba(255, 255, 255, .15);
+    background: rgba(255, 255, 255, .05);
 }
 
 .best11-team-card:focus-visible {
@@ -385,7 +382,7 @@
     font-size: .68rem;
     font-weight: 800;
 
-    background: rgba(255,255,255,.07);
+    background: rgba(255, 255, 255, .07);
 }
 
 .best11-team-header {
@@ -457,13 +454,11 @@
     border-radius: .65rem;
 
     background:
-        radial-gradient(
-            circle at center,
-            rgba(255,255,255,.025),
-            rgba(255,255,255,.01)
-        );
+        radial-gradient(circle at center,
+            rgba(255, 255, 255, .025),
+            rgba(255, 255, 255, .01));
 
-    border: 1px solid rgba(255,255,255,.04);
+    border: 1px solid rgba(255, 255, 255, .04);
 }
 
 .best11-mini-line {
@@ -488,12 +483,12 @@
     font-size: .56rem;
     font-weight: 700;
 
-    background: rgba(255,255,255,.07);
+    background: rgba(255, 255, 255, .07);
 }
 
 .best11-mini-player.captain {
     box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,.25);
+        inset 0 0 0 1px rgba(255, 255, 255, .25);
 }
 
 
@@ -519,7 +514,7 @@
 
     border-radius: .35rem;
 
-    background: rgba(255,255,255,.05);
+    background: rgba(255, 255, 255, .05);
 
     font-size: .61rem;
     font-weight: 600;
@@ -539,13 +534,13 @@
 .best11-detail-modal {
     border-radius: 1rem;
 
-    border: 1px solid rgba(255,255,255,.08);
+    border: 1px solid rgba(255, 255, 255, .08);
 }
 
 .best11-detail-modal .modal-header {
     padding: 1rem 1.1rem;
 
-    border-bottom: 1px solid rgba(255,255,255,.07);
+    border-bottom: 1px solid rgba(255, 255, 255, .07);
 }
 
 .best11-detail-modal .modal-body {
@@ -584,12 +579,10 @@
     border-radius: .9rem;
 
     background:
-        linear-gradient(
-            rgba(255,255,255,.035),
-            rgba(255,255,255,.015)
-        );
+        linear-gradient(rgba(255, 255, 255, .035),
+            rgba(255, 255, 255, .015));
 
-    border: 1px solid rgba(255,255,255,.07);
+    border: 1px solid rgba(255, 255, 255, .07);
 }
 
 .best11-field-line {
@@ -624,17 +617,17 @@
 
     border-radius: 50%;
 
-    background: rgba(255,255,255,.08);
+    background: rgba(255, 255, 255, .08);
 
     font-size: .75rem;
     font-weight: 800;
 
-    border: 1px solid rgba(255,255,255,.08);
+    border: 1px solid rgba(255, 255, 255, .08);
 }
 
 .best11-player.captain .best11-player-dot {
     box-shadow:
-        0 0 0 2px rgba(255,255,255,.13);
+        0 0 0 2px rgba(255, 255, 255, .13);
 }
 
 /* .best11-player-name {
@@ -677,9 +670,9 @@
 
     border-radius: .85rem;
 
-    border: 1px solid rgba(255,255,255,.07);
+    border: 1px solid rgba(255, 255, 255, .07);
 
-    background: rgba(255,255,255,.025);
+    background: rgba(255, 255, 255, .025);
 }
 
 .best11-breakdown h3 {
@@ -708,7 +701,7 @@
     margin-top: .35rem;
     padding-top: .65rem;
 
-    border-top: 1px solid rgba(255,255,255,.08);
+    border-top: 1px solid rgba(255, 255, 255, .08);
 
     font-size: .9rem;
     font-weight: 800;
@@ -741,8 +734,8 @@
 
     border-radius: .8rem;
 
-    background: rgba(255,0,0,.06);
-    border: 1px solid rgba(255,0,0,.12);
+    background: rgba(255, 0, 0, .06);
+    border: 1px solid rgba(255, 0, 0, .12);
 }
 
 .best11-error strong,
@@ -865,14 +858,14 @@
 .best11-detail-modal {
     background: #212529 !important;
     color: var(--bs-body-color, #fff);
-    border: 1px solid rgba(255,255,255,.08);
+    border: 1px solid rgba(255, 255, 255, .08);
     border-radius: 1rem;
     overflow: hidden;
 }
 
 .best11-detail-modal .modal-header {
     padding: 1rem 1.25rem;
-    border-bottom: 1px solid rgba(255,255,255,.08);
+    border-bottom: 1px solid rgba(255, 255, 255, .08);
 }
 
 .best11-detail-modal .modal-body {
@@ -930,13 +923,11 @@
     border-radius: 1rem;
 
     background:
-        linear-gradient(
-            180deg,
-            rgba(255,255,255,.04),
-            rgba(255,255,255,.018)
-        );
+        linear-gradient(180deg,
+            rgba(255, 255, 255, .04),
+            rgba(255, 255, 255, .018));
 
-    border: 1px solid rgba(255,255,255,.08);
+    border: 1px solid rgba(255, 255, 255, .08);
 }
 
 
@@ -947,7 +938,7 @@
     position: absolute;
     inset: 1rem;
 
-    border: 1px solid rgba(255,255,255,.045);
+    border: 1px solid rgba(255, 255, 255, .045);
     border-radius: .7rem;
 
     pointer-events: none;
@@ -999,14 +990,14 @@
 
     border-radius: 50%;
 
-    background: rgba(255,255,255,.08);
-    border: 1px solid rgba(255,255,255,.1);
+    background: rgba(255, 255, 255, .08);
+    border: 1px solid rgba(255, 255, 255, .1);
 
     font-size: .72rem;
     font-weight: 800;
 
     box-shadow:
-        0 3px 10px rgba(0,0,0,.2);
+        0 3px 10px rgba(0, 0, 0, .2);
 }
 
 .best11-player-name {
@@ -1049,11 +1040,11 @@
 /* capitano */
 
 .best11-player.captain .best11-player-dot {
-    border-color: rgba(255,255,255,.24);
+    border-color: rgba(255, 255, 255, .24);
 
     box-shadow:
-        0 0 0 2px rgba(255,255,255,.05),
-        0 4px 12px rgba(0,0,0,.25);
+        0 0 0 2px rgba(255, 255, 255, .05),
+        0 4px 12px rgba(0, 0, 0, .25);
 }
 
 
@@ -1071,8 +1062,8 @@
 
     border-radius: .9rem;
 
-    background: rgba(255,255,255,.025);
-    border: 1px solid rgba(255,255,255,.07);
+    background: rgba(255, 255, 255, .025);
+    border: 1px solid rgba(255, 255, 255, .07);
 }
 
 .best11-breakdown h3 {
@@ -1110,7 +1101,7 @@
     margin-top: .35rem;
     padding-top: .7rem;
 
-    border-top: 1px solid rgba(255,255,255,.08);
+    border-top: 1px solid rgba(255, 255, 255, .08);
 
     font-size: .95rem;
 }
@@ -1129,19 +1120,19 @@
    --------------------------------------------------------- */
 
 .best11-player-dot.role-P {
-    border-color: rgba(59,130,246,.25);
+    border-color: rgba(59, 130, 246, .25);
 }
 
 .best11-player-dot.role-D {
-    border-color: rgba(16,185,129,.25);
+    border-color: rgba(16, 185, 129, .25);
 }
 
 .best11-player-dot.role-C {
-    border-color: rgba(245,158,11,.25);
+    border-color: rgba(245, 158, 11, .25);
 }
 
 .best11-player-dot.role-A {
-    border-color: rgba(239,68,68,.25);
+    border-color: rgba(239, 68, 68, .25);
 }
 
 /* =========================================================
@@ -1300,9 +1291,7 @@
     /* PLAYER */
 
     .best11-player {
-        width: calc(
-            (100vw - 4.2rem) / 4
-        );
+        width: calc((100vw - 4.2rem) / 4);
 
         max-width: 72px;
     }
@@ -1403,8 +1392,8 @@
 
     border-radius: .9rem;
 
-    background: rgba(255,255,255,.045);
-    border: 1px solid rgba(255,255,255,.1);
+    background: rgba(255, 255, 255, .045);
+    border: 1px solid rgba(255, 255, 255, .1);
 }
 
 .best11-leader-label {
@@ -1467,10 +1456,7 @@
     display: grid;
 
     grid-template-columns:
-        2.2rem
-        minmax(0, 1fr)
-        auto
-        auto;
+        2.2rem minmax(0, 1fr) auto auto;
 
     align-items: center;
 
@@ -1480,8 +1466,8 @@
 
     border-radius: .7rem;
 
-    background: rgba(255,255,255,.025);
-    border: 1px solid rgba(255,255,255,.055);
+    background: rgba(255, 255, 255, .025);
+    border: 1px solid rgba(255, 255, 255, .055);
 
     transition:
         background .15s ease,
@@ -1489,8 +1475,8 @@
 }
 
 .best11-cumulative-row:hover {
-    background: rgba(255,255,255,.04);
-    border-color: rgba(255,255,255,.1);
+    background: rgba(255, 255, 255, .04);
+    border-color: rgba(255, 255, 255, .1);
 }
 
 
@@ -1507,7 +1493,7 @@
     font-size: .68rem;
     font-weight: 800;
 
-    background: rgba(255,255,255,.06);
+    background: rgba(255, 255, 255, .06);
 }
 
 
@@ -1591,10 +1577,7 @@
 
     .best11-cumulative-row {
         grid-template-columns:
-            2rem
-            minmax(0, 1fr)
-            auto
-            26px;
+            2rem minmax(0, 1fr) auto 26px;
 
         gap: .55rem;
 
@@ -1623,4 +1606,269 @@
     .best11-rank-delta {
         font-size: .6rem;
     }
+
+    /* BEST11 CUMULATIVA */
+
+    .best11-cumulative-list {
+        display: flex;
+        flex-direction: column;
+        gap: .4rem;
+    }
+
+    .best11-cumulative-row {
+        display: grid;
+        grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+        align-items: center;
+        gap: .75rem;
+
+        padding: .7rem .9rem;
+
+        border-radius: .75rem;
+        background: rgba(255, 255, 255, .035);
+        border: 1px solid rgba(255, 255, 255, .06);
+
+        transition: background .15s ease;
+    }
+
+    .best11-cumulative-row:hover {
+        background: rgba(255, 255, 255, .065);
+    }
+
+    .best11-cumulative-rank {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+
+        background: rgba(255, 255, 255, .07);
+        font-size: .75rem;
+        font-weight: 800;
+    }
+
+    .best11-cumulative-team {
+        min-width: 0;
+        font-size: .85rem;
+        font-weight: 700;
+        overflow-wrap: anywhere;
+    }
+
+    .best11-cumulative-score {
+        font-size: 1rem;
+        font-weight: 800;
+        white-space: nowrap;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .best11-cumulative-score small {
+        font-size: .65rem;
+        opacity: .5;
+    }
+
+    .best11-cumulative-row:nth-child(-n+3) .best11-cumulative-rank {
+        background: rgba(255, 255, 255, .13);
+    }
+
+    @media (max-width: 576px) {
+
+        .best11-cumulative-row {
+            grid-template-columns: 2rem minmax(0, 1fr) auto;
+            gap: .55rem;
+            padding: .65rem;
+        }
+
+        .best11-cumulative-rank {
+            width: 26px;
+            height: 26px;
+            font-size: .67rem;
+        }
+
+        .best11-cumulative-team {
+            font-size: .78rem;
+        }
+
+        .best11-cumulative-score {
+            font-size: .9rem;
+        }
+    }
+
+    /* =========================================================
+   BEST11 NAVIGATION
+   ========================================================= */
+
+    .best11-navigation {
+        display: flex;
+        align-items: center;
+        gap: .65rem;
+
+        padding: .45rem;
+
+        border-radius: .85rem;
+
+        background: rgba(255, 255, 255, .025);
+        border: 1px solid rgba(255, 255, 255, .07);
+    }
+
+    .best11-tab {
+        flex: 0 0 auto;
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: .45rem;
+
+        min-height: 40px;
+        padding: 0 1rem;
+
+        border: 1px solid transparent;
+        border-radius: .6rem;
+
+        background: transparent;
+        color: inherit;
+
+        font-size: .78rem;
+        font-weight: 700;
+
+        opacity: .65;
+        transition: all .15s ease;
+    }
+
+    .best11-tab:hover {
+        opacity: 1;
+        background: rgba(255, 255, 255, .05);
+    }
+
+    .best11-tab.active {
+        opacity: 1;
+        background: rgba(255, 255, 255, .11);
+        border-color: rgba(255, 255, 255, .08);
+    }
+
+    .best11-navigation-divider {
+        width: 1px;
+        height: 25px;
+        flex: 0 0 auto;
+        background: rgba(255, 255, 255, .12);
+    }
+
+    .best11-day-selector {
+        display: flex;
+        align-items: center;
+        gap: .35rem;
+
+        flex: 1;
+        min-width: 0;
+    }
+
+    .best11-days {
+        display: flex;
+        align-items: center;
+        gap: .25rem;
+
+        flex: 1;
+        min-width: 0;
+
+        overflow-x: auto;
+        scrollbar-width: none;
+        overscroll-behavior-x: contain;
+    }
+
+    .best11-days::-webkit-scrollbar {
+        display: none;
+    }
+
+    .best11-day-btn {
+        flex: 0 0 auto;
+
+        min-width: 36px;
+        height: 36px;
+
+        border: 0;
+        border-radius: .5rem;
+
+        background: transparent;
+        color: inherit;
+
+        font-size: .73rem;
+        font-weight: 700;
+
+        opacity: .55;
+        transition: all .15s ease;
+    }
+
+    .best11-day-btn:hover {
+        opacity: 1;
+        background: rgba(255, 255, 255, .05);
+    }
+
+    .best11-day-btn.active {
+        opacity: 1;
+        background: rgba(255, 255, 255, .11);
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08);
+    }
+
+    .best11-day-arrow {
+        flex: 0 0 auto;
+
+        width: 34px;
+        height: 34px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border: 0;
+        border-radius: .5rem;
+
+        background: rgba(255, 255, 255, .045);
+        color: inherit;
+    }
+
+    .best11-day-arrow:disabled {
+        opacity: .25;
+    }
+
+
+    /* MOBILE */
+
+    @media (max-width: 576px) {
+
+        .best11-navigation {
+            gap: .35rem;
+            padding: .35rem;
+        }
+
+        .best11-tab {
+            min-height: 36px;
+            padding: 0 .65rem;
+            font-size: .69rem;
+        }
+
+        .best11-tab i {
+            font-size: .85rem;
+        }
+
+        .best11-navigation-divider {
+            height: 22px;
+        }
+
+        .best11-day-selector {
+            gap: .15rem;
+        }
+
+        .best11-day-arrow {
+            width: 27px;
+            height: 32px;
+        }
+
+        .best11-day-btn {
+            min-width: 32px;
+            height: 34px;
+            font-size: .68rem;
+        }
+    }
+
+
 }

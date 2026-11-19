@@ -6,6 +6,9 @@ const Best11State = {
     cumulative: [],
     selectedTeam: null,
 
+    cumulativeLoaded: false,
+    currentView: "cumulative",
+
     sort: "score"
 };
 
@@ -46,17 +49,115 @@ async function apiGetExecute(url) {
     return json;
 }
 
-
-
 const Best11 = {
 
     init() {
         this.renderDaySelector();
         this.bindEvents();
 
+        this.bindBest11Tabs();
+        
+        this.loadCumulativeData();
         this.loadDay(this.getInitialDay());
     },
 
+    bindBest11Tabs() {
+
+        document
+            .querySelectorAll("[data-best11-view]")
+            .forEach(tab => {
+
+                tab.addEventListener("click", async () => {
+
+                    const view = tab.dataset.best11View;
+
+                    document
+                        .querySelectorAll("[data-best11-view]")
+                        .forEach(el =>
+                            el.classList.remove("active")
+                        );
+
+                    tab.classList.add("active");
+
+                    Best11State.currentView = view;
+
+                    const cumulativeView =
+                        document.getElementById("best11CumulativeView");
+
+                    const dailyView =
+                        document.getElementById("best11DailyView");
+
+                    if (view === "cumulative") {
+
+                        cumulativeView.hidden = false;
+                        dailyView.hidden = true;
+
+                        if (!Best11State.cumulativeLoaded) {
+                            await this.loadCumulative();
+                        }
+
+                    } else {
+
+                        cumulativeView.hidden = true;
+                        dailyView.hidden = false;
+
+                        const day = Number(tab.dataset.day);
+
+                        if (day) {
+                            await this.loadDay(day);
+                        }
+                    }
+                });
+            });
+    },
+
+    async loadCumulativeData() {
+
+        if (Best11State.cumulativeLoaded) {
+            return;
+        }
+
+        const container =
+        document.getElementById("best11CumulativeList");
+
+        container.innerHTML = `
+            <div class="best11-loading">
+                <div class="spinner-border spinner-border-sm"></div>
+                <span>Caricamento classifica...</span>
+            </div>
+        `;
+
+        apiGetExecute(
+            "/l4m/other/best11/cumulative/"
+        )
+            .then(data => {
+
+                Best11State.cumulative =
+                    data.teams ?? [];
+                Best11State.cumulativeLoaded = true;
+
+                document.getElementById(
+                    "cumulativeCurrentDay"
+                ).textContent = data.current_day;
+
+                this.renderCumulative(
+                    Best11State.cumulative
+                );
+            })
+            .catch(error => {
+
+                console.error(
+                    "Best11 Cumulative:",
+                    error
+                );
+
+                container.innerHTML = `
+                    <div class="best11-error">
+                        Impossibile caricare la classifica cumulativa.
+                    </div>
+                `;
+            });
+    },
 
     getInitialDay() {
         const element = document.querySelector(
@@ -179,6 +280,7 @@ const Best11 = {
             button.className = "best11-day-btn";
 
             button.dataset.day = day;
+            button.dataset.best11View = "day";
 
             button.textContent = day;
 
@@ -329,10 +431,10 @@ const Best11 = {
         `;
     },
 
-    renderCumulative(cumulative, summary) {
+    renderCumulative(cumulative) {
 
         const section =
-            document.getElementById("best11Cumulative");
+            document.getElementById("best11CumulativeView");
 
         const leaderContainer =
             document.getElementById("best11Leader");
@@ -345,7 +447,7 @@ const Best11 = {
         }
 
         if (!cumulative.length) {
-            section.hidden = true;
+            // section.hidden = true;
             return;
         }
 
@@ -461,7 +563,7 @@ const Best11 = {
         });
 
 
-        section.hidden = false;
+        // section.hidden = false;
     },
 
     applyData(data) {
@@ -474,16 +576,15 @@ const Best11 = {
                 ? data.teams
                 : [];
 
-        Best11State.cumulative =
-            Array.isArray(data.cumulative)
-                ? data.cumulative
-                : [];
+        // Best11State.cumulative =
+        //     Array.isArray(data.cumulative)
+        //         ? data.cumulative
+        //         : [];
 
 
-        this.renderCumulative(
-            Best11State.cumulative,
-            data.summary ?? {}
-        );
+        // this.renderCumulative(
+        //     Best11State.cumulative
+        // );
 
 
         this.renderSummary(
@@ -494,18 +595,18 @@ const Best11 = {
 
         this.updateDaySelector();
 
-        document.getElementById("cumulativeDay")
-            .textContent = Best11State.day;
+        // document.getElementById("cumulativeDay")
+        //     .textContent = Best11State.day;
 
-            document
-                .getElementById("summaryDay")
-                .textContent =
-                Best11State.day;
+        //     document
+        //         .getElementById("summaryDay")
+        //         .textContent =
+        //         Best11State.day;
 
-            document
-                .getElementById("teamsDay")
-                .textContent =
-                Best11State.day;
+        //     document
+        //         .getElementById("teamsDay")
+        //         .textContent =
+        //         Best11State.day;
         },
 
 

@@ -29,13 +29,16 @@
 
 
         <section class="best11-hero mb-3">
-
             {% include "l4m/generic/generic_hero.html" with hero_title=comp_info.name hero_subtitle=comp_info.description hero_logo=comp_info.logo_path %}
-
         </section>
 
         <!-- DAY SELECTOR -->
         <section class="best11-day-selector mb-3">
+
+            <button type="button" class="best11-tab active" data-best11-view="cumulative" id="best11CumulativeTab">
+                <i class="bi bi-trophy-fill me-1"></i>
+                Classifica
+            </button>
 
             <button type="button" class="best11-day-arrow" id="btnPrevDay" aria-label="Giornata precedente">
                 <i class="bi bi-chevron-left"></i>
@@ -59,7 +62,6 @@
 
         </div>
 
-
         <!-- ERROR -->
         <div id="best11Error" class="best11-error" hidden>
 
@@ -74,130 +76,134 @@
 
         </div>
 
-        <section id="best11Cumulative" class="best11-cumulative mb-4">
+        <!-- CUMULATIVE -->
+        <section id="best11CumulativeView">
         
             <div class="best11-section-header">
                 <div>
                     <span class="best11-section-kicker">
-                        CLASSIFICA
+                        CLASSIFICA GENERALE
                     </span>
         
-                    <h2>
-                        Best11 cumulativa
-                    </h2>
+                    <h2>Best11 cumulativa</h2>
         
                     <span class="best11-section-subtitle">
-                        Dopo la giornata <span id="cumulativeDay"></span>
+                        Dopo la giornata
+                        <span id="cumulativeCurrentDay">-</span>
                     </span>
                 </div>
             </div>
-        
+
+
             <!-- LEADER -->
-            <div id="best11Leader" class="best11-leader">
+            <div
+                id="best11Leader"
+                class="best11-leader">
             </div>
-        
-        
-            <!-- RANKING -->
-            <div id="best11CumulativeList" class="best11-cumulative-list">
-            </div>
+                
+            <div id="best11CumulativeList"></div>
         
         </section>
 
-        <!-- DAY SUMMARY -->
-        <section id="best11Summary" class="best11-summary mb-3" hidden>
+        <section id="best11DailyView" hidden>
 
-            <div class="best11-summary-header">
-                <div>
-                    <span class="best11-section-kicker">
-                        GIORNATA <span id="summaryDay"></span>
-                    </span>
+            <!-- DAY SUMMARY -->
+            <section id="best11Summary" class="best11-summary mb-3" hidden>
 
-                    <h2>
-                        Classifica Best11
-                    </h2>
-                </div>
-            </div>
+                <div class="best11-summary-header">
+                    <div>
+                        <span class="best11-section-kicker">
+                            GIORNATA <span id="summaryDay"></span>
+                        </span>
 
-
-            <div class="best11-summary-grid">
-
-                <div class="best11-stat-card best11-stat-highlight">
-                    <span class="best11-stat-label">
-                        MIGLIOR PUNTEGGIO
-                    </span>
-
-                    <strong class="best11-stat-value" id="summaryBestScore">
-                        -
-                    </strong>
-
-                    <span class="best11-stat-team" id="summaryBestTeam">
-                        -
-                    </span>
+                        <h2>
+                            Classifica Best11
+                        </h2>
+                    </div>
                 </div>
 
 
-                <div class="best11-stat-card">
-                    <span class="best11-stat-label">
-                        MEDIA GIORNATA
-                    </span>
+                <div class="best11-summary-grid">
 
-                    <strong class="best11-stat-value" id="summaryAverage">
-                        -
-                    </strong>
+                    <div class="best11-stat-card best11-stat-highlight">
+                        <span class="best11-stat-label">
+                            MIGLIOR PUNTEGGIO
+                        </span>
 
-                    <span class="best11-stat-team">
-                        FP
-                    </span>
+                        <strong class="best11-stat-value" id="summaryBestScore">
+                            -
+                        </strong>
+
+                        <span class="best11-stat-team" id="summaryBestTeam">
+                            -
+                        </span>
+                    </div>
+
+
+                    <div class="best11-stat-card">
+                        <span class="best11-stat-label">
+                            MEDIA GIORNATA
+                        </span>
+
+                        <strong class="best11-stat-value" id="summaryAverage">
+                            -
+                        </strong>
+
+                        <span class="best11-stat-team">
+                            FP
+                        </span>
+                    </div>
+
+
+                    <!-- <div class="best11-stat-card">
+                        <span class="best11-stat-label">
+                            SQUADRE
+                        </span>
+
+                        <strong class="best11-stat-value" id="summaryTeams">
+                            -
+                        </strong>
+
+                        <span class="best11-stat-team">
+                            partecipanti
+                        </span>
+                    </div> -->
+
+                </div>
+
+            </section>
+
+
+            <!-- TEAMS -->
+            <section id="best11TeamsSection" hidden>
+
+                <div class="best11-section-header">
+
+                    <div>
+                        <span class="best11-section-kicker">
+                            BEST11
+                        </span>
+
+                        <h2>
+                            Giornata <span id="teamsDay"></span>
+                        </h2>
+                    </div>
+
+                    <!-- <div class="best11-sort">
+                        <button type="button" class="best11-sort-btn active" data-sort="score">
+                            Punteggio
+                            <i class="bi bi-sort-down"></i>
+                        </button>
+                    </div> -->
+
                 </div>
 
 
-                <!-- <div class="best11-stat-card">
-                    <span class="best11-stat-label">
-                        SQUADRE
-                    </span>
-
-                    <strong class="best11-stat-value" id="summaryTeams">
-                        -
-                    </strong>
-
-                    <span class="best11-stat-team">
-                        partecipanti
-                    </span>
-                </div> -->
-
-            </div>
-
-        </section>
-
-
-        <!-- TEAMS -->
-        <section id="best11TeamsSection" hidden>
-
-            <div class="best11-section-header">
-
-                <div>
-                    <span class="best11-section-kicker">
-                        BEST11
-                    </span>
-
-                    <h2>
-                        Giornata <span id="teamsDay"></span>
-                    </h2>
+                <div id="best11Teams" class="best11-teams-grid">
                 </div>
 
-                <!-- <div class="best11-sort">
-                    <button type="button" class="best11-sort-btn active" data-sort="score">
-                        Punteggio
-                        <i class="bi bi-sort-down"></i>
-                    </button>
-                </div> -->
-
-            </div>
-
-
-            <div id="best11Teams" class="best11-teams-grid">
-            </div>
-
+            </section>
+        
         </section>
 
 
@@ -227,9 +233,7 @@
 
 
                     <div class="modal-body" id="best11TeamModalBody">
-
                         <!-- JS -->
-
                     </div>
 
                 </div>

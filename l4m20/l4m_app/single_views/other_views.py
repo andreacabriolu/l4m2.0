@@ -7,9 +7,44 @@ from django.views import View
 
 from l4m_app.single_models.b11_results import B11Results
 from .. import utilities as U
-from django.db.models import Q
+from django.db.models import Q, Sum
 
 from l4m_app.single_models import matches_results, other_competition, team
+
+def get_b11_data_cumulative_view(request):
+    current_day = U.get_current_day() 
+
+    results = (
+        B11Results.objects
+        .filter(
+            Season__Active=True,
+            Day__lte=current_day,
+            Team__isnull=False
+        )
+        .values(
+            "Team_id",
+            "Team__Name"
+        )
+        .annotate(
+            Total=Sum("B11Fp")
+        )
+        .order_by("-Total", "Team__Name")
+    )
+
+    teams = []
+
+    for rank, result in enumerate(results, start=1):
+        teams.append({
+            "team_id": result["Team_id"],
+            "team_name": result["Team__Name"],
+            "rank": rank,
+            "score": round(float(result["Total"] or 0), 1)
+        })
+
+    return JsonResponse({
+        "current_day": current_day,
+        "teams": teams
+    })
 
 def get_b11_data_by_day_view(request, day, season=None):
 
