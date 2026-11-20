@@ -23,7 +23,8 @@ def get_b11_data_cumulative_view(request):
         )
         .values(
             "Team_id",
-            "Team__Name"
+            "Team__Name",
+            "Team__LogoPath"
         )
         .annotate(
             Total=Sum("B11Fp")
@@ -37,6 +38,7 @@ def get_b11_data_cumulative_view(request):
         teams.append({
             "team_id": result["Team_id"],
             "team_name": result["Team__Name"],
+            "team_logo": result["Team__LogoPath"],
             "rank": rank,
             "score": round(float(result["Total"] or 0), 1)
         })
@@ -46,7 +48,7 @@ def get_b11_data_cumulative_view(request):
         "teams": teams
     })
 
-def get_b11_data_by_day_view(request, day, season=None):
+def get_b11_data_by_day_view(request,day, season=None):
 
     season_obj = U.get_current_season() if season is None else U.get_season(season)
 

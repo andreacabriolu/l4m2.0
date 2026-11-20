@@ -459,6 +459,19 @@ const Best11 = {
         const leader =
             cumulative[0];
 
+        const leader_logo =
+            leader.team_logo
+                ? `
+                    <img
+                        class="best11-team-logo"
+                        src="/static/l4m/images/logos/${this.escapeAttribute(leader.team_logo)}"
+                        alt=""
+                    >
+                  `
+                : `
+                    <div class="best11-team-logo"></div>
+                  `;
+
         leaderContainer.innerHTML = `
 
         <div>
@@ -466,18 +479,16 @@ const Best11 = {
                 🏆 Leader Best11
             </span>
 
-            <div class="best11-leader-team">
-                ${this.escapeHtml(
-            leader.team_name
-        )}
+            <div class="best11-team-header">
+
+                ${leader_logo}
+
+                <div class="best11-leader-team">
+                    ${this.escapeHtml(leader.team_name)}
+                </div>
+
             </div>
 
-            <div class="best11-leader-daily">
-                Giornata ${Best11State.day}:
-                ${this.formatScore(
-            leader.daily_score
-        )} FP
-            </div>
         </div>
 
         <div class="best11-leader-score">
@@ -489,7 +500,7 @@ const Best11 = {
             </div>
 
             <div class="best11-leader-score-label">
-                FP CUMULATIVI
+                FP
             </div>
 
         </div>
@@ -504,6 +515,11 @@ const Best11 = {
 
         cumulative.forEach(team => {
 
+            //skip first team (leader) since it's already displayed
+            if (team.rank === 1) {
+                return;
+            }
+
             const row =
                 document.createElement("div");
 
@@ -513,14 +529,30 @@ const Best11 = {
             row.dataset.teamId =
                 team.team_id;
 
+            const team_logo =
+            team.team_logo
+                ? `
+                    <img
+                        class="best11-team-logo"
+                        src="/static/l4m/images/logos/${this.escapeAttribute(team.team_logo)}"
+                        alt=""
+                    >
+                  `
+                : `
+                    <div class="best11-team-logo"></div>
+                  `;
+
             row.innerHTML = `
 
             <div class="best11-cumulative-rank">
                 ${team.rank}
             </div>
 
-
             <div class="best11-cumulative-team">
+
+            <div class="best11-team-header">
+
+                ${team_logo}
 
                 <span class="best11-cumulative-team-name">
                     ${this.escapeHtml(
@@ -528,12 +560,7 @@ const Best11 = {
             )}
                 </span>
 
-                <span class="best11-cumulative-daily">
-                    G${Best11State.day}:
-                    ${this.formatScore(
-                team.daily_score
-            )} FP
-                </span>
+            </div>
 
             </div>
 
@@ -551,11 +578,7 @@ const Best11 = {
                 </span>
 
             </div>
-
-
-            ${this.renderRankDelta(
-                team.rank_delta
-            )}
+  
 
         `;
 
@@ -1255,7 +1278,7 @@ const Best11 = {
             document.createElement("div");
 
         div.textContent =
-            value ?? "";
+            String(value ?? "");
 
         return div.innerHTML;
     },
