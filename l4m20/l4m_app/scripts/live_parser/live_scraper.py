@@ -32,12 +32,11 @@ from vote_live import *
 import constants as C
 import utilities as U
 import logging
-logger = logging.getLogger("live_scraper")
-from l4m_app.single_models import competition_calendar, player, vote, real_team, season
+logger = logging.getLogger("scripts")
+from l4m_app.single_models import player, vote, real_team
 from l4m_app.utilities import get_current_season
 
-
-logging.basicConfig(filename='scarper.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s') #TODO: check path
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s') #TODO: check path
 
 TEST = False
 

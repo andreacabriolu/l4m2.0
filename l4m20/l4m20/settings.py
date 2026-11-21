@@ -50,12 +50,25 @@ LOGGING = {
             "class": "logging.StreamHandler",
             "formatter": "simple",
         },
+        "file_scripts": {
+            "level": "DEBUG",
+            'class': 'logging.handlers.RotatingFileHandler',
+            'maxBytes': 1024 * 1024 * 10,
+            'backupCount': 10,
+            "filename": f'{Path.cwd()}/l4m_app/log/scripts.log',
+            "formatter": "verbose",
+        },
     },
     "loggers": {
         "l4m_app": {
             "handlers": ["file"],
             "propagate": False,
             "level": "DEBUG",
+        },
+        "scripts": {
+            "handlers": ["file_scripts"],
+            "propagate": False,
+            "level": "DEBUG",   
         },
     },
 }
