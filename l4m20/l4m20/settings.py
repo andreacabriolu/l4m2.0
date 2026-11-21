@@ -15,6 +15,8 @@ from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+LOG_DIR = BASE_DIR / 'l4m_app/log'
+LOG_DIR.mkdir(parents=True, exist_ok=True)
 
 
 LOGGING = {
@@ -41,7 +43,7 @@ LOGGING = {
             'class': 'logging.handlers.RotatingFileHandler',
             'maxBytes': 1024 * 1024 * 10,
             'backupCount': 10,
-            "filename": f'{Path.cwd()}/l4m_app/log/log.log',
+            "filename": f'{LOG_DIR}/log.log',
             "formatter": "verbose",
         },
         "console": {
@@ -55,7 +57,7 @@ LOGGING = {
             'class': 'logging.handlers.RotatingFileHandler',
             'maxBytes': 1024 * 1024 * 10,
             'backupCount': 10,
-            "filename": f'{Path.cwd()}/l4m_app/log/scripts.log',
+            "filename": f'{LOG_DIR}/scripts.log',
             "formatter": "verbose",
         },
     },
