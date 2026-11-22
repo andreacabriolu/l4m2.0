@@ -897,8 +897,8 @@ def fill_with_events_b11(events, votes, players):
     for event in events:
 
         _type = event['type']
-        if 'player' in event:
-            _player = U.clean_name(event['player'])
+
+        _player = U.clean_name(event['player']) if 'player' in event else ''
 
         pl = player.Player.objects.filter(Surname=_player)
         if len(pl) == 0:
