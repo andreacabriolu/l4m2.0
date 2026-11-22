@@ -76,8 +76,7 @@ def get_real_match_string(day, real_team_id):
 def get_player_statistics_per_day(player_id):
     stats = vote.Vote.objects.filter(Q(Player_id=player_id) & 
                                      Q(Day__gt=0)&
-                                     Q(Season__Active=True) &
-                                     Q(Competition=1)).order_by('Day') #we check stats only for main league votes, always present
+                                     Q(Season__Active=True)).order_by('Day')
     _player = player.Player.objects.get(pk=player_id)
 
     if len(stats) <= 0:
@@ -88,7 +87,8 @@ def get_player_statistics_per_day(player_id):
     current_day = U.get_current_day()
 
     for i in range(1, int(current_day) + 1):
-        if not stats.filter(Day=i).exists():
+        stat = stats.filter(Day=i)
+        if not stat.exists():
             day_stat = {
                 'day': i,
                 'vote': None,
@@ -107,7 +107,7 @@ def get_player_statistics_per_day(player_id):
             }
             stats_per_day.append(day_stat)
         else:
-            stat = stats.get(Day=i)
+            stat = stat.first()
             day_stat = {
                 'day': stat.Day,
                 'vote': stat.Vote,
@@ -130,11 +130,12 @@ def get_player_statistics_per_day(player_id):
 
 def aggregate_player_statistics(player_id):
     _player = player.Player.objects.get(pk=player_id)
-    stats = vote.Vote.objects.filter(Q(Player_id=player_id) & 
-                                     Q(Day__gt=0) & 
-                                     Q(Vote__gt=0) &
-                                     Q(Season__Active=True)&
-                                     Q(Competition=1))
+    stats_ids = vote.Vote.objects.filter(Player_id=player_id,
+                                     Day__gt=0,
+                                     Vote__gt=0,
+                                     Season__Active=True).order_by('Day').distinct('Day').values('id')
+
+    stats = vote.Vote.objects.filter(id__in=stats_ids)
 
     if len(stats) <= 0:
         return None
@@ -158,4 +159,4 @@ def aggregate_player_statistics(player_id):
         
     }
 
-    return aggregated_stats
+    return aggregated_stats, len(stats)
