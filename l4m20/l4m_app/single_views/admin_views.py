@@ -48,9 +48,9 @@ class CalculateDayView(View):
             all_comp = eval(request.POST['all_comp'].capitalize())
             is_day_completed, json_day = U.is_current_day_completed()
             curr_day = U.get_current_day()
+            b11_past = eval(request.POST['b11_past'].capitalize())
 
-            if day == curr_day and not is_day_completed\
-            and False:
+            if day == curr_day and not is_day_completed:
                 return HttpResponse(f'error GIORNATA {day} ANCORA IN CORSO!')
             
             if day == curr_day and int(day) > int(json_day):
@@ -71,7 +71,7 @@ class CalculateDayView(View):
             if all_comp:
                 CU.calculate_league(main_league, day)
                 CU.calculate_league(cdl_league, day)
-                CU.calculate_b11_league(b11_league, day)
+                CU.calculate_b11_league(b11_league, day, b11_past)
                 CU.calculate_total_league(total_league, day)
                 CU.calculate_league(cds_seriea_league, day)
                 CU.calculate_league(cds_serieb_league, day)
@@ -84,7 +84,7 @@ class CalculateDayView(View):
 
             else: 
                 if int(competitionid) == b11_league.id:     
-                    CU.calculate_b11_league(b11_league, day)
+                    CU.calculate_b11_league(b11_league, day, b11_past)
                     return HttpResponse(f'GIORNATA CALCOLATA PER {b11_league.Name}')
                 
                 if int(competitionid) == total_league.id:

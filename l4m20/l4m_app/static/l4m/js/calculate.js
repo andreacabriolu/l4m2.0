@@ -43,7 +43,11 @@ function fill_days(c_id) {
 function calculate(c_id, d_id, allcomp = true) {
     const token = Cookies.get('csrftoken');
 
-    var data = { 'competitionid': c_id, 'all_comp': $('#allCompChk').prop('checked'), 'day': parseInt(d_id), 'csrfmiddlewaretoken': token };
+    var data = { 'competitionid': c_id, 
+        'all_comp': $('#allCompChk').prop('checked'), 
+        'day': parseInt(d_id), 
+        'b11_past': $('#b11_past_Chk').prop('checked'),
+        'csrfmiddlewaretoken': token };
 
     $('#spinner').attr('hidden', false);
     $.post("/l4m/calculate/calculateDay/", data, function (response) {
